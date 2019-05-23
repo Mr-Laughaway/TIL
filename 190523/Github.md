@@ -4,7 +4,7 @@ Github로 취업하기
 
 
 
-## I. 마크다운 학습
+## I. 마크다운 기초
 
 가족마크다운 문법
 
@@ -45,3 +45,4 @@ class Person:
         self.name = name
 ```
 
+살짝 수정
