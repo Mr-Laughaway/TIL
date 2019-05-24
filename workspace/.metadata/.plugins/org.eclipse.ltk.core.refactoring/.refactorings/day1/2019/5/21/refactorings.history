@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename compilation unit &apos;com.DeLa.util.QuickSort.java&apos; to &apos;Sort.java&apos;&#x0D;&#x0A;- Original project: &apos;day1&apos;&#x0D;&#x0A;- Original element: &apos;com.DeLa.util.QuickSort.java&apos;&#x0D;&#x0A;- Renamed element: &apos;com.DeLa.util.Sort.java&apos;" description="Rename compilation unit &apos;QuickSort.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;com.DeLa.util{QuickSort.java" name="Sort.java" references="false" stamp="1558412636285" version="1.0"/>
-</session>
