@@ -38,6 +38,8 @@
 
 
 
+
+
 ## Chapter 08 예외처리
 
 ### 예외처리
@@ -69,9 +71,9 @@
 
 
 
-## 예제
+#### 예제
 
-#### Product.java
+##### Product.java
 
 ```java
 package lab.exercise.entity;
@@ -98,7 +100,7 @@ public class Product {
 
 
 
-#### IShoppingBiz.java
+##### IShoppingBiz.java
 
 ```java
 package lab.exercise.biz;
@@ -113,7 +115,7 @@ public interface IShoppingBiz {
 
 
 
-#### ShoppingBiz.java
+##### ShoppingBiz.java
 
 ```java
 package lab.exercise.biz;
@@ -217,7 +219,7 @@ public class ShoppingBiz implements IShoppingBiz {
 
 
 
-#### ShoppingTest.java
+##### ShoppingTest.java
 
 ```java
 package lab.exercise.test;
@@ -281,7 +283,7 @@ public class ShoppingTest {
 
 
 
-#### 실행결과
+##### 실행결과
 
 ```
 ===== << 메뉴 >> =====
