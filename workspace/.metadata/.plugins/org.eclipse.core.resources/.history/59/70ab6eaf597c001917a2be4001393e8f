@@ -1,0 +1,30 @@
+package lab.java.basic;
+
+
+
+class Outer3 {
+	private int outVar = 5;
+	
+	public void outerMethod() {
+	}
+	
+	public void method() {
+		int local = 10;
+		class Inner {
+			public void innerMethod() {
+				System.out.println("local=" + local);
+//				local += 3;
+			}
+		}
+	}
+	
+	
+}
+
+
+
+public class LocalInnerTest {
+	public static void main(String[] args) {
+		
+	}
+}

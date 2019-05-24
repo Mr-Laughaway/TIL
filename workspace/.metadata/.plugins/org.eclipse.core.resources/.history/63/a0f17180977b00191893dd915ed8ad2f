@@ -1,0 +1,8 @@
+package execise.inheritance.Parent;
+
+public class Child {
+	public Child(int cash, int building, int apartment) {
+		
+		
+	}
+}

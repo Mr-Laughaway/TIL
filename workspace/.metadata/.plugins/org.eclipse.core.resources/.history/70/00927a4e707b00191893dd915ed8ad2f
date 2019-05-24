@@ -1,0 +1,17 @@
+package lab.java.core;
+
+public class BaseBall {
+	public int player = 0;
+	public int outCount = 0;
+	public int strike = 0;
+	public int ball = 0;
+	
+	public void getStatus() {
+		
+	}
+	
+	public boolean isStrike() {
+		
+		return true;
+	}
+}

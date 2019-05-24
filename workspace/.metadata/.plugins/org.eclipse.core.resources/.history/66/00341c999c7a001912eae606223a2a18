@@ -1,0 +1,24 @@
+package lab.java.core;
+
+public class MethodTest {
+	
+	int member = 0;
+	
+	public void method1() {
+		int local = 1;
+	}
+	
+	public void method2(int member) {
+		System.out.println(member);
+		//클래스 내부에서 자신을 객체 생성하지 않고 this를 사용합니다.
+		//this는 객체 생성될 때 자신을 참조하는 reference변수입니다.
+		System.out.println(this.member);
+		System.out.println();
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

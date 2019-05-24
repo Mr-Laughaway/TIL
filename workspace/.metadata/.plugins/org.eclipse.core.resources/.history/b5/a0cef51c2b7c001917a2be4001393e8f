@@ -1,0 +1,41 @@
+package lab.java.core;
+
+
+//class Parent {
+//	public  final void last() {
+//		
+//	}
+//}
+//
+//class Child extends Parent {
+//	public void last() {
+//		
+//	}
+//	
+//}
+
+
+//final class Parent {
+//	public  final void last() {
+//		
+//	}
+//}
+//
+//class Child extends Parent {
+//	
+//	
+//}
+
+//class MyMath extends Math {
+//	
+//}
+
+
+public class ExtendsTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

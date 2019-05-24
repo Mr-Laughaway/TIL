@@ -1,0 +1,14 @@
+package lab.java.core;
+
+class Parent {
+	
+	String name = "parent";
+	
+	public void work() {
+		System.out.println("IT");
+	}
+}
+
+class Child extends ExtendsTest1 {
+	
+}

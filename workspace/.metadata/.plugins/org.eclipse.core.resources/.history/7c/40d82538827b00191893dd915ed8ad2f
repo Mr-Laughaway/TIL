@@ -1,0 +1,67 @@
+package com.DeLa.util;
+
+import lab.java.core.BaseBall;
+
+public class Sort {
+
+	public static boolean Quicksort(int[] array, int nLow, int nHigh)	{
+		int lo = nLow;
+		int hi = nHigh;
+		int pivot = (lo + hi) / 2;
+		int nItemLow, nItemHigh, nItemPivot;
+//		TCHARin *pszLow, *pszHigh, *pszPivot;
+	 
+		while(TRUE){
+			pszPivot = swListArray->GetAt(pivot)->wstrDispName;
+	 
+			while( lo < pivot ) {
+				pszLow = swListArray->GetAt(lo)->wstrDispName;
+				if( 0 < wcscmp(pszLow, pszPivot) )
+					break;
+				else
+					lo++;
+			}
+	 
+			while( hi > pivot ) {
+				pszHigh = swListArray->GetAt(hi)->wstrDispName;
+				if( 0 > wcscmp(pszHigh, pszPivot) )
+					break;
+				else
+					hi--;
+			}
+	 
+			if( lo == pivot && hi == pivot) {
+				if( nLow < pivot-1  )
+					QuickSort(swListArray, nLow, pivot-1);
+	   
+				if( pivot +1 < nHigh)
+					QuickSort(swListArray, pivot+1, nHigh);
+	 
+				break;
+			}
+			else {
+				pItemLow = swListArray->GetAt(lo);
+				pItemHigh = swListArray->GetAt(hi);
+				swListArray->RemoveAt(lo);
+				swListArray->RemoveAt(hi-1);
+				swListArray->InsertAt(lo, pItemHigh);
+				swListArray->InsertAt(hi, pItemLow);
+			 
+				if(lo != pivot && hi != pivot) {
+					lo++;
+					hi--;
+				}
+				else if (lo == pivot) {
+					pivot = hi;
+					lo++;
+				}
+				else { // hi == pivot
+					pivot = lo;
+					hi--;
+				}
+			}
+		}
+	 
+		return TRUE;
+	}
+}

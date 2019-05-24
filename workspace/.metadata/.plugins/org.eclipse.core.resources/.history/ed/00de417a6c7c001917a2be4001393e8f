@@ -1,0 +1,16 @@
+package exercise.overall.hero;
+
+public class SuperMan extends Hero {
+	
+	@Override
+	public String toString() {
+		return "슈퍼맨";
+	}
+
+	@Override
+	void action() {
+		System.out.print(toString()); swim();
+		System.out.print(toString()); fight();
+	}
+
+}

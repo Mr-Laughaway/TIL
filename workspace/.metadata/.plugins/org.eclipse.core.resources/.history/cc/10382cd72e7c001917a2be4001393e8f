@@ -1,0 +1,34 @@
+package lab.java.core;
+
+class Parent2 {
+	int num = 1;
+	public void method() {
+		System.out.println("Parent2.method() called");
+	}
+	
+	public void parentMethod() {
+		System.out.println("Parent2.parentMethod() called");
+	}
+}
+
+class Child2 extends Parent2 {
+	int num = 2;
+	public void method() {
+		System.out.println("Child2.method() called");
+	}
+	
+	public void childMethod() {
+		System.out.println("Child2.childMethod() called");
+	}
+}
+
+
+public class ExtendsTest2 {
+
+	public static void main(String[] args) {
+		Parent2 p = new Parent2();
+		System.out.println(p.num);
+
+	}
+
+}

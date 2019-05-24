@@ -1,0 +1,5 @@
+package exercise.overall.processor;
+
+public abstract class Processor {
+
+}

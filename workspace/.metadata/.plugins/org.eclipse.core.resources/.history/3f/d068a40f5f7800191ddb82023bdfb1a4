@@ -1,0 +1,28 @@
+package lab.java.core;
+
+import java.util.Scanner;
+
+public class MyDiaryTest {
+	
+	private static Scanner scanner = new Scanner(System.in);
+	
+	public static int getUserInput() {
+		System.out.println("## 월 입력(종료: -1) => ");
+		return scanner.nextInt();
+	}
+
+	public static void main(String[] args) {
+		
+		MyDiary[] diary = new MyDiary[] {
+				new MyDiary("데이트", 1, 5, "레스토랑"),
+				new MyDiary("시험", 1, 7, "열공"),
+				new MyDiary("찜질방", 1, 30, "땀빼기"),
+				new MyDiary("야근", 2, 3, "땀빼기"),
+				new MyDiary("미장원", 2, 3, "변신"),
+				new MyDiary("영화", 3, 3, "쿵푸팬더")
+		};
+		
+
+	}
+
+}

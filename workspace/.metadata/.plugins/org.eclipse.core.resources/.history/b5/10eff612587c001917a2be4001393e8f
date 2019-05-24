@@ -1,0 +1,38 @@
+package lab.java.basic;
+
+import lab.java.basic.Outer.Inner;
+
+class Outer {
+	private int outVar = 5;
+	static int staticOutVar = 100;
+	
+	public void outerMehod() {
+
+
+	}
+	
+	 static class Inner {
+		public  static void innerMethod() {
+//			System.out.println("outVar=" + outVar);
+			System.out.println("staticOutVar=" + staticOutVar);
+		}
+	}
+}
+
+
+public class StaticInnerTest {
+
+	public static void main(String[] args) {
+//		Outer outer = new Outer();
+//		outer.outerMehod();
+		
+		Outer.Inner inner = new Outer().new Inner();
+		inner.innerMethod();
+		
+		Outer outer = new Outer();
+		outer.outerMehod();
+		
+//		Outer.Inner inner2 = outer.new Inner();
+	}
+
+}

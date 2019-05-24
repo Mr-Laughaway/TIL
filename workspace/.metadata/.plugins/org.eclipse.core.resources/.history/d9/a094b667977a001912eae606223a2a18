@@ -1,0 +1,10 @@
+package lab.java.core;
+
+public class ConstructorTest2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,19 @@
+package lab.java.core;
+
+class Parent2 {
+	
+
+}
+
+class Child2 extends Parent2 {
+	
+}
+
+public class ExtendsTest2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

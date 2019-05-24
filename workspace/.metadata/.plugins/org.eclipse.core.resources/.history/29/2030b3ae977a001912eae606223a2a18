@@ -1,0 +1,26 @@
+package lab.java.core;
+
+
+import java.awt.Color;
+import java.awt.Frame;
+
+class MyFrame {
+	public MyFrame() {
+		Frame f = new Frame();
+		f.setSize(100, 100);
+		f.setBackgroud(Color.black);
+		f.setVisible(true);
+		
+	}
+}
+
+
+
+public class ConstructorTest2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

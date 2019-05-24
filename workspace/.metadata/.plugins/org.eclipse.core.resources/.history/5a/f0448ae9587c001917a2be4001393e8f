@@ -1,0 +1,21 @@
+package lab.java.basic;
+
+import lab.java.basic.Outer2.Inner;
+
+class Outer3 {
+	private int outVar = 5;
+	
+	public void outerMethod() {
+		Inner.innerMethod();
+	}
+	
+	
+}
+
+
+
+public class LocalInnerTest {
+	public static void main(String[] args) {
+		
+	}
+}

@@ -1,0 +1,5 @@
+package com.workshop3.entity;
+
+public class Travel {
+
+}

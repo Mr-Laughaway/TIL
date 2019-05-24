@@ -1,0 +1,12 @@
+package exercise.overall.orchestra;
+
+public class Trumpet extends Wind {
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+
+	
+}

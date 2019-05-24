@@ -1,0 +1,55 @@
+package com.workshop.account;
+
+public class Account {
+	private String customerId;
+	private String customerName;
+	private String accountNumber;
+	private int balance;
+	
+	public Account(String customerId, String customerName, String accountNumber, int balance) {
+		this.customerId = customerId;
+		this.customerName = customerName;
+		this.accountNumber = accountNumber;
+		this.balance = balance;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void withdraw(int money) {
+		if(money  < 1) {
+			System.out.printf("잘못된 금액입니다. (%d원)\n", money);
+		}
+		else if(balance < money){
+			System.out.printf("잔액이 부족합니다. (%d원)\n", money);
+		}
+		else {
+			this.balance -= money;
+			System.out.printf("%d원이 출금되었습니다.\n", money);
+		}
+	}
+	
+	public void deposit(int money) {
+		if(money  < 1) {
+			System.out.printf("잘못된 금액입니다. (%d원)\n", money);
+		}
+		else {
+			this.balance += money;
+			System.out.printf("%d원이 입금되었습니다.\n", money);
+		}
+	}
+	
+}

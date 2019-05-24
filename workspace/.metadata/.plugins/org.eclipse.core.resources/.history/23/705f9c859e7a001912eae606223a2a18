@@ -1,0 +1,15 @@
+package lab.java.core;
+
+public class MethodTest2 {
+	
+	public void method(int a, String b, int...c) {
+		
+	}
+	
+	
+
+	public static void main(String[] args) {
+		
+	}
+
+}

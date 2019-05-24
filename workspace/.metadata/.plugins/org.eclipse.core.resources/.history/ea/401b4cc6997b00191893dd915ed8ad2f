@@ -1,0 +1,8 @@
+package exercise.inheritance.Language;
+
+public class Japanese extends Language {
+	public String region = "미국, 영국, 기타등등";
+	public void Hello() {
+		System.out.println("Hello");
+	}
+}
