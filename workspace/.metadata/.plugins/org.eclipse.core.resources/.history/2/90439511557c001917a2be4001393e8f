@@ -1,0 +1,10 @@
+package lab.java.basic;
+
+public class MemberInnerTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

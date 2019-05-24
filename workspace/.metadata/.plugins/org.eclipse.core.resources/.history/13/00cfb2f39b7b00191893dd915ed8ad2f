@@ -1,0 +1,9 @@
+package exercise.inheritance.Language;
+
+public class Language {
+	public String region = "지구";
+	public void sayHello() {
+		System.out.println("지구하이");
+	}
+	
+}

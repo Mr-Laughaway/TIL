@@ -1,0 +1,7 @@
+package exercise.inheritance.Language;
+
+public class Languague {
+	public String region = "지구";
+	public void Hello() {}
+	
+}

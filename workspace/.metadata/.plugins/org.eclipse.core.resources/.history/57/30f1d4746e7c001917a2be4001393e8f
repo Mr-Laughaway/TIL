@@ -1,0 +1,23 @@
+package exercise.overall.orchestra;
+
+public class Percussion implements Instrument {
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "타악기";
+	}
+
+	@Override
+	public void playStart() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void playStop() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

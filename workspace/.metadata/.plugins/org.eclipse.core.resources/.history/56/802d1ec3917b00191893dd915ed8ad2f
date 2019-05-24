@@ -1,0 +1,8 @@
+package package2;
+
+public class Other {
+	public void access() {
+		Parent p = new Parent();
+		System.out.println();
+	}
+}

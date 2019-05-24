@@ -1,0 +1,14 @@
+package lab.java.core;
+
+public class FactorialTest2 {
+	static long factorial(int n ) {
+		if(n <= 0 || 20 < n) return -1;
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

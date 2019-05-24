@@ -1,0 +1,55 @@
+package exercise.overall.orchestra;
+
+public class MusicTest {
+	
+	private static void playAll(Instrument[] e) {
+		System.out.println("=========== 연주 시작 ===========");
+		for(Instrument inst : e) {
+			inst.playStart();
+		}
+		System.out.println();
+		
+		System.out.println("=========== 연주 종료 ===========");
+		for(Instrument inst : e) {
+			inst.playStop();
+		}
+		System.out.println();
+	}
+	
+	private static void summary(Instrument[] e) {
+		int nKeyboard = 0, nPercussion = 0, nWind = 0;
+		
+		System.out.println("========= 연주 악기 목록 =========");
+		for(Instrument inst : e) {
+			System.out.println(inst.toString());
+			
+			if(inst instanceof Keyboard)
+				nKeyboard++;
+			else if(inst instanceof Percussion)
+				nPercussion++;
+			else if(inst instanceof Wind)
+				nWind++;
+		}
+		System.out.println();
+		
+		System.out.println("========== 연주 악기 수 ==========");
+		System.out.println("## 건반악기 수 : " + nKeyboard );
+		System.out.println("## 관악기 수 : " + nWind );
+		System.out.println("## 타익기 수 : " + nPercussion );
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Instrument[] e = new Instrument[] {
+				new Piano(),
+				new Flute(),
+				new Drum(),
+				new Timpani(),
+				new Trumpet()
+		};
+		
+		MusicTest.playAll(e);
+	}
+
+}

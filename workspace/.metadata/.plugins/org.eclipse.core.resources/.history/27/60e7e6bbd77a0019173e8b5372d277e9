@@ -1,0 +1,33 @@
+package com.workshop.account;
+
+public class Account {
+	private String customerId;
+	private String customerName;
+	private String accountNumber;
+	private int balance;
+	
+	public Account(String customerId, String customerName, String accountNumber, int balance) {
+		this.customerId = customerId;
+		this.customerName = customerName;
+		this.accountNumber = accountNumber;
+		this.balance = balance;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	
+}

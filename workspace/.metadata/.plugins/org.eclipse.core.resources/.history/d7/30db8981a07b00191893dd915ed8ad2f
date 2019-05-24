@@ -1,0 +1,27 @@
+package com.workshop3.biz;
+
+import com.workshop3.entity.Travel;
+
+public class TravelBiz {
+	private Travel[] travels;
+	
+	public void printAllTravels() {
+		for( Travel travel : travels) {
+			travel.printTravelInfo();
+		}
+	}
+	
+	public void printIndividualTravels() {
+		for( Travel travel : travels) {
+			if(travel.getTravelType() == Travel.INDIVIDUAL)
+				travel.printTravelInfo();
+		}
+	}
+	
+	public void printPackageTravels() {
+		for( Travel travel : travels) {
+			if(travel.getTravelType() == Travel.PACKAGE)
+				travel.printTravelInfo();
+		}
+	}
+}

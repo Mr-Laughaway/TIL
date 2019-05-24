@@ -1,0 +1,30 @@
+package com.lg.workshop2.lotto;
+
+import java.util.Random;
+
+public class Lotto {
+	public static final int CNT = 6;
+	
+	public int[] getnerateLottoNumbers() {
+		int numbers[] = new int[CNT];
+		
+		//ToDo:
+		
+		return numbers;
+	}
+	
+	public void displayLottoNumbers(int[] lottoNumbers) {
+		//ToDo:
+	}
+	
+	public void sortLottoNumbers(int[] lottoNumbers) {
+		//ToDo:
+	}
+	
+	private int getRandomNumber() {
+		Random rand = new Random();
+		return rand.nextInt(45) + 1;
+	}
+	
+	
+}

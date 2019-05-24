@@ -1,0 +1,6 @@
+package package1;
+
+public class Parent {
+	public String name = "package1.Parent";
+
+}

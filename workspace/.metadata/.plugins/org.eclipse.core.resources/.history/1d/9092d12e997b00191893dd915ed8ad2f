@@ -1,0 +1,42 @@
+package execise.inheritance.Parent;
+
+public class Parent {
+	private int cash;
+	private int building;
+	private int apartment;
+	
+	public Parent(int cash, int building, int apartment) {
+		this.cash = cash;
+		this.building = building;
+		this.apartment = apartment;
+	}
+
+	public int getCash() {
+		return cash;
+	}
+
+	public void setCash(int cash) {
+		this.cash = cash;
+	}
+
+	public int getBuilding() {
+		return building;
+	}
+
+	public void setBuilding(int building) {
+		this.building = building;
+	}
+
+	public int getApartment() {
+		return apartment;
+	}
+
+	public void setApartment(int apartment) {
+		this.apartment = apartment;
+	}
+	
+	public void printStatus() {
+		System.out.printf("현금 : %d, 아파트 : %d, 빌딩 : %d\n", cash, building, apartment);
+	}
+
+}

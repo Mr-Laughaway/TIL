@@ -1,0 +1,22 @@
+package lab.java.core;
+
+public class MethodTest {
+	
+	int member = 0;
+	
+	public void method1() {
+		int local = 1;
+	}
+	
+	public void method2(int member) {
+		System.out.println(member);
+		System.out.println(this.member);
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

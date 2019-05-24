@@ -1,0 +1,17 @@
+package lab.java.core;
+
+public class MethodTest2 {
+	
+	public void method(String b, int...c) {
+		System.out.println(c.length);
+		
+		for(int num : c) {
+			System.out.println(num);
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+	}
+
+}

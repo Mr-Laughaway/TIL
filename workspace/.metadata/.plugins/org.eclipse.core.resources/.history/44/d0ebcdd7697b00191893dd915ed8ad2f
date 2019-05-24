@@ -1,0 +1,27 @@
+package lab.java.core;
+
+class Parent4 {
+	
+}
+
+
+class Child4 extends Parent4 {
+	
+
+}
+
+class Child5 extends Parent4 {
+	
+}
+
+
+public class ExtendsTest4 {
+
+	public static void main(String[] args) {
+		Child4 c4 = new Child4();
+		Child5 c5 = new Child5();
+		Parent4 p = new Parent4();
+
+	}
+
+}

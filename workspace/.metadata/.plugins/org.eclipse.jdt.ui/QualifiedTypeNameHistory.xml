@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="lab.java.core.InputTest"/>
+<fullyQualifiedTypeName name="java.io.BufferedReader"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
+<fullyQualifiedTypeName name="lab.java.core.MethodTest2"/>
+<fullyQualifiedTypeName name="lab.java.core.OverloadTest"/>
+<fullyQualifiedTypeName name="lab.java.core.BaseBall"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="com.workshop3.test.TravelTest"/>
+<fullyQualifiedTypeName name="java.io.ObjectInputStream.GetField"/>
+<fullyQualifiedTypeName name="com.workshop3.util.TravelUtil"/>
+<fullyQualifiedTypeName name="lab.java.basic.Outer.Inner"/>
+<fullyQualifiedTypeName name="lab.java.basic.Outer2.Inner"/>
+<fullyQualifiedTypeName name="lab.java.basic.AnonymousTest"/>
+<fullyQualifiedTypeName name="java.awt.event.WindowAdapter"/>
+<fullyQualifiedTypeName name="exercise.overall.hero.SuperMan"/>
+<fullyQualifiedTypeName name="exercise.overall.hero.SpiderMan"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="exercise.overall.orchestra.Flute"/>
+<fullyQualifiedTypeName name="exercise.overall.orchestra.Timpani"/>
+<fullyQualifiedTypeName name="exercise.overall.orchestra.Trumpet"/>
+<fullyQualifiedTypeName name="exercise.overall.orchestra.Keyboard"/>
+</qualifiedTypeNameHistroy>

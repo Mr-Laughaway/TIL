@@ -1,0 +1,23 @@
+package exercise.overall.hero;
+
+public class Hero implements CanFight, CanFly, CanSwim {
+
+	@Override
+	public void swim() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void fly() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void fight() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

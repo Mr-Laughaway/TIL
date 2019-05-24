@@ -1,0 +1,5 @@
+package execise.inheritance.Parent;
+
+public class GrandChild {
+
+}

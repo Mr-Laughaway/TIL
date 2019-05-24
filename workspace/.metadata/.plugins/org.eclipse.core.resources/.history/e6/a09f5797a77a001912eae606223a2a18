@@ -1,0 +1,49 @@
+package lab.java.core;
+
+import java.util.Scanner;
+
+public class AccountTest {
+
+	public static void main(String[] args) {
+		Account account = new Account("CUST01", "소지섭", "1-22-333", 100000);
+		Scanner input = new Scanner(System.in);
+		
+		account.printAccount();
+		
+		while(true) {
+			System.out.println("[ Menu ]");
+			System.out.println("1. 입금");
+			System.out.println("2. 출금");
+			System.out.println("9. 종료");
+			System.out.print("=> Menu 선택 : ");
+			
+			int n = input.nextInt();
+			if(n == 9) {
+				System.out.println("Bye~~");
+				break;
+			}
+			
+			int amount = 0;
+			switch(n) {
+			case 1:
+				System.out.print("금액 : ");
+				amount = input.nextInt();
+				System.out.printf("%d원을 입금합니다.\n");
+				account.addBalance(amount);
+				break;
+			case 2:
+				System.out.print("금액 : ");
+				amount = input.nextInt();
+				System.out.printf("%d원을 출금합니다.\n");
+				account.substractBalance(amount);
+				break;
+			}
+			
+			System.out.println("=============");
+			System.out.println("현재 잔액: " + account.getBalance());
+			System.out.println("=============");
+		}
+
+	}
+
+}

@@ -1,0 +1,21 @@
+package lab.java.core;
+
+public class StaticTest {
+	
+	static int snum; //클래스 변수
+	int num; //인스턴스 변수
+
+	public static void staticMethod() {
+		
+	}
+	
+	public void method() {
+		
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

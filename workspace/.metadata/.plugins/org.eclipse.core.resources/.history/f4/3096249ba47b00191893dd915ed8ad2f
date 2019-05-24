@@ -1,0 +1,49 @@
+package com.workshop3.test;
+
+import com.workshop3.biz.TravelBiz;
+import com.workshop3.util.TravelUtil;
+
+public class TravelTest {
+	
+	public static void printMenu() {
+		System.out.println("======= <메뉴> =======");
+		System.out.println("1. 전체 여행 상품 조회");
+		System.out.println("2. 개별 자유여행 상품 조회");
+		System.out.println("3. 패키기여행 상품 조회");
+		System.out.println("4. 여행 상품 예약");
+		System.out.println("9. 종료");
+		System.out.println("=====================");
+	}
+
+	public static void main(String[] args) {
+		
+		TravelBiz biz = new TravelBiz();
+		
+		int nMenu = 0;
+		String sCode;
+		while(true) {
+			printMenu();
+			System.out.print("## 메뉴 입력 : ");
+			nMenu = Integer.parseInt(TravelUtil.getUserInput());
+			
+			switch(nMenu) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 9:
+				break;
+			default:
+				System.out.println("메뉴를 잘못 입력하였습니다.");
+				continue;
+			}
+		}
+		
+
+	}
+
+}

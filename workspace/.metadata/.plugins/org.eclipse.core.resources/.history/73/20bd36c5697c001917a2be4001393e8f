@@ -1,0 +1,11 @@
+package exercise.overall.processor;
+
+public class Splitter extends Processor {
+
+	@Override
+	String process(Object input) {
+		// TODO Auto-generated method stub
+		return ((String)input).toLowerCase();
+	}
+
+}

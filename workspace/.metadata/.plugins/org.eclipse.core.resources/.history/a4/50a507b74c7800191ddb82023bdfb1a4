@@ -1,0 +1,12 @@
+package com.lg.workshop2.lotto.test;
+
+import com.lg.workshop2.lotto;
+
+public class TestLotto {
+
+	public static void main(String[] args) {
+		Lotto lotto = new Lotto();
+
+	}
+
+}
