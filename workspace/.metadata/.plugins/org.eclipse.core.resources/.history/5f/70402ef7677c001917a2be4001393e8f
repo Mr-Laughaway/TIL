@@ -1,5 +1,0 @@
-package exercise.overall.orchestra;
-
-public interface Instrument {
-
-}

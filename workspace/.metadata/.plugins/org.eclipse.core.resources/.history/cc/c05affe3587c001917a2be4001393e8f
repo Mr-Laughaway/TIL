@@ -1,7 +1,0 @@
-package lab.java.basic;
-
-public class LocalInnerTest {
-	public static void main(String[] args) {
-		
-	}
-}

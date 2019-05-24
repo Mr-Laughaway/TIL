@@ -1,9 +1,0 @@
-package lab.java.core;
-
-public class Array {
-	private String title;
-	private int row;
-	private int col;
-	private int[][] array;
-	
-}
