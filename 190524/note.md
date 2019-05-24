@@ -71,7 +71,7 @@
 
 
 
-#### 예제
+#### 예제 1) 마트에서 장보기
 
 ##### Product.java
 
@@ -352,7 +352,49 @@ public class ShoppingTest {
 
 
 
+#### 예제 2) ArrayList 사용법
 
+##### ArrayListTest.java
+
+```java
+package lab.java.core;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import lab.exercise.entity.Product;
+
+public class ArrayListTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Product> aList = new ArrayList();
+		aList.add(new Product("사과", 1500));
+//		aList.set(0, new Product("라면", 1000));
+		aList.add(new Product("라면", 1000));
+		
+		for(int i = 0; i < aList.size(); i++) {
+			System.out.println(aList.get(i).getName());
+		}
+		
+		
+		for(Product p : aList) {
+			System.out.println(p.getName());
+		}
+		
+		Iterator<Product> iter = aList.iterator();
+		while(iter.hasNext()) {
+			System.out.println(iter.next().getName());
+		}
+	}
+
+}
+
+```
+
+
+
+#### 예제 3) 고객 관리 프로그램
 
 
 
