@@ -190,7 +190,7 @@ public class GradeManager implements IGradeManager {
 					students[i].getTotal(),
 					students[i].getAverage(),
 					students[i].isPass() ? "합격" : "불합격"
-			);
+			); //To do:  Student의 toString() 메소드 사용하는 것으로 바꿔야 함
 			
 			System.out.println(st);
 		}
