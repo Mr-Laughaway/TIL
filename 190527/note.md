@@ -53,5 +53,58 @@
 
     ```AccessModifier class XXXException extends 구체적 Exception(API) { //속성 ;//생성자; //기능; ... } ```
 
-     
+
+
+### 유용한 코드
+
+- 얕은 복사와 깊은 복사 
+
+  ```.clone() 참조```
+
+  
+
+- Boxing 과 UnBoxing
+
+  ```java
+  class BoxingTest {
+  	public static void main(String[] args) {
+          int n5 = 5;
+          Integer i5 = n5; //Boxing
+          
+          Integer i6 = new Integer(6);
+          int n6 = i6; //UnBoxing
+      }
+  }
+  ```
+
+
+
+- StringBuffer 와 StringBuilder
+
+  > "멀티스레딩 환경 : StringBuffer,  그외(성능향상) : StringBuilder"
+
+  
+
+- 문자 인코딩 변환
+
+  - ```"가".getBytes("UTF-8");``` 
+  - ```String str = new String(utf8_str, "UTF-8");```
+
+  
+
+- Class 객체를 얻는 방법
+
+  - 얻기
+
+    ```Class cObj = new Card().getClass(); //생성된 객체로부터 얻는  방법```
+
+    ```Class cObj = Card.class; // 클래스 리터럴(*.class)로부터 얻는 방법```
+
+    ```Class cObj = Class.forName("Card"); //클래스 이름으로부터 얻는 방법```
+
+  - 생성하기
+
+    ``` Card c = new Card(); //new 연산자를 이용해서 객체 생성```
+
+    ```Card c = Card.class.newInstance(); //Class객체를 이요해서 객체 생성```
 
