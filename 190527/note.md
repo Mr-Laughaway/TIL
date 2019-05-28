@@ -176,7 +176,7 @@ public class GradeManager implements IGradeManager {
 			else if(printType == PRINT_FAIL && students[i].isPass() == true)
 				continue;
 			
-			String st = String.format("%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%.1f\t%s",
+			String st = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s",
 					students[i].getStudentNo(),
 					students[i].getStudentName(),
 					students[i] instanceof NewStudent ? "신입" : "경력",
@@ -184,14 +184,10 @@ public class GradeManager implements IGradeManager {
 							(((NewStudent)students[i]).isInternYn() ? "Y" : "N") : "",
 					students[i] instanceof CareerStudent ?
 							((CareerStudent)students[i]).getCareerYears() : "",
-					students[i].getGradeArr()[0],
-					students[i].getGradeArr()[1],
-					students[i].getGradeArr()[2],
-					students[i].getTotal(),
-					students[i].getAverage(),
+					students[i],
 					students[i].isPass() ? "합격" : "불합격"
-			); //To do:  Student의 toString() 메소드 사용하는 것으로 바꿔야 함
-			
+			);
+            
 			System.out.println(st);
 		}
 		System.out.println("=====================================================================================");
@@ -262,7 +258,7 @@ public abstract class Student {
 	
 	@Override
 	public String toString() {
-		String st = String.format("%-6d,%-6d%-6d%-8d%-8.1f", 
+		String st = String.format("%d\t%d\t%d\t%d\t%.1f", 
 				gradeArr[0],
 				gradeArr[1],
 				gradeArr[2],
