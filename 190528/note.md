@@ -194,7 +194,7 @@ System.console()
 
 
 
-### 10장
+### Chapter 10
 
 #### 1.날짜와 시간
 
@@ -460,4 +460,368 @@ public class SimpleDateFormatEx2 {
 	}
 }
 ```
+
+
+
+
+
+### Chapter 11
+
+#### 컬렉션 프레임워크
+
+- List
+
+  - ArrayList
+
+    - 
+
+    ```java
+    package lab.java.core;
+    
+    
+    import java.util.ArrayList;
+    import java.util.Iterator;
+    import java.util.List;
+    import java.util.Vector;
+    
+    public class ListTest {
+    
+    	public static void main(String[] args) {
+    		
+    		//ArrayList example
+    		String cars[] = {"k3", "k5", "sm5", "k7", "9", "sm3", "sm5", "sm6", };
+    		List<String> alist = new ArrayList<String>();
+    		for(String car : cars) {
+    			alist.add(car);
+    		}
+    		System.out.println(alist.size());
+    		System.out.println(alist);
+    		alist.set(1, "Bentz");
+    		System.out.println(alist);
+    		alist.remove(5);
+    		System.out.println(alist);
+    		System.out.println(alist.size());
+    		
+    		//get(i)
+    		for(int i =0; i < alist.size(); i++) {
+    			System.out.print(alist.get(i) + ", ");
+    		}
+    		System.out.println();
+    		
+    		//alist.iterator(), iter.hasNext(), iter.next()
+    		Iterator<String> iter = alist.iterator();
+    		while(iter.hasNext()) {
+    			System.out.print(iter.next() + ", ");
+    		}
+    		System.out.println();
+    		
+    		
+    		//Vector example
+    		List vec = new Vector();
+    	}
+    
+    }
+    ```
+
+    
+
+  - LinkedList
+
+  - Stack
+
+  - Vector
+
+    ```java
+    package lab.java.core;
+    
+    import java.util.Vector;
+    
+    public class VectorTest {
+    	public static void main(String[] args) {
+    		
+    		Vector<String> vec = new Vector();
+    		System.out.println("capacity: " + vec.capacity());
+    		System.out.println("size: " + vec.size());
+    		
+    		for(int i = 1; i < 12; i++) {
+    			vec.add("K" + i);
+    		}
+    		System.out.println("capacity: " + vec.capacity());
+    		System.out.println("size: " + vec.size());
+    		
+    		for(int i = 12; i < 23; i++) {
+    			vec.add("K" + i);
+    		}
+    		System.out.println("capacity: " + vec.capacity());
+    		System.out.println("size: " + vec.size());
+    		
+    		for(int i = 23; i < 42; i++) {
+    			vec.add("K" + i);
+    		}
+    		System.out.println("capacity: " + vec.capacity());
+    		System.out.println("size: " + vec.size());
+    		
+    	}
+    }
+    
+    ```
+
+    ```
+    ///실행 결과
+    capacity: 10
+    size: 0
+    capacity: 20
+    size: 11
+    capacity: 40
+    size: 22
+    capacity: 80
+    size: 41
+    
+    ```
+
+    
+
+- Set (중복 제거)
+
+  - HashSet
+  - TreeSet (이진 정렬 적용됨)
+
+  ```java
+  package lab.java.core;
+  
+  
+  import java.util.HashSet;
+  import java.util.Iterator;
+  import java.util.Set;
+  import java.util.TreeSet;
+  
+  public class ListTest {
+  
+  	public static void main(String[] args) {
+  		
+  		//ArrayList example
+  		String cars[] = {"k3", "k5", "sm6", "k7", "k9", "sm3", "sm5", "sm6", "k5" };
+  		Set<String> hSet = new HashSet();
+  		Set<String> tSet = new TreeSet();
+  		for(String car : cars) {
+  			hSet.add(car);
+  			tSet.add(car);
+  		}
+  		
+  		Iterator<String> iter = hSet.iterator();
+  		System.out.print("HashSet :");
+  		while(iter.hasNext()) {
+  			System.out.print(iter.next()+",");
+  		}
+  		System.out.println();
+  		
+  		iter = tSet.iterator();
+  		System.out.print("TreeSet :");
+  		while(iter.hasNext()) {
+  			System.out.print(iter.next()+",");
+  		}
+  		System.out.println();	
+  	}
+  
+  }
+  ```
+
+  ```
+  //실행결과
+  HashSet :k3,sm3,k5,sm5,k7,sm6,k9,
+  TreeSet :k3,k5,k7,k9,sm3,sm5,sm6, //<----정렬됨
+  
+  ```
+
+  
+
+- Map
+
+  - HashMapEx1
+
+    ```java
+    package lab.java.core;
+    
+    import java.util.Collection;
+    import java.util.Collections;
+    import java.util.HashMap;
+    import java.util.Iterator;
+    import java.util.Map;
+    import java.util.Set;
+    
+    public class HashMapEx1 {
+    
+    	public static void main(String[] args) {
+    		
+    		HashMap map = new HashMap();
+    		map.put("김자바",  new Integer(90));
+    		map.put("김자바",  new Integer(100));
+    		map.put("이자바",  new Integer(100));
+    		map.put("강자바",  new Integer(80));
+    		map.put("안자바",  new Integer(90));
+    		
+    		Set set = map.entrySet();
+    		Iterator it = set.iterator();
+    		while(it.hasNext()) {
+    			Map.Entry e = (Map.Entry)it.next();
+    			System.out.println("이름 : " + e.getKey() + ", 점수 : " + e.getValue());
+    		}
+    		
+    		set = map.keySet();
+    		System.out.println("참가자 명단 : " + set);
+    		
+    		Collection values = map.values();
+    		it = values.iterator();
+    		
+    		int total = 0;
+    		while(it.hasNext()) {
+    			Integer i = (Integer)it.next();
+    			total += i.intValue();
+    		}
+    		
+    		System.out.println("총점 : " + total);
+    		System.out.println("평균 : " + (float)total / set.size());
+    		System.out.println("최고점수 : " + Collections.max(values));
+    		System.out.println("최저점수 : " + Collections.min(values));
+    	}
+    
+    }
+    ```
+
+    
+
+  - HashMapEx2
+
+    ```java
+    package lab.java.core;
+    
+    import java.util.HashMap;
+    import java.util.Scanner;
+    
+    public class HashMapEx2 {
+    
+    	public static void main(String[] args) {
+    		
+    		HashMap map = new HashMap();
+    		map.put("myId", "1234");
+    		map.put("asdf", "1111");
+    		map.put("asdf", "1234");
+    		
+    		Scanner s = new Scanner(System.in);
+    		
+    		while(true) {
+    			System.out.println("Id와 password를 입력해주세요.");
+    			System.out.print("Id: ");
+    			String id = s.nextLine().trim();
+    			
+    			System.out.print("password: ");
+    			String password = s.nextLine().trim();
+    			System.out.println();
+    			
+    			if(!map.containsKey(id)) {
+    				System.out.println("입력하신 Id는 존재하지 않습니다. 다시 입력해 주세요");
+    				continue;
+    			}
+    			else {
+    				if(!(map.get(id)).equals(password)) {
+    					System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+    				}
+    				else {
+    					System.out.println("Id와 비밀번호가 일치합니다.");
+    					break;
+    				}
+    			}
+    			
+    		}
+    	}
+    
+    }
+    ```
+
+    
+
+  - HashMapEx3
+
+    ```java
+    package lab.java.core;
+    
+    import java.util.HashMap;
+    import java.util.Iterator;
+    import java.util.Map;
+    import java.util.Set;
+    
+    public class HashMapEx3 {
+    	static HashMap phoneBook = new HashMap();
+    
+    	public static void main(String[] args) {
+    		addPhoneNo("친구", "이자바", "010-111-1111");
+    		addPhoneNo("친구", "김자바", "010-222-2222");
+    		addPhoneNo("친구", "김자바", "010-333-3333");
+    		addPhoneNo("회사", "김대리", "010-444-4444");
+    		addPhoneNo("회사", "김대리", "010-555-5555");
+    		addPhoneNo("회사", "박대리", "010-666-6666");
+    		addPhoneNo("회사", "이과장", "010-777-7777");
+    		addPhoneNo("세탁", "010-888-8888");
+    		
+    		printList();
+    	}
+    	
+    	static void addPhoneNo(String groupName, String name, String tel) {
+    		addGroup(groupName);
+    		HashMap group = (HashMap)phoneBook.get(groupName);
+    		group.put(tel,name);
+    	}
+    	
+    	static void addGroup(String groupName) {
+    		if(!phoneBook.containsKey(groupName)) {
+    			phoneBook.put(groupName,  new HashMap());
+    		}
+    	}
+    
+    	static void addPhoneNo(String name, String tell) {
+    		addPhoneNo("기타", name, tell);
+    	}
+    	
+    	//전화번호부 전체를 출력하는 메서드
+    	static void printList() {
+    		Set set = phoneBook.entrySet();
+    		Iterator it = set.iterator();
+    		
+    		while(it.hasNext()) {
+    			Map.Entry e = (Map.Entry)it.next();
+    			Set subSet = ((HashMap)e.getValue()).entrySet();
+    			Iterator subIt = subSet.iterator();
+    			
+    			System.out.println(" * " + e.getKey() + " [" + subSet.size() + "]");
+    			
+    			while(subIt.hasNext()) {
+    				Map.Entry subE = (Map.Entry)subIt.next();
+    				String telNo = (String)subE.getKey();
+    				String name = (String)subE.getValue();
+    				System.out.println(name + " " + telNo);
+    			}
+    			System.out.println();
+    		}
+    	}
+    }
+    ```
+
+    ```
+    //실행 결과
+     * 기타 [1]
+    세탁 010-888-8888
+    
+     * 친구 [3]
+    이자바 010-111-1111
+    김자바 010-222-2222
+    김자바 010-333-3333
+    
+     * 회사 [4]
+    이과장 010-777-7777
+    김대리 010-444-4444
+    김대리 010-555-5555
+    박대리 010-666-6666
+    ```
+
+    
 
