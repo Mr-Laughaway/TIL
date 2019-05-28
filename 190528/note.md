@@ -823,5 +823,442 @@ public class SimpleDateFormatEx2 {
     박대리 010-666-6666
     ```
 
-    
+
+
+#### 중간 복습 예제 (도서 조회 시스템)
+
+##### Book.java
+
+```java
+package lab.exercise.entity;
+
+public class Book {
+	private String title;
+	private int price;
+	
+	public Book(String title, int price) {
+		this.title = title;
+		this.price = price;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public int getPrice() {
+		return price;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%-20s", "[제목] " + title);
+	}
+}
+
+```
+
+
+
+##### Magazine.java
+
+```java
+package lab.exercise.entity;
+
+public class Magazine extends Book {
+	
+	private String category;
+	private String description;
+
+	public Magazine(String title, int price, String category, String description) {
+		super(title, price);
+		this.category = category;
+		this.description = description;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + String.format("\t[분류] %s\t[가격] %d\t[비고] %s", 
+				getCategory(), 
+				getPrice(), 
+				getDescription()
+		);
+	}
+	
+}
+
+```
+
+
+
+##### Novel.java
+
+```java
+package lab.exercise.entity;
+
+public class Novel extends Book {
+	
+	private String author;
+
+	public Novel(String title, int price, String author) {
+		super(title, price);
+		this.author = author;
+	}
+	
+	public String getAuthor() {
+		return author;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + String.format("\t[저자] %s\t[가격] %d", 
+				getAuthor(), 
+				getPrice()
+		);
+	}
+	
+}
+
+```
+
+
+
+##### BookBiz.java
+
+```java
+package lab.exercise.biz;
+
+import lab.exercise.entity.Magazine;
+import lab.exercise.entity.Novel;
+import lab.exercise.util.BookUtil;
+
+public class BookBiz {
+	private Magazine[] magazines;
+	private Novel[] novels;
+	
+	public BookBiz() {
+		magazines = new Magazine[]{
+			new Magazine("Cooking Light", 15000, "living, cooking", "America Cooking"),
+			new Magazine("Auto Build", 16000, "science, car", "Germany Car")
+		};
+		
+		novels = new Novel[]{
+			new Novel("The Confession", 10500, "Grisham, John"),
+			new Novel("Les Miserables", 17500, "Hugo, Victor"),
+			new Novel("Breakthrough", 47200, "Ifill, Gwen"),
+			new Novel("The Racketeer", 38000, "Grisham, John")			
+		};
+	}
+	
+	public void printAllBooks() {
+		BookUtil.printHeader();
+		int index = 1;
+		for(Magazine book : magazines) {
+			System.out.println(index++ + ". " + book);
+		}
+		for(Novel book : novels) {
+			System.out.println(index++ + ". " + book);
+		}
+		BookUtil.printTail();
+	}
+	
+	public void printAllMagazines() {
+		BookUtil.printHeader();
+		int index = 1;
+		for(Magazine book : magazines) {
+			System.out.println(index++ + ". " + book);
+		}
+		BookUtil.printTail();
+	}
+	
+	public void printAllNovels() {
+		BookUtil.printHeader();
+		int index = 1;
+		for(Novel book : novels) {
+			System.out.println(index++ + ". " + book);
+		}
+		BookUtil.printTail();
+	}
+	
+	public void printMagazineOneYearSubscription() {
+		System.out.println("-------------------------");
+		int index = 1;
+		for(Magazine book : magazines) {
+			System.out.println(index++ + ". " + book.getTitle() + ": " + calculateOneYearSubscriptionPrice(book.getPrice()) + " 원");
+		}
+		System.out.println("-------------------------");
+	}
+	
+	public void searchNovelByAuthor(String author) {
+		BookUtil.printHeader();
+		int index = 1;
+		for(Novel book : novels) {
+//			System.out.println(book.getAuthor());
+//			System.out.println(author);
+			if(book.getAuthor().equals(author)) 
+				System.out.println(index++ + ". " + book);
+		}
+		BookUtil.printTail();
+	}
+	
+	public void searchNovelByPrice(int minPrice, int maxPrice) {
+		BookUtil.printHeader();
+		int index = 1;
+		for(Novel book : novels) {
+			if(minPrice <= book.getPrice() && book.getPrice() <= maxPrice)
+				System.out.println(index++ + ". " + book);
+		}
+		BookUtil.printTail();
+	}
+	
+	private int calculateOneYearSubscriptionPrice(int price) {
+		return price * 12;
+	}
+}
+
+
+```
+
+
+
+##### BookUtil.java
+
+```java
+package lab.exercise.util;
+
+import java.util.Scanner;
+
+import java.util.Scanner;
+
+public class BookUtil {
+	
+	public static String getUserInput() {
+		Scanner sc = new Scanner(System.in);
+		return sc.nextLine();
+	}
+	
+	public static void printHeader() {
+		System.out.println("-------------------------------------- 도서 정보 --------------------------------------");
+	}
+	
+	public static void printTail() {
+		System.out.println("------------------------------------------------------------------------------------");
+	}
+}
+
+
+```
+
+
+
+##### BookTest.java
+
+```java
+package lab.exercise.test;
+
+import lab.exercise.biz.BookBiz;
+import lab.exercise.util.BookUtil;
+
+public class BookTest {
+
+	public static void main(String[] args) {
+		
+		BookBiz biz = new BookBiz();
+
+		while(true) {
+			printMenu();
+			System.out.print("## 메뉴 입력 : ");
+			int n = -1;
+			try {
+				n = Integer.parseInt(BookUtil.getUserInput());
+			}
+			catch(NumberFormatException e) {
+				//Todo: 별로 할 일 없음
+			}
+			finally {
+				if(n == 9) {
+					System.out.println("------------------------------");
+					System.out.println("  프로그램을 종료합니다. Bye~");
+					System.out.println("------------------------------");
+					break;
+				}
+				
+				switch(n) {
+				case 1: biz.printAllBooks();
+					break;
+					
+				case 2: biz.printAllMagazines();
+					break;
+					
+				case 3: biz.printAllNovels();
+					break;
+					
+				case 4: biz.printMagazineOneYearSubscription();
+					break;
+					
+				case 5:
+					System.out.print("> 검색할 저자명을 입력하세요 : ");
+					
+					biz.searchNovelByAuthor(BookUtil.getUserInput());
+					break;
+					
+				case 6:
+					try {
+						System.out.print("> 검색할 소설 가격의 최소값을 입력하세요: ");
+						int min = Integer.parseInt(BookUtil.getUserInput());
+						System.out.print("> 검색할 소설 가격의 최대값을 입력하세요: ");
+						int max = Integer.parseInt(BookUtil.getUserInput());
+						biz.searchNovelByPrice(min, max);
+					}
+					catch(NumberFormatException e) {
+						System.out.println("@ 숫자 형식이 잘못되었습니다.");
+					}
+					break;
+					
+				default:
+					System.out.println("@ 메뉴번호를 잘못 입력하셨습니다.");	
+				}
+			}//end of try~catch~finally
+		}//end of while
+	}//end of main
+	
+	
+	
+	public static void printMenu() {
+		System.out.println("=== << 도서 정보 프로그램 >> ===");
+		System.out.println("1. 전체 도서 정보 조회");
+		System.out.println("2. 전체 잡지 조회");
+		System.out.println("3. 전체 소설 조회");
+		System.out.println("4. 잡지 연간 구독료 조회");
+		System.out.println("5. 소설 저자명 검색");
+		System.out.println("6. 소설 가격 검색(최소값 ~ 최대값)");
+		System.out.println("9. 시스템 종료");
+		System.out.println("===========================");
+	}
+
+}
+
+```
+
+```
+//실행 결과
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 1
+-------------------------------------- 도서 정보 --------------------------------------
+1. [제목] Cooking Light  	[분류] living, cooking	[가격] 15000	[비고] America Cooking
+2. [제목] Auto Build     	[분류] science, car	[가격] 16000	[비고] Germany Car
+3. [제목] The Confession 	[저자] Grisham, John	[가격] 10500
+4. [제목] Les Miserables 	[저자] Hugo, Victor	[가격] 17500
+5. [제목] Breakthrough   	[저자] Ifill, Gwen	[가격] 47200
+6. [제목] The Racketeer  	[저자] Grisham, John	[가격] 38000
+------------------------------------------------------------------------------------
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 2
+-------------------------------------- 도서 정보 --------------------------------------
+1. [제목] Cooking Light  	[분류] living, cooking	[가격] 15000	[비고] America Cooking
+2. [제목] Auto Build     	[분류] science, car	[가격] 16000	[비고] Germany Car
+------------------------------------------------------------------------------------
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 3
+-------------------------------------- 도서 정보 --------------------------------------
+1. [제목] The Confession 	[저자] Grisham, John	[가격] 10500
+2. [제목] Les Miserables 	[저자] Hugo, Victor	[가격] 17500
+3. [제목] Breakthrough   	[저자] Ifill, Gwen	[가격] 47200
+4. [제목] The Racketeer  	[저자] Grisham, John	[가격] 38000
+------------------------------------------------------------------------------------
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 4
+-------------------------
+1. Cooking Light: 180000 원
+2. Auto Build: 192000 원
+-------------------------
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 5
+> 검색할 저자명을 입력하세요 : Grisham, John
+-------------------------------------- 도서 정보 --------------------------------------
+1. [제목] The Confession 	[저자] Grisham, John	[가격] 10500
+2. [제목] The Racketeer  	[저자] Grisham, John	[가격] 38000
+------------------------------------------------------------------------------------
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 6
+> 검색할 소설 가격의 최소값을 입력하세요: 15000
+> 검색할 소설 가격의 최대값을 입력하세요: 40000
+-------------------------------------- 도서 정보 --------------------------------------
+1. [제목] Les Miserables 	[저자] Hugo, Victor	[가격] 17500
+2. [제목] The Racketeer  	[저자] Grisham, John	[가격] 38000
+------------------------------------------------------------------------------------
+=== << 도서 정보 프로그램 >> ===
+1. 전체 도서 정보 조회
+2. 전체 잡지 조회
+3. 전체 소설 조회
+4. 잡지 연간 구독료 조회
+5. 소설 저자명 검색
+6. 소설 가격 검색(최소값 ~ 최대값)
+9. 시스템 종료
+===========================
+## 메뉴 입력 : 9
+------------------------------
+  프로그램을 종료합니다. Bye~
+------------------------------
+
+```
+
+
+
+
 
