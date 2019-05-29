@@ -180,6 +180,167 @@ public class EnumEx1 {
 
 
 
+---
+
+### Chapter 13 - 쓰레드thread
+
+###### Count.java
+
+```java
+package lab.java.thread;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Panel;
+
+public class Count extends Panel implements Runnable {
+
+	int num = 0;
+	
+	public Count() {
+		setSize(200, 200);
+	}
+	
+	public void paint(Graphics g) {
+		g.setColor(Color.BLUE);
+		g.setFont(new Font("ArialBlack", Font.BOLD|Font.ITALIC, 75));
+		g.drawString(String.valueOf(num), 100, 100);
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true) {
+			num++;
+			repaint();
+			try {
+				Thread.sleep(1000);
+			}
+			catch(InterruptedException e) {}
+		}
+	}
+
+}
+
+```
+
+
+
+###### Snow.java
+
+```java
+package lab.java.thread;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Panel;
+
+public class Snow extends Panel implements Runnable {
+
+	int x, y;
+	
+	public Snow() {
+		setSize(200, 200);
+		setBackground(Color.BLACK);
+	}
+	
+	public void paint(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.fillOval(x,  y,  5,  5);
+	}
+	
+	public void update(Graphics g) {
+		paint(g);
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true) {
+			x = (int)(Math.random()*200);
+			y = (int)(Math.random()*200);
+			repaint();
+			try {
+				Thread.sleep(300);
+			}
+			catch(InterruptedException e) {}
+		}
+	}
+
+}
+
+```
+
+
+
+###### ThreadTest.java
+
+```java
+package lab.java.thread;
+
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class ThreadTest extends Frame {
+	
+	Count cnt;
+	Snow snow;
+	
+	public ThreadTest() {
+		setSize(600, 200);
+		setLayout(new GridLayout(1,3));
+		cnt = new Count();
+		add(cnt);
+		snow = new Snow();
+		add(snow);
+		setVisible(true);
+		
+		Thread t = new Thread(cnt);
+		t.start();
+		Thread s = new Thread(snow);
+		s.start();
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+	}
+
+	public static void main(String[] args) {
+		
+		new ThreadTest();
+
+	}
+
+}
+
+```
+
+
+
+
+
+---
+
+### Chapter 14 - 람다와 스트림Lambda & stream
+
+### 책 봐라 794p~
+
+
+
+
+
+
+
+
+
+
+
 
 
 ---
