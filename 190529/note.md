@@ -75,19 +75,116 @@
     }
     ```
 
-  - Enumeration  <- 구 버전, **deprecated**
+  - Enumeration  <- 구 버전, ***deprecated***
 
     ```
     hasMoreElement(), nextElement()
     ```
 
-    
+  - **Stack** - LIFO(Last In First Out)
+
+    ```java
+    Stack st = new Stack();
+    //push(), pop(), peek()
+    ```
+
+  - **Queue** - FIFO(First In First Out)
+
+    ```java
+    Queue q = new LinkedList();
+    //offer(), poll(), peek()
+    ```
 
 - Set - 순서 보장 안 됨, 중복 객체 저장 불가
 
-  
+  ### 책 봐라 631p~
 
 - Map - Key, Value 쌍으로 존재
 
-  
+  ### 책 봐라 644p~
+
+- Comparator 와 Comparable
+
+  ### 책 봐라 628p~
+
+- ***Arrays***  - **아주 유용한 static class**
+
+- ***Properties*** - **658p~** 
+- ***Collections*** - **유용한 static class**
+
+
+
+
+
+---
+
+### Chapter 12
+
+#### Enum
+
+```java
+package lab.java.core;
+
+enum Direction { EAST, SOUTH, WEST, NORTH }
+
+public class EnumEx1 {
+
+	public static void main(String[] args) {
+		
+		Direction d1 = Direction.EAST;
+		Direction d2 = Direction.valueOf("WEST");
+		Direction d3 = Enum.valueOf(Direction.class,  "EAST");
+		
+		System.out.println("d1="+d1);
+		System.out.println("d2="+d2);
+		System.out.println("d3="+d3);
+
+		
+		System.out.println("d1==d2 ? " + (d1==d2));
+		System.out.println("d1==d3 ? " + (d1==d3));
+		System.out.println("d1.equals(d3) ? " + d1.equals(d3));
+//		System.out.println("d2 > d3 ? " + (d1 > d3));
+		System.out.println("d1.compareTo(d3) ? " + (d1.compareTo(d3)));
+		System.out.println("d1.compareTo(d2) ? " + (d1.compareTo(d2)));
+		
+		switch(d1) {
+			case EAST:
+				System.out.println("The direction is EAST."); break;
+			case SOUTH:
+				System.out.println("The direction is SOUTH."); break;
+			case WEST:
+				System.out.println("The direction is WEST."); break;
+			case NORTH:
+				System.out.println("The direction is NORTH."); break;
+			default:
+				System.out.println("Invalid direction"); break;
+		}
+		
+		Direction[] dArr = Direction.values();
+		for(Direction d : dArr) {
+			System.out.printf("%s=%d\n", d.name(), d.ordinal());
+		}
+	}
+
+}
+
+```
+
+
+
+#### 애너테이션(annotation)
+
+> 프로그램의 소스코드 안에 다른 프로그램을 위한 정보를 미리 약속된 형식으로 포함시킨 것이 바로 애너테이션이다. 애너테이션은 주석(comment)처럼 프로그래밍 언어에 영향을 미치지 않으면서도 다른 프로그램에게 유용한 정보를 제공할 수 있다는 장점이 있다.
+
+
+
+
+
+
+
+---
+
+### Chapter 15 - 입출력 I/O
+
+#### 스트림(stream)
 
