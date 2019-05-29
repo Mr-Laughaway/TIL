@@ -591,5 +591,166 @@ public class EnumEx1 {
 
   
 
-- 
+-  RandomAccessFile
 
+  ###### RandomAccessFileEx.java
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.IOException;
+  import java.io.RandomAccessFile;
+  
+  public class RandomAccessFileEx {
+  
+  	public static void main(String[] args) {
+  		RandomAccessFile ra = null;
+  		
+  		try {
+  			ra = new RandomAccessFile("c:/testa/random.txt", "rw");
+  			String receive = "hello";
+  			ra.seek(ra.length()); //0 offset
+  			ra.write(receive.getBytes());
+  //			byte[] buf = new byte[(int) ra.length()];
+  			byte[] buf = new byte[100];
+  			ra.seek(0);
+  			ra.read(buf);
+  			System.out.print(" 처음 읽은 내용 : ");
+  			System.out.println(new String(buf));
+  			ra.seek(0);
+  			receive = "안녕하세요?";
+  			ra.write(receive.getBytes());
+  			ra.seek(0);
+  			ra.read(buf);
+  			System.out.print(" 다시 읽은 내용 : ");
+  			System.out.println(new String(buf));
+  		}
+  		catch(IOException ioe) {
+  			ioe.printStackTrace();
+  		}
+  		finally {
+  			try {
+  				if(ra != null) ra.close();
+  			}
+  			catch(IOException ioe) {
+  				ioe.printStackTrace();
+  			}
+  		}
+  
+  	}
+  
+  }
+  
+  ```
+
+  
+
+  
+
+- ***PipedReader / PipedWriter  + Thread 예제***
+
+  ###### PipedReaderWriter.java
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.IOException;
+  import java.io.PipedReader;
+  import java.io.PipedWriter;
+  import java.io.StringWriter;
+  
+  public class PipedReaderWriter {
+  	
+  	public static void main(String[] args) {
+  		InputThread inThread = new InputThread("InputThread");
+  		OutputThread outThread = new OutputThread("OutputThread");
+  		
+  		//PipedReader와 PipedWriter를 연결한다.
+  		inThread.connect(outThread.getOutput());
+  		
+  		inThread.start();
+  		outThread.start();
+  	}
+  }
+  
+  
+  class InputThread extends Thread {
+  	PipedReader input = new PipedReader();
+  	StringWriter sw = new StringWriter();
+  	
+  	InputThread(String name) {
+  		super(name);	// Thread(String name)
+  	}
+  	
+  	public void run() {
+  		try {
+  			int data = 0;
+  			while( (data = input.read()) != -1) {
+  				sw.write(data);
+  			}
+  			System.out.println(getName() + " received : " + sw.toString());
+  		}
+  		catch(IOException e) {
+  			e.printStackTrace();
+  		}
+  	}
+  	
+  	public PipedReader getInput() {
+  		return input;
+  	}
+  	
+  	public void connect(PipedWriter output) {
+  		try {
+  			input.connect(output);
+  		}
+  		catch(IOException e) {
+  			e.printStackTrace();
+  		}
+  	}
+  }
+  
+  
+  class OutputThread extends Thread {
+  	PipedWriter output = new PipedWriter();
+  	
+  	OutputThread(String name) {
+  		super(name);
+  	}
+  	
+  	public void run() {
+  		try {
+  			String msg = "Hello";
+  			System.out.println(getName() + " sent : " + msg);
+  			output.write(msg);;
+  			output.close();
+  		}
+  		catch(IOException e) {
+  			e.printStackTrace();
+  		}
+  	}
+  	
+  	public PipedWriter getOutput() {
+  		return output;
+  	}
+  	
+  	public void connect(PipedReader input) {
+  		try {
+  			output.connect(input);
+  		}
+  		catch(IOException e) {
+  			e.printStackTrace();
+  		}
+  	}
+  }
+  
+  ```
+
+  ```
+  //실행 결과
+  OutputThread sent : Hello
+  InputThread received : Hello
+  ```
+
+  
+
+  
