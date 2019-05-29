@@ -310,6 +310,126 @@ public class EnumEx1 {
 
   
 
+  ###### FileCopy Ex
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.FileInputStream;
+  import java.io.FileNotFoundException;
+  import java.io.FileOutputStream;
+  import java.io.IOException;
+  
+  public class FileCopyEx {
+  
+  	public static void main(String[] args) {
+  		FileInputStream fis = null;
+  		FileOutputStream fos = null;
+  		
+  		byte _read[] = new byte[100];
+  		byte console[] = new byte[100];
+  		try {
+  			System.out.print("파일명 : ");
+  			System.in.read(console);
+  			String file = new String(console).trim();
+  			fis = new FileInputStream(file);
+  			
+  			String prefix = file.substring(0, file.lastIndexOf('.'));
+  			String suffix = file.substring(file.lastIndexOf('.'),file.length()); 
+  			String dest = prefix + "-복사본" + suffix;
+  			fos = new FileOutputStream(dest);
+  			
+  			int cnt = 0;
+  			while( (cnt = fis.read(_read)) != -1) {
+  				fos.write(_read, 0, cnt);
+  			}
+  			fos.flush();
+  			
+  			System.out.println("파일 복사가 완료 되었습니다!!!");
+  			System.out.printf("새로운 파일명 : %s\n", dest);
+  			
+  		}
+  		catch(FileNotFoundException fnfe) {
+  			fnfe.printStackTrace();
+  		}
+  		catch(IOException ie) {
+  			ie.printStackTrace();
+  		}
+  		finally {
+  			try {
+  				if(fis != null) fis.close();
+  				if(fos != null) fos.close();
+  			}
+  			catch(IOException ioe) {
+  				ioe.printStackTrace();
+  			}
+  		}
+  
+  	}
+  
+  }
+  
+  ```
+
+  
+
+  ###### DataStream Ex
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.DataInputStream;
+  import java.io.DataOutputStream;
+  import java.io.FileInputStream;
+  import java.io.FileOutputStream;
+  import java.io.IOException;
+  
+  public class DataStreamEx {
+  
+  	public static void main(String[] args) {
+  		FileInputStream fis = null;
+  		DataInputStream dis = null;
+  		FileOutputStream fos = null;
+  		DataOutputStream dos = null;
+  		
+  		try {
+  			fos = new FileOutputStream("c:/testa/dataOut.txt");
+  			dos = new DataOutputStream(fos);
+  			dos.writeBoolean(false);;
+  			dos.writeInt(20000);
+  			dos.writeChar('T');
+  			dos.writeDouble(290.45);
+  			System.out.println("자바 기본값을 바이트 코드로 저장!!");
+  			
+  			fis = new FileInputStream("c:/testa/dataOut.txt");
+  			dis = new DataInputStream(fis);
+  			System.out.println(dis.readBoolean());
+  			System.out.println(dis.readInt());
+  			System.out.println(dis.readChar());
+  			System.out.println(dis.readDouble());
+  		}
+  		catch(IOException ioe) {
+  			ioe.printStackTrace();
+  		}
+  		finally {
+  			try {
+  				if(fos != null) fos.close();
+  				if(fis != null) fis.close();
+  			}
+  			catch(IOException ioe) {
+  				ioe.printStackTrace();
+  			}
+  		}
+  
+  	}
+  
+  }
+  ```
+
+  
+
+  
+
 - File 
 
   ###### File Ex
@@ -341,5 +461,135 @@ public class EnumEx1 {
   
   ```
 
+
+
+- Serialization  - **직렬화**
+
+  ###### UserInfo.java
+
+  ```java
+  package lab.java.serialize;
   
+  public class UserInfo implements java.io.Serializable {
+  	String name;
+  	String password;
+  	int age;
+  	
+  	public UserInfo() {
+  		this("Unknown", "111", 0);
+  	}
+  	
+  	public UserInfo(String name, String password, int age) {
+  		this.name = name;
+  		this.password = password;
+  		this.age = age;
+  	}
+  	
+  	public String toString() {
+  		return "(" + name + "," + password + "," + age + ")";
+  	}
+  }
+  
+  ```
+
+  
+
+  ###### SerialEx1.java
+
+  ```java
+  package lab.java.serialize;
+  
+  import java.io.BufferedOutputStream;
+  import java.io.FileOutputStream;
+  import java.io.IOException;
+  import java.io.ObjectOutputStream;
+  import java.util.ArrayList;
+  
+  public class SerialEx1 {
+  
+  	public static void main(String[] args) {
+  		try {
+  			String fileName = "UserInfo.ser";
+  			FileOutputStream fos = new FileOutputStream(fileName);
+  			BufferedOutputStream bos = new BufferedOutputStream(fos);
+  			
+  			ObjectOutputStream out = new ObjectOutputStream(bos);
+  			
+  			UserInfo u1 = new UserInfo("JavaMan", "1234", 30);
+  			UserInfo u2 = new UserInfo("JavaWoman", "4321", 26);
+  			
+  			ArrayList<UserInfo> list = new ArrayList<>();
+  			list.add(u1);
+  			list.add(u2);
+  			
+  			//객체를 직렬화한다.
+  			out.writeObject(u1);
+  			out.writeObject(u2);
+  			out.writeObject(list);
+  			out.close();
+  			System.out.println("직렬화가 끝났습니다.");
+  		}
+  		catch(IOException e) {
+  			e.printStackTrace();
+  		}
+  
+  	}
+  
+  }
+  
+  ```
+
+  
+
+  ###### SerialEx2.java
+
+  ```java
+  package lab.java.serialize;
+  
+  import java.io.BufferedInputStream;
+  import java.io.FileInputStream;
+  import java.io.ObjectInputStream;
+  import java.util.ArrayList;
+  
+  public class SerialEx2 {
+  
+  	public static void main(String[] args) {
+  		try {
+  			String fileName = "UserInfo.ser";
+  			FileInputStream fis = new FileInputStream(fileName);
+  			BufferedInputStream bis = new BufferedInputStream(fis);
+  			
+  			ObjectInputStream in = new ObjectInputStream(bis);
+  			
+  			//객체를 읽을 때는 출력한 순서와 일치해야한다.
+  			UserInfo u1 = (UserInfo)in.readObject();
+  			UserInfo u2 = (UserInfo)in.readObject();
+  			ArrayList list = (ArrayList)in.readObject();
+  			
+  			System.out.println(u1);
+  			System.out.println(u2);
+  			System.out.println(list);
+  			in.close();
+  		}
+  		catch (Exception e) {
+  			e.printStackTrace();
+  		}
+  
+  	}
+  
+  }
+  
+  ```
+
+  ```
+  //실행 결과
+  (JavaMan,1234,30)
+  (JavaWoman,4321,26)
+  [(JavaMan,1234,30), (JavaWoman,4321,26)]
+  
+  ```
+
+  
+
+- 
 
