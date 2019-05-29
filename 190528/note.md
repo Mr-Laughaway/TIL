@@ -473,10 +473,8 @@ public class SimpleDateFormatEx2 {
 
   - ArrayList
 
-    - 
-
     ```java
-    package lab.java.core;
+package lab.java.core;
     
     
     import java.util.ArrayList;
@@ -522,7 +520,7 @@ public class SimpleDateFormatEx2 {
     
     }
     ```
-
+    
     
 
   - LinkedList
@@ -532,7 +530,7 @@ public class SimpleDateFormatEx2 {
   - Vector
 
     ```java
-    package lab.java.core;
+  package lab.java.core;
     
     import java.util.Vector;
     
@@ -565,9 +563,9 @@ public class SimpleDateFormatEx2 {
     }
     
     ```
-
+  
     ```
-    ///실행 결과
+  ///실행 결과
     capacity: 10
     size: 0
     capacity: 20
@@ -578,7 +576,7 @@ public class SimpleDateFormatEx2 {
     size: 41
     
     ```
-
+  
     
 
 - Set (중복 제거)
