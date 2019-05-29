@@ -188,3 +188,158 @@ public class EnumEx1 {
 
 #### 스트림(stream)
 
+- I/O Stream
+
+  ###### InputStream Ex
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.IOException;
+  
+  public class InputStreamEx {
+  
+  	public static void main(String[] args) throws IOException {
+  		System.out.println("입력하세요..");
+  		int _byte;
+  		while((_byte = System.in.read()) != -1) {
+  			if(_byte == '\r' || _byte=='\n') continue;
+  			if(_byte == 'q' || _byte=='Q') break;
+  			char c = (char)_byte;
+  			System.out.printf("%s(%d)", c, _byte);
+  		}
+  	}
+  
+  }
+  
+  ```
+
+  
+
+  ###### FileInputStream Ex
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.FileInputStream;
+  import java.io.FileNotFoundException;
+  import java.io.IOException;
+  
+  public class FileInputStreamEx {
+  
+  	public static void main(String[] args) {
+  		FileInputStream fis = null;
+  		byte _read[] = new byte[100];
+  		byte console[] = new byte[100];
+  		try {
+  			System.out.print("파일명 : ");
+  			System.in.read(console);
+  			String file = new String(console).trim();
+  			fis = new FileInputStream(file);
+  			fis.read(_read, 0, _read.length);
+  			System.out.println(new String(_read).trim());
+  		}
+  		catch(FileNotFoundException fnfe) {
+  			fnfe.printStackTrace();
+  		}
+  		catch(IOException ie) {
+  			ie.printStackTrace();
+  		}
+  		finally {
+  			try {
+  				if(fis != null) fis.close();
+  			}
+  			catch(IOException ioe) {
+  				ioe.printStackTrace();
+  			}
+  		}
+  
+  	}
+  
+  }
+  
+  ```
+
+  
+
+  ###### FileOutputStream Ex
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.File;
+  import java.io.FileNotFoundException;
+  import java.io.FileOutputStream;
+  import java.io.IOException;
+  
+  public class FileOutputStreamEx {
+  
+  	public static void main(String[] args) {
+  		FileOutputStream fos = null;
+  		
+  		try {
+  			File f = new File("c:/testa");
+  			
+  			if(!f.exists()) 
+  				f.mkdirs();
+  			
+  			fos = new FileOutputStream("c:/testa/fileout.txt");
+  			String message = "Hello FileOutputStream!!";;
+  			fos.write(message.getBytes());
+  			System.out.println("file 쓰기 완료!!!");
+  		}
+  		catch(FileNotFoundException fnfe) {
+  			fnfe.printStackTrace();
+  		}
+  		catch(IOException ie) {
+  			ie.printStackTrace();
+  		}
+  		finally {
+  			try {
+  				if(fos != null) fos.close();
+  			}
+  			catch(IOException ioe) {
+  				ioe.printStackTrace();
+  			}
+  		}
+  
+  	}
+  
+  }
+  ```
+
+  
+
+- File 
+
+  ###### File Ex
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.File;
+  
+  public class FileEx {
+  
+  	public static void main(String[] args) {
+  		// TODO Auto-generated method stub
+  		String filePath = "c:\\";
+  		File f1 = new File(filePath);
+  		String list[] = f1.list();
+  		for(int i = 0; i < list.length; i++) {
+  			File f2 = new File(filePath, list[i]);
+  			if(f2.isDirectory()) {
+  				System.out.printf("%s : 디렉토리 \n", list[i]);
+  			}
+  			else {
+  				System.out.printf("%s : 파일(%,dbyte)\n", list[i], f2.length());
+  			}
+  		}
+  	}
+      
+  }
+  
+  ```
+
+  
+
