@@ -38,7 +38,7 @@
 
 - DB 용어
   - Table ≒ Entity (Record 집합)
-  - Row ≒ Record ≠ Tuple (속성값 모음)
+  - Row ≒ Record ≒ Tuple (속성값 모음)
   - Column ≒ Attribute (속성)
   - Primary Key 속성 = Not Null + Unique
   - Foreign Key = 외래키
