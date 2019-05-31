@@ -616,6 +616,7 @@ from
 conn scott/oracle
 insert into emp (empno, ename) values (8000, 'Hong');
 
+
 --문> 부서번호가 없는 사운을 포함해서 사원들의 부서이름을 함께 출력
 --틀린 예
 select 
@@ -632,7 +633,13 @@ from
 	emp a, dept b
 where 
 	a.deptno = b.deptno(+);
-	
+
+--SQL1999
+select 
+	a.empno, a.ename, a.deptno, b.dname
+from 
+	emp a left outer join dept b on a.deptno = b.deptno;
+
 
 --문> 부서정보를 기준으로 부서의 소속 사원을 출력하고, 소속 사원이 벗는 부서도 출력합니다.
 --틀린 예
@@ -654,12 +661,99 @@ where
 	a.deptno(+) = b.deptno
 order by 
 	b.deptno;
+	
+--SQL1999
+select 
+	b.deptno, b.dname, a.empno, a.ename
+from 
+	emp a right outer join dept b on a.deptno = b.deptno
+order by 
+	b.deptno;
 
+--오류 문장
+select 
+	b.deptno, b.dname, a.empno, a.ename
+from 
+	emp a, dept b
+where 
+	a.deptno(+) = b.deptno(+) -- 양쪽에 할 수 없음!!!
+order by 
+	b.deptno;
 
+-- SQL1999 인 경우 full <--- 로 가능하다!!!
+select 
+	b.deptno, b.dname, a.empno, a.ename
+from 
+	emp a full outer join dept b on a.deptno = b.deptno
+order by 
+	b.deptno;
 
 ```
 
 
+
+###### 연습문제 - exercise3.docx
+
+```sql
+--1
+select 
+    location_id, street_address, city, 
+    state_province, country_name
+from 
+	locations a natural join countries b;
+	
+	
+--2
+select 
+	a.last_name, a.department_id, b.department_name
+from 
+	employees a, departments b
+where 
+	a.department_id = b.department_id
+order by 
+	a.department_id;
+
+select 
+	a.last_name, a.department_id, b.department_name
+from 
+	employees a join departments b on a.department_id = 		b.department_id
+order by 
+	a.department_id;
+	
+	
+--3
+select last_name, job_id, a.department_id, b.department_name
+from
+    employees a 
+    join departments b on a.department_id = b.department_id
+    join locations c on b.location_id = c.location_id
+where 
+	c.city = 'Toronto';
+
+
+--4
+select
+    a.last_name as "Employee",
+    a.employee_id as "EMP#",
+    b.last_name as "Manager",
+    b.employee_id as "Mgr#"
+from 
+	employees a , employees b 
+where 
+    a.manager_id = b.employee_id;
+    
+    
+select
+    a.last_name as "Employee",
+    a.employee_id as "EMP#",
+    b.last_name as "Manager",
+    b.employee_id as "Mgr#"
+from 
+	employees a 
+	join employees b on a.manager_id = b.employee_id;
+
+
+```
 
 
 
