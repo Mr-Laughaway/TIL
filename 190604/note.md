@@ -418,10 +418,74 @@ where
   UNION, UNION ALL, MINUS, INTERSECT
 
   ```sql
+  --conn hr2/orcle
+  desc employees
+  desc job_history
   
+  --문> 20명 사원의 현재와 과거의 모든 부서, 직무 이력을 출력
+  --동일한 직무와 부서 근무 이력은 중복 데이터로 출력
+  -- UNION ALL
+  select employee_id, job_id, department_id
+  from employees
+  UNION ALL
+  select employee_id, job_id, department_id
+  from job_history;
+  
+  --문> 20명 사원의 현재와 과거의 모든 부서, 직무 이력을 출력
+  --동일한 직무와 부서 근무 이력은 한번만 결과 데이터로 출력
+  -- UNION
+  select employee_id, job_id, department_id
+  from employees
+  UNION 
+  select employee_id, job_id, department_id
+  from job_history;
+  
+  --문> 20명 사원중 의 현재 직무와 부서를 과거에 동일한 부서와 직무를 담당한 사원 조회 (사원번호, 직무, 부서번호)
+  -- INTERSECT
+  select employee_id, job_id, department_id
+  from employees
+  INTERSECT
+  select employee_id, job_id, department_id
+  from job_history;
+  
+  --문> 입사한 이후에 한 번도 직무나 부서를 변경한 적이 없는 사원번호 출력
+  select employee_id, job_id, department_id
+  from employees
+  MINUS
+  select employee_id, job_id, department_id
+  from job_history;
+  
+  --conn scott/oracle
+  --문>  전체 사원들의 급여 평균과
+  --    부서별 사원들의 급여 평균과 
+  --    직무별 사원들의 급여 평균과
+  --    부서와 직무별 사원들의 급여 평균을 단일 결과 집합으로 출력합니다.
+  select to_number(null), to_char(null), avg(sal)
+  from emp
+  union all
+  select deptno, to_char(null), avg(sal)
+  from emp
+  group by deptno
+  union all
+  select deptno, job, avg(sal)
+  from emp
+  group by deptno, job;
+  
+  
+  
+  select deptno, job, avg(sal)
+  from emp
+  group by rollup (deptno, job);
+  
+  
+  select deptno, job, avg(sal)
+  from emp
+  group by cube (deptno, job);
   ```
 
-  
+- rollup
+- cube
+- 
 
 
 
