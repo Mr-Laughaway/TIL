@@ -385,7 +385,7 @@ where
           where mgr is not null
       );
   -->>>>>>> where exists 
-  select empno
+  select *
   from emp a
   where not exists(
       	select '1'
@@ -458,7 +458,6 @@ where
   --conn scott/oracle
   --문>  전체 사원들의 급여 평균과
   --    부서별 사원들의 급여 평균과 
-  --    직무별 사원들의 급여 평균과
   --    부서와 직무별 사원들의 급여 평균을 단일 결과 집합으로 출력합니다.
   select to_number(null), to_char(null), avg(sal)
   from emp
@@ -471,21 +470,58 @@ where
   from emp
   group by deptno, job;
   
-  
+  ```
+
+
+
+- group by ***rollup***
+
+  group by rollup (A, B)
+
+  -> group by (A, B)
+
+  -> group by (A)
+
+  -> group by ()
+
+  ```sql
+  --문>  전체 사원들의 급여 평균과
+  --    부서별 사원들의 급여 평균과 
+  --    부서와 직무별 사원들의 급여 평균을 단일 결과 집합으로 출력합니다.
   
   select deptno, job, avg(sal)
   from emp
   group by rollup (deptno, job);
+  ```
+
   
+
+- group by ***cube***
+
+  group by cube (A, B)
+
+  -> group by (A, B)
+
+  -> group by (A)
+
+  -> group by (B)
+
+  -> group by ()
+
+  ```sql
+  --문>  전체 사원들의 급여 평균과
+  --    부서별 사원들의 급여 평균과 
+  --    직무별 사원들의 급여 평균과
+  --    부서와 직무별 사원들의 급여 평균을 단일 결과 집합으로 출력합니다.
   
   select deptno, job, avg(sal)
   from emp
   group by cube (deptno, job);
   ```
 
-- rollup
-- cube
-- 
+  
+
+  
 
 
 
