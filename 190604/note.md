@@ -204,7 +204,14 @@ select
 from 
     emp
 where 
-	sal > any (select sal from emp where job = 'SALESMAN')
+	sal > any (
+        select 
+        	sal 
+       	from 
+        	emp 
+        where 
+        	job = 'SALESMAN'
+    )
     and 
     job <> 'SALESMAN';
 
@@ -329,11 +336,92 @@ from
 where 
     b.movcnt >= 2;
 
---co-related subquery 로???
-
+--co-related subquery 로??? (어렵네...., 성능면에서 비추)
+select 
+	a.employee_id, a.last_name
+from 
+	employees a
+where 
+	2 <= (
+    	select 
+        	count(employee_id) 
+        from 
+        	job_history
+        where a.employee_id = employee_id
+    );
 ```
 
+- ***where exists (co-related subquery)***
 
+  ```sql
+  --문>subquery를 사용해서 관리자인 사원들만 검색
+  select 
+  	*
+  from 
+  	emp
+  where 
+  	empno in (
+          select distinct mgr from emp
+      );
+  -->>>>>>> where exists 
+  select 
+  	*
+  from 
+  	emp a
+  where 
+  	exists (
+          select '1'
+          from emp 
+          where a.empno = mgr
+      );
+  
+  --문>subquery를 사용해서 관리자가 아닌 사원들만 검색
+  --subquery의 모든 값을 비교해야 하는 연산에서는 null 포함되어 있는지 여부를 먼저 체크해서 null을 처리하거나 제외시켜야 합니다.
+  select  *
+  from emp
+  where empno not in (
+          select distinct mgr 
+      	from emp
+          where mgr is not null
+      );
+  -->>>>>>> where exists 
+  select empno
+  from emp a
+  where not exists(
+      	select '1'
+          from emp 
+  		where a.empno = mgr
+  );
+  
+  ```
+
+- with 절 *(고급 sql, 이런 것도 있다....)*
+
+  ```sql
+  --conn hr/oracle
+  --문> 부서별 총 급여가 전체 부서의 총급여 평균보다 큰 부서번호와 총급여를 출력합니다.
+  
+  with
+  dept_sum as ( select department_id, sum(salary) as sum_sal
+              from employees
+              group by department_id),
+  emp_avg as ( select avg(sum_sal) as  total_avg
+              from dept_sum)
+  select a.department_id, a.sum_sal
+  from dept_sum a, emp_avg b
+  where a.sum_sal > b.total_avg;
+  
+  ```
+
+- 집합 연산자
+
+  UNION, UNION ALL, MINUS, INTERSECT
+
+  ```sql
+  
+  ```
+
+  
 
 
 
