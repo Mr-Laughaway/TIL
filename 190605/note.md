@@ -624,7 +624,159 @@ rollback;
 
 
 
-- purge
+
+
+## 14. 제약조건
+
+``` sql
+create table userinfo (
+    userid varchar2(10) not null,
+    username varchar2(15) constraint userinfo_nn not null,
+    age number(30)
+);
+
+desc userinfo
+insert into userinfo
+values('tester1', '테스트1', 20);
+
+insert into userinfo (username, age)  
+values('테스터1', 20); -- NOT NULL 제약조건에 걸림
+
+select * from userinfo;
+
+select constraint_name, constraint_type
+from user_constraints
+where table_name = 'USERINFO';
+--SYS_C0011087	C
+--USERINFO_NN	C
+
+insert into userinfo (username, age)
+values('tester2', 30);
+
+alter table userinfo disable constraint userinfo_nn; --  제약조건 비활성화
+
+drop table userinfo purge;
+
+--====================unique 제약조건 ====================
+create table userinfo 
+(userid  varchar2(10)  constraint userinfo_uk  unique,
+ username  varchar2(15)  ,
+ age  number(30)
+);
+
+desc userinfo
+insert into userinfo 
+values ('tester1', '테스터1', 20);
+
+insert into userinfo  (username, age)
+values ( '테스터2', 25);    ---userid는 null?
+
+insert into userinfo  (username, age)
+values ( '테스터3', 30);    ---userid는 null?
+
+insert into userinfo 
+values ('tester1', '테스터5', 35); ---error
+
+select * from userinfo;
+
+select constraint_name, constraint_type
+from user_constraints
+where table_name = 'USERINFO';
+
+select index_name, uniqueness
+from user_indexes
+where table_name = 'USERINFO';
+
+--oracle server는 unique제약조건이 선언된 컬럼에 자동으로 unique index 생성합니다.
+
+alter table userinfo disable constraint userinfo_uk;
+select index_name, uniqueness
+from user_indexes
+where table_name = 'USERINFO'; --? 
+--제약조건 비활성화 하면 인덱스 자동 삭제 
+
+alter table userinfo enable constraint userinfo_uk;
+ 
+select index_name, uniqueness
+from user_indexes
+where table_name = 'USERINFO'; ---? index 다시 자동 생성?
+
+
+drop table userinfo purge;
+
+
+--==================primary key 제약조건===================
+--다른 제약조건은 하나의 테이블에 여러개 선언가능하지만 primary key 제약조건은 하나만 선언 가능하다.
+create table userinfo 
+(userid  varchar2(10)  constraint userinfo_pk primary key,
+ username  varchar2(15)  ,
+ age  number(30)
+);
+
+desc userinfo
+insert into userinfo 
+values ('tester1', '테스터1', 20);
+
+insert into userinfo  (username, age)
+values ( '테스터2', 25);    ---userid는 null?
+
+insert into userinfo  (username, age)
+values ( '테스터3', 30);    ---userid는 null?
+
+insert into userinfo 
+values ('tester1', '테스터5', 35); ---error PK 위반
+
+select * from userinfo;
+
+select constraint_name, constraint_type
+from user_constraints
+where table_name = 'USERINFO';
+
+select index_name, uniqueness
+from user_indexes
+where table_name = 'USERINFO';
+
+drop table userinfo purge;
+
+
+
+
+--=====================check 제약조건======================
+create table userinfo(
+	userid  varchar2(10),
+	username  varchar2(15),
+	gender   char(1) constraint userinfo_ck  check (gender in 			('F', 'M')),
+	age  number(2) check (age > 0 and age < 100)
+);
+
+select constraint_name, constraint_type, search_condition
+from user_constraints
+where table_name='USERINFO';
+
+insert into userinfo  values ('a001', 'an', 'f', 20);  --E
+insert into userinfo  values ('a001', 'an', 'w', 20); --E
+
+--null 허용한다....
+insert into userinfo  values ('a001', 'an', null, 20);   --E
+
+
+insert into userinfo  values ('a002', 'choi', 'M', 0); --E
+insert into userinfo  values ('a002', 'choi', 'M', 100); --E
+
+insert into userinfo  values ('a002', 'choi', 'M', 25); -- OK
+
+drop table userinfo purge;
+
+
+
+
+```
+
+
+
+
+
+- purge, flashback
 
   drop table OOO;의 경우 undo 생성 없이 물리적 삭제되고 구조 또한 삭제된다. 그래서 10g 버전 이후 Recyclebin을 지원하여 휴지통에 들어간다. purge를 실행하면 휴지통에서도 삭제 된다.
 
@@ -639,8 +791,29 @@ rollback;
   desc copy_dept;
   select * from copy_dept;
   
+  select tname from tab;
+  --BIN$xUjd5jQBSja1Z90V5FQVuw==$0
+  --BONUS
+  --CUSTOMER
+  --DEPT
+  --EMP
+  --EMP30
+  --SALGRADE
+  --TEST
+  select * from user_recyclebins;
+  select * from recyclebin;
+  select * from "BIN$xUjd5jQBSja1Z90V5FQVuw==$0"; --조회됨
+  
+  flashback table copy_dept to before drop; --복구
+  select * from recyclebin; --확인 (없어짐)
+  select tname from tab; --확인 (없어짐)
+  select * from copy_dept; -- 조회됨(복구됨)
   
   ```
+
+  
+
+  
 
   
 
