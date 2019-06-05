@@ -109,7 +109,7 @@
 - where 절에 multiple row subquery를 사용할 경우 반드시 multiple row operator를 사용:  ***in, any, all***
 
 ```sql
---문> ADAMS 보다 급여를 만ㅁㅎ이 받는 사원
+--문> ADAMS 보다 급여를 많이 받는 사원
 select 
 	ename, sal
 from 
