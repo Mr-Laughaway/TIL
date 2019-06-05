@@ -624,6 +624,28 @@ rollback;
 
 
 
+- purge
+
+  drop table OOO;의 경우 undo 생성 없이 물리적 삭제되고 구조 또한 삭제된다. 그래서 10g 버전 이후 Recyclebin을 지원하여 휴지통에 들어간다. purge를 실행하면 휴지통에서도 삭제 된다.
+
+  ```sql
+  
+  create table copy_dept
+  as select * from dept;
+  desc copy_dept;
+  select * from copy_dept;
+  
+  drop table copy_dept;
+  desc copy_dept;
+  select * from copy_dept;
+  
+  
+  ```
+
+  
+
+
+
 #### Window 함수
 
 - ***rank()***
