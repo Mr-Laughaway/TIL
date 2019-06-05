@@ -435,18 +435,332 @@ select * from emp30;
 --30번부서 사원은 직무와 급여를 update하고
 --급여가 2500이상이면 삭제하시오
 --20, 10번부서 사원은 사원번호와 이름과 부서번호만 입력하시오 
-alter table emp30 modify (job  varchar2(15), sal number(8,2));
+alter table emp30 modify (job varchar2(15), sal number(8,2));
 
+--나
 merge into emp30 t
 using emp s
 on (t.empno = s.empno)
 when matched then
-update set t.job = s.job, t.sal = s.sal
-delete where s.sal >= 2500
+	update set t.job = s.job, t.sal = s.sal
+	delete where s.sal >= 2500
 when not matched then
-insert (t.empno, t.ename, t.deptno, t.job, t.sal)
-values (s.empno, s.ename, s.deptno, s.job, s.sal)
-where s.sal < 2500;
+	insert (t.empno, t.ename, t.deptno, t.job, t.sal)
+	values (s.empno, s.ename, s.deptno, s.job, s.sal)
+	where s.sal < 2500;
 
+--강사님
+merge into emp30 a
+using emp b
+on (a.empno = b.empno)
+when matched then
+    update set a.job = b.job , a.sal = b.sal
+    delete where a.sal > 2500
+when not matched then
+    insert (a.empno, a.ename, a.deptno)
+    values (b.empno, b.ename, b.deptno);
 ```
+
+
+
+
+
+## 11. 트랜잭션 제어와 세션
+
+***Transaction - Unit of work*** (분리되어 수행될 수 없는 작업단위)
+
+***ACID*** - 원자성, 일관성, 격리성, 영속성
+
+DB관점의 transaction은 변경(DML, DDL, DCL)이 포함되면 일어난다.
+
+
+
+#### transaction 단위
+
+- 1개 이상의 DML들로 구성 - 명시적 commit, rollback
+
+- 1개의 DLL - auto commit
+- 1개의 DCL - auto commit
+
+>수행중인 DML 트랜잭션의 세션이 비정상종료하면 oracle server는 rollback 합니다.
+>
+>수행중인 DML 트랜잭션의 세션을 정상종료(exit;)하면 oracle server는 commit 합니다.
+
+
+
+#### 읽기 일관성
+
+select하는 user들이 변경중인 user의 작업이 종료될 때까지 기다릴 필요가 없고 변경 작업하려는 user들은 select하는 user들이 검색을 종료할 때까지 기다릴 필요가 없다. 
+
+*변경 작업중인 user들은 변경중인 값을 조회결과로 볼 수 있고, 변경 작업중이 아닌  user들은 DB에 저장된(commit)데이터 값을 조회 결과로 볼 수 있다.*
+
+오라클 서버는 읽기 일관성을 위해서 lock, undo segment 등을 지원합니다.
+
+```sql
+create table test (num   number(2));
+insert into test values (1);
+insert into test values (2);
+savepoint a;
+insert into test values (3);
+insert into test values (4);
+savepoint b;
+insert into test values (5);
+insert into test values (6);
+select * from test;
+rollback to savepoint b;
+select * from test;
+rollback to savepoint a;
+select * from test;
+rollback;
+```
+
+
+
+***https://localhost:1158/em***
+
+> A session에서 update후 commit을 하지 않은 상황에서 B session에서 또 update를 하면 waiting이 걸린다. 이때 상황을, 위 주소로 들어가면 확인 할 수 있다.
+>
+> (sys/oracle as sysdba)
+
+
+
+
+
+## 13. 객체 종류
+
+### 객체
+
+- 테이블을 생성하려면 create table 시스템 권한이 있어야 한다.
+
+- tablespace(data container) 저장소에 quota가 할당되어 있어야 한다.
+
+- table 또는column 이름 규칙
+
+  - 영문자 또는 _, $, #로 시작
+
+  - 두 번째 문자부터 숫자 허용
+
+  - 키워드 안 됨
+
+  - schema 내에서 중복된 이름 사용 불가
+
+    > schema
+    >
+    > 서로 연관된 table, index등의 객체를 그룹핑하는 논리적 개념. 객체 명을 재사용할 수 있는 namespace역할을 합니다. 오라클은 user 명을 schema명으로 사용합니다
+
+  - 길이 제한 30자
+
+  - DB 이름 길이 제한 8자
+
+- 컬럼 타입
+
+  - char: 고정길이 문자열 ~2000byte
+
+  - varchar2: 가변길이 문자열 ~4000byte
+
+  - number(p, s)
+
+  - date: _세기, _년, _월, _일, _시, _분, _초
+
+  - timestamp: date 타입 확장. 1/10^9의 정밀한 초값 저장
+
+  - timestamp with timezone
+
+  - interval year to month
+
+  - interval day to second
+
+  - rowid
+
+  - **CLOB**(Character Large Object) ~ 4G
+
+  - raw: binary 형식의 값 저장 (지문, 증명사진 등) ~2000byte
+
+  - **BLOB**(Binary Large Object)
+
+  - **BFILE**(Big File): read only 가능한 file을 DB외부에 운영체제의 폴더에 저장, transaction 처리 없음.
+
+    
+
+  ```sql
+  desc user_tables;
+  select table_name, tablespace_name from user_tables;
+  
+  create table 테이블명 (
+      컬럼명 컬럼타입(size),
+      컬럼명 컬럼타입(size) [default 값],
+      컬럼명 컬럼타입(size) [제약조건],
+      ...
+      [, 제약조건]
+  )
+  [....................];
+  
+  --CTAS
+  create table 테이블이름
+  as (subquery);
+  
+  --Ex)
+  create table emp20
+  as select empno, ename, deptno, sal*12
+  from emp
+  where deptno =20; --ERROR (컬럼몇 * 오류)
+  
+  create table emp20
+  as select empno, ename, deptno, sal*12 as salary
+  from emp
+  where deptno =20; -- alias로 해결
+  
+  create table emp20 (empid, name, deptid, salary)
+  as select empno, ename, deptno, sal*12 
+  from emp
+  where deptno =20; -- 컬럼명 지정으로 해결
+  
+  
+  ```
+
+  >***제약조건 constraint*** - table의 DML 수행시 규칙
+  >
+  >Primary Key, not null, Unique Key, Foreign Key, check
+
+
+
+#### Window 함수
+
+- ***rank()***
+
+  특정 컬럼에 대한 순위를 구하는 함수로서 동일한 값에 대해서 동일한 순위를 가지며, 동일한 순위의 수만큼 다음 순위는 건너뛴다
+
+  ```sql
+  --emp 테이블에서 사원이름, 직무, 급여 데이터와 전체 사원의 급여가 높은 순서와 JOB별로 급여가 높은 순서 출력하시오
+  
+  select ename, job , sal,
+      rank() over( order by sal desc) sal_rank,
+      rank() over (partition by job order by sal desc) job_raemp 테이블에서 사원이름, 직무, 급여 데이터와 전체 사원의 급여가 높은 순서와 JOB별로 급여가 높은 순서 출력하시오nk
+  from emp;
+  ```
+
+  
+
+- ***dense_rank()***
+
+  특정 컬럼에 대한 순위를 구하는 함수로서 동일한 순위 다음의 순위는 동일 순위의 수와 상관없이 1 증가된 값을 돌려준다**.**
+
+  ```sql
+  --emp사원 테이블에서 사원이름, 직무, 급여 데이터와 전체 사원의 급여를 높은 순서로 출력하되,동일한 순위를 하나의 등수로 간주하여 출력하시오
+  select ename, job , sal,
+      dense_rank() over( order by sal desc) sal_rank,
+      dense_rank() over (partition by job order by sal desc) job_rank
+  from emp;
+  ```
+
+  
+
+- ***row_number()***
+
+  특정 컬럼에 대한 순위를 구하는 함수로서 동일한 값이라도 고유한 순위를 부여한다 (동일한 순위를 배제하기 위해 unique한 순위를 oracle의 경우 rowid가 적은 행이 먼저 나온다.)  PARTITION내의 ROW들에 순서대로 UNIQUE한 일련번호를 부여한다
+
+  ```sql
+  --emp사원 테이블에서 사원이름, 직무, 급여 데이터와  전체 사원의 급여가 높은 순서와 동일한 순위에 대하여 고유한 순위 같이 출력
+  select  ename, job, sal, 
+          dense_rank( ) over ( order by sal desc ) sal_rank
+          ,  rank( ) over ( order by sal desc ) sal_rank2
+          ,  row_number( ) over ( order by sal desc/*,  ) sal_rank2
+  from emp; 
+  ```
+
+  
+
+- ***sum()***
+
+  sum 함수를 이용해 파티션별로 윈도우의 합을 구할 수 있다.
+
+  ```sql
+  --사원들의 급여와 같은 매니저를 두고 있는 사원들의  salary 합을 구하여 출력한다.
+  select ename, mgr, sal, 
+      sum(sal) over (partition by mgr order by sal asc)
+  from emp;
+  ```
+
+  
+
+- ***range unbounded  preceding***
+
+  emp사원 테이블에서 사원이름, 관리자, 급여 데이터와 사원들의 급여와
+  같은 매니저를 두고 있는 사원들의 salary 합을 파티션내에 현재 행을 기준으로 이전행의 salary들의 누적합을 함께 출력한다.
+
+  ```sql
+  --emp사원 테이블에서 사원이름, 관리자, 급여 데이터와 사원들의 급여와 같은 매니저를 두고 있는 사원들의  salary 합을 파티션내에 현재 행을 기준으로 이전행의 salary들의 누적합을 함께 출력한다.
+  select  ename, mgr, sal, 
+          sum(sal) over (partition by mgr order by sal
+                         range  unbounded preceding) 
+  from emp;
+  
+  
+  select  ename, mgr, sal, 
+          sum(sal) over (partition by mgr order by sal
+                         rows between unbounded preceding and current row   ) 
+  from emp;
+  
+  
+  select  ename, mgr, sal, 
+          sum(sal) over (partition by mgr order by sal
+                         rows between 1 preceding and 1 following   ) 
+  from emp;
+  
+  
+  select  ename, mgr, sal, 
+          count(sal) over (order by sal
+                           range between 200 preceding and 200 following   ) 
+  from emp;
+  
+  ```
+
+  
+
+- ***first_value***(컬럼), ***last_value***(컬럼)
+
+  ```sql
+  select ename, mgr, sal,
+      first_value(sal) over (partition by mgr order by sal) i,
+      last_value(sal) over (partition by mgr order by sal) j
+  from emp;
+  --last_value() 값이 제대로 안 나오므로 
+  --range unbounded following을 같이 써 줘야한다
+  select ename, mgr, sal,
+      first_value(sal) over (partition by mgr order by sal) i,
+      last_value(sal) over (partition by mgr order by sal
+          range between current row and unbounded following
+      ) j
+  from emp;
+  
+      
+  ```
+
+  
+
+- ***lag(), lead()***
+
+  ```sql
+  select ename, mgr, sal,
+      lag(sal) over (order by hiredate) i,
+      lag(sal, 2, 0) over (order by hiredate) j
+  from emp;
+  
+  select ename, mgr, sal,
+      lead(sal) over (order by hiredate) i,
+      lead(sal, 2, 0) over (order by hiredate) j
+  from emp; 
+  ```
+
+  *3개의 AGUMENTS 까지 사용할 수 있는데, 두번째 인자는 몇 번째 앞의 행을 가져올 지 결정하는 것이고 (default 1), 세번째 인자는 파티션의 첫번째 행의 경우 가져올데이터가 없어 NULL값이 들어오는데 이 경우 다른 값으로 바꾸어 줄 수 있다.*
+
+- d
+
+- d
+
+- d
+
+- d
+
+
 
