@@ -32,7 +32,7 @@
 
 - Primary Key - Not NULL + Unique
 
-- Foreign Key - 다른 table의 PK를 참조하는 현제 table의 속성
+- Foreign Key - 다른 table의 PK를 참조하는 현재 table의 속성
 
 - null - 아직 값이 할당되지 않음을 의미. 0이 아니며 ' '도 아니다. 
 
