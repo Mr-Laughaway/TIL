@@ -830,7 +830,7 @@ drop table userinfo purge;
   
   select ename, job , sal,
       rank() over( order by sal desc) sal_rank,
-      rank() over (partition by job order by sal desc) job_raemp 테이블에서 사원이름, 직무, 급여 데이터와 전체 사원의 급여가 높은 순서와 JOB별로 급여가 높은 순서 출력하시오nk
+      rank() over (partition by job order by sal desc) job_rank --emp 테이블에서 사원이름, 직무, 급여 데이터와 전체 사원의 급여가 높은 순서와 JOB별로 급여가 높은 순서 출력하시오
   from emp;
   ```
 
@@ -852,14 +852,14 @@ drop table userinfo purge;
 
 - ***row_number()***
 
-  특정 컬럼에 대한 순위를 구하는 함수로서 동일한 값이라도 고유한 순위를 부여한다 (동일한 순위를 배제하기 위해 unique한 순위를 oracle의 경우 rowid가 적은 행이 먼저 나온다.)  PARTITION내의 ROW들에 순서대로 UNIQUE한 일련번호를 부여한다
+  특정 컬럼에 대한 순위를 구하는 함수로서 동일한 값이라도 고유한 순위를 부여한다(동일한 순위를 배제하기 위해 unique한 순위를 -oracle의 경우 rowid가 적은 행이 먼저 나온다- 매긴다).  PARTITION내의 ROW들에 순서대로 UNIQUE한 일련번호를 부여한다
 
   ```sql
   --emp사원 테이블에서 사원이름, 직무, 급여 데이터와  전체 사원의 급여가 높은 순서와 동일한 순위에 대하여 고유한 순위 같이 출력
   select  ename, job, sal, 
           dense_rank( ) over ( order by sal desc ) sal_rank
           ,  rank( ) over ( order by sal desc ) sal_rank2
-          ,  row_number( ) over ( order by sal desc/*,  ) sal_rank2
+          ,  row_number( ) over ( order by sal desc  ) sal_rank2
   from emp; 
   ```
 
@@ -878,7 +878,7 @@ drop table userinfo purge;
 
   
 
-- ***range unbounded  preceding***
+- ***range unbounded  preceding/following***
 
   emp사원 테이블에서 사원이름, 관리자, 급여 데이터와 사원들의 급여와
   같은 매니저를 두고 있는 사원들의 salary 합을 파티션내에 현재 행을 기준으로 이전행의 salary들의 누적합을 함께 출력한다.
@@ -933,7 +933,7 @@ drop table userinfo purge;
 
   
 
-- ***lag(), lead()***
+- ***lag(), lead()*** - 파티션별 윈도우에서 이전/이후 몇 번째 행의 값을 가져올 수 있다 
 
   ```sql
   select ename, mgr, sal,
@@ -948,14 +948,6 @@ drop table userinfo purge;
   ```
 
   *3개의 AGUMENTS 까지 사용할 수 있는데, 두번째 인자는 몇 번째 앞의 행을 가져올 지 결정하는 것이고 (default 1), 세번째 인자는 파티션의 첫번째 행의 경우 가져올데이터가 없어 NULL값이 들어오는데 이 경우 다른 값으로 바꾸어 줄 수 있다.*
-
-- d
-
-- d
-
-- d
-
-- d
 
 
 
