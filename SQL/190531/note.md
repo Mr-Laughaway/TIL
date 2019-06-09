@@ -164,7 +164,7 @@ select nullif('A', 'A'), nullif('A', 'a') from dual;
 
   ```decode(column, 표현식1, 리턴값1, 표현식2, 리턴값2,...)```
 
-- 조건처리 표현식 , sql3 : ***case when then end***
+- 조건처리 표현식 , sql3 : ***case when then [else] end***
 
   ```case [표현식] when [값|표현식] then 값 [else 값] end ```
 
