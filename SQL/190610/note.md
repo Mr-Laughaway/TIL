@@ -528,6 +528,10 @@ truncate table 테이블명 [reuse storage];
 
 
 
+---
+
+
+
 ### VIEW
 
 - ***simple view*** 
@@ -578,7 +582,79 @@ truncate table 테이블명 [reuse storage];
   create view emp20_vu
   as select empno, ename, deptno, job, sal*12 salary
      from emp
-     where deptno = 20
+     where deptno = 20;
+     
+  select text from user_views where view_name = 'EMP20_VU';
+  
+  
+  
+  ```
+
+
+
+- create or replace view - alter view 역할
+
+  ```sql
+  create or replace view dept_vu
+  as select *
+  from dept10; --> error
+  
+  create or replace force view dept_vu
+  as select *
+  from dept10; --> 컴파일 오류와 함께 뷰가 생성되었습니다.
+  
+  select object_name, object_type, status
+  from user_objects
+  where object_name = 'DEPT_VU';
+  --결과: DEPT_VU		VIEW	INVALID
+  --생성은 되었으나 유효하지 않음
+  ```
+
+
+
+- complex view - 추가/변경/삭제 불가
+
+  ```sql
+  select * from emp20_vu;
+  
+  insert into emp20vu values(
+  	9005, 'Song', 20, 'SALESMAN', 2000); --ERROR 가상 열은 사용할 수 없습니다.
   ```
 
   
+
+- simple view - 추가/변경/삭제 가능
+
+  ```sql
+  create view emp20_vu
+  as select empno, ename, deptno, job, sal
+     from emp
+     where deptno = 20; --ERROR 기존의 객체가 이름을 사용하고 있습니다.
+     
+  create or replace view emp20_vu
+  as select empno, ename, deptno, job, sal
+     from emp
+     where deptno = 20;
+     
+  insert into emp20_vu values(
+  	9005, 'Song', 20, 'SALESMAN', 2000); --SUCCESS
+  
+  select * from emp;
+  select * from emp20_vu;
+  
+  delete from emp20_vu where empno = 9005;
+  
+  select * from emp;
+  select * from emp20_vu;
+  ```
+
+  
+
+- view 삭제
+
+  ```sql
+  drop view emp20_vu;
+  ```
+
+  
+
