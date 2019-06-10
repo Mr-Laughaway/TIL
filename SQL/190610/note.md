@@ -311,6 +311,8 @@ insert into category values (40000, 'Movie');
 
 select * from category;
 
+
+--foreing key 제약 조건이 참조하는 부모 컬럼에는 primary key 또는 unique key 제약조건이 걸려 있어야한다.
 create table product (
     prodid number(5),
     pname varchar2(50),
@@ -318,16 +320,149 @@ create table product (
     cid number(5) constraint product_fk references category(cid)
 );
 -->>> ERROR
---foreing key 제약 조건이 참조하는 부모 컬럼에는 primary key 또는 unique key 제약조건이 걸려 있어야한다.
 
+
+-->>> 대상 column에 제약조건 설정 후 product 생성
 alter table category add constraint category_pk primary key(cid);
--->>> 실행후 다시 product 생성 ->>> 성공
+
+create table product (
+    prodid number(5),
+    pname varchar2(50),
+    price number(6),
+    cid number(5) constraint product_fk references category(cid)
+);
+-->>> SUCCESS
 
 
+--제약 조건 확인
+select constraint_name, constraint_type
+from user_constraints
+where table_name = 'PRODUCT';
 
 
+insert into product values (1, 'java', 5000, 10000); --
+insert into product values (2, 'oracle', 5000, 50000); --참조 무결성 오류
+insert into product values (3, 'BTS', 15000, 20000);--
+update product set cid = 2222 where prodid = 3; -- 참조 무결성 오류
+
+delete from category where cid = 40000; --
+delete from category where cid = 10000; -- 참조 무결성 오류
+update category set cid = 15000 where cid = 10000; --참조 무결성 오류 
 
 
+create table product (
+prodid   number(5),
+pname    varchar2(50),
+price    number(6),
+cid      number(5) ,
+constraint product_fk foreign key (cid) references category(cid)  -- on delete cascade 또는 on delete set null
+);
+-- on delete cascade 부모 삭제시 무결성 제약에 걸릴경우 같이 삭제
+-- on delete set null 부모 삭제시 무결성 제약에 걸릴경우 null로 변경
 
 ```
+
+
+
+### index
+
+```sql
+
+
+
+-- unique 제약이 없는 경우 FULL SCAN
+select * from emp where ename = 'SMITH';
+
+-- unique 제약이 있어서 index가 있기 때문에 UNIQUE SCAN(INDEX SCAN)
+select * from emp where empno = 7788;
+```
+
+- PK와 UK에 index 자동생성 목적 
+
+  정합성 체크와 중복값 체크를 빠르게하기 위함
+
+
+
+- index 생성에 적합한 조건
+
+  - where 조건에 사용되는 컬럼
+
+  - join 컬럼
+
+  - order by 컬럼
+
+  - 컬럼 중에서 distinct value(선택도) 값이 많아야 합니다.
+
+  - where 절의 =(equal) 연산 조건의 결과 행이 5%이내가 적합
+
+    > 인덱스 생성 컬럼으로 조회 결과 행수가 약 10%를 초과하면 손익분기점으로 table full scan이 더 유리하다.
+
+  - 자주 update되는지 않는 컬럼이 적함. 자주 update 되는 컬럼은 인덱스를 생성하면 성능이 저하됨
+
+  - 4~6개 블럭이상에 데이터가 저장된 테이블
+
+  
+
+- 인덱스의 종류
+
+  - 단일컬럼 인덱스
+
+    ```cretae index idx_name on emp(sal);```
+
+  - 복합컬럼 인덱스
+
+    ```create index idx_name on emp (sal, ename, ...);```
+
+  - unique 인덱스
+
+    ```create unique index idx_name on emp(empno);```
+
+  - non-unique 인덱스
+
+  - function-based 인덱스 (컬럼 값의 내림차순 등으로 생성)
+
+    ```create index idx_name on emp(sal*12+COMM);```
+
+  - OLTP
+
+    - B*TREE 인덱스
+    - 소량 데이터, 빠른 검색
+
+  - OLAP, DW, DSS - 분석처리 ***BITMAP INDEX***
+
+    ***01011101  등의 bitwise 연산***
+
+    데이터 종류가 적고 같은 데이터가 많이 존재할 때 주로 사용
+
+    ```sql
+    where 컬럼 = 값 or
+    	  ... 연령대 1/6,
+    	  ... 미혼여부 1/2,
+    	  ... 직장여부 1/2
+    
+    create BITMAP INDEX IDX_NAME ON EMP(JOB);
+    
+    ```
+
+    
+
+- index 삭제
+
+  ```sql
+  drop index 인덱스이름;
+  ```
+
+  
+
+- alter index 가능 (따로 공부해야...)
+
+
+
+- index 조회
+
+  ```sql
+  select * from user_ind_columns;
+  ```
+
+  
 
