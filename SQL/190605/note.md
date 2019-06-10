@@ -722,10 +722,10 @@ insert into userinfo
 values ('tester1', '테스터1', 20);
 
 insert into userinfo  (username, age)
-values ( '테스터2', 25);    ---userid는 null?
+values ( '테스터2', 25);    ---userid는 null? --> PK는 null 안 됨
 
 insert into userinfo  (username, age)
-values ( '테스터3', 30);    ---userid는 null?
+values ( '테스터3', 30);    ---userid는 null? --> PK는 null 안 됨
 
 insert into userinfo 
 values ('tester1', '테스터5', 35); ---error PK 위반
