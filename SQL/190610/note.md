@@ -466,3 +466,119 @@ select * from emp where empno = 7788;
 
   
 
+#### 앞에서 빼먹은 alter 
+
+- 컬럼 타입 변경할 때 컬럼값이 존재하더라도 char5->varchar2(10) 변경은 가능
+- 컬럼 타입 변경할 때 호환되지 않는 컬럼타입으로 변경할 때는 컬럼값을 null 변경한 후에 변경할 수 있다.
+- 컬럼 크기를 변경할 때 크기 증가는 항상 가능하지만, 컬럼값이 존재할 때  컬럼 크기를 줄이려면 저장된 컬럼값의 초대 길이보다 작게 죽일 수 없다.
+- not null 제약조건 추가 
+
+```sql
+alter table 테이블명 add constraint~;
+
+alter table 테이블명 drop constraint~;
+
+alter table 테이블명 add (컬럼 컬럼타입(크기), 컬럼 컬럼타입(크기),..);
+
+alter table 테이블명 drop (컬럼 컬럼타입(크기), 컬럼 컬럼타입(크기),..);
+
+alter table 테이블명 drop column 컬럼명;
+
+alter table 테이블명 rename column old명 to new명;
+
+alter table 테이블명 enable constraint~;
+
+alter table 테이블명 disable constraint~;
+
+```
+
+
+
+#### drop 복습
+
+```sql
+drop table 테이블명;
+--테이블이름이 rename되어 recyclebin에 저장됨
+--조회가능
+--저장공간이 부족할 때 oracle server가 제거함
+
+drop table 테이블명 purge;
+--recyclebin을 bypass하고 물리적으로 완전 삭제
+
+purge recyclebin;
+```
+
+- 삭제되는 정보
+  - table 메타 정보
+  - data
+  - 제약조건
+  - index
+
+
+
+#### truncate 복습
+
+```sql
+truncate table 테이블명 [reuse storage];
+--구조만 남겨두고 data는 완전 삭제(recyclebin에도 undo data도 생성하지 않음)
+```
+
+- 삭제되는 정보
+  - data
+
+
+
+### VIEW
+
+- ***simple view*** 
+
+  하나의 대상 테이블로부터 view 생성
+
+  ***DML이 가능한 view(간접적 table access DML 수행됨)***
+
+  - not null 제약조건이 선언된 컬럼은 모두 포함
+  - 컬럼 표현식 없음
+  - group by 없음
+  - 그룹함수 x
+  - rowid 없음
+  - 
+
+- ***complex view***
+
+  하나 이상의 테이블에 대한
+
+  - 하나 이상의 테이블에 대한 select 문으로 정의
+  - 컬럼표현식, group by, 그룹함수 rowid 등 모두 포함
+
+
+
+- 권한 확인
+
+  ```sql
+  select * from session_privs;
+  ```
+
+  
+
+- 권한이 없을 경우
+
+  ```
+  <cmd>
+  
+  sqlplus / as sysdba
+  
+  SQL> grant create view to scott, hr
+  ```
+
+
+
+- view 생성
+
+  ``` sql
+  create view emp20_vu
+  as select empno, ename, deptno, job, sal*12 salary
+     from emp
+     where deptno = 20
+  ```
+
+  
