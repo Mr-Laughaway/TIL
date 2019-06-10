@@ -761,7 +761,7 @@ insert into userinfo  values ('a001', 'an', 'f', 20);  --E
 insert into userinfo  values ('a001', 'an', 'w', 20); --E
 
 --null 허용한다....
-insert into userinfo  values ('a001', 'an', null, 20);   --E
+insert into userinfo  values ('a001', 'an', null, 20); -- OK
 
 
 insert into userinfo  values ('a002', 'choi', 'M', 0); --E
@@ -770,10 +770,6 @@ insert into userinfo  values ('a002', 'choi', 'M', 100); --E
 insert into userinfo  values ('a002', 'choi', 'M', 25); -- OK
 
 drop table userinfo purge;
-
-
-
-
 ```
 
 
