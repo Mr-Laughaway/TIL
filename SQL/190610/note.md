@@ -758,6 +758,8 @@ select deptno, dname from dept;
 ```sql
 create [PUBLIC] synonym 동의어이름
 for [사용자.][객체이름];
+
+select * from user_synonyms; --synonym 확인
 ```
 
 ```sql
