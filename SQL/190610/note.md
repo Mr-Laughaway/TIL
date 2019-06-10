@@ -895,10 +895,22 @@ where table_name='DUAL';
   - role을 생성할 수 있는 권한은 DBA에게 있다.
 
   ```sql
+  --생성
   create role 롤이름;
+  
+  --부여
   grant 시스템 권한, 객체 권한 to 롤이름;
   grant 롤이름 to 사용자|롤이름|public;
+  
+  --회수
   revoke 롤이름 from 사용자|롤이름|public;
+  
+  --삭제
+  drop 롤이름 사용자|롤이름|public;
+  
+  --10g 이후 일반적 권한 부여
+  grant CONNECT, RESOURCE, CREATE VIEW, CREATE SYSNONYM
+  to 롤이름;
   ```
 
   - CONNECT 롤
@@ -906,7 +918,7 @@ where table_name='DUAL';
     - create cluster
     - create database link
     - create sequence
-    - create session,
+    - ***create session*** - 얘 빼고 다 없어짐(10g  부터)
     - create synonym
     - create table
     - create view
@@ -922,4 +934,3 @@ where table_name='DUAL';
   - DBA 롤
 
   - **role의 또 하나의 장점은 동적 권한 관리 기능이다.**
-
