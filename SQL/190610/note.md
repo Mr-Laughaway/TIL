@@ -777,3 +777,149 @@ select * from e;
 drop synonym e;
 ```
 
+
+
+---
+
+
+
+
+
+## 15. 사용자, 권한, 롤 관리
+
+```sql
+conn / as sysdba
+create user kim
+identified by 1234
+password expire;
+
+conn kim/1234 
+
+--alter user kim identified by 새비밀번호;
+--password 명령어로 비밀번호 변경
+
+conn kim/oracle
+-- create session 권한 (DB connetion권한) 없다고 오류 
+
+conn / as sysdba
+grant create session to kim;
+
+
+conn kim/oracle
+create table test (name varchar2(10));   --ERROR
+
+select user from dual;
+
+
+--dual -----소유자? 
+select owner, table_name
+from all_tables
+where table_name='DUAL';
+
+```
+
+
+
+- 권한
+
+  - 시스템 권한 - DB에서 특정 sql을 수행할 수 있는 권한, **DBA**
+
+  - 객체 권한
+
+    - table
+
+      alter, delete, index, insert, references, select, update
+
+    - view
+
+      delete, insert, references, select, update
+
+    - sequence
+
+      select, alter, drop
+
+  ```sql
+  conn kim/oracle
+  select * from scott.emp;
+  
+  conn scott/oracle
+  grant select on emp to kim;
+  
+  
+  conn kim/oracle
+  select * from scott.emp;
+  grant select on scott.emp  to hr;  --ERROR
+  
+  conn scott/oracle
+  grant select on emp to kim with grant option;
+  
+  
+  conn kim/oracle
+  select * from scott.emp;
+  grant select on scott.emp  to hr; 
+  
+  conn hr/oracle
+  select * from scott.emp; 
+  
+  conn scott/oracle
+  revoke select on emp from hr;  --ERROR, 객체 권한은 직접 권한을 준 user가 회수 가능합니다.
+  
+  revoke select on emp from kim;
+  
+  conn kim/oracle
+  select * from scott.emp; --ERROR 권한 회수되어 못 봄
+  
+  conn hr/oracle
+  select * from scott.emp; --ERROR 객체권한은 cascade로 회수됨
+  
+  ```
+
+  ```sql
+  --컬럼별 권한
+  grant update on emp(job, deptno) to kim;
+  
+  --user_tab_privs, user_sys_privs 확인
+  select * from 'user%prives';
+  select session_privs;
+  
+  
+  ```
+
+  
+
+- 롤
+
+  권한 관리의 불편한 점을 해결하기 위해 롤(role)이라는 그룹핑 개념을 이용.
+
+  - 직무별, 업무별로 필요한 권한을 그룹핑 - role
+  - role을 생성할 수 있는 권한은 DBA에게 있다.
+
+  ```sql
+  create role 롤이름;
+  grant 시스템 권한, 객체 권한 to 롤이름;
+  grant 롤이름 to 사용자|롤이름|public;
+  revoke 롤이름 from 사용자|롤이름|public;
+  ```
+
+  - CONNECT 롤
+    - alter session
+    - create cluster
+    - create database link
+    - create sequence
+    - create session,
+    - create synonym
+    - create table
+    - create view
+  - RESOURCE 롤
+    - create tirgger
+    - create sequence
+    - create type
+    - create procedure
+    - create cluster
+    - craete operator
+    - create indextype
+    - create table
+  - DBA 롤
+
+  - **role의 또 하나의 장점은 동적 권한 관리 기능이다.**
+
