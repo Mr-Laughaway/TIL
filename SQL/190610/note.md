@@ -935,3 +935,169 @@ where table_name='DUAL';
 
   - **role의 또 하나의 장점은 동적 권한 관리 기능이다.**
 
+
+
+---
+
+
+
+## JDBC
+
+- 준비작업
+
+  ```
+  jdbc library를 JDK library 패스로 카피
+  
+  C:\app\student\product\11.2.0\dbhome_1\jdbc\lib\ojdbc6.jar
+  
+  -->
+  
+  C:\Program Files (x86)\Java\jdk1.8.0_211\jre\lib\ext\ojdbc6.jar
+  ```
+
+
+
+- DBTest.java
+
+  ```java
+  package lab.java.core;
+  
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Statement;
+  
+  public class DBTest {
+  
+  	public static void main(String[] args) {
+  
+  		Connection con = null; //DB연결상태 세션 저오 저장
+  		Statement stat = null;
+  		ResultSet rs = null;
+  		String url = "jdbc:oracle:thin:@localhost:1521:orcl";
+  		String sql = "select * from dept";
+  		try {
+  			Class.forName("oracle.jdbc.OracleDriver");
+  //			System.out.println("Driver loading 성공");
+  			con = DriverManager.getConnection(url, "scott", "oracle");
+  //			System.out.println("db connect 성공");
+  			stat = con.createStatement();
+  			rs = stat.executeQuery(sql);
+  			while(rs.next()) {
+  				System.out.print(rs.getInt("deptno"));
+  //				System.out.println(rs.getInt(1));
+  				System.out.print(rs.getString(2));
+  //				System.out.println(rs.getString("dname"));
+  				System.out.println(rs.getString(3));
+  //				System.out.println(rs.getString("loc"));
+  			}
+  			
+  		}
+  		catch(ClassNotFoundException e) {
+  			System.out.println("Driver 없음");
+  		}
+  		catch(SQLException e) {
+  			System.out.println(e.getMessage());
+  			//db 연결 실패
+  		}
+  		finally {
+  			try {
+  				if(rs != null) rs.close();
+  				if(stat != null) stat.close();
+  				if(con != null) con.close();
+  			}
+  			catch(Exception e) {
+  				e.printStackTrace();
+  			}
+  		}//finally end
+  		
+  	}//main end
+  
+  }//class end
+  
+  ```
+
+
+
+- InsertTest.java
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.FileInputStream;
+  import java.io.IOException;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.util.Properties;
+  
+  public class InsertTest {
+  
+  	public static void main(String[] args) {
+  
+  		Connection con = null; //DB연결상태 세션 저오 저장
+  		PreparedStatement stat = null;
+  		String sql = "insert into dept values (?, ?, ?)";
+  		try {
+  			Properties prop = new Properties();
+  			prop.load(new FileInputStream("C:/workspace/day13/src/dbinfo.properties"));
+  			
+  			Class.forName(prop.getProperty("driver"));
+  			System.out.println("Driver loading 성공");
+  			con = DriverManager.getConnection(
+  					prop.getProperty("url"), 
+  					prop.getProperty("user"), 
+  					prop.getProperty("pwd")
+  			);
+  			System.out.println("db connect 성공");
+  			
+  			stat = con.prepareStatement(sql);
+  			stat.setInt(1,  70);
+  			stat.setString(2, "BigData");
+  			stat.setString(3, "Seoul");
+  			
+  			int rows = stat.executeUpdate();
+  			if(rows > 0) {
+  				System.out.println("insert 성공");
+  			}
+  			
+  		}
+  		catch(ClassNotFoundException e) {
+  			System.out.println("Driver 없음");
+  		}
+  		catch(SQLException e) {
+  			System.out.println(e.getMessage());
+  			//db 연결 실패
+  		}
+  		catch(IOException e) {
+  			System.out.println(e.getMessage()); //Properties
+  		}
+  		finally {
+  			try {
+  				if(stat != null) stat.close();
+  				if(con != null) con.close();
+  			}
+  			catch(Exception e) {
+  				e.printStackTrace();
+  			}
+  		}//finally end
+  		
+  	}//main end
+  
+  }//class end
+  
+  ```
+
+  ```properties
+  #dbinfo.properties
+  
+  driver=oracle.jdbc.OracleDriver
+  url=jdbc:oracle:thin:@localhost:1521:orcl
+  user=scott
+  pwd=oracle
+  ```
+
+  
