@@ -46,7 +46,7 @@
 
 - DML - Data Manipulation Language
 
-  - DQL SELECT
+  - 선택 SELECT
   - 추가 INSERT
   - 수정 UPDATE
   - 삭제 DELETE

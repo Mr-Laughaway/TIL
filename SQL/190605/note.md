@@ -25,10 +25,10 @@
 
     ```sql
     select ~~
-    from table 1 a
+    from table1 a
     where column [연산자] (select ~
                       		from table2
-                       		where a.column = column2)
+                       		where a.column1 = column2)
     ```
 
   
