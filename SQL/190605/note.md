@@ -314,10 +314,14 @@ rollback;
 
 
 --문> KING사원과 동일한 부서에 근무하는 KING사원을 제외한 다른 사원의 급여를 20%인상 수정합니다.
-
-
-
-
+update 
+	emp
+set
+	sal = (sal * 1.2)
+where 
+    deptno = (select deptno from emp where ename = 'KING')
+    and
+    ename <> 'KING';
 ```
 
 
