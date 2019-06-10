@@ -488,7 +488,7 @@ DB관점의 transaction은 변경(DML, DDL, DCL)이 포함되면 일어난다.
 
 >수행중인 DML 트랜잭션의 세션이 비정상종료하면 oracle server는 rollback 합니다.
 >
->수행중인 DML 트랜잭션의 세션을 정상종료(exit;)하면 oracle server는 commit 합니다.
+>수행중인 DML 트랜잭션의 세션이 정상종료(exit;)하면 oracle server는 commit 합니다.
 
 
 
