@@ -656,5 +656,122 @@ truncate table 테이블명 [reuse storage];
   drop view emp20_vu;
   ```
 
+  view 객체 삭제는 테이블에 영향을 주지 않고, 메타 정보만 
+
+
+
+- with check option (타입; V)
+
+  ```sql
+  create or replace view emp20_vu
+  as select empno, ename, deptno, job, sal
+     from emp
+     where deptno = 20 with check option;
+     
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'EMP20_VU';
   
+  insert into emp20_vu values(
+      9005, 'Song', 30, 'SALESMAN', 2000); --ERROR: 20번 부서만 insert/update 등이 가능 
+  ```
+
+
+
+- with read only (타입: O)
+
+  ```sql
+  create or replace view emp20_vu
+  as select empno, ename, deptno, job, sal
+     from emp
+     where deptno = 20 with read only;
+     
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'EMP20_VU';
+  
+  insert into emp20_vu values(
+      9005, 'Song', 30, 'SALESMAN', 2000); --ERROR: 읽기 전용 뷰에서는 DML 작업을 수행할 수 없습니다.
+      
+  delete from emp20_vu; --ERROR: 읽기 전용 뷰에서는 DML 작업을 수행할 수 없습니다.
+  ```
+
+
+
+
+
+### SEQUENCE
+
+- 생성 및 사용
+
+```sql
+create sequence emp_seq;
+select * from user_sequences;
+
+select emp_seq.currval from dual; --시퀀스를 생성하면 최최값을 생성한 다음에 currval을 사용 가능하다
+
+select emp_seq.nextval from dual;
+
+select emp_seq.currval from dual;
+
+insert into emp (empno, ename)
+values (emp_seq.nextval, 'Kang');
+
+select empno, ename from emp;
+
+--여러 테이블에서 같은 시퀀스를 사용한다 (번호 갭 주의)
+update dept set deptno = emp_seq.nextval
+where deptno = 50;
+
+select deptno, dname from dept;
+
+
+```
+
+
+
+- 변경 가능  (start with는 변경 불가)
+
+  ```sql
+  alter sequence 시퀀스명
+  increment by ~
+  maxvalue ~
+  minvalue ~
+  cycle ~
+  cache ~;
+  
+  ```
+
+
+
+- 삭제
+
+  ```sql
+  drop sequence 시퀀스명;
+  --메타 정보만 data dictionary로부터 삭제됨
+  ```
+
+  
+
+### SYNONYM
+
+```sql
+create [PUBLIC] synonym 동의어이름
+for [사용자.][객체이름];
+```
+
+```sql
+--사용 예
+
+--권한 주기
+--(cmd)
+--> sqlplus / as sysdba
+--> SQL> grant create sysnonym to scott;
+
+create synonym e for emp;
+
+select * from e;
+
+drop synonym e;
+```
 
