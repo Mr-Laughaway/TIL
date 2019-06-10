@@ -334,7 +334,7 @@ desc emp10;
 
 create table customer (
     custid number(7), 
-    custnmae varchar2(15)),
+    custname varchar2(15),
     point number(5) default 100
  );
  
@@ -405,9 +405,9 @@ rollback;
 
 ※운용계 DB : transaction 목적의 DB. 데이터 변경.
 
-※정보계 DB : 장기간 저장, 읽기, 분석 목적의 DB(**D**ata**W**arehose 등)
+※정보계 DB : 장기간 저장, 읽기, 분석 목적의 DB(**D**ata**W**arehouse 등)
 
-데이터이관(**E**xtract**T**ranslage**L**oad) 작업에 유용하게 쓰임.
+데이터이관(**E**xtract**T**ranslate**L**oad) 작업에 유용하게 쓰임.
 
 ```sql
 merge into 대상테이블 as t
@@ -483,7 +483,7 @@ DB관점의 transaction은 변경(DML, DDL, DCL)이 포함되면 일어난다.
 
 - 1개 이상의 DML들로 구성 - 명시적 commit, rollback
 
-- 1개의 DLL - auto commit
+- 1개의 DDL - auto commit
 - 1개의 DCL - auto commit
 
 >수행중인 DML 트랜잭션의 세션이 비정상종료하면 oracle server는 rollback 합니다.
