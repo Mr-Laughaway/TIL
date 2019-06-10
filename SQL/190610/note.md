@@ -934,3 +934,4 @@ where table_name='DUAL';
   - DBA 롤
 
   - **role의 또 하나의 장점은 동적 권한 관리 기능이다.**
+
