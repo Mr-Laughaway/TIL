@@ -102,11 +102,15 @@
 
 - nvl(column, expression)
 
+  column값이 null 일경우 expression을 리턴
+
   column과 expression이 동일한 타입이어야 한다.
 
   
 
 - nvl(column, expression1, expression2)
+
+  column값이 null이 아니면 e1, 아니면 e2를 리턴.
 
   ex1과 ex2가 동일한 타입이어야한다.
 
@@ -276,7 +280,7 @@ select sum(comm)/count(*), avg(nvl(comm, 0)) from emp;
 select deptno, avg(sal) from emp group by deptno;
 
 --group by 된 컬럼이 꼭 select 절에 오지 않아도 무방하다
-select deptno, avg(sal) from emp group by deptno;
+select avg(sal) from emp group by deptno;
 
 --group by 절에는 column명만 선언할 수 있다.
 
