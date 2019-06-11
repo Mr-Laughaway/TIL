@@ -66,7 +66,7 @@
     
     --컬럼 명이 다를 경우
     from tab1 a join tab2 b on a.col = b.col2
-    from tab1 a join tab1 b on a.col = g.col2
+    from tab1 a join tab1 b on a.col = b.col2
     
     --cartesian product
     select e.ename, e.deptno, d.dname
