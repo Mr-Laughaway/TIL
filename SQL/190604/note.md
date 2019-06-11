@@ -101,7 +101,7 @@
 
 - subquery 는 mainquery의 select절, from절,  where절,  having절, order by 절에 subquery가 정의될 수 있습니다.
 - where 절과 having절의 subquery는 연산자 오른쪽에 ()안에 정의합니다.
-- 단일 행을 리턴하는 subquery : *single row wubquery*
+- 단일 행을 리턴하는 subquery : *single row subquery*
 - 복수 행을 리턴하는 subquery : *multiple row subquery*
 - 단일 행, 단일 컬럼값을 리턴 subquery : *scalar subquery*
 - 두개 이상의 컬럼 값을 리턴하는 subquery : *multiple column subquery*
