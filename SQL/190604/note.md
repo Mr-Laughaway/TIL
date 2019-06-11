@@ -245,6 +245,7 @@ select
 from (
     	select empno, sal 
     	from emp 
+    	where deptno = 80
     	order by sal desc
 	)
 where 
