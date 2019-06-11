@@ -577,6 +577,28 @@
 - BookUtil.java
 
   ```java
+  package lab.jdbc.util;
+  
+  import java.util.Scanner;
+  
+  import java.util.Scanner;
+  
+  public class BookUtil {
+  	
+  	public static String getUserInput() {
+  		Scanner sc = new Scanner(System.in);
+  		return sc.nextLine();
+  	}
+  	
+  	public static void printHeader() {
+  		System.out.println("-------------------------------------- 도서 정보 --------------------------------------");
+  	}
+  	
+  	public static void printTail() {
+  		System.out.println("------------------------------------------------------------------------------------");
+  	}
+  }
+  
   
   ```
 
@@ -585,7 +607,104 @@
 - Book.java
 
   ```java
+  package lab.jdbc.entity;
   
+  public class Book {
+  	private String isbn;
+  	private String category;
+  	private String title;
+  	private String author;
+  	private int price;
+  	private String descript;
+  	
+  	public Book() {
+  		super();
+  		
+  	}
+  	
+  	public Book(String isbn, String title, int price) {
+  		super();
+  		this.isbn = isbn;
+  		this.title = title;
+  		this.price = price;
+  	}
+  
+  	public Book(String isbn, String title, String author, int price) {
+  		this(isbn, title, price);
+  		this.author = author;
+  		
+  	}
+  
+  	public Book(String isbn, String category, String title, int price, String descript) {
+  		this(isbn, title, price);
+  		this.category = category;
+  		this.descript = descript;
+  	}
+  
+  	public String getIsbn() {
+  		return isbn;
+  	}
+  
+  	public String getCategory() {
+  		return category;
+  	}
+  
+  	public String getTitle() {
+  		return title;
+  	}
+  
+  	public String getAuthor() {
+  		return author;
+  	}
+  
+  	public int getPrice() {
+  		return price;
+  	}
+  
+  	public String getDescript() {
+  		return descript;
+  	}
+  
+  	public void setIsbn(String isbn) {
+  		this.isbn = isbn;
+  	}
+  
+  	public void setCategory(String category) {
+  		this.category = category;
+  	}
+  
+  	public void setTitle(String title) {
+  		this.title = title;
+  	}
+  
+  	public void setAuthor(String author) {
+  		this.author = author;
+  	}
+  
+  	public void setPrice(int price) {
+  		this.price = price;
+  	}
+  
+  	public void setDescript(String descript) {
+  		this.descript = descript;
+  	}
+  
+  	@Override
+  	public String toString() {
+  		String info = null;
+  		if(isbn.startsWith("N")) {
+  			info = "소설 [isbn=" + isbn + ", title=" + title + ", author=" + author 
+  					+ ", price=" + price + "]";
+  		}
+  		else {
+  			info = "잡지 [isbn=" + isbn + ", category=" + category + ", title=" + title 
+  					+ ", price=" + price + ", descript=" + descript + "]";
+   		}
+  				
+  		return info;
+  	}
+  	
+  }
   ```
 
   
@@ -593,6 +712,339 @@
 - BookBiz.java
 
   ```java
+  package lab.jdbc.biz;
+  
+  import java.io.FileInputStream;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.Statement;
+  import java.util.ArrayList;
+  import java.util.Properties;
+  
+  import lab.jdbc.entity.Book;
+  import lab.jdbc.util.BookUtil;
+  
+  public class BookBiz {
+  //	private ArrayList<Book> books;
+  	
+  	public BookBiz() {
+  		super();
+  	}
+  	
+  	public Connection dbCon() {
+  		Connection con = null;
+  		try {
+  			Properties prop = new Properties();
+  			prop.load(new FileInputStream("C:/workspace/day13/src/dbinfo.properties"));
+  			
+  			Class.forName(prop.getProperty("driver"));
+  //			System.out.println("Driver loading 성공");
+  			con = DriverManager.getConnection(
+  					prop.getProperty("url"), 
+  					prop.getProperty("user"), 
+  					prop.getProperty("pwd")
+  			);
+  //			System.out.println("db connect 성공");
+  			
+  			
+  			
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  		}
+  		
+  		return con;
+  	}
+  	
+  	public void dbClose(Connection con, Statement stat, ResultSet rs) {
+  		try {
+  			if(rs != null) rs.close();
+  			if(stat != null) stat.close();
+  			if(con != null) con.close();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}
+  	}
+  	
+  	public void printAllBooks() {
+  		Connection con = null;
+  		Statement stat = null;
+  		String sql = "select * from book";
+  		ResultSet rs = null;
+  		try {
+  			con = dbCon();
+  			stat = con.createStatement();
+  			rs = stat.executeQuery(sql);
+  			BookUtil.printHeader();
+  			while(rs.next()) {
+  				Book book = new Book();
+  				book.setIsbn(rs.getString("isbn"));
+  				book.setTitle(rs.getString("title"));
+  				book.setAuthor(rs.getString("author"));
+  				book.setPrice(rs.getInt("price"));
+  				book.setCategory(rs.getString("category"));
+  				book.setDescript(rs.getString("descript"));
+  				System.out.println(book);
+  			}
+  			BookUtil.printTail();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}
+  	}
+  	
+  	public void printAllNovels() {
+  		Connection con = null;
+  		Statement stat = null;
+  		String sql = "select * from book where isbn like 'N%'";
+  		ResultSet rs = null;
+  		try {
+  			con = dbCon();
+  			stat = con.createStatement();
+  			rs = stat.executeQuery(sql);
+  			BookUtil.printHeader();
+  			while(rs.next()) {
+  				Book book = new Book();
+  				book.setIsbn(rs.getString("isbn"));
+  				book.setTitle(rs.getString("title"));
+  				book.setAuthor(rs.getString("author"));
+  				book.setPrice(rs.getInt("price"));
+  				book.setCategory(rs.getString("category"));
+  				book.setDescript(rs.getString("descript"));
+  				System.out.println(book);
+  			}
+  			BookUtil.printTail();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, rs);
+  		}
+  	}
+  	
+  	public void printAllMagazines() {
+  		Connection con = null;
+  		Statement stat = null;
+  		String sql = "select * from book where isbn like 'M%'";
+  		ResultSet rs = null;
+  		try {
+  			con = dbCon();
+  			stat = con.createStatement();
+  			rs = stat.executeQuery(sql);
+  			BookUtil.printHeader();
+  			while(rs.next()) {
+  				Book book = new Book();
+  				book.setIsbn(rs.getString("isbn"));
+  				book.setTitle(rs.getString("title"));
+  				book.setAuthor(rs.getString("author"));
+  				book.setPrice(rs.getInt("price"));
+  				book.setCategory(rs.getString("category"));
+  				book.setDescript(rs.getString("descript"));
+  				System.out.println(book);
+  				
+  			}
+  			BookUtil.printTail();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, rs);
+  		}
+  	}
+  	
+  	public void printMagazineOneYearSubscription() {
+  		Connection con = null;
+  		Statement stat = null;
+  		String sql = "select title, price from book where isbn like 'M%'";
+  		ResultSet rs = null;
+  		try {
+  			con = dbCon();
+  			stat = con.createStatement();
+  			rs = stat.executeQuery(sql);
+  			BookUtil.printHeader();
+  			int i = 0;
+  			while(rs.next()) {
+  				Book book = new Book();
+  				book.setTitle(rs.getString("title"));
+  				book.setPrice(rs.getInt("price"));
+  				System.out.println(++i + ". " + book.getTitle() + " : " + book.getPrice()*12 + " 원\n");
+  			}
+  			BookUtil.printTail();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, rs);
+  		}
+  	}
+  	
+  	public ArrayList<Book> searchNovelByAuthor(String author) {
+  		ArrayList<Book> searchBooks = new ArrayList<Book>();
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String sql = "select * from book where isbn like 'N%' and author like ?";
+  		ResultSet rs = null;
+  		try {
+  			con = dbCon();
+  			stat = con.prepareStatement(sql);
+  			stat.setString(1, '%' + author + '%');
+  			rs = stat.executeQuery();
+  			while(rs.next()) {
+  				Book book = new Book();
+  				book.setIsbn(rs.getString("isbn"));
+  				book.setTitle(rs.getString("title"));
+  				book.setAuthor(rs.getString("author"));
+  				book.setPrice(rs.getInt("price"));
+  				book.setCategory(rs.getString("category"));
+  				book.setDescript(rs.getString("descript"));
+  				searchBooks.add(book);
+  			}
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, rs);
+  		}
+  				
+  		return searchBooks;
+  	}
+  	
+  	public ArrayList<Book> searchNovelByPrice(int minPrice, int maxPrice) {
+  		ArrayList<Book> searchBooks = new ArrayList<Book>();
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String sql = "select * from book where isbn like 'N%' and price between ? and ?";
+  		ResultSet rs = null;
+  		try {
+  			con = dbCon();
+  			stat = con.prepareStatement(sql);
+  			stat.setInt(1, minPrice);
+  			stat.setInt(2, maxPrice);
+  			rs = stat.executeQuery();
+  			while(rs.next()) {
+  				Book book = new Book();
+  				book.setIsbn(rs.getString("isbn"));
+  				book.setTitle(rs.getString("title"));
+  				book.setAuthor(rs.getString("author"));
+  				book.setPrice(rs.getInt("price"));
+  				book.setCategory(rs.getString("category"));
+  				book.setDescript(rs.getString("descript"));
+  				searchBooks.add(book);
+  			}
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, rs);
+  		}
+  		
+  		return searchBooks;
+  	}
+  	
+  	public int insertBook(Book newBook) {
+  		/*
+  		int rows = 0;
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String sql = "INSERT INTO book VALUES(?, ?, ?, ?, ?, ?)";
+  		
+  		try {
+  			con = dbCon();
+  			stat = con.prepareStatement(sql);
+  			stat.setString(1, newBook.getIsbn());
+  			stat.setString(2, newBook.getCategory());
+  			stat.setString(3, newBook.getTitle());
+  			stat.setString(4, newBook.getAuthor());
+  			stat.setInt(   5, newBook.getPrice());
+  			stat.setString(6, newBook.getDescript());
+  			rows = stat.executeUpdate();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, null);
+  		}
+  		
+  		return rows;
+  		*/
+  		
+  		int rows = 0;
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String novel = "INSERT INTO book (isbn, title, author, price) VALUES(?, ?, ?, ?)";
+  		String magazine = "INSERT INTO book (isbn, title, price, category, descript) VALUES(?, ?, ?, ?, ?)";
+  		
+  		try {
+  			con = dbCon();
+  			if(newBook.getIsbn().startsWith("N")) {
+  				stat = con.prepareStatement(novel);
+  				stat.setString(1, newBook.getIsbn());
+  				stat.setString(2, newBook.getTitle());
+  				stat.setString(3, newBook.getAuthor());
+  				stat.setInt(4, newBook.getPrice());
+  			}
+  			else {
+  				stat = con.prepareStatement(magazine);
+  				stat.setString(1, newBook.getIsbn());
+  				stat.setString(2, newBook.getTitle());
+  				stat.setInt(3, newBook.getPrice());
+  				stat.setString(4, newBook.getCategory());
+  				stat.setString(5, newBook.getDescript());
+  			}
+  			rows = stat.executeUpdate();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, null);
+  		}
+  		
+  		return rows;
+  	}
+  	
+  	public int updateBook(Book modifyBook) {
+  		int rows = 0;
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String novel = "UPDATE book SET price = ? WHERE isbn = ?";
+  		String magazine = "UPDATE book SET price = ?, descript = ? WHERE isbn = ?";
+  		
+  		try {
+  			con = dbCon();
+  			if(modifyBook.getIsbn().startsWith("N")) {
+  				stat = con.prepareStatement(novel);
+  				stat.setInt(1, modifyBook.getPrice());
+  				stat.setString(2, modifyBook.getIsbn());
+  			}
+  			else {
+  				stat = con.prepareStatement(magazine);
+  				stat.setInt(1, modifyBook.getPrice());
+  				stat.setString(2, modifyBook.getDescript());
+  				stat.setString(3, modifyBook.getIsbn());
+  			}
+  			rows = stat.executeUpdate();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, null);
+  		}
+  		
+  		return rows;
+  	}
+  	
+  	public int deleteBook(String isbn) {
+  		int rows = 0;
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String sql = "DELETE FROM book WHERE isbn = ?";
+  		
+  		try {
+  			con = dbCon();
+  			stat = con.prepareStatement(sql);
+  			stat.setString(1, isbn);
+  			rows = stat.executeUpdate();
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}finally {
+  			dbClose(con, stat, null);
+  		}
+  		
+  		return rows;
+  	}
+  }
   
   ```
 
@@ -601,7 +1053,159 @@
 - BookTest.java
 
   ```java
+  package lab.jdbc.test;
   
+  import java.util.ArrayList;
+  
+  import lab.jdbc.biz.BookBiz;
+  import lab.jdbc.entity.Book;
+  import lab.jdbc.util.BookUtil;
+  
+  public class BookTest {
+  
+  	public static void main(String[] args) {
+  		
+  		BookBiz biz = new BookBiz();
+  		ArrayList<Book> books = null;
+  		Book book = null;
+  
+  		while(true) {
+  			printMenu();
+  			System.out.print("## 메뉴 입력 : ");
+  			int n = -1;
+  			try {
+  				n = Integer.parseInt(BookUtil.getUserInput());
+  			}
+  			catch(NumberFormatException e) {
+  				//Todo: 별로 할 일 없음
+  			}
+  			finally {
+  				if(n == 0) {
+  					System.out.println("------------------------------");
+  					System.out.println("  프로그램을 종료합니다. Bye~");
+  					System.out.println("------------------------------");
+  					break;
+  				}
+  				
+  				switch(n) {
+  				case 1: biz.printAllBooks();
+  					break;
+  					
+  				case 2: biz.printAllMagazines();
+  					break;
+  					
+  				case 3: biz.printAllNovels();
+  					break;
+  					
+  				case 4: biz.printMagazineOneYearSubscription();
+  					break;
+  					
+  				case 5:
+  					System.out.print("> 검색할 저자명을 입력하세요 : ");
+  					
+  					books = biz.searchNovelByAuthor(BookUtil.getUserInput());
+  					BookUtil.printHeader();
+  					for(int i = 0; i < books.size(); i++) {
+  						System.out.println(books.get(i));
+  					}
+  					BookUtil.printTail();
+  					break;
+  					
+  				case 6:
+  					try {
+  						System.out.print("> 검색할 소설 가격의 최소값을 입력하세요: ");
+  						int min = Integer.parseInt(BookUtil.getUserInput());
+  						System.out.print("> 검색할 소설 가격의 최대값을 입력하세요: ");
+  						int max = Integer.parseInt(BookUtil.getUserInput());
+  						
+  						books =  biz.searchNovelByPrice(min, max);
+  						BookUtil.printHeader();
+  						for(int i = 0; i < books.size(); i++) {
+  							System.out.println(books.get(i));
+  						}
+  						BookUtil.printTail();
+  					}
+  					catch(NumberFormatException e) {
+  						System.out.println("@ 숫자 형식이 잘못되었습니다.");
+  					}
+  					break;
+  					
+  				case 7:
+  					book = new Book();
+  					System.out.print("> ISBN 입력하세요: ");
+  					book.setIsbn(BookUtil.getUserInput());
+  					
+  					System.out.print("> 책 제목을 입력하세요: ");
+  					book.setTitle(BookUtil.getUserInput());
+  					
+  					System.out.print("> 저자를 입렵하세요:  ");
+  					book.setAuthor(BookUtil.getUserInput());
+  					
+  					System.out.print("> 가격을 입력하세요:  ");
+  					book.setPrice(Integer.parseInt(BookUtil.getUserInput()));
+  					
+  					System.out.print("> 카테고리를 입력하세요: ");
+  					book.setCategory(BookUtil.getUserInput());
+  					
+  					System.out.print("> 설명을 입력하세요: ");
+  					book.setDescript(BookUtil.getUserInput());
+  					
+  					if(biz.insertBook(book) > 0 ) {
+  						System.out.println("새 책 정보 추가 완료!!!");
+  					}
+  					
+  					break;
+  					
+  				case 8:
+  					book = new Book();
+  					System.out.print("> ISBN 입력하세요: ");
+  					book.setIsbn(BookUtil.getUserInput());
+  				
+  					System.out.print("> 가격을 입력하세요:  ");
+  					book.setPrice(Integer.parseInt(BookUtil.getUserInput()));
+  					
+  					System.out.print("> 설명을 입력하세요: ");
+  					book.setDescript(BookUtil.getUserInput());
+  					
+  					if(biz.updateBook(book) > 0) {
+  						System.out.println("책 정보 변경 완료!!!");
+  					}
+  					break;
+  					
+  				case 9:
+  					System.out.print("> ISBN 입력하세요: ");
+  					String isbn = BookUtil.getUserInput();
+  					if(biz.deleteBook(isbn) > 0) {
+  						System.out.println("책 정보 삭제 완료!!!");
+  					}
+  					break;
+  					
+  					
+  				default:
+  					System.out.println("@ 메뉴번호를 잘못 입력하셨습니다.");	
+  				}
+  			}//end of try~catch~finally
+  		}//end of while
+  	}//end of main
+  	
+  	
+  	
+  	public static void printMenu() {
+  		System.out.println("=== << 도서 정보 프로그램 >> ===");
+  		System.out.println("1. 전체 도서 정보 조회");
+  		System.out.println("2. 전체 잡지 조회");
+  		System.out.println("3. 전체 소설 조회");
+  		System.out.println("4. 잡지 연간 구독료 조회");
+  		System.out.println("5. 소설 저자명 검색");
+  		System.out.println("6. 소설 가격 검색(최소값 ~ 최대값)");
+  		System.out.println("7. 도서 추가");
+  		System.out.println("8. 도서 변경");
+  		System.out.println("9. 도서 삭제");
+  		System.out.println("0. 시스템 종료");
+  		System.out.println("===========================");
+  	}
+  
+  }
   ```
 
   
