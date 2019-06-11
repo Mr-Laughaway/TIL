@@ -449,6 +449,159 @@
 
   
 
-  ### ResultSetMetaData
+### ResultSetMetaData
+
+- GetMetaData.java
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.FileInputStream;
+  import java.io.IOException;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.ResultSetMetaData;
+  import java.sql.SQLException;
+  import java.util.Properties;
+  
+  public class GetMetaData {
+  
+  	public static void main(String[] args) {
+  
+  		Connection con = null; //DB연결상태 세션 저오 저장
+  		PreparedStatement stat = null;
+  		String sql = "select * from emp";
+  		ResultSet rs = null;
+  		ResultSetMetaData rsmd = null;
+  		try {
+  			Properties prop = new Properties();
+  			prop.load(new FileInputStream("C:/workspace/day14/src/dbinfo.properties"));
+  			
+  			Class.forName(prop.getProperty("driver"));
+  			System.out.println("Driver loading 성공");
+  			con = DriverManager.getConnection(
+  					prop.getProperty("url"), 
+  					prop.getProperty("user"), 
+  					prop.getProperty("pwd")
+  			);
+  			System.out.println("db connect 성공");
+  			
+  			stat = con.prepareStatement(sql);
+  			rs = stat.executeQuery();
+  			rsmd = rs.getMetaData();
+  			System.out.println("컬럼이름\t\tNull허용?\t\t컬럼타입");
+  			System.out.println("============================================");
+  			for(int i = 0; i < rsmd.getColumnCount(); i++) {
+  				System.out.print(rsmd.getColumnName(i+1)+"\t");
+  				if(rsmd.isNullable(i+1) == 0 ) {
+  					System.out.print("\tNot Null\t");
+  				}
+  				else {
+  					System.out.print("\t\t\t");
+  				}
+  				
+  				System.out.print(rsmd.getColumnTypeName(i+1));
+  				if(rsmd.getColumnTypeName(i+1).contentEquals("VARCHAR2")) {
+  					System.out.print("("+rsmd.getPrecision(i+1)+")");
+  				}
+  				if(rsmd.getColumnTypeName(i+1).contentEquals("NUMBER")) {
+  					if(rsmd.getScale(i+1) > 0) {
+  						System.out.print("("+rsmd.getPrecision(i+1)+ "," + rsmd.getScale(i+1) + ")");
+  					}
+  					else {
+  						System.out.print("("+rsmd.getPrecision(i+1)+")");
+  					}
+  				}
+  				
+  				System.out.println();
+  			}
+  			
+  		}
+  		catch(ClassNotFoundException e) {
+  			System.out.println("Driver 없음");
+  		}
+  		catch(SQLException e) {
+  			System.out.println(e.getMessage()); //DB 연결 실패
+  		}
+  		catch(IOException e) {
+  			System.out.println(e.getMessage()); //Properties
+  		}
+  		finally {
+  			try {
+  				if(rs != null) rs.close();
+  				if(stat != null) stat.close();
+  				if(con != null) con.close();
+  			}
+  			catch(Exception e) {
+  				e.printStackTrace();
+  			}
+  		}//finally end
+  		
+  	}//main end
+  
+  }//class end
+  
+  ```
+
+
+
+### JDBC 종합 실습 (Book Workshop)
+
+- 테이블 준비
+
+  ```sql
+  drop table book purge;
+  
+  create table Book (
+      isbn varchar2(5) constraint book_isbn_pk primary key,
+      category varchar2(15),
+      title varchar2(50),
+      author varchar2(30),
+      price number(6),
+      descript varchar2(500)
+  );
+  
+  insert into book (isbn, title, category, price, descript)
+  values('M0001', 'Cooking Light', 'living, cooking', 15000, 'America Cooking');
+  
+  insert into book (isbn, title,  author, price)
+  values('N0001', 'The Confession', 'Grisham, John', 10500);
+  
+  commit;
+  ```
+
+
+
+- BookUtil.java
+
+  ```java
+  
+  ```
+
+  
+
+- Book.java
+
+  ```java
+  
+  ```
+
+  
+
+- BookBiz.java
+
+  ```java
+  
+  ```
+
+  
+
+- BookTest.java
+
+  ```java
+  
+  ```
 
   
