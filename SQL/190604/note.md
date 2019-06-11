@@ -30,7 +30,7 @@
     - non-equi join
     - self join (자기 참조가 가능한 테이블)
     - outer join - 일치하는 조인컬럼값이 null인 row도 조인 결과로 생성하려면
-    - cartesian product - 조인 조건을 생략하거나, 조인 조건을 논리적으로 잘못 지정하여 두 테이브르이 모든 row가 한 번씩 join되는 것
+    - cartesian product - 조인 조건을 생략하거나, 조인 조건을 논리적으로 잘못 지정하여 두 테이블의 모든 row가 한 번씩 join되는 것
 
   - 오라클 초기 버전부터 사용 했었떤 조인 구문
 
