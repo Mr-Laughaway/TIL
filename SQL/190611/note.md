@@ -31,11 +31,15 @@
   alter table ~ modify (컬럼 컬럼타입(size));
   ```
 
+  
+
 - 제약조건을 컬럼 추가
 
   ```sql
   alter table ~ add constraint 이름 타입;
   ```
+
+  
 
 - 컬럼에 정의되어 있는 제약조건 삭제
 
@@ -43,11 +47,15 @@
   alter table ~ drop constraint 이름;
   ```
 
+
+
 - 제약조건을 활성화
 
   ```sql
    alter table ~ enable constraint 이름;
   ```
+
+  
 
 - 제약조건을 비활성화
 
@@ -55,12 +63,16 @@
   alter table ~ disable constraint 이름;
   ```
 
+  
+
 - 테이블 삭제
 
   ```sql
   drop table ~;
   drop table ~ purge;
   ```
+
+  
 
 - recyclebin으로부터 drop 테이블 복원
 
@@ -199,5 +211,244 @@
     
 
 - JDBC
+
   - JDBC 프로그래밍 단계
-    1. 연결할 데이터베이스의
+
+    1. 연결할 데이터베이스의 driver class 클래스 (~.jar) 준비
+
+       - 운영체제의 환경 변수 classpath에 추가
+       - JDK또는 JRE의 라이브러리 검색 위치중에 외부 확장 라이브러리 저장위치(%JAVA_HOME%jre/lib/ext)
+       - 이클립스(IDE)에서 프로젝트 build path>configure build path>library>add external jar ... 추가
+
+    2.  import java.sql.*;
+
+    3. DriverClass 로딩
+
+       ```java
+       try {
+       	Class.forName(" "); // oracle.jdbc.OracleDriver
+       }catch(ClassNotFoundException e){
+           System.out.println(e.getMessage());
+       }
+       
+       ```
+
+    4. static 멤버 객체 이용
+
+       ```java
+       Connection con;
+       ...
+       con = DriverManager.getConnection(url, user, pwd); //DB에 connect 합니다. DB에 세션 생성되고, 세션이 리턴됩니다. => java.sql.Connection 객체로 받습니다.
+       ```
+
+       Connection의 주요메서드
+
+       - close()
+       - createStatement()
+       - preparedStatement()
+       - callableStatement()
+       - 
+
+    5. SQL 실행 대행 객체 Statement 객체 생성
+
+       - Statement 
+
+         *완전한 sql 문장을 문자열로 전송하므로 매번 hard parsing 할 가능성이 높다.*
+
+       - PreparedStatement
+
+         *sql 문중중에서 변경되는 부분들을 ?(index parameter)로 성정해서 미리 sql을 전송하고, 실행할 때 마다 값만 전송해서 실행(soft parsing 수행 될 확률이 높다).*
+
+       - CallableStatement
+
+         *DB에 저장되어 있는 procedure, function을 호출해서 결과를 받을때*
+
+    6. SQL문 실행
+
+       - executeQuery() - select 문장, ResultSet 객체 리턴
+       - executeUpdate() - DML문은 int(변경된 행수) 리턴, DDL, DCL문
+       - execute() - select문, DML문, boolean 리턴(true 일 때는 select 수행, false)
+
+    7. select 구행 결과 처리
+
+       ```java
+       while(rs.next()) {
+           rs.getInt("컬럼명" | 컬럼포지션), 
+           rs.getDouble("컬럼명" | 컬럼포지션), 
+           rs.getString("컬럼명" | 컬럼포지션),
+           rs.getDate("컬럼명" | 컬럼포지션),
+           ...
+       }
+       ```
+
+    8. SQLException 예외 처리
+
+    9. 사용 자원 반납(Connection, Statement, ResultSet)
+
+       ```java
+       XXX.close(); // 예외처리 필요
+       ```
+
+  - 접속 정보 보안 처리
+
+    > 소스코드에 db연결정보를 hard coding하는 것은 보안상 문자가 되므로 보안 폴더에 properties파일을 만들고 key=value형태로 저장합니다.
+
+    ```java
+    Properties prop = new Properties();
+    prop.load(new FileInputStream("경로/이름.."));
+    String value = prop.getProperty("key");
+    ```
+
+    
+
+---
+
+
+
+### JDBC Transaction 처리
+
+- Table 준비
+
+  ```sql
+  create table product (
+      id varchar2(20),
+      price number(8)
+  );
+  
+  insert into product values ('사과', 1000);
+  insert into product values ('복숭아', 1500);
+  insert into product values ('포도', 2000);
+  insert into product values ('망고', 3000);
+  insert into product values ('수박', 3500);
+  
+  commit;
+  
+  ```
+
+  
+
+- TransactionTest.java
+
+  ```java
+  package lab.java.core;
+  
+  import java.io.FileInputStream;
+  import java.io.IOException;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.sql.Savepoint;
+  import java.sql.Statement;
+  import java.util.Properties;
+  
+  public class TransactionTest {
+  
+  	public static void main(String[] args) {
+  
+  		Connection con = null; //DB 연결상태 세션 저오 저장
+  		PreparedStatement selectPs = null;
+  		PreparedStatement updatePs = null;
+  		ResultSet rs = null;
+  		String query = "SELECT id, price FROM product WHERE price > ?";
+  		String update = "UPDATE product SET price = ? WHERE id = ?";
+  		try {
+  			Properties prop = new Properties();
+  			prop.load(new FileInputStream("C:/workspace/day13/src/dbinfo.properties"));
+  			
+  			Class.forName(prop.getProperty("driver"));
+  			System.out.println("Driver loading 성공");
+  			con = DriverManager.getConnection(
+  					prop.getProperty("url"), 
+  					prop.getProperty("user"), 
+  					prop.getProperty("pwd")
+  			);
+  			System.out.println("db connect 성공");
+  			
+  			con.setAutoCommit(false); //명시적 트랜잭션 제어를 위해
+  			
+  			selectPs = con.prepareStatement(query);
+  			updatePs = con.prepareStatement(update);
+  			
+  			selectPs.setInt(1,  100);
+  			rs = selectPs.executeQuery();
+  			
+  			Savepoint save1 = con.setSavepoint();
+  			while(rs.next()) {
+  				String id = rs.getString("id");
+  				int oldPrice = rs.getInt("price");
+  				int newPrice = (oldPrice * 2);
+  				updatePs.setInt(1,  newPrice);
+  				updatePs.setString(2,  id);
+  				updatePs.executeUpdate(); 
+  				System.out.println("New Price of " + oldPrice + " is " + newPrice);
+  				if(newPrice >= 5000) {
+  					con.rollback(save1);
+  				}
+  			}//while end
+  			
+  			System.out.println();
+  
+  			selectPs.setInt(1, 100);
+  			rs = selectPs.executeQuery();
+  			
+  			Savepoint save2 = con.setSavepoint();
+  			while(rs.next()) {
+  				String id = rs.getString("id");
+  				int oldPrice = rs.getInt("price");
+  				int newPrice = (oldPrice * 2);
+  				updatePs.setInt(1,  newPrice);
+  				updatePs.setString(2,  id);
+  				updatePs.executeUpdate(); 
+  				System.out.println("2. New Price of " + oldPrice + " is " + newPrice);
+  				if(newPrice >= 5000) {
+  					con.rollback(save2);
+  				}
+  			}//while end
+  			con.commit();
+  			System.out.println();
+  			
+  			Statement stmt = con.createStatement();
+  			rs = stmt.executeQuery("SELECT id, price FROM product");
+  			
+  			System.out.println();
+  			while(rs.next()) {
+  				String id = rs.getString("id");
+  				int price = rs.getInt("price");
+  				System.out.println("id : " + id + ", price : " + price);
+  			}
+  			
+  		}
+  		catch(ClassNotFoundException e) {
+  			System.out.println("Driver 없음");
+  		}
+  		catch(SQLException e) {
+  			System.out.println(e.getMessage()); //DB 연결 실패
+  		}
+  		catch(IOException e) {
+  			System.out.println(e.getMessage()); //Properties
+  		}
+  		finally {
+  			try {
+  				if(rs != null) rs.close();
+  				if(selectPs != null) selectPs.close();
+  				if(updatePs != null) updatePs.close();
+  				if(con != null) con.close();
+  			}
+  			catch(Exception e) {
+  				e.printStackTrace();
+  			}
+  		}//finally end
+  		
+  	}//main end
+  
+  }//class end
+  
+  ```
+
+  
+
+  ### ResultSetMetaData
+
+  
