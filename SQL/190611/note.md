@@ -1138,17 +1138,20 @@
   					System.out.print("> 책 제목을 입력하세요: ");
   					book.setTitle(BookUtil.getUserInput());
   					
-  					System.out.print("> 저자를 입렵하세요:  ");
-  					book.setAuthor(BookUtil.getUserInput());
-  					
   					System.out.print("> 가격을 입력하세요:  ");
   					book.setPrice(Integer.parseInt(BookUtil.getUserInput()));
   					
-  					System.out.print("> 카테고리를 입력하세요: ");
-  					book.setCategory(BookUtil.getUserInput());
-  					
-  					System.out.print("> 설명을 입력하세요: ");
-  					book.setDescript(BookUtil.getUserInput());
+  					if(book.getIsbn().startsWith("N")) {
+  						System.out.print("> 저자를 입렵하세요:  ");
+  						book.setAuthor(BookUtil.getUserInput());
+  					}
+  					else {
+  						System.out.print("> 카테고리를 입력하세요: ");
+  						book.setCategory(BookUtil.getUserInput());
+  						
+  						System.out.print("> 설명을 입력하세요: ");
+  						book.setDescript(BookUtil.getUserInput());
+  					}
   					
   					if(biz.insertBook(book) > 0 ) {
   						System.out.println("새 책 정보 추가 완료!!!");
@@ -1164,12 +1167,15 @@
   					System.out.print("> 가격을 입력하세요:  ");
   					book.setPrice(Integer.parseInt(BookUtil.getUserInput()));
   					
-  					System.out.print("> 설명을 입력하세요: ");
-  					book.setDescript(BookUtil.getUserInput());
+  					if(book.getIsbn().startsWith("M")) {
+  						System.out.print("> 설명을 입력하세요: ");
+  						book.setDescript(BookUtil.getUserInput());
+  					}
   					
   					if(biz.updateBook(book) > 0) {
   						System.out.println("책 정보 변경 완료!!!");
   					}
+  					
   					break;
   					
   				case 9:
@@ -1201,11 +1207,11 @@
   		System.out.println("7. 도서 추가");
   		System.out.println("8. 도서 변경");
   		System.out.println("9. 도서 삭제");
-  		System.out.println("0. 시스템 종료");
+		System.out.println("0. 시스템 종료");
   		System.out.println("===========================");
   	}
   
   }
   ```
-
+  
   
