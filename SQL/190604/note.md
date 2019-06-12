@@ -352,6 +352,8 @@ where
     );
 ```
 
+
+
 - ***where exists (co-related subquery)***
 
   ```sql
