@@ -398,6 +398,8 @@ where
   
   ```
 
+  
+
 - with 절 *(고급 sql, 이런 것도 있다....)*
 
   ```sql
@@ -415,6 +417,8 @@ where
   where a.sum_sal > b.total_avg;
   
   ```
+
+  
 
 - 집합 연산자
 
