@@ -465,6 +465,41 @@
   		return nRows;
   	}
   	
+  	public ArrayList<Student> searchStudent(String sno) {
+  		Connection con = null;
+  		PreparedStatement stat = null;
+  		String sql = "SELECT * FROM student WHERE studentNo = ?";
+  		ResultSet rs = null;
+  		ArrayList<Student> students = new ArrayList<Student>();
+  		try {
+  			con = dbCon();
+  			stat = con.prepareStatement(sql);
+  			stat.setString(1,  sno);
+  			rs = stat.executeQuery();
+  			while(rs.next()) {
+  				Student st = new Student();
+  				st.setStudentNo(rs.getString("studentNo"));
+  				st.setStudentName(rs.getString("studentName"));
+  				st.setC(rs.getInt("c"));
+  				st.setLinux(rs.getInt("linux"));
+  				st.setJava(rs.getInt("java"));
+  				st.setInternYn(rs.getString("internYN"));
+  				st.setCareerYears(rs.getInt("careerYears"));
+  				st.setAverage(rs.getDouble("average"));
+  				st.setPass(rs.getString("pass"));
+  				
+  				students.add(st);
+  			}
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}
+  		finally {
+  			dbClose(con, stat, null);
+  		}
+  		
+  		return students;
+  	}
+  	
   	
   	
   	public GradeManager() {
@@ -472,7 +507,6 @@
   	}
   
   }
-  
   ```
 
   
@@ -619,10 +653,22 @@
   				 
   				break;
   			case "7": //학번으로 검색... 귀찮아... 안 해..
-  				 
+  				System.out.print("> 변경할 사원의 사번 입력하세요: ");
+  				String sno = CommonUtil.getUerInput();
+  				ArrayList<Student> searchedSt = mgr.searchStudent(sno);
+  				
+  				CommonUtil.printHead();
+  				if(searchedSt != null) {
+  					for( Student s : searchedSt) {
+  						System.out.println(s);
+  					}
+  				}
+  				else
+  					System.out.println("해당 사원이 없습니다.");
+  					
+  				CommonUtil.printTail();
+  						
   				break;
-  			 
-  			 
   			}// switch end
   		} // while end
   
