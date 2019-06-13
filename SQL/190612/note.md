@@ -692,4 +692,144 @@
   
   ```
 
-  
+
+
+
+
+
+### Exercise4.docx
+
+```sql
+--subquery
+--1
+select *
+from employees
+where department_id = (
+    select department_id from employees 
+    where last_name = 'Zlotkey')
+    and last_name != 'Zlotkey';
+    
+--2
+select employee_id, last_name, salary
+from employees
+where salary > (
+    select avg(salary) from employees)
+order by salary asc;
+
+--3
+select employee_id, last_name
+from employees
+where department_id in (
+    select department_id
+    from employees
+    where last_name like '%u%'
+    );
+    
+--4
+select last_name, department_id, job_id
+from employees
+where department_id in (
+    select distinct department_id 
+    from departments
+    where location_id = 1700
+)
+order by department_id asc;
+
+--5
+select last_name, salary
+from employees
+where manager_id = (
+    select employee_id
+    from employees
+    where last_name = 'King'
+);
+    
+--6
+select department_id, last_name, job_id
+from employees
+where department_id = (
+    select department_id
+    from departments
+    where department_name = 'Executive'
+    );
+
+--7
+select 
+    employee_id, last_name, salary
+from 
+    employees
+where 
+    department_id in (
+        select distinct department_id
+        from employees
+        where last_name like '%u%'
+    )
+    and
+    salary > (
+        select avg(salary)
+        from employees
+    );
+    
+    
+    
+    
+
+--set operators
+--1
+select distinct department_id
+from employees
+MINUS
+select distinct department_id
+from employees
+where job_id = 'ST_CLERK';
+
+--2
+select 
+    country_id as "CO", country_name
+from 
+    countries
+MINUS 
+select 
+    distinct country_id, country_name
+from 
+    locations a left join countries b using (country_id);
+
+--3
+select distinct job_id, department_id
+from employees
+where department_id = 10
+UNION ALL
+select * from (
+    select distinct job_id, department_id
+    from employees
+    where department_id = 50
+    order by job_id asc
+)
+UNION ALL
+select distinct job_id, department_id
+from employees
+where department_id = 20;
+
+--4
+select employee_id, job_id
+from employees
+INTERSECT
+select distinct employee_id, job_id
+from job_history;
+
+--5
+select last_name, department_id, to_char(null)
+from employees
+UNION
+select to_char(null), department_id, department_name
+from departments;
+
+
+
+
+
+--DML
+--1
+
+```
+
