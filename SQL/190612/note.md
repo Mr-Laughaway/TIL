@@ -771,9 +771,6 @@ where
     );
     
     
-    
-    
-
 --set operators
 --1
 select distinct department_id
@@ -792,7 +789,7 @@ MINUS
 select 
     distinct country_id, country_name
 from 
-    locations a left join countries b using (country_id);
+    locations left join countries using (country_id);
 
 --3
 select distinct job_id, department_id
@@ -823,13 +820,6 @@ from employees
 UNION
 select to_char(null), department_id, department_name
 from departments;
-
-
-
-
-
---DML
---1
 
 ```
 
