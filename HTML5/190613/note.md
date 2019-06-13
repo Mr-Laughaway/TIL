@@ -235,8 +235,17 @@
   
   <h1>회원가입</h1>
   <form method="post" action="login.jsp" name="" id="">
-    아 이 디 : <input type="text" name="userid" id="userid"><br>
+    아 이 디 : <input type="text" name="userid" id="userid" required><br>
     비밀번호 : <input type="text" name="password" id="password"><br>
+    
+    URL : <input type="url" name="url"><br>
+    EMAIL : <input type="email" name="email"><br>
+    연락처 : <input type="tel" name = "phone"
+      pattern="\d{3}-\d{4}-\d{4}"
+      placeholder="000-0000-0000"
+    ><br>
+    number : <input type="number" max=100 min=0 step=5 title="0~100값 허융"><br>
+    
     <input type="submit" value="로그인">
     <input type="reset" value="취소">
   </form>
