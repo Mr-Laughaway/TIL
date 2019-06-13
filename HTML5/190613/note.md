@@ -255,5 +255,126 @@
   </html>
   ```
 
+
+
+- CSS 실습
+
+  ***csstest.htm***
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link href="csstest.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+  
+    <header>
+      상단 헤더
+    </header>
+    
+    <nav>
+      내비게이션 메뉴
+    </nav>
+    
+    <div class="conlay">
+    <section>
+      메인 콘텐츠
+    </section>
+    
+    <aside>
+      사이드바
+    </aside>
+    <div class="clear"></div>
+    </div>
+    
+    
+    <footer>
+      하단 푸터
+    </footer>
+    
+  
+  </body>
+  </html>
+  ```
+
   
 
+  ***csstest.css***
+
+  ```css
+  @charset "UTF-8";
+  
+  * {
+    padding: 0;
+    margin 0;
+  }
+  
+  li {
+    list-style-type: none;
+  }
+  
+  .clear {
+    clear: both;
+  }
+  
+  .conlay {
+    width: 997px;
+  }
+  
+  header {
+    width: 995px;
+    height: 100px;
+    margin-top: 10px;
+    border: solid 1px green;
+  }
+  
+  #logo {
+    float: left;
+    border: solid 1px red;
+  }
+  
+  #top {
+    float: right;
+    margin: 30px 20px 0 0;
+    border: solid 1px red;
+  }
+  
+  nav {
+    width: 995px;
+    height: 70px;
+    margin-top: 10px;
+    border: solid 1px green;
+  }
+  
+  section {
+    width: 674px;
+    height: 240px;
+    float: left;
+    margin-top: 10px;
+    border: solid 1px green;
+  }
+  
+  aside {
+    width: 290px;
+    height: 240px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 29px;
+    border: solid 1px green;
+  }
+  
+  footer {
+    width: 995px;
+    height: 130px;
+    margin-top: 10px;
+    border: solid 1px green;
+  }
+  
+  ```
+
+  
+
+  
