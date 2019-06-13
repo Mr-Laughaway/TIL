@@ -68,7 +68,7 @@
 
 
 
-- 실습코드
+- hello.html
 
   ```html
   <!DOCTYPE html>
@@ -220,4 +220,31 @@
   
   ```
 
+
+
+- form.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  </head>
+  <body>
   
+  <h1>회원가입</h1>
+  <form method="post" action="login.jsp" name="" id="">
+    아 이 디 : <input type="text" name="userid" id="userid"><br>
+    비밀번호 : <input type="text" name="password" id="password"><br>
+    <input type="submit" value="로그인">
+    <input type="reset" value="취소">
+  </form>
+  
+  
+  </body>
+  </html>
+  ```
+
+  
+
