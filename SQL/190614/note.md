@@ -35,6 +35,21 @@ select ename, deptno, dname, loc
 from emp full outer join dept using (deptno);
 
 
+--7.
+select 
+    a.employee_id "사번",
+    a.first_name "사원 이름",
+    a.manager_id "매니저 사번",
+    b.first_name "매니저 이름"
+from
+    employees a,  employees b 
+where 
+    a.manager_id = b.employee_id
+    and
+    a.department_id is null;
+
+
+
 
 ```
 
