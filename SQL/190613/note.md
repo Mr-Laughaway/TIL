@@ -326,5 +326,82 @@
 
 
 
-- 
+- signup.html
 
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>SignUp</title>
+  <style>
+    body {
+      background: #666;
+    }
+    
+    #container {
+      width: 450px;
+      margin: 15px auto;
+      padding: 10px;
+      border: 1px solid #666;
+      border-radius: 10px;
+      background: white;
+    }
+    
+    ul {
+      list-style-type: none;
+    }
+    
+    ul li {
+      line-height: 25px;
+      margin-bottom: 10px;  
+    }
+    
+    label {
+      width: 80px;
+      float: left;
+      text-align: right;
+      padding-right: 5px;
+      font-weight: bold;
+    }
+    
+    .centered {
+      text-align: center;
+    }
+  </style>
+  </head>
+  <body>
+  <div id="container">
+    <h1>가입 정보</h1>
+    <form action="/register.jsp"  method="get"> 
+      <ul>
+        <li>
+          <label for="uname">이름</label>
+          <input type="text" id="uname" name="uname" placeholder="홍길동" required>
+        </li>
+         <li>
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" placeholder="abcd@abcd.com" required>
+        </li>
+         <li>
+          <label for="pw">비밀번호</label>
+          <input type="password" id="pw" name="pw" required>
+        </li>
+        <li>
+          <label for="sex">비밀번호</label>
+          <select id="sex" name="sex">
+            <option value="w"> 여성 </option>
+            <option value="m"> 남성 </option>
+          </select>
+        </li>
+      </ul>
+      <div class="centered">
+        <input type="submit" value="가입하기" class="centered">
+      </div>
+    </form>
+  </div>
+  </body>
+  </html>
+  ```
+
+  
