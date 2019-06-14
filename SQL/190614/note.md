@@ -7,6 +7,9 @@
 --1.
 desc emp;
 
+--2.
+select distinct deptno from emp;
+
 
 ```
 
