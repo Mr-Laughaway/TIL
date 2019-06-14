@@ -24,6 +24,11 @@ group by deptno
 order by deptno asc;
 
 
+--5.
+select deptno, job, avg(sal)
+from emp
+group by rollup(deptno, job);
+
 
 ```
 
