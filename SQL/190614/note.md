@@ -30,6 +30,12 @@ from emp
 group by rollup(deptno, job);
 
 
+--6.
+select ename, deptno, dname, loc
+from emp full outer join dept using (deptno);
+
+
+
 ```
 
 
