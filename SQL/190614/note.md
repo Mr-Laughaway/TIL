@@ -17,6 +17,12 @@ select to_char(sysdate, 'YYYY"년" MM"년" DD"일"') "Today"
 from dual;
 
 
+--4.
+select deptno, count(empno) as "사원수", avg(sal) as "급여평균"
+from emp
+group by deptno
+order by deptno asc;
+
 
 
 ```
