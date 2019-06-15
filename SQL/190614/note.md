@@ -13,7 +13,7 @@ select distinct deptno from emp;
 
 
 --3.
-select to_char(sysdate, 'YYYY"년" MM"년" DD"일"') "Today"
+select to_char(sysdate, 'YYYY"년" MM"월" DD"일"') "Today"
 from dual;
 
 
@@ -29,7 +29,7 @@ select deptno, job, avg(sal)
 from emp
 group by rollup(deptno, job);
 
-s
+
 --6.
 select ename, deptno, dname, loc
 from emp full outer join dept using (deptno);
@@ -153,7 +153,8 @@ public class JdbcExam {
 				e.printStackTrace();
 			}
 		}//finally end
-	}
+	
+    }//search() end
 
 }//class end
 
