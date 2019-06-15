@@ -13,7 +13,7 @@ select distinct deptno from emp;
 
 
 --3.
-select to_char(sysdate, 'YYYY"년" MM"월" DD"일"') "Today"
+select to_char(sysdate, 'YYYY"년" MM"월" DD"일"') as "Today"
 from dual;
 
 
@@ -50,7 +50,9 @@ where
 
 
 --8.
-select mon as "입사월", to_char(max(salary), '9,999,999')  || '원' as "최고급여"
+select 
+	mon as "입사월", 
+	to_char(max(salary), '9,999,999')  || '원' as "최고급여"
 from (
     select
         to_number(to_char(hire_date, 'MM')) || '월' as mon,
@@ -67,11 +69,11 @@ select
     hireyear as "입사년도",
     count(employee_id) as "조건에 맞는 직원수"
 from (
-        select 
-            to_char(hire_date, 'YY') as hireyear,
-            employee_id
-        from employees
-        where salary between 5000 and 10000
+    select 
+    	to_char(hire_date, 'YY') as hireyear,
+    	employee_id
+    from employees
+    where salary between 5000 and 10000
 )
 group by hireyear
 having count(employee_id) >= 7
