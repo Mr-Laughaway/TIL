@@ -161,207 +161,212 @@
 
 
 
+### tag를 활용한 layout 분리
 
+#### 개인 실습
 
-- layouttest.html
+*layouttest.html*
 
-  ```html
-  <!DOCTYPE html>
-  <html>
-  <head>
-  <meta charset="UTF-8">
-  <title>Insert title here</title>
-  <link href="layouttest.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-  
-    <header>
-      <h2>머리말 입니다.</h2>
-      <nav>
-        네비게이션 영역. 이전 이후 등
-      </nav>
-    </header>
-    <section>
-      <article> 첫 번째 기사  </article>
-      <article> 두 번째 기사  </article>
-      <article> 세 번째 기사  </article>
-    </section>
-    <aside> 광고입니다. 계란 사세요. 계란  </aside>
-    <div class="clear"></div>
-  
-    
-    
-    <footer>
-      하단 푸터
-    </footer>
-    
-  
-  </body>
-  </html>
-  ```
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="layouttest.css" rel="stylesheet" type="text/css">
+</head>
+<body>
 
+  <header>
+    <h2>머리말 입니다.</h2>
+    <nav>
+      네비게이션 영역. 이전 이후 등
+    </nav>
+  </header>
+  <section>
+    <article> 첫 번째 기사  </article>
+    <article> 두 번째 기사  </article>
+    <article> 세 번째 기사  </article>
+  </section>
+  <aside> 광고입니다. 계란 사세요. 계란  </aside>
+  <div class="clear"></div>
 
+  
+  
+  <footer>
+    하단 푸터
+  </footer>
+  
 
-- layouttest.css
-
-  ```css
-  @charset "UTF-8";
-  
-  * {
-    padding: 0;
-    margin 0;
-  }
-  
-  li {
-    list-style-type: none;
-  }
-  
-  .clear {
-    clear: both;
-  }
-  
-  .conlay {
-    width: 997px;
-  }
-  
-  header {
-    width: 995px;
-    height: 100px;
-    margin-top: 10px;
-    border: solid 2px green;
-    background: yellow;
-  }
-  
-  #logo {
-    float: left;
-    border: solid 1px red;
-  }
-  
-  #top {
-    float: right;
-    margin: 30px 20px 0 0;
-    border: solid 1px red;
-  }
-  
-  nav {
-    float: right;
-    border: solid 2px green;
-    background: chartreuse;
-  }
-  
-  section {
-    width: 674px;
-    height: 240px;
-    float: left;
-    margin-top: 10px;
-    border: solid 1px green;
-    background: lightgray;
-  }
-  
-  article {
-    margin-left: 20px;
-    margin-top: 10px;
-    margin-right: 20px;
-    height: 30px;
-    background: white;
-    border: solid 1px green;
-  }
-  
-  aside {
-    width: 290px;
-    height: 240px;
-    float: left;
-    margin-top: 10px;
-    margin-left: 29px;
-    border: solid 1px green;
-  }
-  
-  footer {
-    width: 995px;
-    height: 130px;
-    margin-top: 10px;
-    border: solid 1px green;
-  }
-  
-  ```
+</body>
+</html>
+```
 
 
 
-- layout1_teacher.html
+*layouttest.css*
 
-  ```html
-  
-  <!DOCTYPE html>
-  <html>
-  <head>
-  	<meta charset="utf-8">
-  	<title>semantic3</title> 
-  	<style>
-  		header { 
-            background:yellow; 
-            border:2px solid blue;
-            position:relative;
-  		margin-bottom:10px;
-          }
-  		nav { 
-            background:lime; 
-            border:1px solid red;
-            position:absolute;
-  		  right:5px;
-            bottom:2px;
-            width:300px; 
-          }
-  		section { 
-            padding:10px;
-            maring:10px;
-            border:1px solid black;
-  		  background:lightgray;
-            width:70%; 
-          }
-  		article { 
-            padding:20px;
-            margin:10px;
-            border:1px solid black;
-  		  border-radius:8px;
-            background:beige;
-          }
-  		aside { 
-            float:right;
-            width:20%;
-            background:orange;
-            padding:10px; 
-          }
-  		footer { 
-            background:yellow; 
-            border:1px solid blue;
-            margin-top:10px; 
-          }
-  
-  	</style>
-  <body>
-  	<header> <h2>머리말입니다.</h2>
-  		<nav> 내비게이션 영역. 이전, 이후, 홈</nav>
-  	</header>
-  	<aside> 광고입니다. 계란 사세요. 계란</aside>
-  	<section>
-  		<article> 첫 번째 기사 </article>
-  		<article> 두 번째 기사 </article>
-  		<article> 세 번째 기사 </article>
-  	</section>
-  	<footer> 꼬리말입니다. 회사 연락처 등</footer>
-  </body>
-  </html>
-  
-  ```
+```css
+@charset "UTF-8";
+
+* {
+  padding: 0;
+  margin 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+.clear {
+  clear: both;
+}
+
+.conlay {
+  width: 997px;
+}
+
+header {
+  width: 995px;
+  height: 100px;
+  margin-top: 10px;
+  border: solid 2px green;
+  background: yellow;
+}
+
+#logo {
+  float: left;
+  border: solid 1px red;
+}
+
+#top {
+  float: right;
+  margin: 30px 20px 0 0;
+  border: solid 1px red;
+}
+
+nav {
+  float: right;
+  border: solid 2px green;
+  background: chartreuse;
+}
+
+section {
+  width: 674px;
+  height: 240px;
+  float: left;
+  margin-top: 10px;
+  border: solid 1px green;
+  background: lightgray;
+}
+
+article {
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-right: 20px;
+  height: 30px;
+  background: white;
+  border: solid 1px green;
+}
+
+aside {
+  width: 290px;
+  height: 240px;
+  float: left;
+  margin-top: 10px;
+  margin-left: 29px;
+  border: solid 1px green;
+}
+
+footer {
+  width: 995px;
+  height: 130px;
+  margin-top: 10px;
+  border: solid 1px green;
+}
+
+```
+
+
+
+#### 강사님 모범 답안
+
+*layout1_teacher.html*
+
+```html
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>semantic3</title> 
+	<style>
+		header { 
+          background:yellow; 
+          border:2px solid blue;
+          position:relative;
+		margin-bottom:10px;
+        }
+		nav { 
+          background:lime; 
+          border:1px solid red;
+          position:absolute;
+		  right:5px;
+          bottom:2px;
+          width:300px; 
+        }
+		section { 
+          padding:10px;
+          maring:10px;
+          border:1px solid black;
+		  background:lightgray;
+          width:70%; 
+        }
+		article { 
+          padding:20px;
+          margin:10px;
+          border:1px solid black;
+		  border-radius:8px;
+          background:beige;
+        }
+		aside { 
+          float:right;
+          width:20%;
+          background:orange;
+          padding:10px; 
+        }
+		footer { 
+          background:yellow; 
+          border:1px solid blue;
+          margin-top:10px; 
+        }
+
+	</style>
+<body>
+	<header> <h2>머리말입니다.</h2>
+		<nav> 내비게이션 영역. 이전, 이후, 홈</nav>
+	</header>
+	<aside> 광고입니다. 계란 사세요. 계란</aside>
+	<section>
+		<article> 첫 번째 기사 </article>
+		<article> 두 번째 기사 </article>
+		<article> 세 번째 기사 </article>
+	</section>
+	<footer> 꼬리말입니다. 회사 연락처 등</footer>
+</body>
+</html>
+
+```
 
 
 
 
 
+### CSS 스타일 입히기 연습
 
+- Puppy
 
-
-- puppy.html
+  *puppy.html*
 
   ```html
   <!DOCTYPE html>
@@ -405,9 +410,7 @@
   </html>
   ```
 
-  
-
-- puppy.css
+  *puppy.css*
 
   ```css
   @charset "UTF-8";
@@ -491,9 +494,7 @@
   
   ```
 
-  
 
-  
 
 - signup.html
 
