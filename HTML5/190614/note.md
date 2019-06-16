@@ -89,7 +89,7 @@
 
 
 
-- ***frameset, frame***
+- ***frameset, frame*** (아주 유용할 듯)
 
   ***frame_test.html***
 
