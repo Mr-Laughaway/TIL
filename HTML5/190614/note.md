@@ -89,9 +89,9 @@
 
 
 
-- frameset, frame
+- ***frameset, frame***
 
-  *frame_test.html*
+  ***frame_test.html***
 
   ```html
   <!DOCTYPE html>
@@ -112,7 +112,7 @@
   </html>
   ```
 
-  *top.html*
+  ***top.html***
 
   ```html
   <!DOCTYPE html>
@@ -127,7 +127,7 @@
   </html>
   ```
 
-  *left.html*
+  ***left.html***
 
   ```html
   <!DOCTYPE html>
@@ -142,7 +142,7 @@
   </html>
   ```
 
-  *right.html*
+  ***right.html***
 
   ```html
   <!DOCTYPE html>
