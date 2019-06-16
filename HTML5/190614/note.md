@@ -1,5 +1,166 @@
 #### Tag들
 
+- iframe 
+
+  ```html
+  <iframe src="https://www.daum.net">
+    <p>Your browser does not support iframes.</p>
+  </iframe>
+  ```
+
+  target 대상으로 지정 가능
+
+  ```html
+  <h2>국내 주요 사이트</h2>
+  <p><a href="http://www.naver.com" target="site">네이버</a></p>
+  <p><a href="http://www.daum.net" target="site">다음</a></p>
+  <p><a href="http://www.google.com" target="site">구글</a></p>
+  
+  <iframe width="800" height="300" src="http://www.yes24.com" name="site"></iframe>
+  ```
+
+  
+
+- meter
+
+  ```html
+  <meter value="2" min="0" max="10">2 out of 10</meter><br>
+  <meter value="0.6">60%</meter>
+  ```
+
+  
+
+- img > map > area
+
+  ```html
+  <img src="./images/navi.jpg" alt="" usemap="#Map1" />
+  <map name="Map1">
+    <area shape="rect" coords="0,0,40,35" href="http://mail.naver.com" alt="메일" />
+    <area shape="rect" coords="40,0,70,35" href="http://section.cafe.naver.com" alt="카페" />
+    <area shape="rect" coords="70,0,115,35" href="http://section.blog.naver.com" alt="블로그" />
+  </map>
+  ```
+
+
+
+- embed
+
+  ```html
+  <p>Yellow - Coldplay 뮤직 비디오</p>
+  <embed src="https://www.youtube.com/embed/yKNxeF4KMsY" width="560" height="315" >
+  ```
+
+
+
+- label, optgroup, option
+
+  ```html
+  <label>
+      <select>
+          <optgroup label="한식">
+              <option>비빔밥</option>
+              <option>갈비탕</option>
+              <option>김치찌게</option>
+              <option>된장찌게</option>
+          </optgroup>
+          <optgroup label="중식">
+              <option>짜장면</option>
+              <option>짬뽕</option>
+              <option>탕슉</option>
+          </optgroup>
+          <optgroup label="양식">
+              <option>돈까스</option>
+              <option>스파게티</option>
+          </optgroup>
+      </select>
+  </label>
+  ```
+
+  
+
+- svg
+
+  ```html
+  <svg width="100" height="100">
+    <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+    Sorry, your browser does not support inline SVG.
+  </svg>
+  ```
+
+
+
+- frameset, frame
+
+  *frame_test.html*
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Frame test</title>
+  </head>
+  
+  <frameset rows="40%, 60%">
+    <frame src="top.html"/>
+    <frameset cols="30%,70%">
+      <frame src="left.html"/>
+      <frame src="right.html"/>
+    </frameset>
+  </frameset>
+  
+  </html>
+  ```
+
+  *top.html*
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>top</title>
+  </head>
+  <body style="background-color:green">
+    top
+  </body>
+  </html>
+  ```
+
+  *left.html*
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>left</title>
+  </head>
+  <body style="background-color:blue">
+    left
+  </body>
+  </html>
+  ```
+
+  *right.html*
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>right</title>
+  </head>
+  <body style="background-color:yellow">
+    right
+  </body>
+  </html>
+  ```
+
+
+
+
+
 
 
 - layouttest.html
