@@ -254,6 +254,204 @@ css 주석 : /* 주석 *>
 
 
 
+*hirerarchy, h1+h2, :hover, :active, ::first-child, ::first-line*
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style>
+  /* 후손 테스트 해라 */
+  #header h3 { color: red; }
+  #header > #d2 h3 { color: blue; }
+  
+  h1 + h2 { color: red;}
+  h1 ~ h2 { background-color: orange;}
+  
+  h1:hover { background-color: black; color: yellow;}
+  h1:active { background-color: red; color: black;}
+  
+  input:enabeld { background-color: white;}
+  input:disabled { background-color: gray;}
+  input:focus { background-color: orange;}
+  input:checked {
+    background-color: green; 
+    color:green;
+    width: 100px;
+    height: 100px;
+  }
+  
+  li { 
+    list-style: none;
+    float:left; padding: 15px;
+  }
+  
+  li:first-child { border-radius: 10px 0 0 10px; }
+  li:last-child { border-radius: 0 10px 10px 0; }
+  li:nth-child(2n) { background-color: #f00003; }
+  li:nth-child(2n+1) { background-color: #800000; }
+  
+  p::first-letter { font-size: 3em;}
+  p::first-line { color: red;}
+  p::selection { color: yellow; background-color: black;}
+  
+  a { text-decoration: none;}
+  a:visited { color: green;}
+  a:link::after { content: ' - ' attr(href) ' hahahaha!!!!!!!!!!!!!!'}
+  
+</style>
+
+</head>
+<body>
+  <div id="header">
+    <h3>자손태그</h3>
+    <div id="d1">
+      <h3>후손태그</h3>
+    </div>
+    <div id="d2">
+      <div>
+        <h3>후손태그</h3>
+      </div>
+    </div>
+  </div>
+  
+  <h1>h1 태그</h1>
+  <h2>h2 태그</h2>
+  <h2>h2 태그</h2>
+  <h2>h2 태그</h2>
+  <h2>h2 태그</h2>
+  
+  <hr>
+  
+  <h4>Enabled</h4>
+  <input />
+  <h4>Disabled</h4>
+  <input disabled="disabled"/><br>
+  <label>체크박스</label> 
+  <input type="checkbox"/>
+  
+  <hr>
+  
+  <ul>
+    <li>First</li>
+    <li>Second</li>
+    <li>Third</li>
+    <li>Fourth</li>
+    <li>Fifth</li>
+    <li>Sixth</li>
+    <li>Seventh</li>
+  </ul>
+  <br>
+  
+  <h4></h4>
+  <h5></h5>
+  <h6></h6>
+  <br>
+  <hr>
+  
+  <p> Newmonoultramicroscopicsilicovolcanoconiosis alksdjflkasjdfl;kasjdflk;al;ksdjflkasjdfl;kajsd;lfkjas;ldkfj
+  asj;dlfkjas;ldkfja;slkdfja;lskdjf;laksdjf;lkasjdf;lkasjdf;lkjasd;lkfj asdl;kf asd;as sdlf a;aslkdfaksd as;ldfkasd fsadf
+  </p>
+  <br>
+  
+  <p>Since fifteen hundred and sixteen minds asdklfjasl;kdjflkasjdflk;jasdlf;kjasl;kdfjlka;sjdflk;ajsdflkjasldk;fj
+  asl;kdf asd;lkfj as;dlkf as;kdjf ;lkajsd f; as dfa;lskdf asd;lkfj asd;l asd;kjfasd;klfj
+  </p>
+  
+  <hr>
+  
+  <h4><a>Nothing</a></h4>
+  <h4><a href="http://hanb.co.kr">Hanbit Media</a></h4>
+  <h4><a href="www.w3.org">W3</a></h4>
+  <h4><a href="https://github.com">Github</a></h4>
+  
+</body>
+</html>
+```
+
+
+
+*inline*
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<style>
+  span, img {
+    border: solid 1px red;
+  }
+  
+  p, div {
+    border: solid 1px blue;
+  }
+  
+  li {
+    list-style-type: none;
+  }
+  
+  #v_menu {
+    width: 150px;
+  }
+  
+  #v_menu li {
+    padding: 5px;
+    border-bottom: dotted 1px black;
+  }
+  
+  #h_menu li {
+    display: inline;
+  }
+  
+  .menus {
+    margin: 0 20px 0 20px;
+    color: green;
+  }
+  
+  
+ 
+</style>
+</head>
+<body>
+<h2>인라인과 블록의 차이점</h2>
+
+<h3>1. 인라인(수평 방향 레이아웃)</h3>
+<img src="cheese.jpg">
+<span>치즈</span>
+<img src="juice.jpg">
+<span>오렌지 주스</span>
+
+<h3>2. 블록(수직 방향 레이아웃)</h3>
+<p>이것은 단락입니다.</p>
+<div>박스 A</div>
+<div>박스 B</div>
+
+<h3>1. 세로 메뉴</h3>
+<ul id='v_menu'>
+  <li>CEO 인사말</li>
+  <li>조직도</li>
+  <li>전화번호 안내</li>
+  <li>찾아오시는 길</li>
+</ul>
+
+<h3>2. 가로 메뉴</h3>
+<ul id='h_menu'>
+  <li class='menus'>회사소개</li>
+  <li>|</li>
+  <li class='menus'>제품안내</li>
+  <li>|</li>
+  <li class='menus'>고객센터</li>
+  <li>|</li>
+  <li class='menus'>매장안내</li>
+</ul>
+</body>
+</html>
+```
+
 
 
 
