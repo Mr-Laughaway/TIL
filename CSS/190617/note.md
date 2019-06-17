@@ -454,5 +454,326 @@ css 주석 : /* 주석 *>
 
 
 
+*padding*
 
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>padding</title>
+<style>
+  p {
+    width: 500px;
+    border: solid 2px black;
+    margin-top: 20px;
+  }
+  
+  h3 {
+    border-left: solid 8px blue;
+    padding-left: 10px;
+  }
+  
+  #padding1 {
+    padding: 20px;
+  }
+  
+  #padding2 {
+    padding-top: 20px;
+    padding-right: 30px;
+    padding-bottom: 40px;
+    padding-left: 50px;
+    /* padding: 20px 30px 40px 50px; */
+  }
+</style>
+</head>
+<body>
+  <h3>서울동물원 소개</h3>
+  <p id='padding1'> 서울동물원은 동.ㅁ;ㅣ나얼;ㅣ만얼;ㅣ만얼;ㅣ마넝ㄹ;ㅣㅏㅁㄴ얼;ㅣㅏㅁ넝ㄹ;ㅣㅏㅁㄴ얼
+  ㅁㄴ이;라ㅓㅁㄴ;이라ㅓㅁㄴ;ㅣ아럼;니ㅏ얼;ㅣㅁ낭러ㅣ;ㅁ나얼;ㅣㅁ나ㅓㅇ리;ㅏㅁㄴ얼
+  ㅁㄴ이;라ㅓㅁㄴ;ㅣㅇ라ㅓㅁ;니아럼ㄴ'이ㅏ러</p>
+  <p id='padding2'> 서울동움ㄹ원은 동 식물원 ㅁ;ㅣㅏㅓㅇㄴㄹ;ㅣㅏㅁ넝ㄹ;ㅣㅏㅓㅁㄴㅇ;ㅣ라ㅓㅁㄴ;이ㅏ럼
+  ㅁ넝;ㅣ라ㅓㅁㄴ;이라ㅓㅁ;ㄴ아ㅓㄹ;미나얼;ㅣㅁ나ㅓㅇㄹ;ㅣ마넝ㄹ;ㅣㅁ나ㅓㅇㄹ;ㅣ마넝ㄹ;ㅣㅏㅁ넝ㄹ
+  ㅁ넝;ㅣ라ㅓㅁㄴ;이라ㅓㅁ;니아럼;니ㅏ얼;미나ㅓㅇㄹ;미낭러</p>
+
+</body>
+</html>
+```
+
+
+
+***position***
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+  <style>
+    .area {
+      width: 400px;
+      height: 100px;
+      border: 3px solid black;
+      
+      position: relative;
+      overflow: scroll;
+    }
+    
+    .box {
+      width: 100px; height: 100px;
+      position: absolute;
+      /*opacity: 0.5;*/
+    }
+    .red {
+      background-color: red;
+      left: 10px; top: 10px;
+      z-index: 100;
+    }
+    .green {
+      background-color: green;
+      left: 50px; top: 50px;
+      z-index: 10;
+    }
+    .blue {
+      background-color: blue;
+      left: 90px; top: 90px;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lorem ipsum</h1>
+  <div class="area">
+    <div class="box red"></div>
+    <div class="box green"></div>
+    <div class="box blue"></div>
+  </div>
+  <h1>Lorem ipsum</h1>
+  
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아1</span><br>
+  <span>아아아아아2</span><br>
+  <span>아아아아아3</span><br>
+  <span>아아아아아4</span><br>
+  <span>아아아아아5</span><br>
+  <span>아아아아아6</span><br>
+  <span>아아아아아7</span><br>
+  <span>아아아아아8</span><br>
+  <span>아아아아아9</span><br>
+  <span>아아아아아10</span><br>
+</body>
+</html>
+```
+
+
+
+*select[attr=xxx]*
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+  input[type=text] { background: red;}
+  input[type=password] { background: blue;}
+  
+  img[src$=png] { border: solid 3px yellow;}
+  img[src$=jpg] { border: solid 3px blue;}
+</style>
+
+</head>
+
+<body>
+  <form>
+    <input type="text">
+    <input type="password">
+    <br>
+    
+    
+    <img src="../images/foxtail.jpg">
+    <img src="../images/full.png">
+    <img src="../images/cheese.jpg">
+  </form>
+</body>
+</html>
+```
+
+
+
+*border-collapse*
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>table-border</title>
+<style>
+  table, th, td {
+    border: solid 1px #000000;
+  }
+  
+  table {
+    border-collapse: collapse;
+  }
+  
+  th {
+    width: 80px;
+    padding: 6px;
+  }
+  
+  td {
+    padding 6px;
+    text-align: center;
+  }
+  
+  #day {
+    background-color: #adf0f4;
+  }
+  
+  #title {
+    background-color: #adcff4;
+  }
+</style>
+</head>
+<body>
+  <h2>고속버스 예매</h2>
+<table>
+  <tr id='day'>
+    <th colspan='4'>서울 &lt;=&gt; 대전 2020.9.6 수</th>
+  </tr>
+  <tr id='title'>
+    <th>출발</th>
+    <th>버스회사</th>    
+    <th>등급</th>  
+    <th>예약가능</th>    
+  </tr>
+  <tr>
+    <td>11:50</td>
+    <td>한진고속</td>
+    <td>우등</td>
+    <td><img src='full.png'></td>
+  </tr>
+  <tr>
+    <td>12:50</td>
+    <td>천일고속</td>
+    <td>고속</td>
+    <td><img src='empty.png'></td>
+  </tr>
+  <tr>
+    <td>13:50</td>
+    <td>한진고속</td>
+    <td>우등</td>
+    <td><img src='full.png'></td>
+  </tr> 
+</table>
+
+</body>
+</html>
+```
+
+
+
+*transition*
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+  <style>
+        input[type=checkbox]:checked + div {
+            height: 0px;
+        }
+        div {
+            overflow: hidden;
+            background-color: green;
+            width: 650px; height: 100px;
+
+            /* 변환 효과를 적용합니다. */
+            -ms-transition-duration: 1s;
+            -webkit-transition-duration: 1s;
+            -moz-transition-duration: 1s;
+            -o-transition-duration: 1s;
+            transition-duration: 1s;
+        }
+        
+        div:hover {
+          height:300px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Lorem ipsum dolor amet</h1>
+    </div>
+</body>
+</html>
+```
 
