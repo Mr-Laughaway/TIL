@@ -404,3 +404,79 @@
 </html>
 ```
 
+
+
+##### 제어문 (if, 삼항, 논리, switch)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>제어문</title>
+</head>
+<body>
+
+  <script>
+  	//var input1 = window.prompt("점수를 입력하세요", 0);
+  	//document.write(input1 + ":" + typeof(input1) + "<br>");
+  	
+  	//var input2 = window.confirm("종료하시겠습니까?");
+  	//document.write(input2 + ":" + typeof(input2) + "<br>");
+  </script>
+  
+ 
+  <p>문1> if문을 이용해서 사용자로부터 입력받은 점수가 짝수인지 홀수인지 출력 </p>
+  <script>
+    var input = window.prompt("점수를 입력하세요", 0);
+    if( parseInt(input)%2 === 0 ) {
+        document.write("짝수" + "<br>");
+    }
+    else {
+      document.write("홀수" + "<br>");
+    }
+  </script>
+  <hr>
+  
+  <p>문2> 삼항 연산자를 이용해서 사용자로부터 입력받은 점수가 짝수인지 홀수인지 출력 </p>
+  <script>
+ 	 parseInt(input)%2 === 0 ?
+  			document.write("짝수" + "<br>")
+  			:
+  			document.write("홀수" + "<br>");
+  </script>
+  <hr>
+  
+  <p>문3> 논리 연산자를 이용해서 사용자로부터 입력받은 점수가 짝수인지 홀수인지 출력 </p>
+  <script>
+  	parseInt(input)%2 === 0 && document.write("짝수" + "<br>");
+  	parseInt(input)%2 === 0 || document.write("홀수" + "<br>");
+  </script>
+  <hr>
+  
+  <p>문4> switch 문을 사용해서 사용자로부터 입력받은 점수에 대한 학점 출력, ABCD</p>
+  <script>
+  	switch(parseInt(parseInt(input)/10)) {
+  	case 10:
+  	case 9:
+  		document.write("A학점" + "<br>");
+  		break;
+  	case 8:
+  		document.write("B학점" + "<br>");
+  		break;
+  	case 7:
+  		document.write("C학점" + "<br>");
+  		break;
+  	case 6:
+  		document.write("D학점" + "<br>");
+  		break;
+  	default:
+  		document.write("F학점" + "<br>");
+  	}
+  </script>
+  <hr>
+  
+</body>
+</html>
+```
+
