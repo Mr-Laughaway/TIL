@@ -35,3 +35,79 @@
   - Window 인터페이스
   - DOM
   - XMLHttpRequest (ajax의 핵심 객체)
+
+- 서버 측 자바스크립트의 고유한 기술 요소
+
+  - Node.js
+  - Rhino (Mozilla가 관리)
+  - Aptana Jaxer
+
+
+
+#### HTML 문서에 자바스크립트 포함 위치
+
+##### html에 포함하는 방법
+
+```html
+<head>
+    <script>
+        //자바스크립트 코드
+        //대체로 선언과 관련된 부분이 많다
+        //ex) 전역변수 선언, 함수 선언
+        //body요소 를 참조하거나 사용하는 실행문장은
+        //오류가 발생한다.
+    </script>
+</head>
+
+<body>
+    <script>
+        //자바스크립트 코드
+        //대체로 즉시 실행 문장 코드가 온다.
+    </script>
+</body>
+
+
+```
+
+
+
+##### html로부터 분리시키는 방법
+
+```html
+<head>
+    <script type="text/javascript" src="경로/파일.js"></script>
+</head>
+<body>
+</body>
+```
+
+
+
+##### factorial test
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>자바스크립트 테스트01</title>
+<script>
+	window.alert("head 태그내에 포함된 javascript 실행");
+</script>
+</head>
+<body>
+  <script>
+  	function fact(n) {
+		if( n<=1 ) return n;
+		return n*fact(n-1);
+	}
+	for(var i=1; i < 10; i++) {
+	    console.log(i+"! = " + fact(i));
+	}
+  </script>
+</body>
+</html>
+```
+
+
+
