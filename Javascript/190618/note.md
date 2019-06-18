@@ -480,3 +480,72 @@
 </html>
 ```
 
+
+
+##### 반복문 (for, while, do~while)과 구구단
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>반복문</title>
+ <style>
+  div {
+    width: 100px;
+    float: left;
+  }
+ </style>
+</head>
+<body>
+  <script>
+  
+  	for(var i = 0; i < 10; i++) {
+  		if( i%2 == 1 )
+  			document.write(i+ " ");
+  	}
+  	document.write("<hr>");
+  	
+  	var i = 0;
+  	while(i < 10) {
+  		i++;
+  		if( i%2 == 1 )
+  			document.write(i+ " ");
+  	}
+  	document.write("<hr>");
+  	
+  	var i = 0;
+  	do {
+  		i++;
+  		if( i%2 == 1 )
+  			document.write(i+ " ");
+  	}while(i < 10);
+  	document.write("<hr>");
+  
+  	var nums = [1,2,3,4,5,6,7,8,9,10];
+  	for(var n in nums) {
+  		if(n%2 == 1)
+  			document.write(n + " ");
+  	}
+  	document.write("<hr>");
+  	
+  	for(var i = 1; i <= 9; i++){
+  		for(var j = 2; j <= 9; j++) {
+  			document.write("<div>" + j + "*" + i + "=" + j*i + "</div>");
+  		}
+  		document.write("<br>");
+  	}
+  	document.write("<hr>");
+  	
+  	for(var su = 1; su<10; su++) {
+  		for(var dan=2; dan<10; dan++){
+  			document.write(`${dan}x${su}=${dan*su}\t`);
+  		}
+  		document.write("<br>");
+  	}
+  </script>
+
+</body>
+</html>
+```
+
