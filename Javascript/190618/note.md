@@ -325,3 +325,82 @@
 </html>
 ```
 
+
+
+##### type 변환 (String, parseXxx, Number)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>형변환</title>
+</head>
+<body>
+  <h3>자바스크립트 형변환</h3>
+  <script>
+  	var n = 26;
+  	document.write("var n = 26" + "<br>");
+  	document.write("n.toString() : " + n.toString() + "<br>")
+  	document.write("n.toString(2) : " + n.toString(2) + "<br>")
+  	document.write("n.toString(16) : " + n.toString(16) + "<br>")
+  	document.write("(26).toString(16) : " + (26).toString(16) + "<br>")
+  </script>
+  <br>
+  <script>
+  	var x = 1234.567;
+  	document.write("var x = 1234.567" + "<br>");
+  	document.write("x.toString() : " + x.toString() + "<br>");
+  	document.write("x.toString(16) : " + x.toString(16) + "<br>");
+  	document.write("x.toFixed(0) : " + x.toFixed(0) + "<br>");
+  	document.write("x.toFixed(2) : " + x.toFixed(2) + "<br>");
+  	document.write("x.toFixed(4) : " + x.toFixed(4) + "<br>");
+  	document.write("x.toExponential(2) : " + x.toExponential(2) + "<br>");
+  	document.write("x.toPrecision(3) : " + x.toPrecision(3) + "<br>");
+  	document.write("x.toPrecision(6) : " + x.toPrecision(6) + "<br>");
+  </script>
+  <br>
+  <script>
+  	document.write("String(26) : " +String(26)+ "<br>");
+  	document.write("String(1234.567) : " +String(1234.567)+ "<br>");
+  	document.write("String(0x1a) : " +String(0x1a)+ "<br>");
+  </script>
+  <br>
+  <script>
+  	document.write("String('ABC') : " + String("ABC")+ "<br>");
+  	document.write("String(true) : " + String(true)+ "<br>");
+  	document.write("String(false) : " + String(false)+ "<br>");
+  	document.write("String(NaN) : " + String(NaN)+ "<br>");
+  	document.write("String(null) : " + String(null)+ "<br>");
+  	document.write("String(undefined) : " + String(undefined)+ "<br>");
+  	document.write("String({x:1, y:2}) : " + String({x:1, y:2})+ "<br>");
+  	document.write("String([1, 2, 3]) : " + String([1, 2, 3])+ "<br>");
+  </script>
+  <br>
+  <script>
+  	document.write("parseInt('3.14') : " +parseInt("3.14")+ "<br>");
+  	document.write("parseFloat('3.14') : " +parseFloat("3.14")+ "<br>");
+  	document.write("parseInt('3.14 meters') : " +parseInt("3.14 meters")+ "<br>");
+  	document.write("parseFloat('3.14 meters') : " +parseFloat("3.14 meters")+ "<br>");
+  	document.write("parseInt('0xFF') : " +parseInt("0xFF")+ "<br>");
+  	document.write("parseInt('0.5') : " +parseInt("0.5")+ "<br>");
+  	document.write("parseInt(''.5') : " +parseInt(".5")+ "<br>");
+  	document.write("parseInt('abc') : " +parseInt("abc")+ "<br>");
+  	document.write("parseFloat('\100') : " +parseFloat("\100")+ "<br>");
+  </script>
+  <br>
+  <script>
+  	document.write("Nubmer('2.71828') : " + Number("2.71828") + "<br>");
+  	document.write("Number(123) : " + Number(123) + "<br>");
+  	document.write("Number(true) : " + Number(true) + "<br>");
+  	document.write("Number(false) : " + Number(false) + "<br>");
+  	document.write("Number(NaN) : " + Number(NaN) + "<br>");
+  	document.write("Number(undefined) : " + Number(undefined) + "<br>");
+  	document.write("Number(null) : " + Number(null) + "<br>");
+  	document.write("Number({x:1, y:2}) : " + Number({x:1, y:2}) + "<br>");
+  	document.write("Number([1,2,3]) : " + Number([1,2,3]) + "<br>");
+  </script>
+</body>
+</html>
+```
+
