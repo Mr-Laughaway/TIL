@@ -304,3 +304,24 @@
 </html>
 ```
 
+
+
+##### eval() 함수
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>String과 ===</title>
+</head>
+<body>
+  <script>
+  	var a = "window.alert('eval은 문자열을 자바스크립트 코드로 실행합니다')";
+  	eval(a);
+  </script>
+
+</body>
+</html>
+```
+
