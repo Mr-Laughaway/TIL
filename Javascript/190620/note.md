@@ -165,3 +165,18 @@
     - ...
   - 브라우저 객체
     - Window
+  - ECMAScript 객체
+
+
+
+- Window 객체
+  - close()
+  - open(url, name, {...})
+  - moveBy()
+  - MoveTo()
+  - alert()
+  - confirm()
+  - prompt()
+  - setTimeout(function(){}, timeout millisecond), clearTimeout()
+  - setInterval(function(){}, interval millisecond), clearInterval()
+  - 
