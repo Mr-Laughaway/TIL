@@ -179,4 +179,24 @@
   - prompt()
   - setTimeout(function(){}, timeout millisecond), clearTimeout()
   - setInterval(function(){}, interval millisecond), clearInterval()
-  - 
+
+
+
+- Window객체의 속성 Document ***document*** : HTML 요소 관련 처리 객체
+  - getElementById("")
+  - getElementsByName("")
+  - getElementsByTagName("");
+  - getElementsByClassName("");
+  - querySelector("css의 selector형식");  ```td:hover``` 등
+  - querySelectorAll("css의 selector형식");
+  - createElement("h1")
+  - createComment
+  - createTextNode("말말말")
+  - createDocumentFragment
+  - createAttribute()
+  - setAttribute()
+  - getAttribute()
+  - removeAttribute()
+  - Element.parentNod, childNodes
+  - appendChild()
+
