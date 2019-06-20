@@ -155,4 +155,13 @@
 
 - 자바 스크립트 객체 분류
   - 내장 객체
+    - Object
+    - String
+    - Boolean
+    - Number
+    - Array
+    - Date
+    - RegExp
+    - ...
   - 브라우저 객체
+    - Window
