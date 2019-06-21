@@ -94,8 +94,57 @@
     	}
     ```
 
-    
-
   - 캡처링
 
-    
+
+
+- 뷰포트(윈도우 좌표계)
+
+  웹 브라우저에서 문서의 내용을 표시하는 영역
+
+  - 뷰포트 너비 속성: clientWIdth, innerWidth(스크롤막대포함)
+  - 뷰포트 높이 속성: clientHeight, innerHeight(스크롤 막대 포함)
+
+
+
+- 문서의 요소 객체는 박스모델이 적용됨
+  - left, top, right, bottom
+  - width, height
+
+
+
+- innerHTML, innerText, textContent(공백도 다 가져왕)
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+    <script>
+    	onload = function() {
+    		document.getElementById("d1").innerHTML = "<strong>강조체</strong> <i>이탤릭</i>";
+    		document.getElementById("d2").textContent= "<strong>강조체</strong>     <i>이탤릭</i>";
+    		document.getElementById("d3").innerText = "<strong>강조체</strong>      <i>이탤릭</i>";
+    		
+    		
+    		console.log(document.getElementById("d4").innerHTML);
+    		console.log(document.getElementById("d4").innerText);
+    		console.log(document.getElementById("d4").textContent);
+    	}
+    </script>
+  </head>
+  <body>
+  
+    <div id="d1"></div>
+    <div id="d2"></div>
+    <div id="d3"></div>
+    <div id="d4">
+      <div id="d5">내용   내용</div>
+    </div>
+  </body>
+  </html>
+  ```
+
+  
+
