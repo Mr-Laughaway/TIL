@@ -654,7 +654,7 @@
 
 
 
-- preventDefault()
+- Event 3  - preventDefault()
 
   ```html
   <!DOCTYPE html>
@@ -699,9 +699,88 @@
   </html>
   ```
 
+
+
+- Event 4 - keyup()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+  </style>
+  <script>
+  	$(document).ready(function(){
+  		$('textarea').keyup(function(){
+  			var inputLength = $(this).val().length;
+  			var remain = 150 - inputLength;
+  			
+  			$('h1').html(remain);
+  			
+  			if(remain >= 0) {
+  				$('h1').css('color', 'black');
+  			}
+  			else {
+  				$('h1').css('color', 'red');
+  			}
+  		});
+  	});
+  </script>
+  </head>
+  <body>
+    <div>
+      <p>아무 생각 없다</p>
+      <h1>150</h1>
+      <textarea cols="70" rows="5"></textarea>
+    </div>
+  </body>
+  </html>
+  ```
+
+
+
+- Event 5 - scroll()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+  </style>
+  <script>
+  	
+  	$(document).ready(function(){
+  		var n = 0;
+  		for(var i = 0; i < 20; i++) {
+  			$('<h1>Infinity Scroll ' + n++ + '</h1>').appendTo('body');
+  		}
+  		
+  		$(window).scroll(function(){
+  			var scrollHeight = $(window).scrollTop() + $(window).height();
+  			var documentHeight = $(document).height();
+  			
+  			if(scrollHeight == documentHeight) {
+  				for(var i = 0; i < 10; i++) {
+  					$('<h1>Infinity Scroll ' + n++ + '</h1>').appendTo('body');
+  				}
+  			}
+  		});
+  	});
+  </script>
+  </head>
+  <body>
+    
+  </body>
+  </html>
+  ```
+
   
-
-
 
 
 
@@ -753,4 +832,144 @@
 
   
 
-- Effect - 
+- Effect 2 - animate()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+    div{ 
+      width:50px;
+      height:50px;
+      background:orange;
+      position:relative;
+    }
+  </style>
+  <script>
+  	
+  	$(document).ready(function(){
+  		/*
+  		$('div').hover(function(){
+  			$(this).animate({left:500}, 'slow');
+  		}, function() {
+  			$(this).animate({left:0}, 'slow');
+  		});
+  		*/
+  		
+  		$('div').click(function(){
+  			var width = $(this).css('width');
+  			var height = $(this).css('height');
+  			
+  			$(this).animate({
+  				width: parseInt(width)+50,
+  				height: parseInt(height)+50
+  			}, 'slow');
+  		});
+  	});
+  </script>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </body>
+  </html>
+  ```
+
+
+
+- Effect 3 - animate() 2
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+    div{ 
+      width:50px;
+      height:50px;
+      background:orange;
+      position:relative;
+    }
+  </style>
+  <script>
+  	
+  	$(document).ready(function(){
+  		$('button').click(function(){
+  			var html = $(this).html();
+  			var evalText = "$('div')." + html;
+  			
+  			eval(evalText);
+  		});
+  		
+  		$('div').animate({
+  			left: '500'
+  		}, 5000).animate({
+  			left: '0'
+  		}, 5000);
+  	});
+  </script>
+  </head>
+  <body>
+    <button>stop()</button>
+    <button>stop(true)</button>
+    <button>stop(false, true)</button>
+    <button>stop(true, true)</button>
+    <div></div>
+  </body>
+  </html>
+  ```
+
+
+
+- Effect 4 - dealy()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+    div{ 
+      width:50px;
+      height:50px;
+      background:orange;
+      position:relative;
+    }
+  </style>
+  <script>
+  	
+  	$(document).ready(function(){
+  		$('div').each(function(index){
+  			$(this).delay(index * 500).animate({
+  				left: 500
+  			}, 'slow');
+  		});
+  	});
+  </script>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </body>
+  </html>
+  ```
+
+  
+
