@@ -729,4 +729,355 @@ document.write("블럭 외부에서 x :"+ x+"<br>");
 
   
 
-- 
+- Document 객체를 이용한 문서 구조 변경
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+    <title>Document 객체를 이용한 문서 구조 변경</title>
+    <script>
+    	window.onload = function() {
+      	var h1 = document.createElement("h1");
+      	var text1 = document.createTextNode("새 요소 추가");
+      	h1.appendChild(text1);
+      	document.body.appendChild(h1);
+      	
+      	var img1 = document.createElement("img");
+      	img1.src = "../images/puppy.jpg";
+      	img1.width = 300;
+      	img1.height = 300;
+      	document.body.appendChild(img1);
+      	//document.body.appendChild(
+      	//		document.createElement("br")
+      	//);
+      	
+      	
+      	var img2 = document.createElement("img");
+      	img2.setAttribute('src', "../images/puppy.jpg");
+      	img2.setAttribute('width', 300);
+      	img2.setAttribute('height', 300);
+      	console.log(img2.getAttribute("src"));
+      	document.body.appendChild(img2);
+      	
+      	var nodelist = document.getElementsByName("j2");
+      	console.log(nodelist.length);
+      	console.log(nodelist[0].innerHTML+","+nodelist[1].innerHTML);
+      	nodelist = document.getElementsByTagName("p");
+      	console.log(nodelist.length);
+      	
+      	var p1 = document.getElementById("j1");
+      	p1.style.border = "2px solid blue";
+      	p1.style.color = "orange";
+      	p1.style.fontSize="20";
+      	console.log(
+      		document.getElementById("j1").parentNode.nodeName
+      	);
+      	
+    	}
+    </script>
+  </head>
+  <body>
+    <h3>Document 객체를 이용한 문서 구조 변경</h3>
+    <p id="j1">JavaScript</p>
+    <p name="j2">jQuery</p>
+    <p name="j2">SencaTouch</p>
+    <p>Node.js</p>
+  
+  </body>
+  </html>
+  ```
+
+
+
+- querySelector()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  
+  <head>
+    <meta charset="utf-8" />
+    <title>Query Selector Demo</title>
+  
+    <style type="text/css">
+      td {
+        border-style: solid;
+        border-width: 1px;
+        font-size: 300%;
+      }
+  
+      td:hover {
+        background-color: cyan;
+      }
+  
+      #hoverResult {
+        color: green;
+        font-size: 200%;
+      }
+    </style>
+    <script>
+    	window.onload = function() {
+    		document.getElementById("findHover").onclick = function() {
+    			var hovered = document.querySelector("td:hover");
+    			if(hovered) {
+    				document.getElementById("hoverResult").innerHTML =
+    					hovered.innerHTML;
+    			}
+    		}
+    	}
+    </script>
+  </head>
+  
+  <body>
+  <h3> document.querySelector() </h3>
+    <section>
+      <!-- create a table with a 3 by 3 cell display -->
+      <table>
+        <tr>
+          <td>A1</td> <td>A2</td> <td>A3</td>
+        </tr>
+        <tr>
+          <td>B1</td> <td>B2</td> <td>B3</td>
+        </tr>
+        <tr>
+          <td>C1</td> <td>C2</td> <td>C3</td>
+        </tr>
+      </table>
+  
+      <div>Focus the button, hover over the table cells, and hit Enter to identify them using querySelector('td:hover').</div>
+      <button type="button" id="findHover" autofocus>Find 'td:hover' target</button>
+      <div id="hoverResult"></div>
+  
+       
+    </section>
+  
+  </body>
+  </html>
+  ```
+
+  
+
+
+
+- querySelector() - 예제2
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  
+  <head>
+    <meta charset="utf-8" />
+    <title>Query Selector All Demo</title>
+  
+    <style type="text/css">
+      td {
+        border-style: solid;
+        border-width: 1px;
+        font-size: 200%;
+      }
+  
+  
+      #checkedResult {
+        color: green;
+        font-size: 200%;
+      }
+    </style>
+    
+    <script>
+      window.onload = function() {
+    		document.getElementById("findChecked").onclick = function() {
+    			var selected = document.querySelectorAll("input:checked");
+    			var result = "Selected boxes are: ";
+    			for( var i = 0; i < selected.length; i++) {
+    				result += (selected[i].name + " ");
+    			}
+    
+    			document.getElementById("checkedResult").innerHTML = result;
+    		}
+    	}
+    </script>
+  
+  </head>
+  
+  <body>
+  
+    <section>
+  
+      <table>
+        <tr>
+          <td><input type="checkbox" name="A1">A1</td>
+          <td><input type="checkbox" name="A2">A2</td>
+          <td><input type="checkbox" name="A3">A3</td>
+        </tr>
+  
+        <tr>
+          <td><input type="checkbox" name="B1">B1</td>
+          <td><input type="checkbox" checked name="B2">B2</td>
+          <td><input type="checkbox" name="B3">B3</td>
+        </tr>
+  
+        <tr>
+          <td><input type="checkbox" name="C1">C1</td>
+          <td><input type="checkbox" name="C2">C2</td>
+          <td><input type="checkbox" name="C3">C3</td>
+        </tr>
+  
+      </table>
+      <div>Select various checkboxes, then hit the button to identify them using querySelectorAll("*:checked").</div>
+      <button type="button" id="findChecked" autofocus>Find checked boxes</button>
+      <div id="checkedResult"></div>
+  
+       
+    </section>
+  
+  </body>
+  
+  </html>
+  ```
+
+
+
+- misstion1
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  	<meta charset="utf-8">
+  	<title></title>
+  	<style>
+  		body{
+  			font-size:9pt;
+  		
+  		}
+  		
+  		div{
+  			border: 1px solid #999999;
+  			margin:20px;
+  			margin-bottom:20px;
+  		}
+  		div div{
+  			border: 1px dotted #CCC;
+  			
+  		}
+  		
+  		.active{
+  			font-size:20pt;
+  			color:#090;
+  			border:5px solid #ff0000;
+  		}
+  	</style>
+  	<script>
+  	
+  	window.onload = function() {
+  		//1
+  		var m_1 = document.getElementById("m_1");
+  		m_1.style.color = 'red';
+  		
+  		//2
+  		var m_2 = document.getElementById("m_2");
+  		m_2.setAttribute('class', 'active');
+  		
+  		//3
+  		var m_3 = document.getElementById("m_3");
+  		m_3.children[1].setAttribute('src','../images/ch3.png');
+  		
+  		//4
+  		var m_4 = document.getElementById("m_4");
+  		var p = document.createElement("p");
+      	var text = document.createTextNode("항목4");
+      	p.appendChild(text);
+      	m_4.appendChild(p);
+      	
+      	//5
+      	var m_5 = document.getElementById("m_5");
+      	m_5.removeChild(m_5.children[1]);
+      	
+      	
+      	//6
+      	var m_6 = document.getElementById("m_6");
+      	var p_m_6 = m_6.parentNode;
+      	var nChild =  p_m_6.childElementCount;
+      	for(var i = 0; i < nChild; i++) {
+      		p_m_6.removeChild(p_m_6.children[0]);
+      	}
+      	
+  	}
+  		 
+  	</script>
+  </head>
+  
+  <body>
+  	<div> 
+  		<h4>테스트1</h4>
+  		<div id="m_1">
+  			#m_1 : 글자색을 빨간색으로 변경해주세요.
+  		</div>
+  	</div>
+  	<div> 
+  		<h4>테스트2</h4>
+  		<div id="m_2">
+  			#m_2 : 클래스 active를 적용시켜 주세요.
+  		</div>
+  	</div>
+  	<div> 
+  		<h4>테스트3</h4>
+  		<div id="m_3">
+  			#m_3 : 에고 이 이미지가 아닌데... 이미지를 ch3.png로 변경해주세요"<br>
+  			<img src="../images/ch2.png">
+  		</div>
+  	</div>
+  	<div> 
+  		<h4>테스트4</h4>
+  		<div id="m_4">
+  			#m_ 4 :  홋! 항목4까지 있어야 하는건데, 바쁜나머지 실수를 했군요. 항목4를 제일 뒤에 추가해주시겠어요?
+  			<p>
+  				항목1
+  			</p>
+  			<p>
+  				항목2
+  			</p>
+  			<p>
+  				항목3
+  			</p>
+  		</div>
+  	</div>
+  	<div> 
+  		<h4>테스트5</h4>
+  		<div id="m_5">
+  			#m_ 5 :  이번에는 항목4가 더 추가되었네요. 즉시 삭제해주세요.
+  			<p>
+  				항목1
+  			</p>
+  			<p>
+  				항목4
+  			</p>
+  			<p>
+  				항목2
+  			</p>
+  		</div>
+  	</div>
+  	<div> 
+  		<h4>테스트6</h4>
+  		<div id="m_6">
+  			#m_ 6 : 이런이런! 이 부분은 전혀 필요없는 내용들인데 왜 있는거죠? #m_6부터 헤더태그까지 모두 삭제해주세요.
+  			<p>
+  				DOM(Document Object Model)이란?<br>
+  				웹페이지 문서를 조작하기 위해서 지켜야될 약속(interface)만 딸랑 적혀있는 문서랍니다.
+  				약속만 있을뿐 내부는 텅빈 상자랍니다.
+  				우리가 알고있는 W3C DOM에는 구현소스가 한줄도 존재하지 않습니다.
+  				그럼 실제 구현소스는??
+  			</p>
+  		</div>
+  	</div>
+  </body>
+  </html>
+  
+  ```
+
+  
+
+
+
