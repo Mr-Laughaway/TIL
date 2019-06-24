@@ -500,3 +500,137 @@
 
 ### Exception은 책 좀 더 볼 것
 
+
+
+- jQuery 기본 예제
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+  	/*
+  	jQuery(document).ready(function(){
+  		alert("ready event handler1")
+  	});
+  	
+  	$(document).ready(function(){
+  		alert("ready event handler2")
+  	});
+  	
+  	$(function(){alert("즉시 실행될 함수")});
+  	*/
+  	
+  	$(document).ready(function(){
+  		//$('h3').css('color', 'blue').css('background', 'orange');
+  		//$('*').css('color', 'blue').css('background', 'orange');
+  		//$('div, p').css('color', 'blue').css('background', 'orange');
+  		//$('#simple').css('color', 'blue').css('background', 'orange');
+  		//$('.todo').css('color', 'blue').css('background', 'orange');
+  		//$('.todo.select').css('color', 'blue').css('background', 'orange');
+  		//$('body > p').css('color', 'blue').css('background', 'orange');
+  		$('input[type=text]').val('Hello, jQuery..!');
+  		$('input:password').css('background', 'cyan');
+  		$('input:focus').css('background', 'lightgray');
+  	});
+  	
+  	
+  	
+  </script>
+  </head>
+  <body>
+  
+    <h3> jQuery </h3>
+    <h3 id="simple"> jQuery 는 javascript 보다 코드가 간결해서 코드량을 약 1/3로 줄여줍니다. </h3>
+    <h3> jQuery 효과를 조합하면 멋진 효과를 만들 수 있습니다.</h3>
+    <div class="todo"> <p>1. Lorem </p> </div>
+    <p>2. Ipsum</p>
+    <article class="todo select">3. Consta</article>
+    <ul>
+      <li>4. Melis</li>
+      <li>5. Astra</li>
+    </ul>
+    
+    text : <input type="text" /><br>
+    password : <input type="password" /><br>
+    e-mail : <input type="email" autofocus/><br>
+    radio : <input type="radio" checked /><br>
+    checkbox : <input type="checkbox" /><br>
+    file : <input type="file" /><br>
+    
+    
+  </body>
+  </html>
+  ```
+
+  
+
+- jQuery - eq(), nth-child()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery2</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+  	$(document).ready(function(){
+  		//5초 후에 코드를 실행합니다.
+  		/*
+  		setTimeout(function(){
+  			//변수를 선언합니다.
+  			var value = $('select > option:selected').val();
+  			
+  			//출력합니다.
+  			alert(value);
+  		}, 5000);
+  		*/
+  		/*
+  		$('tr:odd').css('background', 'orange');
+  		$('tr:even').css('background', 'yellow');
+  		$('tr:first').css('background', 'black').css('color', 'white');
+  		
+  		$('td:first').css('width', '100px').next().css('width', '70px');
+  		*/
+  		
+  		$('tr:eq(0)').css('background', 'black').css('color', 'white');
+  		$('td:nth-child(3n+1)').css('background', 'yellow');
+  		$('td:nth-child(3n+2)').css('background', 'green');
+  		$('td:nth-child(3n)').css('background', 'orange');
+  	});
+  </script>
+  </head>
+  <body>
+  
+    <select>
+      <option>Apple</option>
+      <option>Bag</option>
+      <option>Cat</option>
+      <option>Dog</option>
+      <option>Elephant</option>
+    </select>
+    
+    <hr>
+    
+    <table>
+          <tr><th>이름</th><th>혈액형</th><th>지역</th><th>이름</th><th>혈액형</th><th>지역</th></tr>
+          <tr><td>강민수</td><td>AB형</td><td>서울특별시 송파구</td><td>강민수</td><td>AB형</td><td>서울특별시 송파구</td></tr>
+          <tr><td>구지연</td><td>B형</td><td>미국 캘리포니아</td>
+  		<td>구지연</td><td>B형</td><td>미국 캘리포니아</td></tr>
+          <tr><td>김미화</td><td>AB형</td><td>미국 메사추세츠</td>
+  		<td>김미화</td><td>AB형</td><td>미국 메사추세츠</td></tr>
+          <tr><td>김선화</td><td>O형</td><td>서울 강서구</td>
+  		<td>김선화</td><td>O형</td><td>서울 강서구</td></tr>
+          <tr><td>남기주</td><td>A형</td><td>서울 노량진구</td><td>남기주</td><td>A형</td><td>서울 노량진구</td></tr>
+          <tr><td>윤하린</td><td>B형</td><td>서울 용산구</td>
+  		<td>윤하린</td><td>B형</td><td>서울 용산구</td></tr>
+      </table>
+    
+    
+  </body>
+  </html>
+  ```
