@@ -290,7 +290,418 @@
 
 
 
-- 
+- attr()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>Insert title here</title>
+  <style>
+          }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+          $(document).ready(function () {
+        	 
+          	
+          	$('img').attr('width', function(index){
+          		return (index+1)*100 
+            	});
+          	
+          	/*
+          	$('img').attr({width: function(index){
+          		return (index+1) * 100;
+          	}, height: 100 	});
+          	*/
+          	
+          	
+          	var colors = ['red', 'white', 'purple'];
+        		
+        		$('h1').css({
+        			color: function(index){
+        				return colors[index];
+        			},
+        			background: 'black'
+        		});
+          });
+      </script>
+  </head>
+  <body>
+    <img src="../images/Koala.jpg">
+    <img src="../images/Penguins.jpg">
+    <img src="../images/Hydrangeas.jpg">
+    
+    <h1>으아아아 1</h1>
+    <h1>으아아아 2</h1>
+    <h1>으아아아 3</h1>
+  
+  </body>
+  </html>
+  ```
+
+
+
+- remove(), empty()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>jQuery 실습</title>
+  <style>
+          }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+      $(document).ready(function () {
+    		/*
+      	var headers = $('h1').html();
+    		alert(headers);
+    		
+    		
+  		var texts = $('h1').text();
+  		alert(texts);
+  		*/
+  		
+  		/*
+  		$('div').html(function(index){
+  			return ("<h3>header-" + index + "</h3>");
+  		});
+  		*/
+  		
+  		
+  		$('div').text(function(index){
+  			return ("<h3>header-" + index + "</h3>");
+  		});
+  		
+  		$('h3').last().remove();
+  		$('#emt').empty();
+  		
+    		
+  		$('<p></p>').html("This is <mark>web app</mark>").appendTo('body');
+      });
+  </script>
+  </head>
+  <body>
+    <h1> Header-0 </h1>
+    <h1> Header-1 </h1>
+    <h1> Header-2 </h1>
+    <div></div>
+    <div></div>
+    <div></div>
+    <hr>
+    <h3>제목1</h3>
+    <h3>제목2</h3>
+    <article id = 'emt'>
+      <p> 아아아1 </p>
+      <p> 아아아2 </p>
+      <p> 아아아3 </p>
+    </article>
+  </body>
+  </html>
+  ```
+
+
+
+- append, prepend, insertAfter, insertBefore
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>Insert title here</title>
+  <style>
+  div { 
+    border: 1px solid black;
+    width : 300px;
+    height : 300px;
+  }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script> 
+  	$(document).ready(function () {
+        $('<p></p>').html('<mark>appendTo</mark>').appendTo('div');
+        $('<p></p>').html('<mark>prependTo</mark>').prependTo('div');
+        $('<p></p>').html('<mark>insertAfter</mark>').insertAfter('div');
+        $('<p></p>').html('<mark>insertBefore</mark>').insertBefore('div');
+        
+        
+        $('div').append(function(){
+        	return $('<p></p>').html('<mark>append</mark>');
+        });
+        $('div').prepend(function(){
+        	return $('<p></p>').html('<mark>prepend</mark>');
+        });
+        $('div').before(function(){
+        	return $('<p></p>').html('<mark>before</mark>');
+        });
+        $('div').after(function(){
+        	return $('<p></p>').html('<mark>after</mark>');
+        });
+      });
+  </script>
+  </head>
+  <body>
+   <h3>문서 객체를 추가</h3>
+   A.appendTo(B) : B의 마지막 자식 요소로 A요소를 추가 <br>
+   A.prependTo(B) : B의 첫번째 자식 요소로 A요소를 추가 <br>
+   A.insertAfter(B) : B의 형제노드로서 A요소를 B의 다음에 추가<br>
+   A.insertBefore(B) : B의 형제노드로서 A요소를 B의 앞에 추가<br>
+   A.append(B) : A의 마지막 자식 요소로 B요소를 추가 <br>
+   A.prepend(B) : A의 첫번째 자식 요소로 B요소를 추가 <br>
+   A.after(B) : A의 형제노드로서 B요소를 A의 다음에 추가<br>
+   A.before(B) : A의 형제노드로서 B요소를 A의 앞에 추가<br> 
+   <div>내용</div>
+     
+      
+  </body>
+  </html>
+  ```
+
+
+
+- appendTo를 활용한 slide 효과 예제
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>Insert title here</title>
+  <style>
+  img {
+    width:  300px;
+    height: 200px;
+  }
+  
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script> 
+  	$(document).ready(function () {
+  		setInterval(function(){
+  			$('img').first().appendTo('body');
+  		}, 1000);
+       
+      });
+  </script>
+  </head>
+  <body>
+  
+  <h3>슬라이드</h3>
+  <img src="../images/Koala.jpg">
+  <img src="../images/Penguins.jpg">
+  <img src="../images/Hydrangeas.jpg">
+     
+      
+  </body>
+  </html>
+  ```
+
+
+
+- wrap(), warpAll()
+
+  ```html
+  <!doctype html>
+  <html lang="ko">
+  <head>
+  <meta charset="UTF-8">  
+  <title>jQuery 문서 조작</title>
+  <style>  
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>  
+    $(document).ready(function(){		 
+    	$('#btn1').on('click', function(){
+    		$('p:first').replaceWith('Hello world!');
+  	});
+    	
+    	$('#btn2').click(function(){
+    		$('<h2>Hellow world!</h2>').replaceAll('p');
+  	});
+    	
+    	$('#btn3').click(function(){
+    		$('p').wrap('<div></div>');
+  	});
+    	
+    	$('#btn4').click(function(){
+    		$('p').warpAll('<div></div>');
+  	});
+    	
+    });
+  </script>
+  </head>
+   <body>
+   
+    <p>단락1</p>
+    <p>단락2</p>
+    <p>단락3</p> 
+    <button id="btn1">단락1에 새로운 내용 넣기</button>
+    <button id="btn2">모든 단락에 새로운 내용 넣기</button>
+    <button id="btn3"> 단락을 div로 감싸기</button>
+    <button id="btn4"> 모든 단락을 div로 감싸기</button>
+    
+  </body>
+  </html>
+  
+  ```
+
+
+
+- ***clone 책봐라!!!***
+
+
+
+- Event - 1
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="EUC-KR">
+  <title>Insert title here</title>
+  <style>
+  .reverse {
+     background:black;
+     color:white;
+  }
+  </style>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+  	/*
+  	$("h1").on("click", function(){
+  		$(this).html(function(index, html){
+  			return html + "+";
+  		});
+  		
+  		$(this).off("click");
+  	});
+  	*/
+  	/*
+  	$("h1").one("click", function(){
+  		$(this).html(function(index, html){
+  			return html + "+";
+  		});
+  	});
+  	*/
+  	
+  	/*
+  	$("h1").one("click", function(){
+  		$(this).html(
+  				$(this)html() + "+"
+  		);
+  	});
+  	*/
+  	
+  	/*
+  	$('h1').on({
+  		mouseenter: function(){ $(this).addClass("reverse");},
+  		mouseleave: function(){ $(this).removeClass("reverse");}
+  	});
+  	*/
+  })
+  </script>
+  </head>
+  <body>
+  <h1>Click</h1>
+  </body>
+  </html>
+  ```
+
+
+
+- Event - 2
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <style>
+  .reverse {
+     background:black;
+     color:white;
+  }
+  </style>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+  	$('h1').click(function(){
+  		$(this).html(function(index, html){
+  			return html + "★";
+  		});
+  	});
+  	
+  	setInterval(function(){
+  		//$('h1').last().click();
+  		$('h1').last().trigger('click');
+  	}, 1000);
+  });
+  </script>
+  </head>
+  <body>
+    <h1>Start:</h1>
+    <h1>Start:</h1>
+  </body>
+  </html>
+  ```
+
+
+
+- preventDefault()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>jQuery </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style>
+  </style>
+  <script>
+  	$(document).ready(function(){
+  		
+  		$('a').click(function(event){
+  			event.preventDefault();
+  		});
+  		
+  		$('#f1').click(function(event){
+  			event.preventDefault();
+  		});
+  		
+  		/*
+  		$('a').click(function(event){
+  			return false;
+  		});
+  		
+  		$('#f1').click(function(event){
+  			return false;
+  		});
+  		*/
+  	});
+  </script>
+  </head>
+  <body>
+  
+  <a href="http://www.multicampus.co.kr">www.multicampus.co.kr</a><br>
+  <form  id = "f1" method="get" action="data.jsp">
+  email : <input type=email name="email" id="email"><br>
+  <input type="submit">
+  </form>
+  </body>
+  </html>
+  ```
+
+  
+
+
 
 
 
