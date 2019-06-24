@@ -420,3 +420,83 @@
   </html>
   ```
 
+
+
+- ***Exception***
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+    <script>
+      function permutation(a) {
+        if(!(a instanceof Array)) {
+          throw new Error(a + " is not an array");
+        }
+  
+     	  return a;
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+    	//permutation("ABC");
+    	//x++;
+    	//if( a>0 ) { a++;
+    	
+    	try {
+    		var p = permutation(/*"abc"*/ [1,2,3,4,5]);
+    		p.forEach(function(v){
+    			console.log(v);
+    		});
+    	}
+    	catch(e) {
+    		alert(e);
+    	}
+    </script>
+    
+  
+  </body>
+  </html>
+  ```
+
+
+
+- innerHTML, innerText, textContent
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+    <script>
+    	onload = function() {
+    		document.getElementById("d1").innerHTML = "<strong>강조체</strong> <i>이탤릭</i>";
+    		document.getElementById("d2").textContent= "<strong>강조체</strong>     <i>이탤릭</i>";
+    		document.getElementById("d3").innerText = "<strong>강조체</strong>      <i>이탤릭</i>";
+    		
+    		console.log(document.getElementById("d4").innerHTML);
+    		console.log(document.getElementById("d4").innerText);
+    		console.log(document.getElementById("d4").textContent);
+    	}
+    </script>
+  </head>
+  <body>
+  
+    <div id="d1"></div>
+    <div id="d2"></div>
+    <div id="d3"></div>
+    <div id="d4">
+      <div id="d5">내용   내용</div>
+    </div>
+  </body>
+  </html>
+  ```
+
+  
+
+### Exception은 책 좀 더 볼 것
+
