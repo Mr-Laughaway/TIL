@@ -535,3 +535,198 @@ document.write("블럭 외부에서 x :"+ x+"<br>");
   </html>
   ```
 
+
+
+- 내장객체 : Array
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>내장 객체</title>
+  </head>
+  <body>
+    <h3>내장 객체</h3>
+    <script>
+    	console.dir(Date);
+    	/*
+    	var today = new Date();
+    	
+    	for(var key in today) {
+    		document.write(key + " : " + today.key+ "<br>");
+    	}
+    	*/
+    	
+    	var array1 = new Array();
+    	var array2 = new Array(10);
+    	var array3 = new Array(10, 20, 30, 40, 50);
+    	
+    	document.write("* array1.length : " + array1.length + "<br>");
+    	document.write("* array2.length : " + array2.length + "<br>");
+    	document.write("* array3.length : " + array3.length + "<br>");
+    	document.write("<hr>");
+    	
+    	array3[5] = 60;
+    	array3.push(70);
+    	for(var idx in array3) {
+    		document.write("* array3[" + idx +"] : " + array3[idx] + "<br>");
+    	}
+    	document.write("<hr>");
+    	
+    	delete array3[1];
+    	for(var idx in array3) {
+    		document.write("* array3[" + idx +"] : " + array3[idx] + "<br>");
+    	}
+    	document.write("<hr>");
+    </script>
+     자바스크립트에서 배열은 서로 다른 타입의 요소를 저장할 수 있고<br>
+     동적으로 요소를 추가하거나 삭제할 수 잇습니다.<br>
+    
+    
+  </body>
+  </html>
+  ```
+
+
+
+- window.open()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Window객체 활용 </title>
+  <script>
+    window.onload = function() {
+      var btn = document.getElementById("newOpen");
+      btn.onclick = function() {
+      	window.open("js12.html", "", "width=300 height=300");
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <h3>새창</h3>
+    <button id="newOpen">새창 열기</button><br>
+    
+  
+  </body>
+  </html>
+  ```
+
+
+
+- window.moveBy()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>윈도우 움직이기</title>
+    <script>
+    	window.onload = function() {
+    		document.getElementById("up").onclick = function() {
+    			window.console.log('a');
+    			window.moveBy(0, -10);
+    		};
+    		document.getElementById("left").onclick = function() {
+    			console.log('b');
+    			window.moveBy(-10, -0);
+    		};
+    		document.getElementById("right").onclick = function() {
+    			console.log('c');
+    			window.moveBy(10, 0);
+    		};
+    		document.getElementById("down").onclick = function() {
+    			console.log('d');
+    			window.moveBy(0, 10);
+    		};
+    		
+    	}
+    	
+    	
+    </script>
+  </head>
+  <body>
+    <h3>js12.html</h3>
+    <input type="button" id="up" value="     UP     "/> <br>
+    <input type="button" id="left" value="    LEFT    "/> <br>
+    <input type="button" id="right" value="   RIGHT    "/> <br>
+    <input type="button" id="down" value="    DOWN    "/> <br>
+  </body>
+  </html>
+  ```
+
+
+
+- setTimeout()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+    <title>js13.html</title>
+    <script>
+    	window.onload = function() {
+    		setTimeout(function(){
+    			window.close();
+    		}, 5000);
+    	}
+    	
+    	//setInterval : 주기마다 계속 반복
+    </script>
+  </head>
+  <body>
+  
+  </body>
+  </html>
+  ```
+
+  
+
+- setInterval()
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <script>
+    	
+    	window.onload = function() {
+    		//setInterval(함수, 시간) 반복
+    		//clearInterval
+    		
+    		var cnt = 1;
+    		var intervalID;
+    		
+    		document.write("<h3>1초마다 숫자 출력하고 10초후 종료</h3>");
+    		
+    		intervalID = setInterval(function(){
+    			if(cnt <= 10) {
+    				document.write(cnt++ + "<br>");
+    			}
+    			else {
+    				clearInterval(intervalID);
+    				window.close();
+    			}
+    			
+    		}, 1000);
+    	}
+    </script>
+  </head>
+  <body>
+    
+  
+  </body>
+  </html>
+  ```
+
+  
+
+- 
