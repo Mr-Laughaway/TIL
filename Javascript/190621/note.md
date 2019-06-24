@@ -113,7 +113,7 @@
 
 
 
-- innerHTML, innerText, textContent(공백도 다 가져왕)
+- innerHTML, innerText, ***textContent(공백도 다 가져왕)***
 
   ```html
   <!DOCTYPE html>
@@ -147,4 +147,276 @@
   ```
 
   
+
+- file 로 이미지 파일 정보 가져오기
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <script>
+  
+  window.onload = function(){
+  	var fileElement = document.getElementById("f1");
+  	fileElement.addEventListener("change", function(){
+  		var files = fileElement.files;
+  		var output = "";
+  		for(var i=0; i<files.length; i++) {
+  			var file = files[i];
+  			output += "파일이름 : " + file.name + ", 크기 : " + file.size +
+  				"bytes, 타입 : " + file.type + "<br>";
+  				
+  		}
+  		
+  		document.getElementById("result").innerHTML = output;
+  		
+  	}, false);
+   
+  }
+  
+  </script>
+  </head>
+  <body>
+    <input id="f1" type="file" multiple accept="image/*">
+    <div id="result"></div>
+   </body>
+  </html>
+  ```
+
+
+
+- ***Drag and Drop***
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>Insert title here</title>
+  <script>
+  var dropbox;
+  window.addEventListener("load", function() {
+  	dropbox = document.getElementById("dropbox");
+  		// 이벤트 핸들러 할당	
+  	dropbox.addEventListener("drop", drop, false);
+  	dropbox.addEventListener("dragenter", dragEnter, false);
+  	dropbox.addEventListener("dragover", dragOver, false);
+  }, false);
+  
+  function dragEnter(event) {
+  	event.stopPropagation();
+  	event.preventDefault();
+  }
+  
+  function dragOver(event) {
+  	event.stopPropagation();
+  	event.preventDefault();
+  }
+  
+  function drop(event) {
+  	event.stopPropagation();
+  	event.preventDefault();
+  
+  	var files = event.dataTransfer.files;
+  	var count = files.length;
+  
+  	// 오직 한개 이상의 파일이 드랍된 경우에만 처리기를 호출한다.
+  	if (count > 0) {
+  		var file = files[0];
+  		document.getElementById("droplabel").innerHTML 
+  		           = "Processing "+ file.name;
+  		var reader = new FileReader();
+  		// 파일 리더의 이베트 핸들러 정의
+  		reader.onloadend = function(event) {
+  			var img = document.getElementById("preview");
+  			img.src = event.target.result;//event.target는 FileReader객체
+  		};
+  		reader.readAsDataURL(file);
+  	}
+  }
+  	
+  </script>	
+  </head>
+  <body>
+  <h1>Drag and Drop Demo</h1>
+  	<div id="dropbox"
+  		style="width: 360px; height: 80px; border: 1px solid #aaa;">
+  		<span id="droplabel"> 이곳에 파일을 드랍해 주세요... </span>
+  	</div>
+  	<img id="preview" alt="[ preview will display here ]" />
+  </body>
+  </html>
+  ```
+
+  
+
+- FileReader로 file 내용 읽기
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <script>
+  //1. new FileReader()
+  //2. onload, onloadend이벤트에 대한 핸들러 : result속성에 저장낸 내용을 textarea에..
+  //3. readAsText()사용  내용 읽기
+  function readFile(){
+  	var file = document.getElementById("file").files[0];
+  	document.getElementById("fileName").innerHTML = file.name;
+  	document.getElementById("fileSize").innerHTML = file.size+"Bytes";
+  	
+  	var reader = new FileReader();
+  	reader.onloadend = function() {
+  		document.getElementById("content").innerHTML = reader.result;
+  	}
+  	
+  	var encodingList = document.getElementById("encoding");
+  	var encoding =
+  	//	encodingList.options[encodingList.selectedIndex].value;
+  		encodingList.children[encodingList.selectedIndex].innerHTML;
+  	console.log(file);
+  	reader.readAsText(file, encoding);
+  	
+  }
+  </script>
+  </head>
+  <body>
+   <h1> FileReader Interface : readAsText()</h1>
+         <input id="file" type="file">
+         <select id="encoding">
+             <option>UTF-8</option>
+  		   <option>euc-kr</option>
+          </select>
+          <button onclick="readFile()">읽기</button><br />
+          <div>
+              <span id="fileName">File Name</span>
+              <span id="fileSize">File Size</span>
+          </div>
+          <textarea id="content" readonly style="width:600px; height:400px;"></textarea>
+  </body>
+  </html>
+  ```
+
+
+
+- Drag & Drop 으로 element 옮기기 예제
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  
+  <meta charset="utf-8">
+  <title>Insert title here</title>
+  <style>
+  div#Red {border:2Px solid #F00;}
+  div#Blue {border:2Px solid #00F;}
+  div {width:400px;height:266px;}
+  a {margin:50px;display:block;}
+  </style>
+  <script>
+  	function drag(source, event) {
+  		//event.preventDefault();
+  		console.log('drag');
+  		event.stopPropagation();
+  		event.dataTransfer.setData("text", source.id);
+  	};
+  	
+  	function drop(source, event) {
+  		//event.preventDefault();
+  		console.log('drop');
+  		event.stopPropagation();
+  		var imgId = event.dataTransfer.getData("text");
+  		source.appendChild(document.getElementById(imgId));
+  	};
+  </script>
+  </head>
+  <body>
+  <div id="Red" ondrop="drop(this, event);" 
+       ondragenter="return false;" 
+       ondragover="return false;"></div>
+  <div id="Blue" ondrop="drop(this, event);" 
+  	ondragenter="return false;" 
+  	ondragover="return false;"></div>
+  <img draggable="true" id="textlink" 
+       ondragstart="drag(this, event);" 
+       src="../images/red_dragon1.jpeg"></img>
+  </body>
+  </html>
+  ```
+
+  
+
+- Canvas 예제 및 내용 복사
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>Insert title here</title>
+  <script>
+  	window.addEventListener("load", function(){
+  		var img = document.getElementById("scream");
+  		var canvas1 = document.getElementById("drawCanvas");
+  		var ctx = canvas1.getContext("2d");
+  		ctx.drawImage(img, 10, 10);
+  		
+  	}, false);
+  	
+  	function fromImageData() {
+  		var canvas1 = document.getElementById("drawCanvas");
+  		var imgData = canvas1.toDataURL();
+  		var canvas2 = document.getElementById("copyCanvas");
+  		var ctx = canvas2.getContext("2d");
+  		var img = new Image();
+  		img.src = imgData;
+  		
+  		img.onload = function() {
+  			ctx.drawImage(img, 50, 50);
+  		};
+  		
+  	}
+  	
+  	window.addEventListener("load", function(){
+  		var canvas = document.getElementById("drawCanvas2");
+  		var ctx = canvas.getContext("2d");
+  		var width = canvas.clientWidth;
+  		var height = canvas.clientHeight;
+  		
+  		ctx.beginPath();
+  		
+  		ctx.moveTo(width*0.5, height*0.1);
+  		ctx.lineTo(width*0.1, height*0.7);
+  		ctx.lineTo(width*0.9, height*0.7);
+  		ctx.lineTo(width*0.5, height*0.1);
+  		
+  		ctx.moveTo(width*0.5, height*0.9);
+  		ctx.lineTo(width*0.1, height*0.3);
+  		ctx.lineTo(width*0.9, height*0.3);
+  		ctx.lineTo(width*0.5, height*0.9);
+  		
+  		ctx.stroke();
+  		ctx.closePath();
+  		
+  		
+  	}, false);
+  
+  </script>
+  </head>
+  <body>
+  <h3>canvas API : Image Copy</h3>
+  <img id="scream" src="../images/red_dragon1.jpeg" 
+  width="220" height="277" style="display:none;">
+  <canvas id="drawCanvas" width="200" height="200" style="position: relative; border: 1px solid #000;"></canvas>
+  <button onclick="fromImageData();">캔버스 복사=></button>                  
+  <canvas id="copyCanvas" width="300" height="300" style="position: relative; border: 1px solid #000;"></canvas>
+  <hr>
+  <canvas id="drawCanvas2" width="300" height="300" style="position: relative; border: 1px solid #000;"></canvas>
+  </body>
+  </html>
+  ```
 
