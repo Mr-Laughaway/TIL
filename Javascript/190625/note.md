@@ -344,3 +344,128 @@ div#confirmed{
 
 
 
+### 크로스 오리진 통신
+
+#### 예제 1
+
+***cross1.html***
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cross1</title>
+<script>
+
+	var name;
+	var price;
+	
+	function show(data) {
+		console.log("name: " + data.name);
+		console.log("price: " + data.price);
+		
+		document.body.innerHTML += "name:" + data.name + "<br>";
+		document.body.innerHTML += "price:" + data.price;
+		
+	}
+	
+	window.onload = function(){
+		var url = "http://70.12.50.130:9000/jsonp.js";
+		var script = document.createElement("script");
+		script.setAttribute("src", url);
+		document.getElementsByTagName("head")[0].appendChild(script);
+	}
+</script>
+</head>
+<body>
+
+</body>
+</html>
+```
+
+
+
+#### 예제 2
+
+***cross2.html***
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Communication API 예제(window.postMessage())</title>
+<script type="text/javascript">
+	window.onload = function(){
+		setInterval(Send, 1000);
+	}
+
+	function Send() {
+		var ifrm = document.getElementById("ifrm");
+		var MyOrigin = location.protocol + "//" + location.host;
+		var date = new Date();
+		var dateStr = date.getFullYear() + "/" + (date.getMonth()+1) +
+			"/" + date.getDate() + " " + date.getHours() + ":" +
+			date.getMinutes() + " " + date.getSeconds();
+		var number = Math.floor(Math.random() * 100);
+		
+		ifrm.contentWindow.postMessage({date:dateStr, number:number},
+				"http://70.12.50.130:9000"
+				//"http://70.12.50.140:8080"
+		);
+		document.getElementById("msg").innerHTML = dateStr + " 생성된 값은 '"
+			+ number + "' 입니다. <br> MyOrigin : " + MyOrigin;
+		;
+	}
+
+</script>
+</head>
+<body>
+  <div id = "msg">8080<br>MyOrigin</div>
+  
+  <iframe id="ifrm" src="http://70.12.50.130:9000/receive.html"
+    width=500 height=200></iframe>
+   
+   <!-- 
+   <iframe id="ifrm" src="http://70.12.50.140:8080/Javascript-test/190625/receive.html"
+    width=500 height=200></iframe>
+   -->
+</body>
+</html>
+```
+
+
+
+***receive.html***
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>Communication API 예제</title>
+<script>
+var MyOrigin = location.origin;
+   console.log("receive.html: " + MyOrigin);
+    window.addEventListener("message", function(e){
+    	console.log("from : " + e.origin);
+    	if(e.origin==MyOrigin) {
+        	document.getElementById("msg").innerHTML = 
+        		"e.origin : " + e.origin + " <br/> " + e.data.date 
+        		+ " : 송신된 값은 " + e.data.number + " 입니다.";
+         }
+    }, false);
+</script>
+</head>
+<body>
+강사 서버 도메인 : http://70.12.50.130:9000 <br>
+<div id = "msg">
+	
+</div>    
+</body>
+</html>
+```
+
+
+
