@@ -469,3 +469,227 @@ var MyOrigin = location.origin;
 
 
 
+### jQuery Ajax
+
+#### 예제 1
+
+***jqueryajax.html***
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jQuery</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	$.ajax({
+		url : "data.txt",
+		success : function(data) {
+			$('#view').html(data);
+		}
+	});
+	
+		
+});
+
+</script>
+</head>
+<body>
+  <p id="view"></p>
+</body>
+</html>
+```
+
+
+
+#### 예제2
+
+***jqueryajax2.html***
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta  charset="UTF-8">
+<title>ajax 처리 2</title>
+<style>
+	.image_panel{
+		border:1px solid eeeeee;
+		text-align:center;
+		margin:5px;
+	}
+	.image_panel .title{
+		font-size:9pt;
+		color:#ff0000;
+		
+	}
+	
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#btn_load").click(function(){
+			$.getJSON("images.jsp", null, createImages);
+		});
+	});
+	
+	function createImages(data) {
+		
+		var images = data.rows;
+		var strDOM = "";
+		for(var i=0; i<images.length;i++) {
+			var image = images[i];
+			strDOM += '<div class="image_panel">';
+			strDOM += '	<img src="' + image.url + '">';
+			strDOM += '	<p class="title">' + image.title + '</p>';
+			strDOM += '</div>';
+		}
+		
+		var $imageContainer = $("#image_container");
+		$imageContainer.append(strDOM);
+		
+		
+		$(document).ajaxComplete(function(){
+			console.log("ajax event: complete");
+		});
+		
+		$(document).ajaxSend(function(){
+			console.log("ajax event: send");
+		});
+		
+		$(document).ajaxStart(function(){
+			console.log("ajax event: start");
+		});
+		
+		$(document).ajaxSuccess(function(){
+			console.log("ajax event: success");
+		});
+	}
+</script> 
+</head>
+
+<body>
+	<div>
+		<button id="btn_load">이미지 읽어들이기</button>
+	</div>
+	<div id="image_container">
+		<!-- 1. 이곳에 이미지를 넣어주세요-->
+	</div>
+	
+	<!-- 2. 이 내용은 이미지 패널 템플릿입니다. -->
+	<div style="display:none;" id="image_panel_template">
+		<div class="image_panel">
+			<img >
+			<p class="title"></p>
+		</div>
+	</div>
+</body>
+</html>
+```
+
+
+
+#### 예제 4
+
+***jqueryajax3.html***
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta  charset="utf-8">
+    <title>부분페이지 동적 갱신</title>     
+    <link rel="stylesheet" href="css/partPage.css" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- 
+    <script src="javascript/partPage.js"></script>
+     -->
+    <script>
+    	$(document).ready(function(){
+    		$('#login').click(startMethod);
+    	});
+    	
+    	
+    	function startMethod() {
+    		var uid = $('#userid').val();
+    		var upwd = $('#userpwd').val();
+    		
+    		$.ajax({
+    			url : "partLogin.jsp",
+    			type : "post",
+    			data : {
+    				'userid' : uid,
+    				'userpwd' : upwd
+    			},
+    			success : resultProcess
+    		});
+    	}
+    	
+    	function resultProcess(data){
+    		console.log(data);
+    		
+    		var result = $(data).find('result').text();
+    		var name = $(data).find('id').text();
+    		
+    		if(result == 1) {
+    			var str="<table><tr><td align='center'><b>"+name+"</b> 님 오셨구려..</td></tr>"
+      	      	str+="<tr><td align='center'><input type='button' id='logout' value='로그아웃' onclick ='logoutMethod()'/></td></tr></table>"
+      	    	$("#confirmed").html(str);
+    		}
+    		else if(result == 0) {
+    			alert("비밀번호가 맞지 않습니다.\n다시 입력해 주시기 바랍니다.");
+      	      	$("#userid").val(name);
+      	      	$("#userpwd").val("");
+      	      	$("#userpwd").focus();
+    		}
+    		else {
+    			alert("아이디가 맞지 않습니다.\n다시 입력해 주시기 바랍니다.");
+  		      	$("#userid").val("");
+  		      	$("#userpwd").val("");
+  		      	$("#userid").focus();
+    		}
+    	}
+    	
+    	function logoutMethod() {
+    		location.reload();
+    	}
+    	
+    	
+    	
+    </script>
+  </head>
+  <body>
+    <h3>부분페이지 갱신, POST요청, XML응답처리</h3>
+    <table border="1">
+      <tr><td colspan="2" align="center"><font size=15><b>우리회사</b></font></td></tr>
+      <tr>
+         <td><form action="#">
+               <div id="confirmed">
+                 <table>
+                    <tr>
+                      <td>아이디</td>
+                      <td><input type="text" id="userid" size="15" maxlength="12"/></td>
+                    </tr>
+                    <tr>
+                      <td>비밀번호</td>
+                      <td><input type="password" id="userpwd" size="15" maxlength="12"/></td>
+                    </tr>
+                    <tr><td colspan="2" align="center">
+                        <input type="button" id="login" value="로그인" /></td>
+                    </tr>
+                </table>
+              </div>
+             </form>
+         </td>
+         <td width="400"><img src="images/dog.jpg"></td>
+      </tr>
+      <tr><td colspan="2" align="center">찾아오시는길 |회사소개|정보보호정책</td></tr>
+    </table>
+  </body>
+</html>
+```
+
+
+
