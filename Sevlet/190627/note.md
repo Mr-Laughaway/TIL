@@ -61,3 +61,49 @@
 		|----tld, tags
 ```
 
+
+
+##### tomcat 설행 과정
+
+```
+tomcat startup
+	|---- conf
+			|----server.xml
+			|----web.xml
+			|----context.xml
+					|----web1
+                    		|---찾아(못찾으면 루트 web.xml)
+							|	url-pattern에서 찾아 sevlet을 실행하던지
+							|	혹은 없으면 웰컴페이지를 리턴한다
+							|	없으면 404
+					*JSP 요청의 경우*
+                    컨테이너가 /web1/hello_jsp.java 찾아
+                    객체 없으면 컴파일->객체생성->init->service(doGet,doPost)반복->destroy
+```
+
+
+
+##### Servlet Spec.
+
+- 패키지 선언
+- public class로 선언
+- HttpServlet 상속
+- lifecycle method override
+  - service(), doGet(), doPost(), doPut() 등
+  - HttpServletRequest, HttpServletResponse 등 이용하여 구현
+  - throws ServletException, IOEXception
+
+
+
+##### JSP Spec.
+
+- 정적 페이지 선언
+
+  ex)
+
+  ```<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>```
+
+
+
+---
+
