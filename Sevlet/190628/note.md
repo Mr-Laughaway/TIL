@@ -103,3 +103,14 @@ HttpServletRequest.setAttribute(키로 사용할 객체, 값 객체);
 HttpServletRequest.getAttribute(키); // Object로 반횐 되므로 실제 저장한 타입으로 다운캐스팅 해야한다.
 ```
 
+
+
+##### Anchor 태그 요청 전달
+
+```html
+<a href="./xxx?paramName=paramValue&pramName=paramValue"> 요청 전달 </a>
+<!-- GET 방식 전달 -->
+```
+
+
+
