@@ -138,4 +138,87 @@ HttpServletRequest.getAttribute(키); // Object로 반횐 되므로 실제 저�
    HttpServletResponse.addCookie(cookie);
    ```
 
-   
+
+
+---
+
+
+
+#### 페이지 변경
+
+##### requestDispatcher(컨텍스트 패스 스트링)
+
+- requeat 추가 정보 전달 가능
+
+
+
+sendRedirect(URL 형식 스트링) 
+
+- ***표시 URL도 바뀜***
+- 다른 URL로도 보낼 수 있음
+- ***request , response 객체 새로 생성되기 때문에 정보 전달 불가***
+- ***정보 전달시 쿼리 스트링으로 전달해야한다 ***
+
+
+
+
+
+#### JSP
+
+- 스크립트, HTML 태그와 함께 java 코드 포함
+
+- View와 로직이 분리 안 되어서 ***재사용성이 낮음***
+
+- 페이지 단위로 개발하여 빠르게 개발 가능하지만...
+
+- Servlet -> JSP -> EJB(망함) -> MVC 패턴 적용 웹 애플리케이션 구현
+
+  >View 는 JSP,
+  >
+  >Controller 는 Servelt
+  >
+  >data 영속성과 비즈니스로직은 JavaObject
+
+- 현재 JSP는 MVC 구조에서 View로만 제한하며, 태그과 EL(Expression Language)만 사용
+
+- JSP 요소
+
+  - 정적 지시자
+    - <%@ page ~~%>
+    - <%@ include ~~ %>
+    - <%@ taglib ~~ %>
+  - 동적 지시자
+    - ```<jsp:include ~></jsp:include>```
+    - ```<jsp:useBean ~><jsp:getProperty ~~/>... </```
+
+  - declare scriptlet
+
+    ```
+     <%!
+     	변수 선언 초기화; //변환된 서블린의 멘버 변수로 정의
+    					
+        public void method() {
+    	...				
+    	}
+    	
+    %>
+    ```
+
+  - scriptlet
+
+    ```
+    <%
+    	자바 실행 문장; //변환된 서블릿의 _service()의 실행문장으로 포함된다
+    	...
+    %>
+    ```
+
+  - expression
+
+    ```
+    <%= 출력내용 %>
+    // <% out.println(출력내용) %> 과 동일
+    ```
+
+    
+
