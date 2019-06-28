@@ -134,9 +134,8 @@ HttpServletRequest.getAttribute(키); // Object로 반횐 되므로 실제 저�
    HttpServletRequest.getCookies(); // Cookie[]
    
    //저장시
-   HttpServletResponse.addCookie(Cookie);
-   
-   
+   Cookie cookie = new Cookie(key, name);
+   HttpServletResponse.addCookie(cookie);
    ```
 
    
