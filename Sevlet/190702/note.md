@@ -50,8 +50,23 @@
       //세션 유지시간 (web.xml에 설정해도 된다)
       session.setMaxInactiveInterval(초);
       
+      //세션 만료시키기
+      session.invalidate();
+      
       
       
       ```
 
-      
+- 요청을 재지정
+
+  클라이언트가 요청한 Servlet이나 JSP에서 응당하는 대신 요청을 다른 자원(JSP, 서블릿)에 전달하는 것
+
+  - dispatcher 방식
+    - 동일한 웹 컨텍스트만 가능
+    - 처음 요청한 url 유지
+  - redirect 방식
+    - 동일한 웹 컨텍스트와 다른 웬 컨텍스트/웹 서버 둘 다 가능
+    - 최종 요청 url 로 출력
+
+
+

@@ -148,7 +148,7 @@ HttpServletRequest.getAttribute(키); // Object로 반횐 되므로 실제 저�
 
 ##### requestDispatcher(컨텍스트 패스 스트링)
 
-- requeat 추가 정보 전달 가능
+- request 추가 정보 전달 가능
 
 
 
