@@ -177,5 +177,28 @@
     - 유효범위 - 컨테이너 메모리에 유지되는 범위
       1. page scope - 현재 jsp 페이지
       2. request scope - redirect 페이지 전환시 
-      3. session scope - session.invalidate, 브라우저 종료
-      4. application scope - 웹 컨텍스트
+      3. session scope - session.invalidate, 만료, 브라우저 종료
+      4. application scope - 웹 컨텍스트가 웹 컨테어니로부터 삭제될 때 까지 혹은
+    - page, request, session, application 공통 메서드
+      1. setAttribute()
+      2. getAttribute()
+      3. removeAttribute()
+      4. getAttributeNames()
+
+
+
+---
+
+
+
+#### 자주 사용하는 태그
+
+- 표준 액션 태그
+  - JSP 스펙에 정의된 기능, 모든 JSP 컨테이너가 지원하므로 항상 상용 가능
+  - ```<jsp:userBean ~~~```
+- 커스텀 액션 태그
+  - 개발자가 직접 태그 클래스와 tld(xml형식) 파일을 정의해서 사용
+- EL(Expression Language) 
+  - 표현 언어,  JSP2.0에서 추가
+  - ```<c:out ...>``` 또는 ```<jsp:getProperty ...>``` 보다 간결하게 사용가능
+
