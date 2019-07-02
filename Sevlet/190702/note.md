@@ -90,3 +90,53 @@
 #### JSP 
 
 - HTML 또는 XML 기반의 동적인 웹 컨텐츠를 개발하는 스크립트
+
+- 응답 페이지를 구현하는데만(View로만) 제한하는 것으로 권장됨
+
+  > 자바코드를 로직을 가능한한 포함하지 않고 태고, el로만 컨텐츠를 생성하는것을 권장합니다.
+
+- JSP 구성요소
+
+  - 정적 지시자
+
+    ```jsp
+    <%@ page 
+    		contentType="text/html;charset=utf-8" 
+        	session
+        	buffer
+        	isThreadSafe
+        	errorPage
+        	isErrorPage
+        	info
+        	language="java"
+        	import
+        	extends
+        	isELIgnored
+        	defferedSyntaxAllowedAsLiteral
+    %>
+    <!-- 
+    text/xml 
+    text/plain, text/json(?)
+    image/jpeg
+    ...
+    application/vnd.ms-
+    application/json(?)
+    -->
+    
+    <%@ include file="" // <html>, <head>, <body>는 포함하면 안 됨
+    %>
+    
+    <!-- JSP 페이지 내에 html 태그가 아닌 태그를 만나면 매핑된 Java class를 실행시켜 줌 -->
+    <%@ taglib
+    		prefix=""
+        	uri="http://java.sun.com/jsp/jstl/~"
+    %>
+    
+    
+    ```
+
+    
+
+  - 동적 지시자
+
+    
