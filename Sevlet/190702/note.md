@@ -87,7 +87,7 @@
 
 
 
-#### JSP 
+##### JSP
 
 - HTML 또는 XML 기반의 동적인 웹 컨텐츠를 개발하는 스크립트
 
@@ -129,9 +129,9 @@
     <!-- JSP 페이지 내에 html 태그가 아닌 태그를 만나면 매핑된 Java class를 실행시켜 줌 -->
     <%@ taglib
     		prefix=""
-        	uri="http://java.sun.com/jsp/jstl/~"
+        	uri="http://java.sun.com/jsp/jstl/~" //~는core, sql, 국제화 format처리 라이브러리, xml 등 JSTL(Java Standard Tag Library)
     %>
-    
+    <!--<c:if test=''>, <c:case, <c:forEach 등등 -->
     
     ```
 
@@ -139,4 +139,43 @@
 
   - 동적 지시자
 
+    - declare scriptlet ```<%!  %>```
+
+      멤버 변수 또는 멘버 메서드 
+
+    - scriptlet ```<%   %>```
+
+      자비 실행 문장. _jspService()메서드의 문장으로 들어감.
+
+    - expression ```<%=   %>``` == ```<% out.println(출력내용); %>``` == ```${출력내용}```
+
+      출력 내용. 변수, 연산식, 값을 리턴하는 함수 등.
+
+  
+
+  - JSP 주석
+
+    ```<%-- JSP 주석 --%>```
+
+    ```<% //주석 %>```
+
+    ```<!-- html 주석 -->```
+
     
+
+  - JSP 내장객체 (요청이 들어올때 JSP 컨테이너 내에서 자동생성)
+
+    - request - javax.servlet.http.HttpServletRequest
+    - response - javax.servlet.http.HttpServletResponse
+    - session - javax.servlet.http.HttpSession
+    - application - javax.servlet.ServletContext
+    - out - javax.servlet.jsp.JSPWriter
+    - exception - java.lang.Throwable
+    - page - java.lang.Object
+    - config - javax.servlet.ServletConfig
+    - pageContext - javax.servlet.jsp.PageContext
+    - 유효범위 - 컨테이너 메모리에 유지되는 범위
+      1. page scope - 현재 jsp 페이지
+      2. request scope - redirect 페이지 전환시 
+      3. session scope - session.invalidate, 브라우저 종료
+      4. application scope - 웹 컨텍스트
