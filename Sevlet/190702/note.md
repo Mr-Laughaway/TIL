@@ -194,11 +194,27 @@
 #### 자주 사용하는 태그
 
 - 표준 액션 태그
+
   - JSP 스펙에 정의된 기능, 모든 JSP 컨테이너가 지원하므로 항상 상용 가능
+
   - ```<jsp:userBean ~~~```
+
+  - ```<jsp:setProperty~```
+
+  - ```<jsp:getProperty~```
+
+  - ```<jsp:include page=""/>```
+
+  - 
+
+    
+
 - 커스텀 액션 태그
+
   - 개발자가 직접 태그 클래스와 tld(xml형식) 파일을 정의해서 사용
+
 - EL(Expression Language) 
+
   - 표현 언어,  JSP2.0에서 추가
   - ```<c:out ...>``` 또는 ```<jsp:getProperty ...>``` 보다 간결하게 사용가능
 
