@@ -62,11 +62,31 @@
   클라이언트가 요청한 Servlet이나 JSP에서 응당하는 대신 요청을 다른 자원(JSP, 서블릿)에 전달하는 것
 
   - dispatcher 방식
+
+    ```java
+    ServletContext sc = request.getServletContext();
+    RequestDispatcher rd = sc.getReqeustDispatcher("/경로");
+    request.setAttribute(key, value);
+    rd.forward(request, response);
+    ```
+
     - 동일한 웹 컨텍스트만 가능
     - 처음 요청한 url 유지
+    - ***request, response 객체 유지***
+
   - redirect 방식
+
+    ```
+    response.sendRedirect("URL 패스 방식");
+    ```
+
     - 동일한 웹 컨텍스트와 다른 웬 컨텍스트/웹 서버 둘 다 가능
     - 최종 요청 url 로 출력
+    - ***request, response 객체 날아감***
+    - 정보 전달시 ***session, 혹은 쿼리 스트링***으로 전달해야한다.
 
 
 
+#### JSP 
+
+- HTML 또는 XML 기반의 동적인 웹 컨텐츠를 개발하는 스크립트
