@@ -34,4 +34,24 @@
   - Session을 사용하는 방법
 
     - ***웹 컨테이너의 메모리에 저장*** (Java는 객체로 저장)
+
     - Session 객체는 최초 요청시에 웹 컨테이너가 HttpSession의 구현 객체를 생성
+
+    - 받아오기 / 사용하기
+
+      ```java
+      HttpServletRequest.getSession(); //가져오기
+      session.setAttribute(key, value); //저장
+      session.getAttribute(key, value); //추출
+      session.removeAttribute(key); //삭제
+      session.getID(); //아이디
+      session.getLastAccessTime(); //마지막 접속시각
+      
+      //세션 유지시간 (web.xml에 설정해도 된다)
+      session.setMaxInactiveInterval(초);
+      
+      
+      
+      ```
+
+      
