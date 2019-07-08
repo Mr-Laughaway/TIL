@@ -67,18 +67,8 @@ public class BbsViewAction extends HttpServlet {
 			request.setAttribute("bid",  new Integer(bid));
 			request.setAttribute("page", new Integer(page));
 			
-			if(article.getFileYN() != null && article.getFileYN().equals("Y")) {
-				ArrayList<FileInfoVO> files = dao.getFiles(bid);
-				if(files != null) {
-					request.setAttribute("fileyn", "Y");
-					request.setAttribute("files", files);
-				}
-			}
-			
 			rd = sc.getRequestDispatcher("/bbs_view.jsp");
 			rd.forward(request, response);
-			
-			
 		}
 		else {
 			out.print("<script>");
