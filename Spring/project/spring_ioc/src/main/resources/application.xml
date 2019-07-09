@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+
+    <bean id="messageSource"
+      class="org.springframework.context.support.ResourceBundleMessageSource">
+      <property name="basenames">
+        <list>
+          <value>notice</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean id="firstMessage" class="lab.spring.di.persist.Message" />
+    <bean id="hello" class="lab.spring.di.service.HelloServiceImpl" scope="prototype">
+      <!-- property name="message" ref="firstMessage" /-->
+      <constructor-arg ref="firstMessage"/>
+    </bean>
+    
+    <bean id="service" class="lab.spring.di.service.HelloServiceLifeCycle"
+      p:name="Spring6.0!!!"
+      p:myMessage-ref="firstMessage"
+      init-method="custom_init"
+      destroy-method="custom_end" />
+      
+    <bean id="oracleDBUtil"
+      class="lab.spring.di.util.JdbcUtil"
+      p:driver="oracle.jdbc.OracleDriver"
+      p:url="jdbc:oracle:thin:@lacalhost:1521:orcl"
+      p:user="hr"
+      p:pwd="oracle"/>
+      
+    <bean id="userDao"
+      class="lab.spring.di.persist.UserManageDAO"
+      p:dbUtil-ref="oracleDBUtil" />
+      
+    <bean id="loginService"
+      class="lab.spring.di.service.UserServiceImpl"
+      p:dao-ref="userDao" />
+
+</beans>
