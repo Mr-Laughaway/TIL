@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>svg1.html</title>
+<style>
+  svg {
+    width: 320px;
+    height: 340px;
+    border: 1px solid black;
+  }
+  
+  rect {
+    stroke-width: 4px;
+    stroke: black;
+    fill: orange;
+  }
+  
+  circle {
+    opacity: 0.75;
+    fill: blue;
+  }
+  
+  
+</style>
+
+</head>
+<body>
+  <svg>
+    
+    <!-- 
+    <rect x="30" y="20" width="200" height="100" />
+    <rect x="30" y="150" width="200" height="100" rx="20" ry="20"/>
+    <circle cx="190" cy="140" r="80" />
+     --> 
+     
+    <!-- 대문자: 절대좌표, 소문자:상대좌표 -->
+    <!-- M/m: 이동->
+    <!-- Z/z: 패스 닫기 -->
+    <!-- L/l: 라인 그리 -->
+    <!-- C/c: 곡선 그리기 -->
+    <!-- A/a: 아크 그리기 -->
+    <!-- 
+    <path d="M80,50 L200,90 L280,200"/>
+    -->
+     
+    <!-- 
+    <path d="M10,100 C80,-100 150,80 300,100">
+    -->
+     
+    <!-- 
+    <rect x="30" y="0" width="200" height="100"
+    style="fill:red;stroke:blue;stroke-width:10px"/>
+    -->
+    
+    <!-- 
+    <rect x="200" y="0" width="1" height="160" style="fill:red"/>
+    <text x="200" y="40" text-anchor="start" style="fill:black">SVG 텍스트 예제 0</text>
+    <text x="200" y="80" text-anchor="middle" style="fill:black">SVG 텍스트 예제 1</text>
+    <text x="200" y="120" text-anchor="end" style="fill:black">SVG 텍스트 예제 2</text>
+     -->
+     
+     <!-- 
+     <g style="opacity:0.25">
+      <rect x="200" y="50" width="100" height="80" />
+      <text x="200" y="40" text-anchor="start" style="fill:black">Sample Text</text>
+      
+     </g>
+      -->
+      
+     <g opacity="0.25"">
+      <rect x="200" y="50" width="100" height="80" />
+      <text x="200" y="40" text-anchor="start" style="fill:black">Sample Text</text>
+      
+     </g>
+     <g transform="translate(-200, 40)">
+      <rect x="200" y="50" width="100" height="80" />
+      <text x="200" y="40" text-anchor="start" style="fill:black">Sample Text</text>
+      
+     </g> 
+     
+     <g transform="rotate(45)">
+      <rect x="200" y="50" width="100" height="80" />
+      <text x="200" y="40" text-anchor="start" style="fill:black">Sample Text</text>
+      
+     </g> 
+     
+     <g opacity="0.25" transform="scale(2.0)">
+      <rect x="20" y="50" width="100" height="80" />
+      <text x="20" y="40" text-anchor="start" style="fill:black">Sample Text</text>
+      
+     </g> 
+  </svg>
+ 
+
+</body>
+</html>

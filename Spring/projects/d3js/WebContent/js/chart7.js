@@ -1,0 +1,51 @@
+/**
+ * 
+ */
+
+window.addEventListener("load", function(){
+	
+	
+	//1. 데이터 준비
+	d3.csv("data.csv").then(function(data){
+		
+		var dataSet = [];
+		for(var i = 0; i < data.length; i++){
+			dataSet.push(data[i].item1);
+		}
+	
+		d3.select("#myGraph")
+		.selectAll("rect")
+		.data(dataSet) //데이터 설정
+		.enter()
+		.append("rect")
+		.attr("x", 0)
+		.attr("y", function(d, i){
+			return i * 30;
+		})
+		.attr("height", "20px")
+		.attr("width", function(d, i){
+			return d + "px";
+		});
+
+		var scale = d3.scaleLinear()
+		.domain([0, 300])
+		.range([0, 300])
+		
+		var axis = d3.axisBottom(scale);
+		
+		d3.select("#myGraph")
+		.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(0, " + ((1+dataSet.length) * 30+5) + ")" )
+		.call(axis);
+		
+		
+
+	}); //csv.then() end
+	
+});
+			
+	
+
+
+

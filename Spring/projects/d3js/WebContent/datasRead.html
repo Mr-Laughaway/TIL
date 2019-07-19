@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sample</title>
+  <style>
+    svg {
+      width: 320px;
+      height: 240px;
+      border: 1px solid black;
+    }
+    
+    .bar {
+      fill: orange;
+    }
+    
+  </style>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+  <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+  <script src="js/modify1.js"></script>
+</head>
+<body>
+  <h1>(XML파일)데이터에 따라 그래프 표시</h1>
+  <div>
+    <button data-src="./datas/mydata1.csv">mydata1.csv 불러오기</button>
+    <button data-src="./datas/mydata2.csv">mydata2.csv 불러오기</button>
+    <button data-src="./datas/mydata3.csv">mydata3.csv 불러오기</button>
+  </div>
+  <svg id="myGraph"></svg>
+
+</body>
+</html>
