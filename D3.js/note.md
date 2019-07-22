@@ -397,4 +397,131 @@
 
   
 
+- 꺾은선 차트
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>chart1.html</title>
+  <style>
+    svg {
+       width: 380px;
+      height: 240px;
+      border: 1px solid black;
+    }
+    
+    .line { fill:none; stroke: black;}
+    
+    .axis text {
+      font-family: sans-serif;
+      font-size: 11px;
+    }
+    
+    .axis path, .axis line {
+      fill: none;
+      stroke: black;
+    }
+    
+    .axis_x line {
+      fill: none;
+      stroke: black;
+    }
+    
+    .barNum { font-size: 10pt; text-anchor : middle; font-color: black; }
+    
+  </style>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="js/line2.js"></script>
+  </head>
+  <body>
+    <h3>꺾은선 그래프 - 눈금 표시</h3>
+    <svg id="myGraph"></svg>
+  
+  </body>
+  </html>
+  ```
+
+  line2.js
+
+  ```javascript
+  /**
+   * 
+   */
+  
+  window.addEventListener("load", function(){
+  	
+  	var svgEle = document.getElementById("myGraph");
+  	var svgWidth = window.getComputedStyle(svgEle, null).getPropertyValue("width");
+  	var svgHeight = window.getComputedStyle(svgEle, null).getPropertyValue("height");
+  	svgWidth = parseFloat(svgWidth);
+  	svgHeight = parseFloat(svgHeight);
+  	
+  	var dataSet = [10, 47, 65, 8, 64, 99, 75, 22, 63, 80];
+  	var margin = (svgWidth*0.9)/(dataSet.length - 1);
+  	
+  	var offsetX = 30;
+  	var offsetY = 15;
+  	var dataMax = 100;
+  	
+  	var line = d3.line()
+  	.x(function(d, i){
+  		return i * margin;
+  	})
+  	.y(function(d, i){
+  		return svgHeight - d*2;
+  	})
+  	
+  	var lineElements = d3.select("#myGraph")
+  	.append("path")
+  	.attr("class", "line")
+  	.attr("d", line(dataSet))
+  	.attr("transform", "translate("+ offsetX +", " + -offsetY+ ")")
+  	
+  	
+  	
+  	//눈금을 표시하기 위한 스케일 설정
+  	var yScale = d3.scaleLinear()
+  	.domain([0, dataMax])
+  	.range([dataMax*2, 0])
+  	
+  	//눈금의 표시 위치를 왼쪽으로 지정
+  	var axis = d3.axisLeft(yScale)
+  	.ticks(10)
+  	//.tickFormat(d3.format(".2f"));
+  	
+  	d3.select("#myGraph").append("g")
+  	.attr("class", "axis")
+  	.attr("transform", "translate("+ offsetX +", " + ((svgHeight-dataMax*2-offsetY))+ ")")
+  	.call(axis)
+  		
+  	
+  	d3.select("#myGraph")
+  	.append("rect")
+  	.attr("class", "axis_x")
+  	.attr("width", 320)
+  	.attr("height", 1)
+  	.attr("transform", "translate("+ offsetX + ", " + (svgHeight-offsetY)+")")
+  	
+  	
+  	//안 먹네....
+  	lineElements.enter()
+  	.append("text")
+  	.attr("class", "barNum")
+  	.attr("x", function(d, i){
+  		return i *5;
+  	})
+  	.attr("y", function(d, i){
+  		return svgHeight - 100;
+  	})
+  	.text(function(d, i){
+  		return 100;
+  	});
+  	
+  }, false);
+  
+  
+  ```
+
   
