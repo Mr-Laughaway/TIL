@@ -254,3 +254,147 @@
   ```
 
   
+
+- 파이 차트
+
+  pie10.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Sample</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+  <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+  <script src="js/pie10.js"></script>
+  <style>
+    svg { width: 320px; height: 240px; border: 1px solid black; }
+    .pie { fill: orange; stroke: none; }
+    .total { font-size: 9pt; text-anchor: middle; }
+    .pieNum { font-size: 10pt; text-anchor: middle; }
+  </style>
+  </head>
+  <body>
+    <h1>원 그래프 표시</h1>
+    <svg id="myGraph"></svg><br>
+    <form>
+      <select id="year">
+        <option value="2008">2008년</option>
+        <option value="2009">2009년</option>
+        <option value="2010">2010년</option>
+        <option value="2011">2011년</option>
+        <option value="2012">2012년</option>
+        <option value="2013">2013년</option>
+        <option value="2014">2014년</option>
+      </select>
+    </form>
+    
+  </body>
+  </html>
+  ```
+
+  
+
+  pie10.js
+
+  ```javascript
+  /**
+   * 
+   */
+  
+  window.addEventListener("load", function(){
+  	
+  	drawPie("./datas/mydata2008.csv");
+  	
+  	d3.select("#year").on("change", function(){
+  		d3.select("#myGraph").selectAll("*").remove();
+  		drawPie("./datas/mydata"+this.value+".csv", this.value);
+  	});
+  	
+  	
+  }, false);
+  
+  function drawPie(filename) {
+  	d3.csv(filename).then(function(data){
+  		
+  		var dataSet = [];
+  		var labelName = [];
+  		
+  		for(var i in data[0]) {
+  			dataSet.push(data[0][i]);
+  			labelName.push(i);
+  		}
+  		
+  		
+  		var svgEle = document.getElementById("myGraph");
+  		var svgWidth = window.getComputedStyle(svgEle, null).getPropertyValue("width");
+  		var svgHeight = window.getComputedStyle(svgEle, null).getPropertyValue("height");
+  		svgWidth = parseFloat(svgWidth);
+  		svgHeight = parseFloat(svgHeight);
+  		
+  		var color = d3.scaleOrdinal(d3.schemeCategory10);
+  		
+  		//원 그래프의 좌표값을 계산하는 메서드
+  		var pie = d3.pie().value(function(d, i) {return d;}); //원 그래프 레이아웃
+  		var arc = d3.arc().innerRadius(40).outerRadius(100);
+  		
+  		//원 그래프 그리기
+  		//원 그래프의 부채꼴은 path의 좌표로 구성되므로 path요소 지정
+  		var pieElements = d3.select("#myGraph")
+  		.selectAll("g")
+  		.data(pie(dataSet))
+  		.enter()
+  		.append("g")
+  		.attr("transform", "translate(" + svgWidth/2 + ", " + svgHeight/2 + ")")
+  		
+  		pieElements
+  		.append("path")
+  		.attr("class", "pie")
+  		.style("fill", function(d, i){
+  			return color(i);
+  		})
+  //		.attr("d", arc)
+  		.transition()
+  		.duration(200)
+  		.delay(function(d, i) {
+  			return i*200;
+  		})
+  		.ease(d3.easeLinear)
+  		.attrTween("d", function(d, i){
+  			var interpolate = d3.interpolate(
+  				{ startAngle : d.startAngle, endAngle : d.startAngle },
+  				{ startAngle : d.startAngle, endAngle : d.endAngle }
+  			);
+  			return function(t) {
+  				return arc(interpolate(t));
+  			}
+  			
+  		})
+  		
+  		var textElements = d3.select("#myGraph")
+  		.append("text")
+  		.attr("class", "total")
+  		.attr("transform", "translate(" + svgWidth/2 + ", " + (svgHeight/2 + 5)+ ")")
+  		.text("점유율: " + d3.sum(dataSet));
+  		
+  		pieElements
+  		.append("text")
+  		.attr("class", "pieNum")
+  		.attr("transform", function(d, i) {
+  			return "translate("+arc.centroid(d)+")";
+  		})
+  		.text(function(d, i){
+  			return labelName[i] + ": " + d.value;
+  		})
+  		
+  	});
+  }
+  
+  
+  ```
+
+  
+
+  
