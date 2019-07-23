@@ -708,4 +708,91 @@
   
   ```
 
+
+
+- 영역 안을 칠한 꺾은선 그래프
+
+  line4.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Sample</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="js/line4.js"></script>
+  <style>
+    
+    
+  </style>
   
+  </head>
+  <body>
+    <h1>영역 안을 칠한 꺾은선 그래프 표시</h1>
+    <div id="my_dataviz"></div>
+  
+  </body>
+  </html>
+  ```
+
+  line4.js
+
+  ```javascript
+  window.addEventListener("load", function(){
+  	
+  	var margin = { top: 10, right: 30, bottom: 30, left: 50},
+  		width = 460 - margin.left - margin.right,
+  		height = 400 - margin.top - margin.bottom;
+  	
+  	var svg = d3.select("#my_dataviz")
+  	.append("svg")
+  	.attr("width", width + margin.left + margin.right)
+  	.attr("height", height + margin.top + margin.bottom)
+  	.append("g")
+  	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  	
+  	d3.csv("datas/orders.csv", 
+  		function(d) {
+  			return { date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value }
+  		}, 
+  		function(data) {
+  			
+  			//Add X axis
+  			var x = d3.scaleTime()
+  			.domain(d3.extent(data, function(d){ return d.date; }))
+  			.range([0, width]);
+  			
+  			svg.append("g")
+  			.attr("transform", "translate(0, " + height + ")")
+  			.call(d3.axisBottom(x));
+  			
+  			//Add Y axis
+  			var y = d3.scaleLinear()
+  			.domain([0, d3.max(data, function(d) { return +d.value; })])
+  			.range([height, 0]);
+  			
+  			svg.append("g")
+  			.call(d3.axisLeft(y));
+  			
+  			//Add the area
+  			svg.append("path")
+  			.datum(data)
+  			.attr("fill", "#cce5df")
+  			.attr("stroke", "#69b3a2")
+  			.attr("stroke-width", 1.5)
+  			.attr("d", d3.area()
+  				.x(function(d){ console.log(d.date); return x(d.date) })
+  				.y0(y(0))
+  				.y1(function(d) { console.log(d.value); return y(d.value)})
+  			)
+  		}
+  		
+  	);
+  	
+  
+  }, false); //addEventListener() end
+  ```
+
+  
+
