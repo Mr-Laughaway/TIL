@@ -898,5 +898,246 @@
   
   ```
 
-  
 
+
+- Plot 그리기 (scatter)
+
+  plot4.html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>Sample</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="js/plot4.js"></script>
+  <style>
+    svg { width: 320px; height: 240px; border: 1px solid black; }
+    .mark { fill: blue; stroke: none; }
+    .axis text {
+      font-family: sans-serif;
+      font-size: 11px;
+    }
+    
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: black;
+    }
+    
+    .grid {
+      stroke : gray;
+      stroke-dasharray: 4, 2;
+      shape-rendering: crispEdges;
+    }
+    
+    .tip {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 9999;
+      visibility: hidden;
+      border: 1px solid black;
+      background-color: yellow;
+      width: 80px;
+      height: 16px;
+      overflow: hidden;
+      text-align: center;
+      font-size: 9pt;
+      font-family: Tahoma, Optima, Helvetica;
+      color: black;
+    }
+  </style>
+  
+  </head>
+  <body>
+    <h1>산포도 표시 : 애니메이션 + 그리프 표현</h1><br>
+    <svg id="myGraph"></svg><br>
+  
+  </body>
+  </html>
+  ```
+
+  plot4.js
+
+  ```javascript
+  /**
+   * 
+   */
+  
+  window.addEventListener("load", function(){
+  	
+  	var svgWidth = 320;
+  	var svgHeight = 240;
+  	var offsetX = 30;
+  	var offsetY = 20;
+  	var svg = d3.select("#myGraph");
+  	
+  	var dataSet = [
+  		[30, 40], [120, 115], [125, 90], [150, 160], [300, 190],
+  		[60, 40], [140, 145], [165, 110], [200, 170], [250, 190]
+  	];
+  	
+  
+  	
+  	var circleElements = svg.selectAll("circle").data(dataSet);
+  	
+  	circleElements.enter()
+  	.append("circle")
+  	.attr("class", "mark")
+  	.attr("cx", function(d, i) {
+  		return d[0] + offsetX;
+  	})
+  	.attr("cy", function(d, i){
+  		return svgHeight - d[1] - offsetY;
+  	})
+  	.attr("r", 5);
+  	
+  	
+  	drawScale(dataSet);
+  	
+  	
+  	function updateData(data) {
+  		var result = data.map(function(d, i) {
+  			var x = Math.random() * (svgWidth );
+  			var y = Math.random() * (svgHeight );
+  			return [x, y];
+  		});
+  		
+  		return result;
+  	}
+  	
+  	function updateGraph(dataSet) {
+  		d3.select("#myGraph").selectAll("*").remove();
+  		
+  		circleElements = d3.select("#myGraph")
+  			.selectAll("circle")
+  			.data(dataSet)
+  			
+  		circleElements.enter()
+  		.append("circle")
+  		.attr("class", "mark")
+  		.transition()
+  		.attr("cx", function(d, i){
+  			return d[0] + offsetX;
+  		})
+  		.attr("cy", function(d, i){
+  			return svgHeight - d[1] - offsetY;
+  		})
+  		.attr("r", 5);
+  		
+  	}
+  	
+  	function drawScale(dataSet) {
+  		d3.select("#myGraph").selectAll("g").remove(); //눈금 삭제
+  		
+  		var maxX = d3.max(dataSet, function(d, i) {
+  			return d[0];
+  		});
+  		
+  		var maxY = d3.max(dataSet, function(d, i){
+  			return d[1];
+  		});
+  		
+  		var yScale = d3.scaleLinear()
+  			.domain([0, maxY])
+  			.range([maxY, 0]);
+  		
+  		var axis = d3.axisLeft(yScale);
+  		
+  		d3.select("#myGraph")
+  		.append("g")
+  		.attr("class", "axis")
+  		.attr("transform", "translate(" + offsetX + ", " + (svgHeight - maxY - offsetY) +")")
+  		.call(axis);
+  		
+  		var xScale = d3.scaleLinear()
+  			.domain([0, maxX])
+  			.range([0, maxX]);
+  		
+  		var axis_x = d3.axisBottom(xScale);
+  		
+  		d3.select("#myGraph")
+  		.append("g")
+  		.attr("class", "axis")
+  		.attr("transform", "translate(" + offsetX + ", " + (svgHeight - offsetY) +")")
+  		.call(axis_x);
+  		
+  		var grid = svg.append("g");
+  		var rangeX = d3.range(50, maxX, 50);
+  		var rangeY = d3.range(20, maxY, 20);
+  		
+  		grid.selectAll("line.y")
+  		.data(rangeY)
+  		.enter()
+  		.append("line")
+  		.attr("class", "grid")
+  		.attr("x1", offsetX)
+  		.attr("y1", function(d, i){
+  			return svgHeight - d - offsetY;
+  		})
+  		.attr("x2", maxX + offsetX)
+  		.attr("y2", function(d, i){
+  			return svgHeight - d - offsetY;
+  		});
+  		
+  		grid.selectAll("line.x")
+  		.data(rangeX)
+  		.enter()
+  		.append("line")
+  		.attr("class", "grid")
+  		.attr("x1", function(d, i){
+  			return d + offsetX;
+  		})
+  		.attr("y1", svgHeight - offsetY)
+  		.attr("x2", function(d, i){
+  			return d + offsetX;
+  		})
+  		.attr("y2", svgHeight - offsetY - maxY)
+  		
+  	}
+  	
+  	var tooltip = d3.select("body")
+  	.append("div")
+  	.attr("class", "tip");
+  	
+  	
+  	function showTooltip() {
+  		circleElements = d3.select("#myGraph")
+  		.selectAll("circle")
+  		
+  		circleElements.on("mouseover", function(d){
+  			var x = parseInt(d[0]);
+  			var y = parseInt(d[1]);
+  			var data = d3.select(this).datum();
+  			var dx = parseInt(data[0]);
+  			var dy = parseInt(data[1]);
+  			
+  			tooltip
+  			.style("left", offsetX + x + "px")
+  			.style("top", svgHeight + offsetY - y + "px")
+  			.style("visibility", "visible")
+  			.text(dx + ", " + dy)
+  		})
+  		
+  		circleElements.on("mouseout", function(d){
+  			tooltip.style("visibility", "hidden")
+  		})
+  	}
+  	
+  	showTooltip();
+  	
+  	setInterval(function(){
+  		dataSet = updateData(dataSet);
+  		updateGraph(dataSet);
+  		drawScale(dataSet);
+  		showTooltip();
+  	}, 2000);
+  	
+  	
+  	
+  }, false);
+  ```
+
+  
