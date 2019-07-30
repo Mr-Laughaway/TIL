@@ -261,7 +261,7 @@
   
   <!-- current resources -->
   <script type="text/javascript" src="resources/js/map.js"></script>
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e4c097578c3266be7fa0ea7907486d92&libraries=services"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?"></script>
   
   
 </body>
