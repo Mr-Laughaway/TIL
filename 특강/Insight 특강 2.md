@@ -189,32 +189,63 @@
 
 
 
-- 산출물
+- 프로젝트 설계단계
+  - 산출물
 
-  - 요구사항 정의서(명세서)
+    - 요구사항 정의서(명세서)
 
-    ![ìêµ¬ì¬í­ ì ììì ëí ì´ë¯¸ì§ ê²ìê²°ê³¼](https://www.itlab.co.kr/v7/files/2016/08/29/c9fd6243628fe5441d99f1835ffbac93050727.jpg)
+      ![ìêµ¬ì¬í­ ì ììì ëí ì´ë¯¸ì§ ê²ìê²°ê³¼](https://www.itlab.co.kr/v7/files/2016/08/29/c9fd6243628fe5441d99f1835ffbac93050727.jpg)
 
-  - Use case 명세서
+    - Use case 명세서
 
-    ***요구사항에 대하여 액터와 시스템 활동 및 상호간의 활동에 대하여 순서화된 시나리오를 기술하고 연관관계를 도식화한 다이어그램***
+      ***요구사항에 대하여 액터와 시스템 활동 및 상호간의 활동에 대하여 순서화된 시나리오를 기술하고 연관관계를 도식화한 다이어그램***
 
-    ![ê´ë ¨ ì´ë¯¸ì§](http://mblogthumb1.phinf.naver.net/20150102_180/whatclouds_1420138165269yXCbe_PNG/%BD%BA%C5%A9%B8%B0%BC%A6_2015-01-02_%BF%C0%C0%FC_3.48.45.png?type=w420)
+      ![ê´ë ¨ ì´ë¯¸ì§](http://mblogthumb1.phinf.naver.net/20150102_180/whatclouds_1420138165269yXCbe_PNG/%BD%BA%C5%A9%B8%B0%BC%A6_2015-01-02_%BF%C0%C0%FC_3.48.45.png?type=w420)
 
-  - 요구사항 추적표
+    - 요구사항 추적표
 
-    - 요구사항 대비 단계별 산출물이 일관성을 가지는지를 프로젝트 전반에 걸쳐 추적하고 관리
-    - 프로젝트 수행 과정에서 요구사항이 추가 혹은 변경될 경우 영향력 평가에도 활용
+      - 요구사항 대비 단계별 산출물이 일관성을 가지는지를 프로젝트 전반에 걸쳐 추적하고 관리
+      - 프로젝트 수행 과정에서 요구사항이 추가 혹은 변경될 경우 영향력 평가에도 활용
 
-    ![img](https://t1.daumcdn.net/cfile/tistory/2362603556FA3F050E)
+      ![img](https://t1.daumcdn.net/cfile/tistory/2362603556FA3F050E)
 
-  - ㅇㄹ
+    - WBS(Work Breakdown Structure)
 
-  - ㅇㄹ
+      **업무 분업 구조**(work-breakdown structure, WBS)[[2\]](https://ko.wikipedia.org/wiki/업무_분업_구조#cite_note-2), **작업 분해 구조**, **작업 분류 체계**, **작업 분할 구조**, **작업 분할 구도**는 [프로젝트 관리](https://ko.wikipedia.org/wiki/프로젝트_관리)와 [시스템 공학](https://ko.wikipedia.org/wiki/시스템_공학) 분야에서 프로젝트의 더 작은 요소로 분해시킨 [딜리버러블](https://ko.wikipedia.org/w/index.php?title=딜리버러블&action=edit&redlink=1) 지향 분업 구조이다. 업무 분업 구조는 팀의 작업을 관리 가능한 부분들로 조직화해놓은 주된 제품 딜리버러블이다. [프로젝트 관리 지식 체계](https://ko.wikipedia.org/wiki/프로젝트_관리_지식_체계) (PMBOK 5)는 업무 분업 구조를 "[프로젝트 팀](https://ko.wikipedia.org/w/index.php?title=프로젝트_팀&action=edit&redlink=1)이 프로젝트 목표를 달성하고 필요한 딜리버러블을 만들기 위한 총 업무 범위의 계층적 분해"로 정의한다.
 
-  - ㅇㄹ
+      업무 분업 구조 요소는 [상품](https://ko.wikipedia.org/wiki/상품), [데이터](https://ko.wikipedia.org/wiki/자료), [서비스](https://ko.wikipedia.org/wiki/서비스), 또 이들 간의 어떠한 결합이 될 수 있다. WBS는 또한 스케줄 개발 및 통제를 위한 지침 제공과 더불어 세세한 비용 예측 및 통제에 필요한 프레임워크를 제공한다.[[](https://ko.wikipedia.org/wiki/업무_분업_구조#cite_note-BAH-3)
+
+      ![WBSì ëí ì´ë¯¸ì§ ê²ìê²°ê³¼](https://m6n6j6i4.stackpathcdn.com/wp-content/uploads/2017/09/Primavera-P6-WBS-Summary-Activity-and-Deliverable-Completion-Dates-WBS-Summary-Activity-and-Deliverable-Completion-Dates-Fig-1.jpg)
+      - 프로젝트 일정계획 수립 시 고려해야 될 사항은...
+
+        - 개발 내역에 대한 기술적인 낭이도를 사전에 평가해야 하고...
+
+        - 업무를 담당하는 팀원 각각의 능력을 고려하되...
+
+        - 개발 과정에서 예상치 못한 이슈가 발생하는 경우가 많기 때문에 이슈를 해결할 버퍼를 고려해서 일정을 계획하는 것이 바람직함
+
+          ***Critical Chain Method***
+
+  - 프로젝트 설계가 중요한 이유
+
+    - 기능, 데이터, UI, 아키텍쳐 요구사항 등을 고려한 체계적인 설계를 통해...
+    - 불필요한 코드를 줄이고 테스트와 재작업이 쉬운 코드를 만들어내며...
+    - 개발 과정에서 무한 수정/변경 등의 삽질을 방지할 수 있을 뿐만 아니라...
+    - 향후 수정 및 유지보수가 용이하여 운영 생산성이 향살될 수 있음
+
+    > ***부실한 설계는 프로젝트에서 공정 지연과 품질 저하를 야기시키는 요인임***
 
   - 
+
+
+
+- 
+- ㅇ
+- ㅇ
+- ㅇ
+- ㅇ
+- ㅇ
+- 
 
 
 
