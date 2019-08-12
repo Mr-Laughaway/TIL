@@ -122,9 +122,7 @@
 
 - 프로젝트 관리 핵심 요소
 
-  ***과제 성격의 소규모 프로젝트에서는 범위, 일정, 품질에 촛점을 맞추어야 함***
-
-  **Scope, Cost, Time** -> Quality
+  ***과제 성격의 소규모 프로젝트에서는 범위, 일정, 품질에 촛점을 맞추어야 함***. (**Scope, Cost, Time** -> Quality)
 
 
 
@@ -136,7 +134,26 @@
     >
     > ***방법론이란 지식을 기반으로 일을 수행하는 절차, 방법 원칙 등을 정의한 것***
 
+  - 개발 방법론과 괸리 방법론
 
+    ![ê°ë° ë°©ë²ë¡ ê³¼ ê´ë¦¬ ë°©ë²ë¡ ì ëí ì´ë¯¸ì§ ê²ìê²°ê³¼](http://cfs4.blog.daum.net/upload_control/download.blog?fhandle=MDh0dFhAZnM0LmJsb2cuZGF1bS5uZXQ6L0lNQUdFLzAvMTAuSlBHLnRodW1i&filename=10.JPG)
+
+  - Waterfall 모델
+
+    ![waterfall modelì ëí ì´ë¯¸ì§ ê²ìê²°ê³¼](https://i2.wp.com/s3.amazonaws.com/production-wordpress-assets/blog/wp-content/uploads/2016/12/08151155/waterfall-model.png?fit=604%2C270&ssl=1)
+
+    - 현장의 거의 대부분의 프로젝트는 초기에 상세 개발 계획을 모두 수립하고 요구분석-> 설계 -> 코딩 -> 테스트 등 순차적으로 개발을 진행하고 산출물 중심으로 관리하는 Waterfall 모델을 사용함
+    - Waterfall 모델을 활용할 경우 시스템이 구현되어 시각적으로 확인되기 전까지 고객은 자신들이 요구했던 사항들의 실체를 알기 어려운 단점이 있어 잦은 변경이 발생됨
+
+  - Agile 방법론
+
+    ​	![Agileì ëí ì´ë¯¸ì§ ê²ìê²°ê³¼](https://www.sam-solutions.com/blog/wp-content/uploads/2018/07/AGILE@2x.png)
+
+    - 애자일 방법론은 Waterfall 모델과 달리 뒤 단계를 미리 예측하여 개발하지 않고, 일정한 반복주기를 가지고 끊임없이 프로토타입을 만들어 내며 피요할 때마다 요구사항을 더하고 수정하여 커다란 소프트웨어를 개발해 나가는 방식임
+    - 이 과정 각각에 이해관계자를 참여시켜 요구사항 수집과 결과 검증을 모두 거쳐갈 수 있는 장점이 있음
+    - 반복주기(Spring)  - 2~4주 (일정)에서 S1 -> S2 -> S3 -> S4 각각이 분석, 설계, 개발, 테스트, 검증을 포함한다.
+
+- ​	
 
 
 
