@@ -234,9 +234,15 @@ PC에 설치되어 있는 운영체제(호스트 OS)에 가상의 시스템을(�
 
 
 - 배시 셸에서 시스템 환경 설정 파일
-  - /etc/profile - 모든 셸에 공통으로 적용되는 환경 설정, bash.bashrc 파일을 실행시킴
-  - /etc/bash.bashrc - 기본 프롬프트 설정, 시스템 공통으로 적용되는 환경 설정
-  - /etc/profile.d/*.sh
+  - 공통 환경설정
+    - /etc/profile - 모든 셸에 공통으로 적용되는 환경 설정, bash.bashrc 파일을 실행시킴
+    - /etc/bash.bashrc - 기본 프롬프트 설정, 시스템 공통으로 적용되는 환경 설정
+    - /etc/profile.d/*.sh - 언어나 명령별로 필요한 환경을 설
+  - 사용자의 환경 설정 파일
+    - ~/.profile
+    - ~/.bashrc
+    - ~/.bash_aliases
+    - ~/.bash_logout
 
 
 
