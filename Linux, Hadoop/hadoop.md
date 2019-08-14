@@ -14,3 +14,12 @@
 
 
 
+```bash
+/usr/local/hadoop-2.7.7/start-all.sh
+/usr/local/hadoop-2.7.7/stop-all.sh
+```
+
+
+
+
+
