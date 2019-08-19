@@ -249,7 +249,7 @@ vi hdfs-site.xml
 
 ### 다른 노드 설정 파일 동기화
 
-```
+```bash
 #마스터 노드에서
 [hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp
 [hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs
@@ -345,7 +345,7 @@ livenode 를 클릭해서 라이브노드가 2개임을 확인하자
 
 ### 종료하는 방법
 
-```
+```bash
 [hadoop@master sbin]$ ./stop-all.sh
 ```
 
@@ -354,6 +354,446 @@ livenode 를 클릭해서 라이브노드가 2개임을 확인하자
 ---
 
 
+
+#### 티빔 2차
+
+### 만약 확인시 라이브노드가 1개라면 다시 설정 해 볼 내용!
+
+1. systemctl enable iptables 를 입력하여 activedt상태인지 확인!(slave도!)
+
+Live Node가 2개가 아닐 시
+
+먼저 master 와 slave둘다
+
+```bash
+[hadoop@master sbin]$ ./stop-all.sh
+//먼저다 스탑!
+[hadoop@slave .ssh]$ cd /usr/local/
+[hadoop@slave hadoop-2.7.7]$ ls
+[hadoop@slave hadoop-2.7.7]$ cd tmp
+[hadoop@slave tmp]$ rm -rf *
+[hadoop@slave tmp]$ cd ..
+[hadoop@slave hadoop-2.7.7]$ ls
+//tmp 아래의 정보만 삭제! master와 slave둘다!
+//그후 마스터노드에서
+[hadoop@master hadoop-2.7.7]$ hadoop namenode -format
+[hadoop@master sbin]$ ./start-all.sh
+ //시작한 후 slave 에서 tmp 파일 아래 자료가 생기는 것을 확인 후! 브라우저에서 live node가 2개임을 확인한다!
+Live Node가 2개가 아닌경우 다시 설정해볼 내용
+[hadoop@master hadoop-2.7.7]$ ls
+#tmp 삭제
+[hadoop@master hadoop-2.7.7]$ rm -rfR tmp
+[hadoop@master hadoop-2.7.7]$ ls
+
+#Slave1 노드에서도 삭제
+[hadoop@slave1 hadoop-2.7.7]$ ls
+bin  include  libexec      logs        README.txt  share
+etc  lib      LICENSE.txt  NOTICE.txt  sbin        tmp
+[hadoop@slave1 hadoop-2.7.7]$ rm -rfR tmp
+[hadoop@slave1 hadoop-2.7.7]$ ls
+
+#master 노드에서 tmp 디렉토리 다시 생성
+[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs/name
+[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs/data
+[hadoop@master hadoop-2.7.7]$ ls -R /usr/local/hadoop-2.7.7/tmp
+
+[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred/system
+[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred/local
+[hadoop@master hadoop-2.7.7]$ ls -R /usr/local/hadoop-2.7.7/tmp
+
+[hadoop@master hadoop-2.7.7]$rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7
+
+[hadoop@master hadoop-2.7.7]$ cd etc/hadoop
+[hadoop@master hadoop-2.7.7]$ rsync -av . hadoop@slave2:/usr/local/hadoop-2.7.7
+[hadoop@master hadoop-2.7.7]$ rsync -av . hadoop@secondary:/usr/local/hadoop-2.7.7
+
+[hadoop@master hadoop-2.7.7]$ rm -rf ./logs/yarn*
+[hadoop@master hadoop-2.7.7]$ rm -rf ./logs/hadoop*
+
+[hadoop@master ~]$ hadoop namenode -format
+
+그 후 다시 생성하자
+```
+
+### 조심하자
+
+#### 하둡 세이프모드 해제(비정상종료시 강제 세이프모드)
+
+$ hadoop dfsadmin -safemode leave
+
+## hadooop
+
+### 하둡 분산 파일 시스템(HDFS)관리
+
+**hadoop** **fs -옵션 …**
+
+1. 파일 목록 보기 : ls, lsr
+2. 파일 용량 확인 : du, dus
+3. 파일 내용 보기 : cat, text
+4. 디렉토리 생성 : mkdir
+5. 파일 복사 : put, get, getmerge, cp, copyFromLocal, copyToLocal
+6. 파일 이동 : mv, moveFromLocal
+7. 카운트 값 조회 : count
+8. 파일삭제, 디렉토리 삭제 : rm, rmr
+9. 파일의 마지막 내용 확인 : tail
+10. 권한 변경 : chmod, chown, chgrp
+11. 0바이트파일 생성 : touchz
+12. 통계 정보 조회 : stat
+13. 복제 데이터 개수 변경 : setrep
+14. 휴지통 비우기 : expunge
+15. 파일 형식 확인 : test
+
+```bash
+[hadoop@master ~]$ hadoop fs mkdir /lab // 먼저 하둡에 파일 생성
+[hadoop@master ~]$ vi test.txt
+//내용 아무것이나 넣고 저장~(파일 생성한 것!)
+
+[hadoop@master ~]$ hadoop fs -put ./test.txt /lab/
+//하둡에 그 파일을 저장~
+
+[hadoop@master ~]$ hadoop fs -ls /lab/
+//저장된 파일 확인!
+
+[hadoop@master ~]$ rm test.txt
+[hadoop@master ~]$ ls
+//로컬에서 삭제!
+
+[hadoop@master ~]$ hadoop fs -get /lab/test.txt
+[hadoop@master ~]$ ls
+//하둡에서 파일 가져와서 다시 확인!
+
+
+[hadoop@master ~]$ hadoop fs -rm /lab/test.txt
+//하둡에서 그 파일을 삭제!
+[hadoop@master ~]$ vi sample.txt 
+//내용입력
+[hadoop@master ~]$ vi sample2.txt
+//내용입력
+
+[hadoop@master ~]$ hadoop fs -put sampl* /lab/
+//두개를 하둡에 올린다!
+[hadoop@master ~]$ hadoop fs -ls /lab/
+//잘 올라가있는지 확인!
+
+[hadoop@master ~]$ hadoop fs -mkdir /data
+[hadoop@master ~]$ hadoop fs -ls /
+Found 2 items
+drwxr-xr-x   - hadoop supergroup          0 2019-08-16 10:24 /data
+drwxr-xr-x   - hadoop supergroup          0 2019-08-16 10:23 /lab
+
+//data 디텍토리 생긴것을 확인!
+
+[hadoop@master ~]$ hadoop fs -mv /lab/sample* /data/
+//파일을 data디렉토리로 옮긴다!
+
+[hadoop@master ~]$ hadoop fs -ls /lab
+[hadoop@master ~]$ hadoop fs -ls /data
+Found 2 items
+-rw-r--r--   1 hadoop supergroup         27 2019-08-16 10:23 /data/sample.txt
+-rw-r--r--   1 hadoop supergroup         22 2019-08-16 10:23 /data/sample2.txt
+//옮겨진것을 확인하자
+
+[hadoop@master ~]$ hadoop fs -getmerge /data/sample* ./sample3.txt
+[hadoop@master ~]$ ls
+Desktop    Downloads  Pictures  sample2.txt  sample.txt  test.txt
+Documents  Music      Public    sample3.txt  Templates   Videos
+[hadoop@master ~]$ cat sample3.txt
+haha~ today is friday!!!!!
+Tomorrow is saturday!
+
+//두 파일이 합쳐져서 만들어진것을 확인할 수 있다!
+```
+
+
+
+### 안전모드
+
+하둡 실행 후 ^z 나 ^s와 같이 비정상 종료를 할 경우 hadoop은 safe모드로 진입한다. 이때는 파일 복사 삭제 등이 안된다.
+
+### 도구
+
+### dfsadmin
+
+hadoop dfsadmin -help 하면 다양한 관리 동작 명령어를 알 수 있다.
+
+1. fsck : 파일 시스템 상태 체크
+2. balancer : HDFS 재균형
+3. deamonlog : 로그 레벨 동적 변경
+4. dfsadmin : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
+
+### 로깅
+
+log4j는
+
+### 클러스터에서 노드를 추가하기
+
+1. nclude 파일에 새 노드의 네트워크 주소를 추가한다.
+   - dfs.hosts와 mapreduce.jobtracker.hosts.filename속성을 통해 하나의 공유 파일을 참조한다.
+2. 네임노드에 허가된 데이터 노드 집합을 반영한다.
+
+- `$ hadoop dfsadmin -refreshNodes`
+
+1. 새로 허가된 태스크트래커 집합을 잡트래커에 반영한다.
+
+- `$ hadoop mradmin -refreshNodes`
+
+1. 새 노드가 하둡 제어 스크립트에 의해 장차 클러스터에서 사용될 수 있게 slaves 파일을 갱신한다.
+2. 새로운 데이터 노드와 대스크 트래커를 시작한다.
+3. 새로운 데이터 노드와 태스크 트래커가 웹 UI에 나타나는지를 확인한다.
+
+## MapReduce Programming
+
+1. MapReduce 프레임워크는 페타바이트 이상의 대용량 데이터를 신뢰할 수 없는 컴퓨터로 구성된 클러스터 환경에서 병렬 처리를 지원하기 위해서 개발되었습니다.
+2. MapReduce프레임워크는 함수형 프로그래밍에서 일반적으로 사용되는 Map()과 Reduce() 함수 기반으로주로 구성
+   - Map()은 (key, value) 쌍을 처리하여 또 다른 (key ,value) 쌍을 생성하는 함수입니다.
+   - Reduce()는 맵(map)으로부터 생성된 (key, list(value)) 들을 병합(merge)하여 최종적으로 list(value) 들을 생성하는 함수입니다
+   - 데이터 처리를 위한 프로그래밍 모델
+   - 분산컴퓨팅에 적합한 함수형 프로그래밍
+   - 배치형 데이터 처리 시스템
+   - 자동화된 병렬처리 및 분산처리
+   - Fault-tolerance(내고장성, 결함허용)
+   - 프로그래머를 위한 추상클래스
+
+### 용어
+
+1. 작업(Job)
+
+- 데이터 집합을 이용하여 Mapper와 Reducer를 실행하는 "전체 프로그램“입니다.
+- 20개의 파일로부터 "Word Count"를 실행하는 것은 1개의 작업(Job)입니다.
+
+1. 태스크(Task)
+
+- 1개의 데이터 조각을 처리하는 1개의 Mapper 또는 Reducer의 실행입니다.
+- 20개의 파일은 20개의 Map 태스크에 의해 처리됩니다.
+
+1. 태스크 시도(Task Attempt)
+
+- 머신 위에서 1개의 태스크를 실행하는 특정 시도입니다.
+- 최소한 20개의 Map 태스크 시도들이 수행됩니다. 서버 장애 시에는 더 많은 시도들이 수행됩니다.
+
+1. Map
+
+- 어떤 데이터의 집합을 받아들여 데이터를 생성하는 프로세스입니다.
+- 주로 입력 파일을 한 줄씩 읽어서 filtering등의 처리를 수해
+
+1. Reduce
+
+- Map에 의해서 만들어진 데이터를 모아서 최종적으로 원하는 결과로 만들어 내는 프로세스입니다
+- 데이터 집약 처리
+
+1. 어떤 처리든 데이터는 키(key)와 밸류(value)의 쌍으로 이루어지고, 해당 쌍의 집합을 처리한다.
+2. 입력 데이터도 출력 데이터도 key-value의 집합으로 구성된다.
+3. Shuffle
+
+- Map 처리 후 데이터를 정렬해서, 같은 키를 가진 데이터를 같은 장소에 모은다.
+- 슬레이브 서버 간에 네트워크를 통한 전송이 발생한다
+
+### 이클립스 설치
+
+```java
+su - 
+//root 계정
+cd /usr/local
+
+tar -xvf /home/hadoop/Downloads/eclipse-jee-photon-R-linux-gtk-x86_64.tar.gz
+ls -al (로 설치 확인)
+chown -R hadoop:hadoop /usr/local/eclipse/
+ls -al(로 그룹명 변화 확인)
+postgresql(추가해야하는 자르파일이다)
+$HADOOP-HOME/share/hadoop/common/lib/common-cli-1.2.jar
+$HADOOP-HOME/share/hadoop/common/hadoop-common-2.7.7.jar
+$HADOOP-HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-2.7.7.jar
+$HADOOP-HOME/share/hadoop/mapreduce/lib/log4j ~.jar
+
+
+
+
+
+
+package lab.hadoop.fileio;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
+public class SingleFileWriteRead {
+  public static void main(String[] args) {
+	// 입력 파라미터 확인
+	if (args.length != 2) {
+		System.err.println("Usage: SingleFileWriteRead <filename> <contents>");
+			System.exit(2);
+		}
+
+	try {
+		// 파일 시스템 제어 객체 생성
+		Configuration conf = new Configuration();
+		FileSystem hdfs = FileSystem.get(conf);
+
+		// 경로 체크
+		Path path = new Path(args[0]);
+		if (hdfs.exists(path)) {
+			hdfs.delete(path, true);
+		}
+
+		// 파일 저장
+		FSDataOutputStream outStream = hdfs.create(path);
+		outStream.writeUTF(args[1]);
+		outStream.close();
+
+		// 파일 출력
+		FSDataInputStream inputStream = hdfs.open(path);
+		String inputString = inputStream.readUTF();
+		inputStream.close();
+
+		System.out.println("## inputString:" +inputString);
+                . System.out.println(path.getFileSystem(conf).getHomeDirectory()); //hdfs 홈 경로
+ System.out.println(path.toUri()); //패스의 파일명
+ System.out.println(path.getFileSystem(conf).getUri().getPath());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+```
+
+export 해서 jar파일을 이름을 fileio.jar 로 해서 home 에 저장하자
+
+```bash
+Hello hadoop HDFS[hadoop@master ~]$ hadoop jar ./fileio.jar test.txt "Hello hadoop HDFS"
+
+[hadoop@master ~]$ hadoop fs -ls -R /
+
+[hadoop@master ~]$ hadoop fs -cat test.txt 
+//확인해보자!!! 잘 나오는가!?
+```
+
+#### WordCount 프로그래밍 순서
+
+```java
+package lab.hadoop.wordcount;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class WordCountMapper  extends Mapper<LongWritable, Text, Text, IntWritable>{
+	private final static IntWritable one=new IntWritable(1);
+	private Text word=new Text();
+	
+
+	@Override
+	protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, IntWritable>.Context context)
+			throws IOException, InterruptedException {
+		
+		
+		StringTokenizer itr=new StringTokenizer(value.toString());
+		while(itr.hasMoreTokens()) {
+			word.set(itr.nextToken());
+			context.write(word, one);
+		}
+	}
+
+}
+package lab.hadoop.wordcount;
+
+import java.io.IOException;
+
+
+import org.apache.hadoop.io.IntWritable;
+
+import org.apache.hadoop.io.Text;
+
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class WordCountReducer  extends Reducer<Text, IntWritable, Text, IntWritable>{
+	private final static IntWritable result=new IntWritable();
+	
+	
+
+	
+	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
+			throws IOException, InterruptedException {
+		
+		
+		int sum=0;
+		for(IntWritable val: values) {
+			sum+= val.get();
+		}
+		result.set(sum);
+		context.write(key,result);
+	}	
+
+}
+package lab.hadoop.wordcount;
+
+
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+public class WordCount {
+
+	public static void main(String[] args) throws Exception {
+		Configuration conf= new Configuration();
+		if(args.length !=2) {
+			System.err.println("Usage: WordCount <input> <output>");
+			System.exit(2);
+		}
+		Job job=new Job(conf, "WordCount");
+		
+		job.setJarByClass(WordCount.class);
+		job.setMapperClass(WordCountMapper.class);
+		job.setReducerClass(WordCountReducer.class);
+		
+		job.setInputFormatClass(TextInputFormat.class);
+		job.setOutputValueClass(TextOutputFormat.class);
+	
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(IntWritable.class);
+		
+		//file system control object making
+		FileSystem hdfs =FileSystem.get(conf);
+		
+		//route check
+		Path path= new Path(args[1]);
+		if(hdfs.exists(path)) {
+			hdfs.delete(path,true);
+		}
+		FileInputFormat.addInputPath(job, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		
+		job.waitForCompletion(true);
+	}
+
+}
+```
+
+
+
+이 과정을 실험해 보았따!
+
+```bash
+[hadoop@master ~]$ hadoop jar ./WordCount.jar /data/input.txt /output/
+
+[hadoop@master ~]$ hadoop fs -ls -R /output
+[hadoop@master ~]$ hadoop fs -cat /output/part-r-00000
+로 확인해보자!!!!!
+```
 
 
 
