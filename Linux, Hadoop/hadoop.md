@@ -1613,5 +1613,8 @@ public class DelayCountwithDateKey extends Configured implements Tool{
   - 배치 처리, 파일 기반 처리 
     - map의 처리 결과도 map처리된 datanode에 파일로 저장. -
     - reducer의 출력결과도 hdfs에 저장
-    - disk 기반, 
+    - disk/stream 기반
+    - sequential 하게 처리
+
+
 
