@@ -1579,8 +1579,34 @@ public class DelayCountwithDateKey extends Configured implements Tool{
 
 
 
-- 
+- 워커노드(슬레이브 노드) 
 
-- ㅇ
-- 
+  마스터 노드의 지시를 받아서 명령을 수행. 실제 데이터를 저장하고, 데이터 처리 프로세싱하는 노드.
+
+
+
+- HDFS는 HDFS의 스토리지를 관리
+  - *NameNode* - HDFS 파일 시스템 디렉토리 트리와 파일의 위치 등 HDFS 스토리지 관련 메타 정보를 관리
+    - 블럭 데이터를 데이터 노드에 매핑
+    - 파일, 디렉토리, 생성, 열기, 쓰기 오퍼레이션 수행
+    - 어떤 데이터 노드에 복제/삭제 할지 결정
+    - 데이터 노드에서 보내온 하트비트와 블록 리포드를 처리 (블록 위치 유지, 데이터 노드의 상태 관리)
+  - *SecondaryNameNode* - HDFS 스토리지 메타 정보 업데이트(기본 1시간 간격, fsimage파일과 editlog 파일을 merge)
+  - *DataNode* - 마스터 노드에 접속 유지, 3초 간격으로 heartbeat, block, report를 주기적으로 전송, 마스터 노드의 요청을 처리(block 저장, block 삭제)
+
+
+
+- **Yarn** 서비스
+  - *resource manager* - 마스터 노드에서 실행. 클러스터의 리소스를 나눠주는 역할, TaskTracker들의 Task를 스케줄링
+  - *node manager* - 워커 노드에서 실행, Task들을 실행시키고 관리, resource manager와 관계 유지, 태스크/노드 상태 관리
+  - *application manager* - 클러스터에서의 메인이 되는 마스터 프로세스로서 어플리케이션별로 하나씩 실행됨. 클러스터에서 실행되는 어플리케이션의 실행 조율, 리소스 매니저와 통신(관계 유지)하면서 리소스 조절
+
+
+
+- 기타 특징
+  - ***sharding***, ***replication*** -  하둡 클러스터에서 장애 허용과 복구 능력을 위해 sharding, replication을 수행합니다.
+  - 배치 처리, 파일 기반 처리 
+    - map의 처리 결과도 map처리된 datanode에 파일로 저장. -
+    - reducer의 출력결과도 hdfs에 저장
+    - disk 기반, 
 
