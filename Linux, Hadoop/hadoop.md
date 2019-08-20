@@ -1593,6 +1593,11 @@ public class DelayCountwithDateKey extends Configured implements Tool{
     - 데이터 노드에서 보내온 하트비트와 블록 리포드를 처리 (블록 위치 유지, 데이터 노드의 상태 관리)
   - *SecondaryNameNode* - HDFS 스토리지 메타 정보 업데이트(기본 1시간 간격, fsimage파일과 editlog 파일을 merge)
   - *DataNode* - 마스터 노드에 접속 유지, 3초 간격으로 heartbeat, block, report를 주기적으로 전송, 마스터 노드의 요청을 처리(block 저장, block 삭제)
+    - 로컬 파일 시스템에 블록을 저장
+    - 데이터에 대한 읽기, 쓰기 수행
+    - 데이터 블록 생성 및 삭제 수행
+    - 클러스터에 데이터 블럭 복제
+    - 주기적으로 네임노드에 heartbeat와 block report를 전송
 
 
 
