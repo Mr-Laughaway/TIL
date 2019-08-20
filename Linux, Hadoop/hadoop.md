@@ -1620,6 +1620,10 @@ public class DelayCountwithDateKey extends Configured implements Tool{
 
 
 
+### hive 설치
+
+- 설치 
+
 ```bash
 http://www.apache.org/dyn/closer.cgi/hive/
 
@@ -1652,5 +1656,125 @@ export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HIVE_HOME/bin:
 
 [root@master ~]# mysql --version
 [root@master ~]# netstat -anp | grep mysql
+
+[root@master ~]# mysql
+```
+
+
+
+- mysql  설정
+
+```mysql
+mysql> grant all privileges on *.* to hive@localhost identified by 'hive' with grant option;
+Query OK, 0 rows affected (0.05 sec)
+>flush privileges;
+ 
+mysql> show databases;
+ +--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+
+
+mysql> use mysql;
+mysql> show tables;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| columns_priv              |
+| db                        |
+| event                     |
+| func                      |
+| general_log               |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| innodb_index_stats        |
+| innodb_table_stats        |
+| ndb_binlog_index          |
+| plugin                    |
+| proc                      |
+| procs_priv                |
+| proxies_priv              |
+| servers                   |
+| slave_master_info         |
+| slave_relay_log_info      |
+| slave_worker_info         |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+
+
+mysql> select user from user;
++------+
+| user |
++------+
+| root |
+| root |
+|      |
+| hive |
+| root |
+|      |
+| root |
++------+
+```
+
+
+
+- hive 설정
+
+```bash
+[hadoop@master conf]$ cd /usr/local/hive/conf/
+[hadoop@master conf]$ cp hive-env.sh.template hive-env.sh
+[hadoop@master conf]$ vi hive-env.sh
+# HADOOP_HOME=/usr/local/hadoop-2.7.7 삽입
+[hadoop@master conf]$ chmod 755 hive-env.sh
+
+# /usr/local/hive/conf/hive-site.xml을 수정
+[hadoop@master ~]$ vi /usr/local/hive/conf/hive-site.xml
+
+```
+
+hive-site.xml
+
+```xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<property>
+  <name>hive.metastore.local</name>
+  <value>true</value>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:mysql://localhost:3306/metastore_db?createDatabaseIfNotExist=true</value>
+  <description>JDBC connect string for a JDBC metastore</description>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionDriverName</name>
+  <value>com.mysql.jdbc.Driver</value>
+  <description>Driver class name for a JDBC metastore</description>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionUserName</name>
+  <value>hive</value>
+  <description>username to use against metastore database</description>
+</property>
+
+<property>
+  <name>javax.jdo.option.ConnectionPassword</name>
+  <value>hive</value>
+  <description>password to use against metastore database</description>
+</property> 
+  </configuration>
 ```
 
