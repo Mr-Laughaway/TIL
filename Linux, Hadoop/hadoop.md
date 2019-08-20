@@ -1618,3 +1618,39 @@ public class DelayCountwithDateKey extends Configured implements Tool{
 
 
 
+
+
+```bash
+http://www.apache.org/dyn/closer.cgi/hive/
+
+[root@master local]# tar -xzvf /home/hadoop/Downloads/apache-hive-1.2.2-bin.tar.gz 
+[root@master local]# chown -R hadoop:hadoop apache-hive-1.2.2-bin/
+
+[root@master local]# ln -s apache-hive-1.2.2-bin/  hive
+[root@master local]# ls -l
+
+[root@master local]# chown -R hadoop:hadoop hive
+[root@master local]# ls -l
+
+#마스터에서 hadoop 환경설정 파일 변경
+[root@master local]# su - hadoop
+[hadoop@master ~]$ vi .bash_profile
+
+export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HIVE_HOME/bin:
+
+
+
+#마스터 노드에 hive 메타스토어 mysql 구성 (로컬모드)
+[root@master ~]# rpm -ivh /home/hadoop/Downloads/mysql-community-release-el6-5.noarch.rpm
+[root@master ~]#  ls -la /etc/yum.repos.d/
+[root@master ~]# yum install mysql-server
+
+[root@master ~]# ls /usr/bin/mysql
+[root@master ~]# ls /usr/sbin/mysqld
+[root@master ~]#  service mysqld start
+
+[root@master ~]# mysql --version
+[root@master ~]# netstat -anp | grep mysql
+```
+
