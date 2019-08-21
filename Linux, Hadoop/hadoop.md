@@ -1832,10 +1832,128 @@ mysql> SOURCE /usr/local/hive/scripts/metastore/upgrade/mysql/hive-txn-schema-0.
 mysql> show tables;
 #53개 나옴
 
+
+
+
+
+
+
 #드라이버 카피
 hadoop@master ~]$ tar -xvzf mysql-connector-java-5.1.36.tar.gz
 hadoop@master ~]$ cp ./Downloads/mysql-connector-java-5.1.36-bin.jar /usr/local/hive/lib/
 
+```
+
+
+
+- hive
+
+```mysql
+[hadoop@master ~]$ hive
+hive> show databases;
+OK
+default
+Time taken: 0.867 seconds, Fetched: 1 row(s)
+
+hive> create database test_db;
+OK
+Time taken: 0.75 seconds
+
+hive> show databases;
+OK
+default
+test_db
+Time taken: 0.035 seconds, Fetched: 2 row(s)
+
+hive> use test_db
+OK
+Time taken: 0.076 seconds
+
+hive> create table test ( name  varchar(10) );
+
+
+
+mysql> describe TBLS;
++--------------------+--------------+------+-----+---------+-------+
+| Field              | Type         | Null | Key | Default | Extra |
++--------------------+--------------+------+-----+---------+-------+
+| TBL_ID             | bigint(20)   | NO   | PRI | NULL    |       |
+| CREATE_TIME        | int(11)      | NO   |     | NULL    |       |
+| DB_ID              | bigint(20)   | YES  | MUL | NULL    |       |
+| LAST_ACCESS_TIME   | int(11)      | NO   |     | NULL    |       |
+| OWNER              | varchar(767) | YES  |     | NULL    |       |
+| RETENTION          | int(11)      | NO   |     | NULL    |       |
+| SD_ID              | bigint(20)   | YES  | MUL | NULL    |       |
+| TBL_NAME           | varchar(128) | YES  | MUL | NULL    |       |
+| TBL_TYPE           | varchar(128) | YES  |     | NULL    |       |
+| VIEW_EXPANDED_TEXT | mediumtext   | YES  |     | NULL    |       |
+| VIEW_ORIGINAL_TEXT | mediumtext   | YES  |     | NULL    |       |
+| LINK_TARGET_ID     | bigint(20)   | YES  | MUL | NULL    |       |
++--------------------+--------------+------+-----+---------+-------+
+12 rows in set (0.10 sec)
+
+
+#메타스토어에서 생성한 ....
+mysql> select OWNER, TBL_NAME, TBL_TYPE from TBLS;
++--------+----------+---------------+
+| OWNER  | TBL_NAME | TBL_TYPE      |
++--------+----------+---------------+
+| hadoop | test     | MANAGED_TABLE |
++--------+----------+---------------+
+1 row in set (0.00 sec)
+
+
+
+# mysql에 테이블이 생성 되었는지 확인
+mysql> describe DBS;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| DB_ID           | bigint(20)    | NO   | PRI | NULL    |       |
+| DESC            | varchar(4000) | YES  |     | NULL    |       |
+| DB_LOCATION_URI | varchar(4000) | NO   |     | NULL    |       |
+| NAME            | varchar(128)  | YES  | UNI | NULL    |       |
+| OWNER_NAME      | varchar(128)  | YES  |     | NULL    |       |
+| OWNER_TYPE      | varchar(10)   | YES  |     | NULL    |       |
++-----------------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select OWNER_NAME, OWNER_TYPE, NAME from DBS;
++------------+------------+---------+
+| OWNER_NAME | OWNER_TYPE | NAME    |
++------------+------------+---------+
+| public     | ROLE       | default |
+| hadoop     | USER       | test_db |
++------------+------------+---------+
+2 rows in set (0.00 sec)
+
+
+
+## hive에서 데이터 베이스를 지워보자
+hive> drop database test_db cascade;
+hive> use default;
+hive> show tables;
+hive> show databases;
+
+
+
+mysql> select OWNER, TBL_NAME, TBL_TYPE from TBLS;
+Empty set (0.00 sec)
+
+mysql> select OWNER_NAME, OWNER_TYPE, NAME from DBS;
++------------+------------+---------+
+| OWNER_NAME | OWNER_TYPE | NAME    |
++------------+------------+---------+
+| public     | ROLE       | default |
++------------+------------+---------+
+1 row in set (0.00 sec)
+
+
+
+
 
 ```
 
+
+
+- 
