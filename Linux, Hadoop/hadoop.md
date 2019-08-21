@@ -2070,5 +2070,83 @@ OK
 30      'SALES' 'CHICAGO'
 40      'OPERATIONS'    'BOSTON'
 Time taken: 0.094 seconds, Fetched: 4 row(s)
+
+# hadoop hdfs 확인
+hive> !hadoop fs -ls -R /user/hive
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 10:36 /user/hive/warehouse
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 10:54 /user/hive/warehouse/airline_db.db
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 10:57 /user/hive/warehouse/airline_db.db/dept
+-rwxr-xr-x   2 hadoop supergroup         96 2019-08-21 10:57 /user/hive/warehouse/airline_db.db/dept/dept.txt
 ```
+
+
+
+##### Join을 해보자( carriers.csv 이용)
+
+```mysql
+1. carriers.csv파일을 carriers테이블을 생성하고, 데이터 로딩하고
+   UniqueCarrier string,
+   CarrierFullName String
+
+2.  airlineinfo 테이블 생성
+   UniqueCarrier string,
+   CarrierFullName String,
+   FlightNum string,
+   TailNum string,
+   Dest string,
+   Distance string,
+   Cancelled string
+
+3. airline테이블과 carriers테이블의 조인 결과를 airlineinfo 테이블에 로딩
+
+
+# carriers External 테이블 생성
+CREATE EXTERNAL TABLE carriers (
+    UniqueCarrier string,
+    CarrierFullName String
+)
+ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',' 
+ LINES TERMINATED BY '\n'
+LOCATION '/data/metadata/';
+
+
+# airlineinfo 테이블 생성
+CREATE TABLE IF NOT EXISTS airlineinfo (
+    UniqueCarrier string,
+    CarrierFullName String,
+    FlightNum string,
+    TailNum string,
+    Dest string,
+    Distance string,
+    Cancelled string
+);
+#ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+
+# JOIN and INSERT
+hive> INSERT  OVERWRITE  TABLE  airlineinfo 
+ select  a.UniqueCarrier ,
+   b.CarrierFullName ,
+   a.FlightNum,
+   a.TailNum ,
+   a.Dest ,
+   a.Distance ,
+   a.Cancelled 
+ from  
+     airline a join carriers b  
+     on (a.UniqueCarrier = regexp_replace(b.UniqueCarrier, '"', ''));
+     
+
+## count로 결과 확인
+hive> select count(*) from airlineinfo ;
+hive> select count(*) from airline ;
+
+```
+
+
+
+
+
+
 
