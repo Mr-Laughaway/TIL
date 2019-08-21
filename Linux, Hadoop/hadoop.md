@@ -1620,6 +1620,8 @@ public class DelayCountwithDateKey extends Configured implements Tool{
 
 
 
+---
+
 ### hive 설치
 
 - 설치 
@@ -1966,4 +1968,107 @@ mysql> select OWNER_NAME, OWNER_TYPE, NAME from DBS;
 
 
 
-- 
+### hive 실습
+
+##### 월별 지연 횟수 카운트
+
+```mysql
+hive> create database airline_db;
+OK
+Time taken: 0.236 seconds
+hive> use airline_db;
+OK
+Time taken: 0.017 seconds
+
+hive> CREATE EXTERNAL TABLE airline (
+Year string,
+Month string,
+DayofMonth string,
+DayOfWeek string,
+DepTime string,
+CRSDepTime string,
+ArrTime string,
+CRSArrTime string,
+UniqueCarrier string,
+FlightNum string,
+TailNum string,
+ActualElapsedTime string,
+CRSElapsedTime string,
+AirTime string,
+ArrDelay string,
+DepDelay string,
+Origin string,
+Dest string,
+Distance string,
+TaxiIn string,
+TaxiOut string,
+Cancelled string,
+CancellationCode string,
+Diverted string,
+CarrierDelay string,
+WeatherDelay string,
+NASDelay string,
+SecurityDelay string,
+LateAircraftDelay  string
+)
+ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',' 
+ LINES TERMINATED BY '\n'
+LOCATION '/data/airline/';
+
+
+#월별 도착지연횟수를 출력하는 select문
+hive> SELECT Year,Month, count(DepDelay)
+      FROM airline
+      GROUP BY Year,Month
+      SORT BY Year,Month;   #reducer 별 처리 데이터 정렬, 전체 결과 정렬되지 않음
+
+
+hive> SELECT Year,Month, count(DepDelay)
+      FROM airline
+      GROUP BY Year,Month
+      ORDER BY Year,Month;   #reducer개수 1개로 제한, 전체 정렬
+      
+# 실행 계획 확인
+explain SELECT Year,Month, count(DepDelay)
+      FROM airline
+      GROUP BY Year,Month
+      SORT BY Year,Month;
+
+```
+
+
+
+##### 로컬 파일로 table 만들기
+
+```mysql
+# dept 테이블에 넣을 로컬 파일 만들기
+vi /home/hadoop/dept.txt 
+10,'ACCOUNTING','NEW YORK'
+20,'RESEARCH','DALLAS'
+30,'SALES','CHICAGO'
+40,'OPERATIONS','BOSTON'
+
+
+# dept 테이블 만들기
+hive> CREATE TABLE IF NOT EXISTS dept (
+deptno INT, dname STRING, loc STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+hive> describe dept;
+OK
+deptno                  int
+dname                   string
+loc                     string
+Time taken: 0.116 seconds, Fetched: 3 row(s)
+
+# 로컬파일로 dept 테이블에 값 덮어씌우기
+hive> load data local inpath '/home/hadoop/exercise/hadoop/dept.txt' overwrite into table dept;
+hive> select  * from dept;
+OK
+10      'ACCOUNTING'    'NEW YORK'
+20      'RESEARCH'      'DALLAS'
+30      'SALES' 'CHICAGO'
+40      'OPERATIONS'    'BOSTON'
+Time taken: 0.094 seconds, Fetched: 4 row(s)
+```
+
