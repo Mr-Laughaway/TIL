@@ -2156,6 +2156,106 @@ hive> select count(*) from airline ;
 
 ### hive 에서 R 사용하기
 
+##### 설치
+
+```bash
+[root@master ~]# yum install epel-release
+[root@master ~]# yum install npm
+[root@master ~]# yum install R
+[root@master ~]# cd /usr/lib64
+[root@master lib64]# chown -R hadoop:hadoop R/
+[root@master lib64]# chown -R hadoop:hadoop /usr/share/doc/R-3.6.0/html/
+
+# .bash_profile 설정
+export HADOOP_CMD=/usr/local/hadoop/bin/hadoop
+export HADOOP_STREAMING=/usr/local/hadoop-2.7.7/share/hadoop/tools/lib/hadoop-streaming-2.7.7.jar
+
+
+>Sys.setenv(HADOOP_HOME="/usr/local/hadoop-2.7.7")
+>Sys.setenv(HADOOP_CMD="/usr/local/hadoop-2.7.7/bin/hadoop")
+>Sys.getenv("HADOOP_HOME")
+
+
+
+
+```
+
+
+
+##### Hello, R!
+
+```R
+> install.packages(c("rJava", "Rcpp", "RJSONIO", "bitops", "digest", "functional", "stringr", "plyr", "reshape2", "caTools"))
+> update.packages(c("rJava", "Rcpp", "RJSONIO", "bitops", "digest", "functional", "stringr", "plyr", "reshape2", "caTools"))
+> update.packages()
+yes
+yes
+yes
+yes
+
+
+# 아래 패키지가 없어서 직접 설치해야한다
+> install.packages(c("rhdfs", "rmr", "plyrmr"))
+
+
+#패키지 직접 다운로드
+https://github.com/RevolutionAnalytics/RHadoop/wiki
+-> Download 가서 windows 용 빼고 전부 다운로드
+
+#소스로부터 직접 설치
+>install.packages("/home/hadoop/Downloads/rhdfs_1.0.8.tar.gz", repos=NULL, type="source")
+
+>install.packages("/home/hadoop/Downloads/rmr2_3.3.1.tar.gz", repos=NULL, type="source")
+
+#에러나는??
+>install.packages("/home/hadoop/Downloads/plyrmr_0.6.0.tar.gz", repos=NULL, type="source")
+>install.packages("/home/hadoop/Downloads/rhbase_1.2.1.tar.gz", repos=NULL, type="source")
+
+>install.packages("/home/hadoop/Downloads/ravro_1.0.4.tar.gz", repos=NULL, type="source")
+
+>install.packages(c("bit64", "rjson"))
+
+
+
+
+ERROR: dependencies ‘dplyr’, ‘R.methodsS3’, ‘Hmisc’, ‘memoise’, ‘lazyeval’ are not available for package ‘plyrmr’
+
+```
+
+
+
+##### swap 늘리기
+
+```bash
+#Swap 메모리 늘리기
+#2G로 설정한 swap공간 확인 2048*1024=2097152
+[root@master swap]# free
+
+#스왑 파일을 저장할 디렉토리를 만든다
+[root@master swap]# mkdir /swap
+
+
+# dd 명령어를 이용하여 swapfile이라는 스왑파일을 만든다.
+[root@master swap]# dd if=/dev/zero of=/swap/swapfile bs=1024 count=4194304
+ 
+
+
+# swap 디렉토리로 이동한다.
+[root@master swap]#  cd /swap
+
+
+
+# mkswap 명령어를 이용하여 swapfile이 스왑공간을 쓰도록 만든다. (스왑 영역 생성)
+[root@master swap]#  mkswap swapfile
+
+ 
+# 스왑파일을 즉시 활성화 할 수 있다.
+[root@master swap]# swapon swapfile
+[root@master swap]# swapon -s  
+[root@master swap]# free
+
+```
+
 
 
 
