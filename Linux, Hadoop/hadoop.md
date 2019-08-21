@@ -33,7 +33,7 @@ Hadoop
 - hadoop-2.7.7 다운 받고
 - eclipse-jee-photon-R-linux-gtk-x86_64 도 다운 받는다.
 
-```
+```bash
 [hadoop@master ~]$ su -
 Password: 
 Last login: Wed Jul 31 13:04:07 EDT 2019 on pts/0
@@ -59,7 +59,7 @@ Last login: Wed Jul 31 13:04:07 EDT 2019 on pts/0
 
 hostname이 master여야 한다. 밑의 코드를 이용하여 바꿔주자.
 
-```
+```bash
 #Hostname 변경
 
 CentOS를 처음 시작하면 다음과 같이 Hostname이 localhost로 설정됩니다.
@@ -2143,6 +2143,32 @@ hive> select count(*) from airlineinfo ;
 hive> select count(*) from airline ;
 
 ```
+
+
+
+> 참고자료:
+>
+> https://wikidocs.net/book/2203
+
+
+
+
+
+### hive 에서 R 사용하기
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
 
 
 
