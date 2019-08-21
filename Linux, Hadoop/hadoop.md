@@ -1849,6 +1849,7 @@ hadoop@master ~]$ cp ./Downloads/mysql-connector-java-5.1.36-bin.jar /usr/local/
 - hive
 
 ```mysql
+# hive 에 접속하여 테스트
 [hadoop@master ~]$ hive
 hive> show databases;
 OK
@@ -1873,6 +1874,7 @@ hive> create table test ( name  varchar(10) );
 
 
 
+# mysql 에서 변경 사항이 있는지 확인
 mysql> describe TBLS;
 +--------------------+--------------+------+-----+---------+-------+
 | Field              | Type         | Null | Key | Default | Extra |
@@ -1893,7 +1895,6 @@ mysql> describe TBLS;
 12 rows in set (0.10 sec)
 
 
-#메타스토어에서 생성한 ....
 mysql> select OWNER, TBL_NAME, TBL_TYPE from TBLS;
 +--------+----------+---------------+
 | OWNER  | TBL_NAME | TBL_TYPE      |
@@ -1903,8 +1904,6 @@ mysql> select OWNER, TBL_NAME, TBL_TYPE from TBLS;
 1 row in set (0.00 sec)
 
 
-
-# mysql에 테이블이 생성 되었는지 확인
 mysql> describe DBS;
 +-----------------+---------------+------+-----+---------+-------+
 | Field           | Type          | Null | Key | Default | Extra |
@@ -1929,14 +1928,29 @@ mysql> select OWNER_NAME, OWNER_TYPE, NAME from DBS;
 
 
 
-## hive에서 데이터 베이스를 지워보자
+# hadoop hdfs 에서도 변경 사항 확인
+[hadoop@master ~]$ hadoop fs -ls -R /user/
+drwxr-xr-x   - hadoop supergroup          0 2019-08-16 13:45 /user/hadoop
+-rw-r--r--   2 hadoop supergroup         19 2019-08-16 13:45 /user/hadoop/test.txt
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 09:51 /user/hive
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 09:51 /user/hive/warehouse
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 09:52 /user/hive/warehouse/test_db.db
+drwxr-xr-x   - hadoop supergroup          0 2019-08-21 09:52 /user/hive/warehouse/test_db.db/test
+
+
+
+## hive 에서 데이터 베이스를 지워보자
 hive> drop database test_db cascade;
 hive> use default;
 hive> show tables;
 hive> show databases;
+OK
+default
+Time taken: 0.022 seconds, Fetched: 1 row(s)
 
 
 
+# mysql 에서 지워졌는지 확인
 mysql> select OWNER, TBL_NAME, TBL_TYPE from TBLS;
 Empty set (0.00 sec)
 
@@ -1947,10 +1961,6 @@ mysql> select OWNER_NAME, OWNER_TYPE, NAME from DBS;
 | public     | ROLE       | default |
 +------------+------------+---------+
 1 row in set (0.00 sec)
-
-
-
-
 
 ```
 
