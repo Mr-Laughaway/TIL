@@ -1778,3 +1778,64 @@ hive-site.xml
   </configuration>
 ```
 
+
+
+- mysql에 database와 table 생성
+
+```mysql
+[root@master ~]# mysql -u root -p
+
+
+# 스크립트 실행하여 hive를 위한 db  생성
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+3 rows in set (0.02 sec)
+
+mysql> CREATE DATABASE metastore_db;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| metastore_db       |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> USE metastore_db;
+Database changed
+
+mysql> show tables;
+Empty set (0.01 sec)
+
+mysql> SOURCE /usr/local/hive/scripts/metastore/upgrade/mysql/hive-schema-1.1.0.mysql.sql;
+...
+ERROR:
+Failed to open file 'hive-txn-schema-0.13.0.mysql.sql', error: 2
+...
+
+mysql> show tables;
+#45개 나옴
+
+#실패한 스크립트 직접 실행
+mysql> SOURCE /usr/local/hive/scripts/metastore/upgrade/mysql/hive-txn-schema-0.14.0.mysql.sql
+
+mysql> show tables;
+#53개 나옴
+
+#드라이버 카피
+hadoop@master ~]$ tar -xvzf mysql-connector-java-5.1.36.tar.gz
+hadoop@master ~]$ cp ./Downloads/mysql-connector-java-5.1.36-bin.jar /usr/local/hive/lib/
+
+
+```
+
