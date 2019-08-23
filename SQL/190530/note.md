@@ -75,7 +75,7 @@
 
 ##### 실행 연습 
 
-```s
+```sql
 > sqlplus
 > sqlplus /nolog
 ^C or exit
