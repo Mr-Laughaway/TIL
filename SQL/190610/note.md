@@ -12,7 +12,8 @@
                  	following |
         	    n preceding | n following
     ) 
-```
+    ```
+```sql
     
 - dense_rank()
   
@@ -50,13 +51,16 @@
     
     insert into 테이블명 (컬럼명 리스트) subquery; --컬럼명 리스트는 subquery의 컬럼순서 , 개수, 타입과 일치해야 합니다.
     
-    ```
+```
 
-    > ```
-    > insert 오류 - 컬럼타입 불일치, 컬럼크기 불일치, 제약조건 오류
-    > ```
+```sql
+> ```
+> insert 오류 - 컬럼타입 불일치, 컬럼크기 불일치, 제약조건 오류
+> ```
+```
 
-    
+
+​    
 
   - **update** - 컬럼 값 변경
 
@@ -71,9 +75,9 @@
 
     > update 오류 - 컬럼타입 불일치, 컬럼크기 불일치, 제약조건 오류
 > 변경할 값에 null, default, 단일행함수 등 사용가능
-    
-    
-    
+
+
+​    
 - **delete from** - 행 삭제
   
     ```sql
