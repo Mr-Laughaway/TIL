@@ -153,7 +153,7 @@ soft parsing, hard parsing, logical read, physical read
 >
 > select sysdate from daul; --시스템 현재 시간을 리턴하는 함수
 
-```
+```sql
 SQL> conn scott/oracle
 SQL> select tname from tab;
 SQL> describe emp;
@@ -199,7 +199,7 @@ SQL>
 >
 > dba_tables - DB의 모든 테이블 목록 확인 (DBA 권한으로만 확인 가능)
 
-```
+```sql
 SQL> desc user_tables
 SQL> select table_name from user_tables; --user_tables의 별칭 tab
 
@@ -232,7 +232,7 @@ conn scott/oracle
 
 - distinct - 중복 제거
 
-```
+```sql
 select ename, sal, job, deptno from emp;
 
 select deptno from emp;
