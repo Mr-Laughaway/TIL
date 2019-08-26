@@ -371,6 +371,8 @@ https://wikidocs.net/book/2350
 
     ```Implicit```는 에러는 바로 내지 않고 해당하는 함수가 있으면 그것을 사용해서 암묵적으로 형 변환을 도와주어 함수의 활용도를 높입니다.
 
+    예1)
+
     ```scala
     case class Person(name:String) 
     implicit def stringToPerson(name:String) : Person = Person(name)
@@ -382,6 +384,8 @@ https://wikidocs.net/book/2350
     warning: there was one feature warning; re-run with -feature for details
     Hello, Korea
     ```
+
+    예2)
 
     ```scala
     // 일반적인 상황
@@ -407,19 +411,280 @@ https://wikidocs.net/book/2350
     warning: there was one feature warning; re-run with -feature for details
     ```
 
+  
+
+  - 스칼라에서는 public class 대신 object 예약어를 통해 처음부터 메모리에 객체를 생성하고 컴ㄹ파일러는 객체에 main 이라는 이름이 있으며 main을 프로그램의 시작점으로 컴파일 한다.
+
+    ```scala
+    object Ex4 {
+    	def main(args:Array[String]): Unit = {
+            ...
+        }
+    }
+    ```
+
     
 
-  - ㅇㄹ
+  - ```case class``` 케이스 클래스는 자동으로 멤버 변수를 만들어주며, 외부
 
-  - ㅇㄹ
+    ```scala
+    case class Fruit2(name:String)
+     
+    val apple = new Fruit2("apple")
+    println(apple.name)
+    
+    val apple2 = new Fruit2("apple")
+    println(apple2.name)
+    
+    println(apple2.equals(apple))
+    println(apple.hashCode)
+    println(apple2.hashCode)
+    println(apple.toString)
+    
+    apple
+    apple
+    true
+    1789182185
+    1789182185
+    Fruit2(apple)
+    ```
 
-  - ㅇㄹ
+    
 
-  - ㅇㄹ
+  - **클래스** 생성자
 
-  - ㅇㄹ
+    ***스칼라에서는 생성자가 특별한 메소드로 따로 존재하지 않는다.*** 클래스 몸체에서 메소드 정의 부분 밖에 있는 모든 코드가 생성자 코드가 된다.
 
-  - ㅇㄹ
+    ```scala
+    class Calculator(brand:String) {
+        /**
+        * 생성자
+        */
+        val color:String = if(brand == "TI") {
+            "blue"
+        } else if (brand == "HP") {
+            "black"
+        } else {
+            "white"
+        }
+    
+        //인스턴스 메소드
+        def add(m:Int, n:Int): Int = m + n
+    }
+    
+    val calc = new Calculator("HP")
+    print(calc.color)
+    
+    black
+    ```
 
-  - 
+    
+
+  - 상속
+
+    자식 클래스는 부모 클래스가 가진 모든 기능을 가진다
+
+    ``` scala
+    object Ex {
+        def main(args: Array[String]): Unit = {
+            val richUser = new PaidUser("LeeMongRyong", 20, 'M', 10000)
+            richUser.sayName
+            richUser.showMoney
+        } 
+    }
+    
+    class User(name:String, age:Int, sex:Char) {
+        var sayName = pringln("My name is "  + name)
+    }
+    
+    //.........다 못침
+    ```
+
+    
+
+  - 상속과 메소드 Overloading
+
+    ```scala
+    class Calculator(brand:String) {
+        /**
+        * 생성자
+        */
+        val color:String = if(brand == "TI") {
+            "blue"
+        } else if (brand == "HP") {
+            "black"
+        } else {
+            "white"
+        }
+    
+        //인스턴스 메소드
+        def add(m:Int, n:Int): Int = m + n
+    }
+    
+    //상속
+    class ScientificCalculator(brand:String) extends Calculator(brand) {
+        def lg(m:Double, base:Double) = math.log(m) / math.log(base)
+    }
+    
+    //메소드 중복정의
+    class EvenMoreScientificCalculator(brand:String) extends ScientificCalculator(brand) {
+    
+        def log(m:Int): Double = log(m, math.exp(1))
+    }
+    
+    
+    ```
+
+  
+
+  - 추상 클래스
+
+    추상클래스는 메소드 정의는 잇지만 구현은 없는 클래스이다.  대신 이를 상속한 하위클래스에서 메소드를 구현하게 된다. 추상 클래스의 인스턴스를 만들 수는 없다.
+
+    ```scala
+    abstract class Shape {
+        def getArea():Int //하위 클래스에서 이 메소드를 정의해야만 한다
+    }
+    
+    class Circle(r:Int) extends Shape {
+        def getArea():Int = {
+            r * r * 3
+        }
+    }
+    
+    //val s = new Shape //에러 발생
+    val c = new Circle(2);
+    print(c.getArea)
+    
+    12
+    ```
+
+  
+
+  - ***트레잇(trait)***
+
+    - 특성: 하나의 완성된 기능이라기보다는 어떠한 객체에 추가될 수 있는 부가적인 하나의 특성
+    - 클래스의 부가적인 특성으로 동작, 자체로 인스턴스화는 가능하지 않다.
+    - 다른 클래스가 확장(즉, 상속)하거나 섞어 넣을 수 있는***(이를 믹스인Mix in 이라 한다)*** 필드와 동작의 모음이다.
+    - 클래스는 여러 트레잇을 with 키워드를 사용해 확장할 수 있다.
+    - 자유롭게 변수를 선언하고 로직을 구현하는 것이 가능
+
+    - 다중상속 여부
+
+      , 로 구분 - ***Error***
+
+      ```scala
+      trait Car {
+          val brand:String
+      }
+      
+      trait Shiny {
+          val shineRefraction:Int
+      }
+      
+      /*
+      class BMW extends Car {
+          val brand = "BMW"
+      }
+      */
+      
+      class BMW extends Car, Shine { // error? -> error
+          val brand = "BMW"
+      }
+      ```
+
+      with 로 구분 - ***OK***
+
+      ```scala
+      trait Car {
+          val brand:String
+      }
+      
+      trait Shiny {
+          val shineRefraction:Int
+      }
+      
+      /*
+      class BMW extends Car {
+          val brand = "BMW"
+      }
+      */
+      
+      class BMW extends Car with Shiny {
+          val brand = "BMW"
+          val shineRefraction = 12
+      }
+      
+      val bmw = new BMW()
+      println(bmw.brand)
+      println(bmw.shineRefraction)
+      
+      BMW
+      12
+      ```
+
+    - 트레잇 쌓기
+
+      추상 클래스 여러개를 한 클래스에서 상속 받을 경우 다아몬드 상속의 문제가 발생할 경우, 최종적으로 상속받는 클래스의 메서드가 수행되도록 override 예약어와 함께 적당한 상속 관계를 만들어줄 수 있습니다.
+
+      ```scala
+      abstract class Robot {
+          def shoot = "Pyong Pyong"
+      }
+      
+      trait M16 extends Robot {
+          override def shoot = "BBangya"
+      }
+      
+      trait Bazooka extends Robot {
+          override def shoot = "BBuang BBuang"
+      }
+      
+      trait Daepodong extends Robot {
+          override def shoot = "Kwarrrrrrrrr"
+      }
+      
+      class Mazinga extends Robot with M16 with Bazooka with Daepodong
+      
+      val robot = new Mazinga
+      println(robot.shoot)
+      
+      Kwarrrrrrrrr
+      ```
+
+      
+
+      
+
+    - df
+
+    - df
+
+    - df
+
+    - 
+
+  - df
+
+  - d
+
+  - f
+
+  - df
+
+  - df
+
+  - d
+
+  - f
+
+- 
+
+- ㅇㄹ
+- ㅇㄹ
+- ㅇㄹ
+- ㅇㄹ
+- ㅇㄹ
+- ㅇㄹ
+- 
 
