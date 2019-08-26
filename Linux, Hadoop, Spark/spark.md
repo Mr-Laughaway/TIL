@@ -367,7 +367,47 @@ https://wikidocs.net/book/2350
 
     
 
-  - ㅇㄹ
+  - **암묵적 형변환**
+
+    ```Implicit```는 에러는 바로 내지 않고 해당하는 함수가 있으면 그것을 사용해서 암묵적으로 형 변환을 도와주어 함수의 활용도를 높입니다.
+
+    ```scala
+    case class Person(name:String) 
+    implicit def stringToPerson(name:String) : Person = Person(name)
+    def sayHello(p:Person): Unit = {
+        print("Hello, " + p.name)
+    }
+    sayHello("Korea")
+    
+    warning: there was one feature warning; re-run with -feature for details
+    Hello, Korea
+    ```
+
+    ```scala
+    // 일반적인 상황
+    def doubleToInt(d:Double) = d.toInt
+    val x:Int = doubleToInt(18.0)
+    print(x)
+    
+    
+    // 잘못 사용된 상황 (에러)
+    def doubleToInt(d:Double) = d.toInt
+    val x:Int = 18.0
+    
+    c:\workspace_scala\tempCodeRunnerFile.scala:2: error: type mismatch;
+     found   : Double(18.0)
+     required: Int
+    val x:Int = 18.0
+    
+    
+    //Implicit를 사용한 상황 (warning 이지만 괜찮아)
+    implicit def doubleToInt(d:Double) = d.toInt
+    val x:Int = 18.0
+    
+    warning: there was one feature warning; re-run with -feature for details
+    ```
+
+    
 
   - ㅇㄹ
 
