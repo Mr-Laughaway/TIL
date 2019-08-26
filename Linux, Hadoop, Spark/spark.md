@@ -57,63 +57,133 @@ https://wikidocs.net/book/2350
 
 - 실습
 
-  ```scala
-  ///////////////
-  scala> var a = 1
-  scala> val a = 1   // 불변
-  scala> val b:Double = 1.3  //타입 명시
-  
-  scala> val name = "David"
-  scala> println(s"Hello! ${name}")
-  Hello! David
-  
-  ///////////////
-  scala> println("${1 + 1}")
-  ${1 + 1}
-  
-  scala> println("s${1 + 1}")
-  2
-  
-  ///////////////
-  scala> val height:Double = 182.3
-  scala> val name = "James"
-  scala> println(f"${name}%s is $height%2.2f centimeters tall"})
-  James is 182.30 centimeters tall
-  
-  
-  ///////////////
-  scala> s"가\n나"
-  가
-  나
-  
-  scala> raw("가\n나")
-  가\n나
-  
-  
-  ///////////////
-  scala> var str3 = s"println $str1"
-  scala> println(str3)
-  println aaa
-  
-  scala> println(s"2 * 3 \ ${2 * 3}")
-  2 * 3 = 6
-  
-  scala> def minus(x:Int, y:Int) = x - y
-  scala> println(s"$Math.pow(2,3)}")
-  8.0
-  
-  scala> println(s"${minus(2,3)}")
-  -1
-  
-  
-  
-  
-  
-  
-  
-  ```
+  - 컴파일 해서 쓰기
 
-  
+    ```bash
+    #Ex1.scala
+    object Ex1 {
+        def main(args: Array[String]): Unit = {
+            println("Hello, Scala!")
+        }
+    }
+    
+    c:> scalac Ex1.scala
+    c:> scala Ex1
+    Hello, Scala!
+    ```
+
+    
+
+  - 기본
+
+    ```scala
+    ///////////////
+    scala> var a = 1
+    scala> val a = 1   // 불변
+    scala> val b:Double = 1.3  //타입 명시
+    
+    scala> val name = "David"
+    scala> println(s"Hello! ${name}")
+    Hello! David
+    
+    ///////////////
+    scala> println("${1 + 1}")
+    ${1 + 1}
+    
+    scala> println("s${1 + 1}")
+    2
+    
+    ///////////////
+    scala> val height:Double = 182.3
+    scala> val name = "James"
+    scala> println(f"${name}%s is $height%2.2f centimeters tall"})
+    James is 182.30 centimeters tall
+    
+    
+    ///////////////
+    scala> s"가\n나"
+    가
+    나
+    
+    scala> raw("가\n나")
+    가\n나
+    
+    
+    ///////////////
+    scala> var str3 = s"println $str1"
+    scala> println(str3)
+    println aaa
+    
+    scala> println(s"2 * 3 \ ${2 * 3}")
+    2 * 3 = 6
+    
+    scala> def minus(x:Int, y:Int) = x - y
+    scala> println(s"$Math.pow(2,3)}")
+    8.0
+    
+    scala> println(s"${minus(2,3)}")
+    -1
+    
+    ```
+
+    
+
+  - 반복문
+
+    ```scala
+    // to 는 10 까지
+    for(x <- 1 to 10) {
+        println(x)
+    }
+    
+    // until 은 10 전까지
+    for(x <- 1 until 10) {
+        println(x)
+    }
+    
+    // 조건이 있는 반복 문
+    // error
+    for(i <- 10) if(i % 2 == 0) {
+        println(i)
+    }
+    
+    // ok
+    for(i <- 1 to 10) if(i %2 == 0) {
+        println(i)
+    }
+    
+    
+    // zipWithIndex
+    val lst = (10 to 100 by 10).toList
+    for( (num, index) <- lst.zipWithIndex ) {
+        println(s"$index : $num")
+    }
+    0 : 10
+    1 : 20
+    2 : 30
+    3 : 40
+    4 : 50
+    5 : 60
+    6 : 70
+    7 : 80
+    8 : 90
+    9 : 100
+    
+    
+    // 이중 for 문
+    for( x <-1 until 5; y <- 1 until 5) {
+        print(x + " * " + y + " = " + x*y + "|")
+    }
+    1 * 1 = 1|1 * 2 = 2|1 * 3 = 3|1 * 4 = 4|2 * 1 = 2|2 * 2 = 4|2 * 3 = 6|2 * 4 = 8|3 * 1 = 3|3 * 2 = 6|3 * 3 = 9|3 * 4 = 12|4 * 1 = 4|4 * 2 = 8|4 * 3 = 12|4 * 4 = 16|
+    ```
+
+    
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
+  - 
 
 
 
