@@ -55,7 +55,65 @@ https://wikidocs.net/book/2350
 
 
 
+- 실습
 
+  ```scala
+  ///////////////
+  scala> var a = 1
+  scala> val a = 1   // 불변
+  scala> val b:Double = 1.3  //타입 명시
+  
+  scala> val name = "David"
+  scala> println(s"Hello! ${name}")
+  Hello! David
+  
+  ///////////////
+  scala> println("${1 + 1}")
+  ${1 + 1}
+  
+  scala> println("s${1 + 1}")
+  2
+  
+  ///////////////
+  scala> val height:Double = 182.3
+  scala> val name = "James"
+  scala> println(f"${name}%s is $height%2.2f centimeters tall"})
+  James is 182.30 centimeters tall
+  
+  
+  ///////////////
+  scala> s"가\n나"
+  가
+  나
+  
+  scala> raw("가\n나")
+  가\n나
+  
+  
+  ///////////////
+  scala> var str3 = s"println $str1"
+  scala> println(str3)
+  println aaa
+  
+  scala> println(s"2 * 3 \ ${2 * 3}")
+  2 * 3 = 6
+  
+  scala> def minus(x:Int, y:Int) = x - y
+  scala> println(s"$Math.pow(2,3)}")
+  8.0
+  
+  scala> println(s"${minus(2,3)}")
+  -1
+  
+  
+  
+  
+  
+  
+  
+  ```
+
+  
 
 
 
