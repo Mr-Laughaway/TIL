@@ -683,19 +683,83 @@ https://wikidocs.net/book/2350
       Pyong Pyong BBangya BBuang BBuang Kwarrrrrrrrr
       ```
 
-      
+    
 
-    - df
+  - Companion Object
 
-    - df
+    
 
-    - 
+  - 케이스 클래스
 
-  - df
+    케이스 클래스는 패턴 매치를 위해 최적화된 특별한 클래스로서 case class 키워드를 사용해서 생성하며 컴패니언 객체와 객체 생성을 위한 apply(), 패턴 매치를 위한 unapply()가 자동으로 생성됨
 
-  - d
+    ```scala
+    case class Person(name:String, age:Int) 
+    var papa = Person("papa", 100)
+    ```
 
-  - f
+    
+
+  - 패턴 매치
+
+    - 기본형이 아닌 튜플을 사용하는 경우 튜플 형식으로 변수를 정의해야 매칭된다.
+    - 리스트의 경우도 각 위치에 해당하는 값이 변수에 할당된다.
+    - 케이스 클래스의 경우는 클래스 형태를 그대로 사용해서 속성 정보를 매칭할 수 있다.
+
+    예1)
+
+    ```scala
+    def matchFunction(input:Any): Any = input match {
+        case 100 => "hundred"
+        case "hundred" => 100
+        case etcNumber:Int => "Input value must be an Integer which equals or less than 100"
+        case _ => "etc"
+    }
+    
+    println(matchFunction(100))
+    println(matchFunction("hundred"))
+    println(matchFunction(1000))
+    println(matchFunction(1000.5))
+    println(matchFunction("thousand"))
+    
+    //결과
+    hundred
+    100
+    Input value must be an Integer which equals or less than 100
+    etc
+    etc
+    ```
+
+    예2)
+
+    ```scala
+    case class Person(name:String, age:Int)
+    val alice = new Person("Alice", 25)
+    val bob = new Person("Bob", 32)
+    val charlie = new Person("Charlie", 32)
+    
+    for(person <- List(alice, bob, charlie)) {
+        person match {
+            case Person("Alice", 25) => println("Hi Alice!")
+            case Person("Bob", 32) => println("Hi Bob!")
+            case Person(name, age) => println(
+                "Age: " + age + " years, name: " + name + "?"
+            )
+        }
+    }
+    
+    //결과
+    Hi Alice!
+    Hi Bob!
+    Age: 32 years, name: Charlie?
+    
+    ```
+
+    
+
+    예3)
+
+    예4)
 
   - df
 
