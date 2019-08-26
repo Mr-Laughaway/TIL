@@ -1350,6 +1350,30 @@ https://wikidocs.net/book/2350
       Exiting finally...
       ```
 
+    
+
+    - 파일 읽기
+
+      ```scala
+      import java.io.FileReader
+      import java.io.FileNotFoundException
+      import java.io.IOException
+      import scala.io.Source
+      
+      object FilereadTest {
+          def main(args:Array[String]) {
+             println("Following is the content read: ")
+      
+             Source.fromFile("input2.txt").foreach {
+                 print
+             }
+          }
+      }
+      
+      //결과
+      잘 됨...
+      ```
+
       
 
     - 파일에 쓰기
@@ -1372,6 +1396,10 @@ https://wikidocs.net/book/2350
               print("입력하신 텍스트를 " + filename + " 에 저장했습니다.")
           }
       }
+      
+      
+      //결과
+      잘 됨..
       
       ```
 
