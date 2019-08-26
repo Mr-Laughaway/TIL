@@ -33,6 +33,29 @@ https://wikidocs.net/book/2350
     - **액터 모델**은 각각의 액터가 서로 간의 메시지를  통해서만 의사소통을 하고, 액터를 이루는 각종 변수나 속성은 서로 공유하지 않는다.
   - expression(결과를 반환하는 문장) 중심 언어
   - 필요할 때 ```implicit``` 예약어를 사용하면 명시적인 표현을 감춰버릴 수 있다.
+  - ...
+  - ...
+  - 익명 함수
+  - 고차 함수
+
+
+
+- 설치
+
+  - Java 8 JDK install
+
+  - Scalar install
+
+    - https://www.scala-lang.org/download/
+    - Scalar IDE - IntelliJ, or SBT, Scala's build tool. Http://scala-ide.org
+
+  - 이클립스는 마켓플레이스에서 스칼라 IDE를 설치하면 스칼라 프로젝트를 생성할 수 있다
+
+    Help -> Eclipse Marketplace > scala ide
+
+
+
+
 
 
 
