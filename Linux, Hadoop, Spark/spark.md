@@ -310,5 +310,76 @@ https://wikidocs.net/book/2350
 
     
 
+  - 매개변수가 여러개인 함수
+
+    ```scala
+    object Ex {
+        def main(args: Array[String]): Unit = {
+            printlnStrings("str1", "str2", "str3")
+            printlnStrings()
+        }
+        def printlnStrings(args: String*) =  {
+            for(arg <- args) {
+                println(arg)
+            }
+        }
+    }
+    
+    str1
+    str2
+    str3
+    
+    ```
+
+    
+
+  - 함수 기본 값
+
+    ```scala
+    def default(a:Int = 4, b:Int = 5) : Int = a + b
+    println("기본값은 " + default())
+    println("기본값은 " + default(11, 6))
+    
+    �⺻���� 9
+    �⺻���� 17
+    ```
+
+    
+
+  - ***apply***
+
+    ```apply```는 매번 메서드 이름을 적는 것을 피하기 위해 사용. 변수를 받아 함수에 적용시켜 결과를 만들어내는 설정자와 같은 역할을 한다. ```apply()```를 이용하면 생성자처럼 초기화하거나 클래스 안에 특정한 메서드를 기본 메서드로 지정하는 것을 편하게 할 수 있다.
+
+    ```scala
+    class SomeClass {
+        def apply(m:Int) = method(m)
+        def method(i:Int) =  i + i
+        def method2(s:String) = 5
+    }
+    
+    val something = new SomeClass
+    println(something(2))
+    println(something.method2("하"))
+    
+    4
+    5
+    ```
+
+    
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
+  - ㅇㄹ
+
   - 
 
