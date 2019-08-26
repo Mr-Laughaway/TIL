@@ -625,7 +625,7 @@ https://wikidocs.net/book/2350
 
     - 트레잇 쌓기
 
-      추상 클래스 여러개를 한 클래스에서 상속 받을 경우 다아몬드 상속의 문제가 발생할 경우, 최종적으로 상속받는 클래스의 메서드가 수행되도록 override 예약어와 함께 적당한 상속 관계를 만들어줄 수 있습니다.
+      추상 클래스 여러개를 한 클래스에서 상속 받을 경우 다아몬드 상속의 문제가 발생할 경우, 최종적으로 상속받는 클래스의 메서드가 수행되도록 ***override*** 예약어와 함께 적당한 상속 관계를 만들어줄 수 있다.
 
       ```scala
       abstract class Robot {
@@ -652,11 +652,38 @@ https://wikidocs.net/book/2350
       Kwarrrrrrrrr
       ```
 
+    - 모두의 기능을 실행하도록 사위 클래스 super를 호출해서 해당하는 메서드를 실행되게 할 수 있다.
+
+      ```scala
+      abstract class AnotherRobot {
+          def shoot = "Pyong Pyong"
+      }
       
+      trait AnotherM16 extends AnotherRobot {
+          override def shoot = super.shoot + " BBangya"
+      }
+      
+      trait AnotherBazooka extends AnotherRobot {
+          override def shoot = super.shoot + " BBuang BBuang"
+      }
+      
+      trait AnotherDaepodong extends AnotherRobot {
+          override def shoot = super.shoot + " Kwarrrrrrrrr"
+      }
+      
+      class AnotherMazinga extends AnotherRobot 
+          with AnotherM16 
+          with AnotherBazooka 
+          with AnotherDaepodong
+      
+      val anotherRobot = new AnotherMazinga
+      println(anotherRobot.shoot)
+      
+      //결과
+      Pyong Pyong BBangya BBuang BBuang Kwarrrrrrrrr
+      ```
 
       
-
-    - df
 
     - df
 
