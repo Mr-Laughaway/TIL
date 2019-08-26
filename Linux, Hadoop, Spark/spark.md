@@ -132,6 +132,8 @@ https://wikidocs.net/book/2350
 
   - 반복문
 
+    ```zipWIthIndex``` <- ***특이한거***
+
     ```scala
     // to 는 10 까지
     for(x <- 1 to 10) {
