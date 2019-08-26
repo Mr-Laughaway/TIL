@@ -183,11 +183,112 @@ https://wikidocs.net/book/2350
 
     
 
-  - ㅇㄹ
+  - 함수 정의
 
-  - ㅇㄹ
+    ```scala
+    //
+    object Ex {
+        def main(args: Array[String]): Unit = {
+            println("반환받은 값: " + name())
+        }
+        def name () = {
+            val a = 10
+            a
+        }
+    }
+    
+    //
+    def name () : Int = {
+        val a = 10
+        return a
+    }
+    println(name())
+    
+    
+    // 리턴을 명시할 경우 타입을 꼭 써 줘야한다
+    def name3() = {
+        val a = 10
+        return a
+    }
+    
+    
+    // 
+    scala> scala> def addOne(m: Int): Int = m + 1
+    scala> val three = addOne(2)
+    scala> def three() = 1 + 2
+    scala> three()
+    scala> three
+    ```
+
+    
+
+  - 익명 함수
+
+    _: ***만능???***
+
+    ```scala
+    (x: Int) => x + 1
+    //인터프리터가 부여한 이름(1)
+    
+    
+    def adder(m:Int, n:Int) = m + n
+    val add2 = adder(2, _:Int)
+    print(add2(3))
+    ```
+
+    
+
+  - 커리 함수 (Curried functions)
+
+    함수의 인자 중 일부를 적용하고, 나머지는 나중에 적용하게 남겨두는 경우
+
+    ```scala
+    object Ex {
+        def main(args: Array[String]): Unit = {
+            val thisYear = 2019
+            val fixedValueFunction = go(thisYear, _:String)
+            fixedValueFunction("test1")
+            fixedValueFunction("test2")
+            fixedValueFunction("test3")
+        }
+        def go(thisYear:Int, string:String) = {
+            println(string + ":" + thisYear)
+        }
+    }
+    
+    test1:2019
+    test2:2019
+    test3:2019
+    ```
+
+    
+
+  - 변수에 함수 넣기
+
+    ```scala
+    //변수에 함수 넣기
+    //명시적으로 함수가 기대되지 않는 곳에서 = 연산자를 이용해 
+    //매개변수가 필요한 함수를 대입하였을 때 에러가 발생
+    // - 객체화 되어 있지 않는 함수를 바로 val 에 대입하면 에러발생
+    
+    
+    object Ex {
+        def main(args: Array[String]): Unit = {
+            val g = f _ // _를 넣었더니 에러가 안 나
+            println(f(1))
+        }
+        def f(i: Int) = i
+    }
+    
+    def f(i: Int) = i
+    val g = f // 에러 발생
+    val g:(Int => Int) = f; // 에러 발생하지 않음
+    val g = f _ // 에러 발생하지 않음
+    ```
+
+    
+
+  - df
 
   - 
-
-
 
