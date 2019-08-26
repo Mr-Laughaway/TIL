@@ -77,7 +77,7 @@ https://wikidocs.net/book/2350
   - 기본
 
     ```scala
-    ///////////////
+    //------------------------------------------
     scala> var a = 1
     scala> val a = 1   // 불변
     scala> val b:Double = 1.3  //타입 명시
@@ -86,21 +86,23 @@ https://wikidocs.net/book/2350
     scala> println(s"Hello! ${name}")
     Hello! David
     
-    ///////////////
+    
+    //------------------------------------------
     scala> println("${1 + 1}")
     ${1 + 1}
     
     scala> println("s${1 + 1}")
     2
     
-    ///////////////
+    
+    //------------------------------------------
     scala> val height:Double = 182.3
     scala> val name = "James"
     scala> println(f"${name}%s is $height%2.2f centimeters tall"})
     James is 182.30 centimeters tall
     
     
-    ///////////////
+    //------------------------------------------
     scala> s"가\n나"
     가
     나
@@ -109,7 +111,7 @@ https://wikidocs.net/book/2350
     가\n나
     
     
-    ///////////////
+    //------------------------------------------
     scala> var str3 = s"println $str1"
     scala> println(str3)
     println aaa
@@ -141,14 +143,14 @@ https://wikidocs.net/book/2350
         println(x)
     }
     
-    // 조건이 있는 반복 문
+    // 조건이 있는 반복문
     // error
     for(i <- 10) if(i % 2 == 0) {
         println(i)
     }
     
     // ok
-    for(i <- 1 to 10) if(i %2 == 0) {
+    for(i <- 1 to 10) if(i % 2 == 0) {
         println(i)
     }
     
