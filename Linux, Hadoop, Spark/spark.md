@@ -757,16 +757,201 @@ https://wikidocs.net/book/2350
 
     
 
-    예3)
+    예3) ***Extractor*** 로 매칭
 
-    예4)
+    ``` scala
+    object Emergency {
+        def unapply(number:String):Boolean = {
+            if(number.length == 3 && number.forall(_.isDigit)) true
+            else false
+        }
+    }
+    
+    object Normal {
+        def unapply(number: String):Option[Int] = {
+            try {
+                var o = number.replaceAll("-", "")
+                Some(number.replaceAll("-", "").toInt)
+            } catch {
+                case _: Throwable => None
+            }
+        }
+    }
+    
+    val number1 = "010-222-2222"
+    val number2 = "119"
+    val number3 = "Pig which ate grapes"
+    val numberList = List(number1, number2, number3)
+    for(number <- numberList) {
+        number match {
+            case Emergency() => println("Emergency Call!!!")
+            case Normal(number) => println("Normal call - " + number)
+            case _ => println("Couldn't judge")
+        }
+    }
+    
+    //결과
+    Normal call - 102222222
+    Emergency Call!!!
+    Couldn't judge
+    
+    ```
+
+    
+
+  - 컬렉션
+
+    - 배열(Array)
+
+    - 리스트(List) 
+
+      - 앞뒤가 연결된 리스트로서 내부적으로 리스트를 붙이거나 나누는데 효율적인 구조를 가지고 있다. 
+      - 동적으로 크기를 늘리거나 줄이는 것이 가능. List는 추상 클래스 형태 혹은 이미 완성된 객체 형태로 존재하기 때문에 new를 사용하지 않는다.
+      - 이미 만들어져 있는 List 정적 객체의 내부적인 패토리 역할인 apply()가 동작하면서 새로운 List 개체를 생성
+      - ***::는 리스트의 각 요소를 결함***
+      - ***:::는 여러 리스트를 병합***
+
+      ```scala
+      val list1 = "a" :: "b" :: "c" :: Nil
+      for(x <- 0 until list1.size) {
+          println(list1(x))
+      }
+      
+      val list2 = "d" :: "e" :: Nil
+      val list0 = list1 ::: list2
+      for(x <- 0 until list0.size) {
+          println(list0(x))
+      }
+      
+      //결과
+      a
+      b
+      c
+      a
+      b
+      c
+      d
+      e
+      ```
+
+      - 리스트의 주요 기능
+
+        ```++```, ```apply(Int)```, ```-(키)``` , ... 다 못 침
+
+        ```scala
+        object Ex {
+            def main(args:Array[String]) : Unit = {
+                val list3 = "a" :: "b" :: "c" :: Nil
+                val list4 = 1 :: 2 :: 3 :: Nil
+                val list5 = 2 :: 2 :: 4 :: Nil
+        
+                println(list3 ++ list4)
+                println(list3.apply(0))
+                println(list3.reverse)
+                println(list4.max)
+                println(list4.min)
+                println(list4.sum)
+                println(list4.mkString(","))
+                println(list4.exists(a => 0 > 3))
+                println(list4.exists(_ > 3))
+                println(list4.contains(1))
+                println(list4.distinct)
+            }
+        }
+        
+        //결과
+        List(a, b, c, 1, 2, 3)
+        a
+        List(c, b, a)
+        3
+        1
+        6
+        1,2,3
+        false
+        false
+        true
+        List(1, 2, 3)
+        
+        ```
+
+        
+
+    - 맵(Map)
+
+      키를 통해 요소에 접근
+
+      ```scala
+      val map = Map(
+          "number1" -> "aa",
+          "number2" -> "bb",
+          "number3" -> 3,
+          5 -> "cc"
+      )
+      
+      println(map.isEmpty)
+      println("whole map : " + map)
+      println("keys : " + map.keys)
+      println("values : " + map.values)
+      println(map("number1"))
+      
+      //결과
+      false
+      whole map : Map(number1 -> aa, number2 -> bb, number3 -> 3, 5 -> cc)
+      keys : Set(number1, number2, number3, 5)
+      values : View(<not computed>) //  뭐지??
+      aa
+      
+      ```
+
+      맵(Map) 의 주요기능
+
+      ```scala
+      val map = Map(
+          "number1" -> "aa",
+          "number2" -> "bb",
+          "number3" -> 3,
+          5 -> "cc"
+      )
+      
+      println(map.isEmpty)
+      println("whole map : " + map)
+      println("keys : " + map.keys)
+      println("values : " + map.values)
+      println(map("number1"))
+      
+      
+      println("------")
+      //추가
+      val mapTest01 = map + ("num4" ->  44)
+      println(mapTest01("num4"))
+      
+      val map2 = Map("n1" -> 100, "n2" -> 200)
+      val mapTest02 = mapTest01 ++ map2
+      println(mapTest02)
+      val mapTest03 = mapTest02 - ("num4")
+      println(mapTest03)
+      ```
+
+      
+
+    - ㅇㄹㅇ
+
+    - ㅇㄹ
+
+    - ㅇ
+
+    - ㅇㄹ
+
+    - ㅇㄹ
+
+    - ㅇㄹ
+
+  
+
+  
 
   - df
-
-  - df
-
   - d
-
   - f
 
 - 
