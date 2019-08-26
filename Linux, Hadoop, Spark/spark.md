@@ -1,3 +1,7 @@
+
+
+
+
 ## Spark
 
 https://wikidocs.net/book/2350
@@ -934,33 +938,441 @@ https://wikidocs.net/book/2350
 
       
 
-    - ㅇㄹㅇ
+    - 셋(Set)
 
-    - ㅇㄹ
+      집합(Set) - 중복되지 않는 값을 다뤄야 할 때 사용
 
-    - ㅇ
+      ```scala
+      var basket: Set[String] = Set()
+      basket += "aaa"
+      basket += "aaa"
+      basket += "aaa"
+      basket += "bbb"
+      basket += "ccc"
+      basket += "ddd"
+      println(basket)
+      ```
 
-    - ㅇㄹ
+      집합의 주요 기능
 
-    - ㅇㄹ
+      ```scala
+      var basket: Set[String] = Set()
+      basket += "aaa"
+      basket += "aaa"
+      basket += "aaa"
+      basket += "bbb"
+      basket += "ccc"
+      basket += "ddd"
+      println(basket)
+      
+      var basket2:Set[String] = Set()
+      basket2 += "aaa"
+      basket2 += "fff"
+      basket2 += "ggg"
+      basket2 += "hhh"
+      
+      // .diff
+      println(basket.diff(basket2))
+      // | 합치기
+      println(basket | basket2)
+      
+      // 결과 (해쉬 셋???)
+      Set(aaa, bbb, ccc, ddd)
+      Set(bbb, ccc, ddd)
+      HashSet(hhh, ddd, ggg, ccc, bbb, aaa, fff)
+      ```
 
-    - ㅇㄹ
+      
+
+      ㅇㄹㅇㄹ
+
+      ㅇㄹㅇㄹ
+
+      
+
+    - 튜플(tuple)
+
+      - 여러 데이터를 하나의 묶음으로 처리하고 싶을 때 튜플로 처리
+      - 튜플은 N개의 데이터 쌍을 저장하는자료 구조
+
+      ```scala
+      val t1 = (1, 2)     //튜플 생성
+      val t2 = ("a", 1, "c")
+      val n1 = t1._2 //튜플 내용 참조
+      val n2 = t2._3
+      
+      println(t1)
+      println(t2)
+      println(n1)
+      println(n2)
+      
+      //결과
+      (1,2)
+      (a,1,c)
+      2
+      c
+      ```
+
+      
+
+    - 옵션
+
+      - 여러 개의 값을 저장하는 자료 구조로서 값이 있을 수도 있고 없을 수도 잇는 경우에 사용
+      - None이거나 Some()을 하나 가지고 있다.
+      - 맵에서 키를 이용해서 값을 가져올 때, 해당하는 ㅇ값이 있을 때는 SOme(을 반환하고 없으면 None을 반환하는 로직에 사용된다.
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val students = Map(
+                  1 -> "Moon",
+                  2 -> "Um",
+                  3 -> "Noh"
+              )
+      
+              val one = students.get(1)
+              val four = students.get(4)
+      
+              println(one)
+              println(four)
+              println(one.get)
+              println(four.getOrElse("Value not exists"))
+          }
+      }
+      
+      //결과
+      Some(Moon)
+      None
+      Moon
+      Value not exists
+      
+      ```
+
+      
+
+    - 시퀀스(Seq)
+
+      https://www.scala-lang.org/api/2.12.3/scala/collection/Seq.html
+
+      내부적으로 인덱스에 대한 정보를 가지고 있으므로 인덱스와 관련해서 써야 할 기능이 많을 경우 쉽게 데이터를 다룰 수 있다.
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+      
+              val donuts:Seq[String] = Seq(
+                  "Plain Donut",
+                  "Strawberry Donut",
+                  "Glazed Donut"
+              )
+      
+              println(s"Elements of donuts = $donuts")
+              println(s"Take elements from index 0 to 1 =  ${donuts.slice(0, 1)}"
+              )
+              println(s"Take elements from index 0 to 2 =  ${donuts.slice(0, 2)}"
+              )
+          }
+      }
+      
+      //결과
+      Elements of donuts = List(Plain Donut, Strawberry Donut, Glazed Donut)
+      Take elements from index 0 to 1 =  List(Plain Donut)
+      Take elements from index 0 to 2 =  List(Plain Donut, Strawberry Donut)
+      ```
+
+      
+
+    - 이터레이터(iterator)
+
+      컬렉션에서 데이터를 꺼내와서 차례대로 무언가를 실행할 때
+
+    
+
+    
+
+    - 패키지 객체(Package Object)
+
+      스칼라에는 패키지에 변수나 클래스 등을 성너할 수 있다.
+
+      패키지 객체를 이용하면 Common과 같은 클래스를 정의하지 않고도 동일 패키지에서 사용하는 변수나 메서드 등을 공유할 수 있다.
+
+      ```package``` 키워드를 사용해 정의
+
+      ```scala
+      
+      //org.apache.spark.sql 패키지의 패키지 객체
+      package org.apache.spark
+      ...
+      
+      package object sql {
+      	...
+      	type Strategy = SparkStragegy
+      	type DataFrame = DataSet[Row]
+      }
+      ```
+
+    
+
+    -  함수 컴비네이터(bombinator)
+
+      구현된 로직에 따라 컬렉션을 변형한 후 동일한 자료형의 컬렉션을 반환하는 역할을 맡는 메소드
+
+      map().foreach() 컬렉션을 탐색하면서 그 안의 값을 바꾸는 역할
+
+      amp() 리스트 자체를 변형하지 않고 List 자료형을 반환하면서 해로운 변수에 담게 한다
+
+      foreach() 아무값도 반환하지 않으며 리스트 자체의 값을 변형
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(1, 2, 3, 4)
+              println(o)
+              
+              val n = o.map(i => i * 10)
+              rintln(n)
+          }
+      }
+      
+      //결과
+      List(1, 2, 3, 4)
+      List(10, 20, 30, 40)
+      ```
+
+      
+
+      - filter(), filterNot() - 조건이 참 , 거짓을 가릴 수 있는.... ㅜㅜ
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(1, 2, 3, 4)
+              val n = o.filter(i => i >= 3).map(i =>)
+          }
+      }
+      //치다가 다 못 침
+      ```
+
+      
+
+      - foldleft(), foldRight() - 컬렉션에 잇는 여러 요소를 한 쪽..... ㅜㅜ
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+             val o = List(1, 2, 3, 4)
+             val sum = o.foldLeft(0.0 )(_ + _)
+             println(s"Sum = $sum")
+          }
+      }
+      
+      //결과
+      Sum = 10.0
+      ```
+
+      
+
+      - partition() - 컬렉션을 나눈는데 필요한 기능. 조건에 맞는 것들을 하나의 리스트로 저장하고 나머지 것을 다른 리스트에 저장한다.
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(1, 2, 3, 4)
+              val n = o.partition(i => i < 3)
+              println(n)
+          }
+      }
+      
+      //결과
+      (List(1, 2),List(3, 4))
+      ```
+
+      
+
+      - zip, unzip
+
+        ```zip```: 두 개의 List를 각각의 쌍으로 묶음
+
+        ```:::``` : 걍 합침
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(1, 2, 3, 4)
+              val oo = List(5, 6, 7, 8, 9)
+              val n = o zip oo
+              val nn = o ::: oo
+              println(n)
+              println(nn)
+          }
+      }
+      
+      //결과
+      List((1,5), (2,6), (3,7), (4,8))
+      List(1, 2, 3, 4, 5, 6, 7, 8, 9)
+      
+      ```
+
+      
+
+      - find()
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(1, 2, 3, 4)
+              
+              val n = o.find(i => i >= 2)
+              val nn = o.find(i => i == 9)
+              println(n)
+              println(nn)
+          }
+      }
+      
+      //결과
+      Some(2)
+      None
+      ```
+
+      
+
+      - drop()
+
+      ```scala
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(1, 2, 3, 4, 5, 6, 0)
+              
+              val n = o.drop(4)
+              val nn = o.dropWhile( i => i < 3)
+      
+              println(n)
+              println(nn)
+          }
+      }
+      
+      //결과
+      List(5, 6, 0) //4개 버림
+      List(3, 4, 5, 6, 0) // 3 보다 작으면 버림
+      ```
+
+      
+
+      - flatten() - 리스트 안에 리스트가 중첩되어 있는 경우 하나로 합쳐준다.
+
+      ```scala
+      //--------------------------------------------
+      //Ex1)
+      object Ex {
+          def main(args: Array[String]): Unit = {
+              val o = List(List(1, 2, 3, 4), List(5, 6))
+      
+              val n = o.flatten
+              println(n)
+          }
+      }
+      
+      //결과
+      List(1, 2, 3, 4, 5, 6)
+      
+      //--------------------------------------------
+      //Ex2)
+      val donuts1: Seq[String] = Seq("Plain", "Strawberry", "Glazed")
+      val donuts2: Seq[String] = Seq("Vanilla", "Glazed")
+      val listDonuts: List[Seq[String]] = List(donuts1, donuts2)
+      val listDonutsFromFlatten: List[String] = listDonuts.flatten
+      
+      println(donuts1)
+      println(donuts2)
+      println(listDonuts)
+      println(listDonutsFromFlatten)
+      
+      //결과
+      List(Plain, Strawberry, Glazed)
+      List(Vanilla, Glazed)
+      List(List(Plain, Strawberry, Glazed), List(Vanilla, Glazed))
+      List(Plain, Strawberry, Glazed, Vanilla, Glazed)
+      ```
 
   
 
   
 
-  - df
-  - d
-  - f
+  - 예외처리
 
-- 
+    - Either - 둘 중 하나를 선택
 
-- ㅇㄹ
-- ㅇㄹ
-- ㅇㄹ
-- ㅇㄹ
-- ㅇㄹ
-- ㅇㄹ
-- 
+      ```scala
+      object EitherTest {   
+         def main(args: Array[String]): Unit = {
+             val input = scala.io.StdIn.readLine("값을 입력하세요:")
+             val result: Either[String, Int] = try {
+                Right(input.toInt)
+             } catch {
+               case e : Exception => Left(input)
+             }
+             print(result.getClass)             
+         }
+      }
+      ```
 
+      
+
+    - 파일 없을 경우
+
+      ```scala
+      import java.io.FileReader
+      import java.io.FileNotFoundException
+      import java.io.IOException
+      
+      object Demo {
+          def main(args:Array[String]) {
+      
+              try {
+                  val f = new FileReader("input.txt")
+              } catch {
+                  case ex: FileNotFoundException => {
+                      println("Missing file exception")
+                  }
+                  case ex: IOException => {
+                      println("IO Exception")
+                  }
+              } finally {
+                  println("Exiting finally...")
+              }
+          }
+      }
+      
+      c:> scalac Demo.scala
+      c:> scala Demo
+      //결과
+      Missing file exception
+      Exiting finally...
+      ```
+
+      
+
+    - 파일에 쓰기
+
+      ```scala
+      import scala.io.StdIn.readLine
+      import java.io.File
+      import java.io.PrintWriter
+      
+      object FilewriteTest {
+          def main(args:Array[String]) {
+              val filename = "test.txt"
+              var input = readLine("파일에 쓸 내용을 입력하세요! : ")
+      
+              val writer = new PrintWriter(new File(filename))
+              writer.write(input)
+              writer.close
+      
+              //출력 파일은 패키지 디렉토리에 생성됩니다.
+              print("입력하신 텍스트를 " + filename + " 에 저장했습니다.")
+          }
+      }
+      
+      ```
+
+    
