@@ -1408,7 +1408,77 @@ https://wikidocs.net/book/2350
 
 ### Spark
 
->  아파치 스파크는 빅데이터처리르 ㄹ위한 오픈소스 병렬분산처리 플랫폼이다. 빅데이터 활용이 당연시되는 현재, 빅데이터로부터 시행착오를 겪어 원하는 결과를 얻거나, 스트림처리와 머신 러닝을 효과적으로 수행하려는 수요가 늘고 있다. 이러한 수요에 대응하고자 스파크는 성능과 이용자 편의성을 모두 고려하여 개발이 이뤄지고 있다.
+>  아파치 스파크는 빅데이터처리를 위한 오픈소스 병렬분산처리 플랫폼이다. 빅데이터 활용이 당연시되는 현재, 빅데이터로부터 시행착오를 겪어 원하는 결과를 얻거나, 스트림처리와 머신 러닝을 효과적으로 수행하려는 수요가 늘고 있다. 이러한 수요에 대응하고자 스파크는 성능과 이용자 편의성을 모두 고려하여 개발이 이뤄지고 있다.
 
 
 
+- 설치
+
+  ```bash
+  #Download
+  #https://www.apache.org/dyn/closer.lua/spark/spark-#2.4.3/spark-2.4.3-bin-hadoop2.7.tgz
+  
+  root$ cd /usr/local
+  root$ tar xvzf /home/hadoop/Download/spark-2.4.3-bin-hadoop2.7.tgz
+  root$ chown -R hadoop:hadoop spark-2.4.3-bin-hadoop2.7/
+  root$ ln -s spark-2.4.3-bin-hadoop2.7 spark
+  root$ chown -R hadoop:hadoop spark
+  
+  
+  # .bash_profile 에 다음 추가
+  hadoop$ vi .bash_profile
+  
+  #----------------------------------
+  export SPARK_HOME=/usr/local/spark
+  export HADOOP_CONF_DIR=/usr/local/hadoop-2.7.7/etc/hadoop
+  export YARN_CONF_DIR=/usr/local/hadoop-2.7.7/etc/hadoop
+  export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HIVE_HOME/bin:$SPARK_HOME/bin
+  #----------------------------------
+  
+  hadoop$ source .bash_profile
+  
+  ```
+
+  
+
+- 실행
+
+  ```bash
+  hadoop$ spark-shell --master local verbose
+  
+  Welcome to
+        ____              __
+       / __/__  ___ _____/ /__
+      _\ \/ _ \/ _ `/ __/  '_/
+     /___/ .__/\_,_/_/ /_/\_\   version 2.4.3
+        /_/
+  
+  Using Scala version 2.11.12 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_221)
+  Type in expressions to have them evaluated.
+  Type :help for more information.
+  
+  ```
+
+  
+
+- ㅇㄹ
+
+- ㅇㄹ
+
+- ㅇㄹ
+
+- ㅇㄹ
+
+- ㅇㄹ
+
+- ㅇ
+
+- ㅇ
+
+- ㅇ
+
+- ㅇ
+
+- 
+
+- ㄹ
