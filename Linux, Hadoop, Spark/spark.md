@@ -1521,22 +1521,22 @@ https://wikidocs.net/book/2350
   ```bash
   hadoop$ cd ~
   
-  //스파크 어플리케이션 프로젝트 폴더 생성
+  #스파크 어플리케이션 프로젝트 폴더 생성
   hadoop$ mkdir spark-simple-app
   hadoop$ cd spark-simple-app
   
-  //소스 코드 파일 저장 디렉토리 생성
+  #소스 코드 파일 저장 디렉토리 생성
   hadoop$ mkdir -p src/main/scala
   
-  //sbt 설정 파일 저장 디렉토리 생성
+  #sbt 설정 파일 저장 디렉토리 생성
   hadoop$ mkdir project
   
-  //소스 코드 저장될 패키지 디렉토리 생성
+  #소스 코드 저장될 패키지 디렉토리 생성
   hadoop$ mkdir -p src/main/scala/lab/spark/example
   hadoop$ cd src/main/scala/lab/spark/example
   hadoop$ vi SundayCount.scala
-  // SundayCount.scala
-  //-----------------------------------------
+  # SundayCount.scala
+  #-----------------------------------------
   package lab.spark.example
   
   import org.joda.time.{DateTime, DateTimeConstants}
@@ -1578,39 +1578,81 @@ https://wikidocs.net/book/2350
           }
       }
   }
-  //-----------------------------------------
+  #-----------------------------------------
   
   hadoop$
   hadoop$
   hadoop$
   hadoop$ cd ~/exercise/sbt/spark-simple-app
   hadoop$ vi build.sbt
-  // build.sbt
-  //-----------------------------------------
+  # build.sbt
+  #-----------------------------------------
   name := "spark-simple-app"
   version := "0.1"
   scalaVersion := "2.11.12"
   libraryDependencies ++= Seq("org.apache.spark" % "spark-core_2.11" % "2.4.3" % "provided", "joda-time" % "joda-time" % "2.8.2")
   assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
-  //-----------------------------------------
+  #-----------------------------------------
   
   hadoop$ cd project
   hadoop$ vi plugins.sbt
   
-  // plugins.sbt
-  //-----------------------------------------
+  # plugins.sbt
+  #-----------------------------------------
   addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
-  //-----------------------------------------
+  #-----------------------------------------
   
   hadoop$ cd ..
   hadoop$ pwd
   /home/hadoop/exercise/sbt/spark-simple-app
   hadoop$ sbt assembly
-  //결과
+  #결과
   [info] Done packaging.
   [success] Total time: 289 s, completed Aug 27, 2019 1:24:04 PM
-  //아래 파일 확인
+  #아래 파일 확인
   /home/hadoop/exercise/sbt/spark-simple-app/target/scala-2.11/spark-simple-app-assembly-0.1.jar
+  
+  hadoop$ cd ~
+  hadoop$ vi date.txt
+  # data.txt
+  #-----------------------------------------
+  20150322
+  20150331
+  20150417
+  20150426
+  20150506
+  20150523
+  20150524
+  20150712
+  20150728
+  20150801
+  20150830
+  20150927
+  #-----------------------------------------
+  
+  hadoop$ hadoop fs -mkdir /data/spark/
+  hadoop$ hadoop fs -put date.txt /data/spark/
+  
+  # 대망의 실행!!!!
+  hadoop$ spark-submit --master local \
+  --class lab.spark.example.SundayCount \
+  --name SundayCount \
+  ./target/scala-2.11/spark-simple-app-assembly-0.1.jar \
+  /data/spark/date.txt
+  
+  #결과
+  주어진 데이터에는 일요일이 6개 들어 있습니다.
+  19/08/27 14:28:18 INFO server.AbstractConnector: Stopped Spark@1a6f5124{HTTP/1.1,[http/1.1]}{0.0.0.0:4040}
+  19/08/27 14:28:18 INFO ui.SparkUI: Stopped Spark web UI at http://master:4040
+  19/08/27 14:28:18 INFO spark.MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+  19/08/27 14:28:18 INFO memory.MemoryStore: MemoryStore cleared
+  19/08/27 14:28:18 INFO storage.BlockManager: BlockManager stopped
+  19/08/27 14:28:18 INFO storage.BlockManagerMaster: BlockManagerMaster stopped
+  19/08/27 14:28:18 INFO scheduler.OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+  19/08/27 14:28:18 INFO spark.SparkContext: Successfully stopped SparkContext
+  19/08/27 14:28:18 INFO util.ShutdownHookManager: Shutdown hook called
+  19/08/27 14:28:18 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-b68d1028-67b1-4f6e-9f16-0e293bef5590
+  19/08/27 14:28:18 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-bfdee742-7715-4459-90d8-e3fc05a05d02
   
   ```
 
@@ -1618,7 +1660,7 @@ https://wikidocs.net/book/2350
 
   
 
-- ㅇㄹ
+- ㅇㄹc
 
 - ㅇㄹ
 
