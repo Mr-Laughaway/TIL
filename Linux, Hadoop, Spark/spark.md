@@ -1443,7 +1443,7 @@ https://wikidocs.net/book/2350
 
 - 실행
 
-  ```bash
+  ```scala
   hadoop$ spark-shell --master local verbose
   
   Welcome to
@@ -1457,29 +1457,34 @@ https://wikidocs.net/book/2350
   Type in expressions to have them evaluated.
   Type :help for more information.
   
-  scala> 
+  // 로컬 파일을 읽어들여서 RDD로 생성
+  scala>  val file = sc.textFile("file:///usr/local/spark/README.md")
+  
+  // RDD로부터 한 행
+  scala> val words = file.flatMap(_.split(" "))
+  
+  // 같은 단어끼리 모아서 요약(갯수) 계산 - map 형태로 단어와 출현횟수
+  scala> val result = words.countByValue
+  
+  // 결과 보기
+  scala> result.get("For").get
+  
+  // 결과
+  res1: Long = 3
   ```
 
-  
+
+
+
 
 - ㅇㄹ
-
 - ㅇㄹ
-
 - ㅇㄹ
-
 - ㅇㄹ
-
 - ㅇㄹ
-
 - ㅇ
-
 - ㅇ
-
 - ㅇ
-
 - ㅇ
-
 - 
-
 - ㄹ
