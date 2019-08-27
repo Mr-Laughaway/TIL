@@ -1457,6 +1457,7 @@ https://wikidocs.net/book/2350
   Type in expressions to have them evaluated.
   Type :help for more information.
   
+  scala> 
   ```
 
   
