@@ -1516,7 +1516,7 @@ https://wikidocs.net/book/2350
 
   
 
-- SBS  실습(spark-simple-app)
+- SBT  실습(spark-simple-app)
 
   ```bash
   hadoop$ cd ~
@@ -1743,8 +1743,6 @@ https://wikidocs.net/book/2350
       
       ```
 
-      
-
     - Some과 None
 
       값이 있거나 없을 수 있는 옵션 상황을 표시하는 스칼라 타입이다. 값이 있다면 Some을, 없으면 None을 반환한다.
@@ -1807,8 +1805,6 @@ https://wikidocs.net/book/2350
       (a,2)   (b,2)   (c,2)
       ```
 
-      
-
     - flatMapValues
 
       RDD의 모든 요소들이 키와 값의 쌍을 이루고 있는 경우에만 사요 가능한 메서드.  "값"에 해당하는 요소에만 flatMap()연산을 적용하고 그결과로 구성된 RDD를 생성
@@ -1822,10 +1818,6 @@ https://wikidocs.net/book/2350
       
       ```
 
-      
-
-      
-
     - zip
 
       두 개의 서로 다른 RDD를
@@ -1838,8 +1830,6 @@ https://wikidocs.net/book/2350
       scala> println(result.collect.mkString("\t"))
       (a,1)   (b,2)   (c,3)
       ```
-
-      
 
     - groupBy
 
@@ -1861,8 +1851,6 @@ https://wikidocs.net/book/2350
       
       ```
 
-      
-
     - df
 
     - df
@@ -1877,7 +1865,88 @@ https://wikidocs.net/book/2350
 
   
 
-- ㅇㄹ
+- SBT  실습(wordcount-app)
+
+  ```bash
+  #스파크 어플리케이션 프로젝트 폴더 생성
+  [hadoop@master ~]$ mkdir wordcount-app
+  
+  [hadoop@master ~]$ cd wordcount-app
+  
+  # 소스 코드 파일 저장 디렉토리 생성
+  [hadoop@master ~]$ mkdir -p src/main/scala  
+  #sbt 설정 파일 저장  디렉토리 생성
+  [hadoop@master ~]$ mkdir project
+  
+  # 소스 코드 저장될 패키지 디렉토리 생성
+  [hadoop@master ~]$ mkdir -p src/main/scala/lab/spark/example
+  [hadoop@master ~]$ cd  src/main/scala/lab/spark/example
+  [hadoop@master ~]$ vi WordCount.scala
+  
+  
+  [hadoop@master ~]$ cd ~/wordcount-app
+  [hadoop@master ~]$ vi build.sbt
+  
+  name := "wordcount-app"
+  version := "0.1"
+  scalaVersion := "2.11.12"
+  libraryDependencies ++= Seq("org.apache.spark" % "spark-core_2.11" % "2.4.3" % "provided")
+  assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+  
+  
+  [hadoop@master ~]$ cd project
+  [hadoop@master ~]$ vi plugins.sbt
+  
+  addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
+  
+  
+  #어플리케이션 빌드
+  [hadoop@master ~]$ cd ~/wordcount-app
+  [hadoop@master ~]$ sbt assembly
+  
+  #데이터 소스 생성
+  [hadoop@master ~]$ vi simple-words.txt
+  cat
+  dog
+  .org
+  cat
+  rabbit
+  bear
+  cat
+  &&
+  tiger
+  dog
+  rabbit
+  100
+  bear
+  tiger
+  cat
+  rabbit
+  ?bear
+  
+  #하둡 파일 시스템에 simple-words.txt파일 업로드
+  [hadoop@master ~]$ hadoop fs -mkdir  /data/spark/
+  [hadoop@master ~]$ hadoop fs -put simple-words.txt  /data/spark/
+  
+  # 대망의 실행!!!!
+  hadoop$ spark-submit --master local \
+  --class lab.spark.example.WordCount \
+  --name SundayCount \
+  ./target/scala-2.11/wordcount-app-assembly-0.1.jar \
+  /data/spark/simple-word.txt
+  
+  
+  #결과
+  (tiger,2)
+  (100,1)
+  (bear,2)
+  (rabbit,3)
+  (org,1)
+  (dog,2)
+  (cat,4)
+  ```
+
+  
 
 - ㅇㄹ
 
