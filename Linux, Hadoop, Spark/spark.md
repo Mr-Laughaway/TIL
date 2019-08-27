@@ -1516,7 +1516,107 @@ https://wikidocs.net/book/2350
 
   
 
-- ㅇㄹ
+- SBS  실습(spark-simple-app)
+
+  ```bash
+  hadoop$ cd ~
+  
+  //스파크 어플리케이션 프로젝트 폴더 생성
+  hadoop$ mkdir spark-simple-app
+  hadoop$ cd spark-simple-app
+  
+  //소스 코드 파일 저장 디렉토리 생성
+  hadoop$ mkdir -p src/main/scala
+  
+  //sbt 설정 파일 저장 디렉토리 생성
+  hadoop$ mkdir project
+  
+  //소스 코드 저장될 패키지 디렉토리 생성
+  hadoop$ mkdir -p src/main/scala/lab/spark/example
+  hadoop$ cd src/main/scala/lab/spark/example
+  hadoop$ vi SundayCount.scala
+  // SundayCount.scala
+  //-----------------------------------------
+  package lab.spark.example
+  
+  import org.joda.time.{DateTime, DateTimeConstants}
+  import org.joda.time.format.DateTimeFormat
+  import org.apache.spark.{SparkConf, SparkContext}
+  
+  object SundayCount {
+      def main(args: Array[String]) {
+          if(args.length < 1) {
+                  throw new IllegalArgumentException(
+                  "명령 인수에 날짜가 기록된 파일의 경로를 지정해 주세요.")
+          }
+          val filePath = args(0)
+          val conf = new SparkConf
+          val sc = new SparkContext(conf)
+  
+          try {
+              //텍스트 파일을 로드한다
+              val textRDD = sc.textFile(filePath)
+  
+              //문자열로 표현된 날짜로부터 DateTime형 인스턴스를 생성한다.
+              val dateTimeRDD = textRDD.map { dateStr => 
+                  val pattern =
+                      DateTimeFormat.forPattern("yyyyMMdd")
+                  DateTime.parse(dateStr, pattern)
+              }
+  
+              //일요일만 추출한다.
+              val sundayRDD = dateTimeRDD.filter { dateTime =>
+                  dateTime.getDayOfWeek == DateTimeConstants.SUNDAY
+              }
+  
+              //sundayRDD에 들어있는 일요일 갯수를 센다
+              val numOfSunday = sundayRDD.count
+              println("주어진 데이터에는 일요일이 ${numOfSunday}개 들어 있습니다.")
+  
+          } finally {
+              sc.stop()
+          }
+      }
+  }
+  //-----------------------------------------
+  
+  hadoop$
+  hadoop$
+  hadoop$
+  hadoop$ cd ~/exercise/sbt/spark-simple-app
+  hadoop$ vi build.sbt
+  // build.sbt
+  //-----------------------------------------
+  name := "spark-simple-app"
+  version := "0.1"
+  scalaVersion := "2.11.12"
+  libraryDependencies ++= Seq("org.apache.spark" % "spark-core_2.11" % "2.4.3" % "provided", "joda-time" % "joda-time" % "2.8.2")
+  assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+  //-----------------------------------------
+  
+  hadoop$ cd project
+  hadoop$ vi plugins.sbt
+  
+  // plugins.sbt
+  //-----------------------------------------
+  addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
+  //-----------------------------------------
+  
+  hadoop$ cd ..
+  hadoop$ pwd
+  /home/hadoop/exercise/sbt/spark-simple-app
+  hadoop$ sbt assembly
+  //결과
+  [info] Done packaging.
+  [success] Total time: 289 s, completed Aug 27, 2019 1:24:04 PM
+  //아래 파일 확인
+  /home/hadoop/exercise/sbt/spark-simple-app/target/scala-2.11/spark-simple-app-assembly-0.1.jar
+  
+  ```
+
+  
+
+  
 
 - ㅇㄹ
 
