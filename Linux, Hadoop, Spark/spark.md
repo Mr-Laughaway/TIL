@@ -1662,6 +1662,219 @@ https://wikidocs.net/book/2350
 
 - 
 
+- 스파크 API
+
+  - collect
+
+    -  RDD의 모든 원소를 모아서 배열로 돌려준다
+    - 파일이나 데이터베이스 같은 외부 데이터를 이용하여 RDD 생성
+    - RDD에 있는 모든 요소들이 collect 연산을 호출한 서버의 메모리에 주집합니다.
+    - 전체 데이터를 모두 담을 수 있을 정도의 충분한 메모리 공간이 확보돼 있는 상태에서만 사용해야 한다
+
+  - count
+
+    RDD를 구성하는 전체 요소의 갯수를 반환
+
+  ```scala
+  scala> var rdd = sc.parallelize(1 to 10)
+  rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at <console>:24
+  
+  scala> var result = rdd.collect
+  result: Array[Int] = Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+  
+  scala> println(result.mkString(", "))
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  
+  scala> val result2 = rdd.count
+  result2: Long = 10
+  
+  scala> println(result2)
+  10
+  
+  ```
+
+  
+
+  - Transformation
+
+    각 요소의 타입을 문자열에서 숫자로 바꾸거나 불필요한 요소를 제외하거나 기존 요소의 값에 특정 값을 더하는 드으이 작업이 모두 포함된다. 
+
+    ```map 연산```, ```그룹화 연산```, ```집합 연산```, ```파티션 연산```, ```필터와 정렬 연산```
+
+    - ```map```
+
+      하나의 입력을 받아 하나의 값을 돌려주는 함수를 인자로 받는다. RDD에 속하는 모든 요소에 적용한 뒤 그 결과로 구성된 새로운 RDD를 생성해서 반환. 인자로 사용하는 함수의 반환 타입에 제약이 없다.
+
+      ```scala
+      //map 메서드 : map[U](f : (T) => U) : RDD[U]
+      
+      scala> var rdd = sc.parallelize( 1 to 5)
+      rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize <console>:24
+      
+      scala> var result = rdd.map(_ + 1)
+      result: org.apache.spark.rdd.RDD[Int] = MapPartitionsRDD[1] at map at <console>:25
+      
+      scala> println(result.collect.mkString(", "))
+      2, 3, 4, 5, 6
+      
+      ```
+
+    - flatmap
+
+      TraversableOnce는 스칼라에서 사용하느 이터레이터 타입 중 하나. 함수 f는 반환값을
+
+      ```scala
+      
+      
+      scala> var fruits = List("apple, orange", "grape, apple, mango", "blueberry, tomato, orange")
+      fruits: List[String] = List(apple, orange, grape, apple, mango, blueberry, tomato, orange)
+      
+      scala> var rdd1 = sc.parallelize(fruits)
+      rdd1: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[2] at parallelize at <console>:26
+      
+      scala> var rdd2 = rdd1.flatMap(_.split(","))
+      rdd2: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[3] at flatMap at <console>:25
+      
+      scala> print(rdd2)
+      MapPartitionsRDD[3] at flatMap at <console>:25
+      scala> print(rdd2.collect.mkString(", "))
+      apple,  orange, grape,  apple,  mango, blueberry,  tomato,  orange
+      scala>
+      
+      ```
+
+      
+
+    - Some과 None
+
+      값이 있거나 없을 수 있는 옵션 상황을 표시하는 스칼라 타입이다. 값이 있다면 Some을, 없으면 None을 반환한다.
+
+      ```scala
+      scala> var rdd2 = rdd1.flatMap( log => {
+           | if(log.contains("apple")) {
+           | 	Some(
+               log.indexOf("apple")
+           	)
+           | } else {
+           | 	None
+           | }
+           |})
+      
+      scala> print(rdd2.collect.mkString(", "))
+      0, 7
+      scala>
+      
+      ```
+
+    - mapPartitions
+
+      ```scala
+      scala> var rdd1 = sc.parallelize( 1 to 10, 3)
+      scala> var rdd2 = rdd1.mapPartitions(numbers => {
+           | print("DB 연결 !!!")
+           | numbers.map {
+           | number => number + 1
+           | }
+           | })
+      
+      scala> println(rdd2.collect.mkString(", "))
+      DB 연결 !!!DB 연결 !!!DB 연결 !!!2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+      ```
+
+    - mapPartitionsWithIndex
+
+      ```scala
+      scala> var rdd2 = rdd1.mapPartitionsWithIndex((idx, numbers) => {
+           | numbers.flatMap {
+           | case number if idx == 1 => Option(number + 1)
+           | case _ => None
+           | }
+           | })
+      
+      scala> println(rdd2.collect.mkString(", "))
+      5, 6, 7
+      ```
+
+    - mapValues
+
+      PairRdd에 속하는 데이터는 키를 기준으로 작은 그룹들을 만들고 해당 그룹들에 속한 값을 대상으로 합계나 평균을 구하는 등의 연산을 수행.
+
+      ```scala
+      scala> var rdd = sc.parallelize(List("a", "b", "c")).map((_, 1))
+      scala> var result = rdd.mapValues(i => i+1)
+      
+      scala> println(result.collect.mkString("\t"))
+      (a,2)   (b,2)   (c,2)
+      ```
+
+      
+
+    - flatMapValues
+
+      RDD의 모든 요소들이 키와 값의 쌍을 이루고 있는 경우에만 사요 가능한 메서드.  "값"에 해당하는 요소에만 flatMap()연산을 적용하고 그결과로 구성된 RDD를 생성
+
+      ```scala
+      scala> var rdd = sc.parallelize(Seq((1, "a, b"),(2, "a, c"), (3, "d, e")))
+      scala> var result = rdd.flatMapValues(_.split(","))
+      
+      scala> println(result.collect.mkString("\t"))
+      (1,a)   (1, b)  (2,a)   (2, c)  (3,d)   (3, e)
+      
+      ```
+
+      
+
+      
+
+    - zip
+
+      두 개의 서로 다른 RDD를
+
+      ```scala
+      scala> var rdd1 = sc.parallelize(List("a", "b", "c"))
+      scala> var rdd2 = sc.parallelize(List(1, 2, 3))
+      scala> var result = rdd1.zip(rdd2)
+      
+      scala> println(result.collect.mkString("\t"))
+      (a,1)   (b,2)   (c,3)
+      ```
+
+      
+
+    - groupBy
+
+      RDD의 요소를 일정한 기준에 따라 여러 개의 그룹으로 나누고 이 그룹으로 구성된 새로운 RD를 생성. 각 그룹은 키와 그 키에 속한 요소들의 시퀀스로 구성되며, 메서드의 인자로 전달하는 함수가 각 그 그룹의 키를 경정하는 역할을 담당. 요소의 키를 생성하는 작업과 그룹으로 분류하는 작업을 동시에 수행
+
+      ```scala
+      scala> var rdd = sc.parallelize( 1 to 10)
+      scala> var result = rdd.groupBy {
+           | case i : Int if (i % 2 == 0) => "even"
+           | case _ => "odd"
+           | }
+      
+      scala> result.collect.foreach {
+           | v => println(s"${v._1}, [${v._2.mkString(", ")}]")
+           | }
+      even, [2, 4, 6, 8, 10]
+      odd, [1, 3, 5, 7, 9]
+      
+      
+      ```
+
+      
+
+    - df
+
+    - df
+
+    - df
+
+  - ㅇ
+
+  - ㅇ
+
+  - 를
+
   
 
 - ㅇㄹ
