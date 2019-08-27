@@ -1931,7 +1931,7 @@ https://wikidocs.net/book/2350
   # 대망의 실행!!!!
   hadoop$ spark-submit --master local \
   --class lab.spark.example.WordCount \
-  --name SundayCount \
+  --name WordCount \
   ./target/scala-2.11/wordcount-app-assembly-0.1.jar \
   /data/spark/simple-word.txt
   
