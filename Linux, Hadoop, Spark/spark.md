@@ -1441,7 +1441,7 @@ https://wikidocs.net/book/2350
 
   
 
-- 실행
+- 실행()
 
   ```scala
   hadoop$ spark-shell --master local verbose
@@ -1475,16 +1475,63 @@ https://wikidocs.net/book/2350
 
 
 
+- SBT 설치
 
+  ```bash
+  # Download
+  # https://www.scala-sbt.org/download.html
+  root$ tar xvzf sbt-1.2.7.tgz -C /opt/
+  
+  # .bash_profile 설정 추가
+  export SBT_HOME=/opt/sbt
+  export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HIVE_HOME/bin:$SPARK_HOME/bin:$SBT_HOME/bin
+  
+  # 실행
+  hadoop$ source .bash_profile
+  hadoop$ sbt about
+  # ... 엄청 오래 걸림. maven 기반으로 엄청 다운로드.
+  
+  # 결과
+  [info] Updated file /home/hadoop/project/build.properties: set sbt.version to 1.2.7
+  [info] Loading project definition from /home/hadoop/project
+  [info] Updating ProjectRef(uri("file:/home/hadoop/project/"), "hadoop-build")...
+  [info] downloading https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1-tests.jar ...
+  [info]  [SUCCESSFUL ] org.apache.logging.log4j#log4j-core;2.11.1!log4j-core.jar(test-jar) (5186ms)
+  [info] Done updating.
+  [info] Set current project to hadoop (in build file:/home/hadoop/)
+  [info] This is sbt 1.2.7
+  [info] The current project is ProjectRef(uri("file:/home/hadoop/"), "hadoop") 0.1.0-SNAPSHOT
+  [info] The current project is built against Scala 2.12.7
+  [info] Available Plugins
+  [info]  - sbt.ScriptedPlugin
+  [info]  - sbt.plugins.CorePlugin
+  [info]  - sbt.plugins.Giter8TemplatePlugin
+  [info]  - sbt.plugins.IvyPlugin
+  [info]  - sbt.plugins.JUnitXmlReportPlugin
+  [info]  - sbt.plugins.JvmPlugin
+  [info]  - sbt.plugins.SbtPlugin
+  [info] sbt, sbt plugins, and build definitions are using Scala 2.12.7
+  
+  ```
+
+  
 
 - ㅇㄹ
+
 - ㅇㄹ
+
 - ㅇㄹ
+
 - ㅇㄹ
-- ㅇㄹ
+
 - ㅇ
+
 - ㅇ
+
 - ㅇ
+
 - ㅇ
+
 - 
+
 - ㄹ
