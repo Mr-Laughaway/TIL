@@ -1928,7 +1928,7 @@ https://wikidocs.net/book/2350
   [hadoop@master ~]$ hadoop fs -mkdir  /data/spark/
   [hadoop@master ~]$ hadoop fs -put simple-words.txt  /data/spark/
   
-  # 대망의 실행!!!!
+  # 실행
   hadoop$ spark-submit --master local \
   --class lab.spark.example.WordCount \
   --name WordCount \
