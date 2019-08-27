@@ -1851,21 +1851,193 @@ https://wikidocs.net/book/2350
       
       ```
 
-    - df
+    - cogroup
 
-    - df
+      RDD의 구성요소가 키와 값 쌍으로 이뤄진 경우에 사용 가능한 메서드. RDD에서 같은 키를 갖는 값 요소를 찾아서 키와 그 키에 속하는 요소으 ㅣ시퀀스로 구성된 튜플을 만들고, 그 튜플들로 구성된 새로운 RDD를 생성한다.
 
-    - df
+      ```scala
+      scala> var rdd = sc.parallelize( List(("k1", "v1"), ("k2", "v2"), ("k1", "v3") ))
+      scala> var rdd2 = sc.parallelize(List(("k1", "v4")))
+      scala> var result = rdd.cogroup(rdd2)
+      scala> result.collect.foreach {
+           |    case (k, (v_1, v_2)) => {
+           |         println(s"($k, [${v_1.mkString(",")}], [${v_2.mkString(", ")}])")
+           |    }
+           | }
+      
+      (k2, [v2], [])
+      (k1, [v1,v3], [v4])
+      ```
 
-  - ㅇ
+      
 
-  - ㅇ
+    - distinct()
 
-  - 를
+      RDD의 원소에서 중복을 제외한 요소로만 구성된 새로운 RDD를 생성하는 메서드
+
+      ```scala
+      val rdd = sc.parallelize( List( 1, 2, 3, 1, 2, 3, 1, 2, 3))
+      val result = rdd.distinct()
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - cartesian()
+
+      두 RDD 요소의 카테시안곱을 구하고 그 결과를 요소로 하는 새로운 RDD 생성
+
+      ```scala
+      val rdd1 = sc.parallelize( List(1, 2, 3))
+      val rdd2 = sc.parallelize( List("a", "b", "c"))
+      val result = rdd1.cartesian(rdd2)
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - substract() -안됨
+
+      rdd1.substract(rdd2)는 rdd1에 속하고, rdd2에는 속하지 않는 요소로 구성된 새로운 RDD를 생성하는 메서드
+
+      ```scala
+      val rdd1 = sc.parallelize( List("a", "b", "c", "d", "e"))
+      val rdd2 = sc.parallelize( List("d", "e"))
+      val result = rdd1.substract(rdd2)
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - union()
+
+      두 RDD에 속하는  요소로 구성된 새로운 RDD를 생성
+
+      ```scala
+      val rdd1 = sc.parallelize( List("a", "b", "c"))
+      val rdd2 = sc.parallelize( List("d", "e", "f"))
+      val result = rdd1.union(rdd2)
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - intersection()
+
+      •두개의 RDD가  있을 때 rdd1과 rdd2에 동시에 속하는 요소로 구성된 새로운 RDD를 생성하는 메서드
+
+      •결과로 생성되는 RDD에는 중복된 원소가 존재하지 않는다
+
+      ```scala
+      val rdd1 = sc.parallelize( List( "a", "a", "b", "c"))
+      val rdd2 = sc.parallelize( List( "a", "a", "c", "c"))
+      val result = rdd1.intersection(rdd2)
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - join()
+
+      •RDD의 구성요소가 키와 값의 쌍으로 구성된 경우에 사용할 수 있는 메서드
+
+      서로 같은 키를 가지고 있는 요소를 모아서 그룹을 형성하고,  RDD튜플Tuple(, Tuple(RDD,  의 요소형태로 구성됩니다
+
+      ```scala
+      val rdd1 = sc.parallelize( List("a", "b", "c", "d", "e")).map((_, 1))
+      val rdd2 = sc.parallelize( List("b", "c", "f")).map((_, 2))
+      val result = rdd1.join(rdd2)
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - leftOuterJoin(), rightOuterJoin()
+
+      ```scala
+      
+      ```
+
+      
+
+    - substractByKey()
+
+      ```scala
+      
+      ```
+
+      
+
+    - reduceByKey()
+
+      ```scala
+      
+      ```
+
+      
+
+    - foldByKey()
+
+      ```scala
+      
+      ```
+
+      
+
+    - §combineByKey()
+
+      •RDD의 구성요소가 키와 값의 쌍으로 구성된 경우에 사용할 수 있는 메서드
+
+      •같은 키를 가진 값들을 하나로 병합하는 기능을 수행하는 과정에서 값의 타입이 바뀔 수 있다
+
+      ```scala
+      
+      ```
+
+      
+
+    - combineByKey() - 평균 구하기 예제 
+
+      ```scala
+      //콤바이너 역할을 할 Record 클래스 정의
+      case class Record(var amount: Long, var number: Long=1){
+         def map(v: Long) = Record(v)
+         def add(amount: Long): Record = {
+            add(map(amount))
+      	  }
+         def add(other: Record) : Record = {
+            this.number += other.number 
+      	  this.amount += other.amount
+      	  this
+      	  }
+         override def toString: String = s"avg:${amount / number}"
+         }
+       //combineByKey()를 이용한 평균값 계산
+       var data = Seq(("Math", 100L), ("Eng", 80L), ("Math", 50L), ("Eng", 60L), ("Eng", 90L))
+       var rdd = sc.parallelize(data)
+       var createCombiner = (v:Long) => Record(v)
+       var mergeValue = (c:Record, v:Long) => c.add(v)
+       var mergeCombiners = (c1:Record, c2:Record) => c1.add(c2)
+       var result = rdd.combineByKey(createCombiner, mergeValue, mergeCombiners)
+      
+      println(result.collect.mkString("\n"))
+      
+      # 결과
+      [Stage 0:>                                                          (0 + 0) / 1[Stage 0:>                                                          (0 + 1) / 1[Stage 0:===========================================================(1 + 0) / 1                                                                               (Math,avg:75)
+      (Eng,avg:76)
+      
+      
+      ```
 
   
 
-- SBT  실습(wordcount-app)
+- SBT 실습(wordcount-app)
 
   ```bash
   #스파크 어플리케이션 프로젝트 폴더 생성
@@ -1950,16 +2122,4 @@ https://wikidocs.net/book/2350
 
 - ㅇㄹ
 
-- ㅇㄹ
-
-- ㅇ
-
-- ㅇ
-
-- ㅇ
-
-- ㅇ
-
 - 
-
-- ㄹ
