@@ -2950,6 +2950,46 @@ https://wikidocs.net/book/2350
   
   
   
+  //---------------------------------------
+  // 구조화된 각종 데이터셋 다루기
+  // 파일 형식의 구조화된 데이터셋 다루기
+  val dfWriter = dessertDF.write
+  dfWriter.format("parquet").save("/data/spark/dessert_parquet")
+  
+  val dfReader = sqlContext.read
+  val dessertDF2 = dfReader.format("parquet").load("/data/spark/dessert_parquet")
+  dessertDF2.orderBy($"name").show(3) 
+  +------+-------------+-----+----+
+  |menuId|         name|price|kcal|
+  +------+-------------+-----+----+
+  |  D-11|고구마 파르페| 6500| 650|
+  |  D-12|    녹차 빙수| 3800| 320|
+  |   D-7|  녹차 파르페| 4500| 380|
+  +------+-------------+-----+----+
+  only showing top 3 rows
+  
+  
+  dessertDF.write.format("parquet").saveAsTable("dessert_tbl_parquet")
+  sqlContext.read.format("parquet").table("dessert_tbl_parquet").show(3)
+  +------+-------------+-----+----+
+  |menuId|         name|price|kcal|
+  +------+-------------+-----+----+
+  |   D-0|초콜릿 파르페| 4900| 420|
+  |   D-1|  푸딩 파르페| 5300| 380|
+  |   D-2|  딸기 파르페| 5200| 320|
+  +------+-------------+-----+----+
+  only showing top 3 rows
+  
+  
+  sqlContext.sql("SELECT * FROM dessert_tbl_parquet LIMIT 3").show
+  +------+-------------+-----+----+
+  |menuId|         name|price|kcal|
+  +------+-------------+-----+----+
+  |   D-0|초콜릿 파르페| 4900| 420|
+  |   D-1|  푸딩 파르페| 5300| 380|
+  |   D-2|  딸기 파르페| 5200| 320|
+  +------+-------------+-----+----+
+  
   ```
 
   
