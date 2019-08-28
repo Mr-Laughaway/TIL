@@ -2160,7 +2160,7 @@ https://wikidocs.net/book/2350
      - 모든 스파크 애플리케이션은 SparkContext를 이용해 RDD나 accumulator, broadcast 변수 등을 다룬다.
      - Spark 애플리케이션을 수행하는데 필요한 각종 설정 정보를 담는 역할
 
-  2. RDD(내결함성 불변 데이터 모델) 생성
+  2. ***RDD***(내결함성 불변 데이터 모델) 생성
 
      collection, HDFS, hive, CSV 등 여러 소스로부터 생성 가틍
 
@@ -2199,13 +2199,164 @@ https://wikidocs.net/book/2350
 - Spark 장점
 
   - 반복처리와 연속으로 이루어지는 변환처리를 고속화(메모리 기반)
-  - 
+  - 딥러닝, 머신러닝등의 실행환경에 적합한 환경 제공
+  - 서로 다른 실행환경과 구조, 데이터들의 처리에 대해서 통합 환경 제공
 
-- df
 
-- df
 
-- 
+- 대표 메서드
+  - sc.textFile() : file 로 부터 RDD 생성
+  - collect : 배열 만들기?
+  - map, flatMap
+  - mkString(["구분자"])
+
+---
+
+
+
+- 계속
+
+  - Transformation 계속
+
+    - aggregateByKey()
+
+      •RDD의 구성요소가 키와 값의 쌍으로 구성된 경우에 사용할 수 있는 메서드
+
+      •병합을 시작할 초기값을 생성, combineByKey()와 동일한 동작을 수행
+
+      ```scala
+      var data = Seq(("Math", 100L),("Eng", 80L), ("Math", 50L), ("Eng", 70L), ("Eng", 90L))
+      val rdd = sc.parallelize(data)
+      //초기값
+      val zero = Record(0, 0)
+      val mergeValue = (c:Record, v: Long) => c.add(v)
+      val mergeCombiners = (c1:Record, c2:Record) => c1.add(c2)
+      //병합을 위한 초기값을 전달함!!
+      val result = rdd.aggregateByKey(zero)(mergeValue, mergeCombiners)
+      println(result.collect.mkString(", \t"))
+      
+      ```
+
+    - pipe() - **안 됨**
+
+      Pipe를 이용하면 데이터를 처리하는 과정에서 외부 프로세스를 활용할 수 있다.
+
+      ```scala
+      //세 개의 숫자로 구성된 문자열을 리눅스의 cut 유틸리티를 이용해 분리한 뒤 첫 번째와 세 번째 숫자를 뽑아내는 예제
+      val rdd = sc.parallelize(List("1, 2, 3", "4, 5, 6", "7, 8, 9"))
+      val result = rdd.pipe("cut -f 1, 3 -d,")
+      println(result.collect.mkString(", "))
+      
+      ```
+
+      
+
+    - coalesce(), repartition()
+
+      •현재의 RDD의 파티션 개수를 조정할 수 있습니다.
+
+      •파티션의 크기를 나타내는 정수를 인자로 받아서 파티션의 수를 조정
+
+      •repartition()이 파티션 수를 늘리거나 줄이는 것을 모두 가능
+
+      •coalesce()는 줄이는 것만 가능
+
+      •repartition()은 셔플을 기반으로 동작
+
+      •coalesce()은 강제로 셔플을 수행하라는 옵션을 지정하지 않는한 셔플을 사용하지 않음
+
+      •데이터 필터링 등의 작업으로 데이터 수가 줄어들어 파티션의 수를 줄이고자 할 때는 상대적으로 성능이 좋은 coalesce()를 사용하고, 파티션 수를 늘여야 하는 경우에만 repartition()를 사용하는 것이 좋습니다.
+
+      ```scala
+      val rdd1 = sc.parallelize( 1 to 1000000, 10)
+      val rdd2 = rdd1.coalesce(5)
+      val rdd3 = rdd2.repartition(10) 
+      println(s"partition size:${rdd1.getNumPartitions}")
+      println(s"partition size:${rdd2.getNumPartitions}")
+      println(s"partition size:${rdd3.getNumPartitions}")
+      
+      ```
+
+      
+
+    - ***repartitionAndSortWithinPartitions()***
+
+      •RDD를 구성하는 모든 데이터를 특정 기준에 따라 여러 개의 파티션으로 분리하고 각 파티션 단위로 정렬을 수행한 뒤 이 결과로 새로운 RDD를 생성해 주는 메서드
+
+      •데이터가 키와 값 쌍으로 구성돼 있어야 하고 메서드를 실행할 때 각 데이터가 어떤 파티션에 속할지 결정하기 위한  파티셔너(Partitioner)를 설정해야 합니다.
+
+      •파티셔너는 각 데이터의 키 값을 이용해 데이터가 속할 파티션을 결정하게 되는데, 이때 키 값을 이용한 정렬도 함께 수행됩니다.
+
+      •파티션 재할당을 위해 셔플을 수행하는 단계에서 정렬도 함께 다루게 되어 파티션과 정렬을 각각 따로 따로 하는 것에 비해 더 높은 성능을 발휘할 수 있습니다.
+
+      •foreachPartition() 은 RDD의 파티션 단위로 특정 함수를 실행해 주는 메서드
+
+      ```scala
+      import org.apache.spark
+      
+      val r = scala.util.Random
+      val data = for (i <- 1 to 10) yield(r.nextInt(100), "-")
+      val rdd1 = sc.parallelize(data)
+      val rdd2 = rdd1.repartitionAndSortWithinPartitions(new org.apache.spark.HashPartitioner(3))
+      //결과 검증
+      rdd2.foreachPartition(it => { println("========"); it.foreach(v=>println(v)) })
+      
+      ```
+
+      
+
+    - sortedByKey()
+
+      ```scala
+      val textRDD = sc.textFile("/tmp/README.txt")
+      val wordCandidateRDD = textRDD.flatMap(_.split("[ , .]"))
+      val wordRDD = wordCandidateRDD.filter(_.matches("""\p{Alnum}+"""))
+      val wordAndOnePairRDD = wordRDD.map((_, 1))
+      val wordAndCountRDD = wordAndOnePairRDD.reduceByKey(_ + _)
+      
+      val countAndWordRDD = wordAndCountRDD.map { wordAndCount =>
+          (wordAndCount._2, wordAndCount._1)
+      }
+      
+      val sortedCWRDD = countAndWordRDD.sortByKey(false)
+      val sortedWCRDD = sortedCWRDD.map { countAndWord =>
+          (countAndWord._2, countAndWord._1)
+      }
+      
+      val sortedWCArray = sortedWCRDD.collect
+      sortedWCArray.foreach(println)
+      
+      //결과
+      (the,8)
+      (software,6)
+      (and,6)
+      (of,5)
+      (The,4)
+      (this,3)
+      (encryption,3)
+      (for,3)
+      (cryptographic,3)
+      (information,3)
+      (country,2)
+      ...
+      
+      ```
+
+      
+
+    - d
+
+    - d
+
+    - 
+
+  - df
+
+  - df
+
+  - df
+
+  - df
 
 
 
