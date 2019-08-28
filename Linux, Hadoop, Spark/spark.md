@@ -2923,6 +2923,20 @@ https://wikidocs.net/book/2350
   +-----+-------------+------------------------+
   
   
+  val amntPerSlipDF = amntPerMenuPerSlipDF.groupBy($"sId").agg(
+       |   sum($"amount_per_menu_per_slip") as "amount_per_slip").select(
+       |     $"sId", $"amount_per_slip")
+  amntPerSlipDF.show
+  +-----+---------------+
+  |  sId|amount_per_slip|
+  +-----+---------------+
+  |SID-0|          14000|
+  |SID-1|          20000|
+  |SID-2|          10600|
+  +-----+---------------+
+  
+  
+  
   //----------------------------------------
   //스파크 SQL의 UDF 이용하기
   val strlen = sqlContext.udf.register("strlen", (str: String) => str.length)
