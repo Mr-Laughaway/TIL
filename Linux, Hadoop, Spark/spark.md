@@ -2344,7 +2344,99 @@ https://wikidocs.net/book/2350
 
       
 
-    - d
+    - take()
+
+      ```bash
+      #스파크 어플리케이션 프로젝트 폴더 생성
+      [hadoop@master ~]$ mkdir wordcounttop3-app
+      
+      [hadoop@master ~]$ cd wordcounttop3-app
+      
+      # 소스 코드 파일 저장 디렉토리 생성
+      [hadoop@master ~]$ mkdir -p src/main/scala  
+      #sbt 설정 파일 저장  디렉토리 생성
+      [hadoop@master ~]$ mkdir project
+      
+      # 소스 코드 저장될 패키지 디렉토리 생성
+      [hadoop@master ~]$ mkdir -p src/main/scala/lab/spark/example
+      [hadoop@master ~]$ cd  src/main/scala/lab/spark/example
+      [hadoop@master ~]$ vi WordCountTop3.scala
+      
+      
+      [hadoop@master ~]$ cd ~/wordcounttop3-app
+      [hadoop@master ~]$ vi build.sbt
+      
+      name := "wordcount-app"
+      version := "0.1"
+      scalaVersion := "2.11.12"
+      libraryDependencies ++= Seq("org.apache.spark" % "spark-core_2.11" % "2.4.3" % "provided")
+      assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+      
+      
+      [hadoop@master ~]$ cd project
+      [hadoop@master ~]$ vi plugins.sbt
+      
+      addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
+      
+      
+      #어플리케이션 빌드
+      [hadoop@master ~]$ cd ~/wordcounttop3-app
+      [hadoop@master ~]$ sbt assembly
+      
+      
+      #WordCountTop3.scala
+      #------------------------------------------
+      package lab.spark.example 
+      
+      import org.apache.spark.{SparkConf, SparkContext}  
+      
+      object WordCountTop3 {
+          def main(args: Array[String]) {
+              require(args.length >= 1,      
+                      "드라이버 프로그램의 인자에 단어를 세고자 하는 " 
+                      + "파일의 경로를 지정해 주세요")    
+              val conf = new SparkConf   
+              val sc = new SparkContext(conf)    
+              try {       
+              // 모든 단어에 대해 (단어, 등장횟수)형식의 튜플을 만든다       
+              val filePath = args(0)       
+              val wordAndCountRDD = sc.textFile(filePath) 
+                              .flatMap(_.split("[ ,.]"))   
+                              .filter(_.matches("""\p{Alnum}+""")) 
+                              .map((_, 1))  
+                              .reduceByKey(_ + _)  
+                      // 등장횟수가 가장 많은 단어 세개를 찾는다     
+              val top3Words = wordAndCountRDD.map {
+                                  case (word, count) => (count, word)  
+                              }
+                              .sortByKey(false)
+                              .map {         
+                                  case (count, word) => (word, count)       
+                              }
+                              .take(3)     
+              // 등장횟수가 가장 많은 단어 톱쓰리를 표준출력으로 표시한다  
+                  top3Words.foreach(println)   
+              } finally {     
+                  sc.stop() 
+              } 
+          } 
+      } 
+      #------------------------------------------
+      
+      
+      # 실행
+      hadoop$ spark-submit --master local --class lab.spark.example.WordCountTop3 --name WordCountTop3 ./target/scala-2.11/wordcounttop3-app-assembly-0.1.jar /tmp/README.txt
+      
+      # 실행 (간단하게 이렇게 해도 되네?)
+      hadoop$ spark-submit --master local ./target/scala-2.11/wordcounttop3-app-assembly-0.1.jar /tmp/README.txt
+      
+      #결과
+      (the,8)
+      (software,6)
+      (and,6)
+      ```
+
+      
 
     - d
 
