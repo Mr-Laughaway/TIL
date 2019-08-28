@@ -2438,7 +2438,93 @@ https://wikidocs.net/book/2350
 
       
 
-    - d
+    - join
+
+      ```scala
+      def createSalesRDD(csvFile: String) = {
+          val logRDD = sc.textFile(csvFile)
+          logRDD.map { record =>
+              val splitRecord = record.split(",")
+              val productId = splitRecord(2)
+              val numOfSold = splitRecord(3).toInt
+              (productId, numOfSold)
+          }
+      }
+      
+      val salesOctRDD = createSalesRDD("/data/spark/sales-october.csv")
+      val salesNovRDD = createSalesRDD("/data/spark/sales-november.csv")
+      
+      import org.apache.spark.rdd.RDD
+      def createOver50SoldRDD(rdd: RDD[(String, Int)]) = {
+          rdd.reduceByKey(_ + _).filter(_._2 >= 50)
+      }
+      
+      val octOver50SoldRDD = createOver50SoldRDD(salesOctRDD)
+      val novOver50SoldRDD = createOver50SoldRDD(salesNovRDD)
+      
+      val bothOver50SOldRDD = octOver50SoldRDD.join(novOver50SoldRDD)
+      bothOver50SOldRDD.collect.foreach(println)
+      //결과
+      (8,(68,72))
+      (15,(80,51))
+      
+      
+      val over50SoldAndAmountRDD = bothOver50SOldRDD.map {
+          case (productId, (octAmount, novAmount)) =>
+          	(productId, octAmount + novAmount)
+      }
+      
+      over50SoldAndAmountRDD.collect.foreach(println)
+      //결과
+      (8,140)
+      (15,131)
+      
+      
+      import scala.collection.mutable.HashMap
+      import java.io.{BufferedReader, InputStreamReader}
+      import org.apache.hadoop.conf.Configuration
+      import org.apache.hadoop.fs.{FileSystem, Path}
+      val productsMap = new HashMap[String, (String, Int)]
+      //HDFS/로컬 파일시스템을 투명하게 다루려고 하둡의  API를 이용한다.
+      val hadoopConf = new Configuration
+      val fileSystem = FileSystem.get(hadoopConf)
+      val inputStream = fileSystem.open(new Path("/data/spark/products.csv"))
+      val productsCSVReader = new BufferedReader(new InputStreamReader(inputStream))
+      var line = productsCSVReader.readLine
+      while(line != null) {
+          val splitLine = line.split(",")
+          val productId = splitLine(0)
+          val productName = splitLine(1)
+          val unitPrice = splitLine(2).toInt
+          productsMap(productId) = (productName, unitPrice)
+          line = productsCSVReader.readLine
+      }
+      productsCSVReader.close()
+      
+      val broadcastedMap = sc.broadcast(productsMap)
+      val resultRDD = over50SoldAndAmountRDD.map {
+          case (productId, amount) =>
+          val productsMap = broadcastedMap.value
+          val (productName, unitPrice) = productsMap(productId)
+          (productName, amount, amount * unitPrice)
+      }
+      
+      resultRDD.collect.foreach(println)
+      //결과
+      (강정(10개),140,2100000)
+      (생과자(10개),131,2227000)
+      
+      resultRDD.saveAsTextFile("/output/oct-nov-over-50-sold")
+      //파일 확인
+      [hadoop@master ~]$ hadoop fs -ls -R /output/oct*
+      -rw-r--r--   2 hadoop supergroup          0 2019-08-28 12:43 /output/o
+      -rw-r--r--   2 hadoop supergroup         59 2019-08-28 12:43 /output/o
+      [hadoop@master ~]$ hadoop fs -cat /output/oct-nov-over-50-sold/part-00
+      (강정(10개),140,2100000)
+      (생과자(10개),131,2227000)
+      ```
+
+      
 
     - 
 
