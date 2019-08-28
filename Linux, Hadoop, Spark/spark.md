@@ -2122,8 +2122,92 @@ https://wikidocs.net/book/2350
   (cat,4)
   ```
 
+
+
+
+---
+
+### 복습
+
+#### Spark?
+
+- 구성 요소
+  - 클러스터 매니저
+
+  - SparkCore
+
+  - Spark SQL
+
+  - Spark Streaming - 실시간 처리
+
+  - MLlib
+
+  - Graph X
+
+    
+
+- RDD
+
+  Spark에서 데이터를 처리하기 위해 추상화된 모델. 복구 가능한 분산 데이터.
+
   
 
-- ㅇㄹ
+- SparkApplication 구현 단계
+
+  1. ***SparkContext***생성 (애플리케이션과 스파크 클러스터와의 연결을 담당
+
+     - Spark 애플리케이션과 Spark 클러스터와의 연결을 담당하는 객체
+     - 모든 스파크 애플리케이션은 SparkContext를 이용해 RDD나 accumulator, broadcast 변수 등을 다룬다.
+     - Spark 애플리케이션을 수행하는데 필요한 각종 설정 정보를 담는 역할
+
+  2. RDD(내결함성 불변 데이터 모델) 생성
+
+     collection, HDFS, hive, CSV 등 여러 소스로부터 생성 가틍
+
+  3. transformation
+
+     변환연산(RDD 요소의 구조 변경. filter/grouping 등)
+
+  4. action
+
+     집계/요약 처리
+
+  5. 영속화
+
+     
+
+- SparkApplication => job
+
+  
+
+- Spark 클러스터 환경에서 node들
+
+  ```SparkClient```, ```Master 노드```, ```Worker 노드```
+
+  - SparkClient - SparkApplication 을 배포하고 실행을 요청
+
+  - Spark Master 노드 - Spark 클러스터 환경에서 사용가능한 리소스들의 관리
+
+  - Spark Worker 노드 - 할당 받은 리소스(CPU core, memory) 를 사용해서 작업을 수행
+
+  - executor - SparkWorker 노드에서 실행되는 프로세스
+
+    RDD의 partition을
+
+  
+
+- Spark 장점
+
+  - 반복처리와 연속으로 이루어지는 변환처리를 고속화(메모리 기반)
+  - 
+
+- df
+
+- df
 
 - 
+
+
+
+
+
