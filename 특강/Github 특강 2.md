@@ -11,7 +11,7 @@ Github 특강 - 2
 
 
 
-# Git
+# I. Git
 
 > Git 은 분산버전관리시스템(DVCS)이다.
 >
@@ -239,7 +239,34 @@ user.name=Mr-Laughaway
 
 
 
-# Github Pages
+# II. Github Pages
 
-지킬, 갯츠비
+### 1. Github에 page repository 생성
+
+​	github에서 new repository를 통하여 `{github id}.github.io` 라는 이름의 레포지토리를 생성한다.
+
+### 2. Bootstrap start templet의 RESUME 
+
+- 다운로드 [링크](https://startbootstrap.com/themes/resume/)
+
+- 원하는 만큼 수정 후 `push`
+
+  ```bash
+  $ git init
+  Initialized empty Git repository in C:/Users/student/Desktop/startbootstrap-resume-gh-pages/.git/
+  
+  $ git add .
+  $ git commit -m 'Github Pages 테스트'
+  $ git push -u origin master
+  ```
+
+- https://mr-laughaway.github.io/ 페이지 확인
+
+### 3. 기타
+
+- 블로그 관리 도구
+
+  [지킬](https://jekyllrb-ko.github.io/), [갯츠비](https://www.gatsbyjs.org/)
+
+- 
 
