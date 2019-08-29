@@ -1,4 +1,8 @@
-### 문법
+# CSS
+
+Cascading Style Sheets
+
+## I. 문법
 
 ```css
 selector {
@@ -7,9 +11,9 @@ selector {
 }
 ```
 
+작성된 파일은 html 문서에 아래와 같이 적용한다.
 
-
-```
+```thml
 <!DOCTYPE html>
 <html>
 태그: 내용에 대한 구조적 변경 -> 파서 -> 생성 결과물 DOM TREE
@@ -27,11 +31,9 @@ css 주석 : /* 주석 *>
 
 
 
-#### 실습
+## II. 대표적인 속성들
 
-
-
-*background*
+### background
 
 ```html
 <!DOCTYPE html>
@@ -68,9 +70,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*background-image*
+### background-image
 
 ```html
 <!DOCTYPE html>
@@ -98,9 +98,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-***float (bookstore.html)***
+### float
 
 ```html
 <!DOCTYPE html>
@@ -199,9 +197,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*nth-child(n), collapse, opacity*
+### nth-child(n), collapse, opacity
 
 ```html
 <!DOCTYPE html>
@@ -252,9 +248,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*hirerarchy, h1+h2, :hover, :active, ::first-child, ::first-line*
+### hirerarchy, h1+h2, :hover, :active, ::first-child, ::first-line
 
 ```html
 <!DOCTYPE html>
@@ -372,9 +366,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*inline*
+### inline
 
 ```html
 <!DOCTYPE html>
@@ -452,9 +444,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*padding*
+### padding
 
 ```html
 <!DOCTYPE html>
@@ -500,9 +490,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-***position***
+### position
 
 ```html
 <!DOCTYPE html>
@@ -628,9 +616,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*select[attr=xxx]*
+### select[attr=xxx]
 
 ```html
 <!DOCTYPE html>
@@ -663,9 +649,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*border-collapse*
+### border-collapse
 
 ```html
 <!DOCTYPE html>
@@ -737,9 +721,7 @@ css 주석 : /* 주석 *>
 </html>
 ```
 
-
-
-*transition*
+### transition
 
 ```html
 <!DOCTYPE html>
