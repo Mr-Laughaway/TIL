@@ -31,9 +31,7 @@ VII. [TreeMap](#vii-treemap)
 
 VIII. [Plot 그리기](#viii-Plot-그리기-scatter)
 
-  
-
-  
+ <br>
 
 ## I. 일단 해 보기
 
