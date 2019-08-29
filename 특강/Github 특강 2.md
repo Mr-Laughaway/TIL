@@ -6,6 +6,8 @@ Github 특강 - 2
 | ---------------- | ------------------------------------------------------------ |
 | 기술 면접 가이드 | https://github.com/JaeYeopHan/Interview_Question_for_Beginner |
 | 채용 관련 가이드 | https://github.com/jojoldu/junior-recruit-scheduler          |
+| 치트시트!        | http://ndpsoftware.com/git-cheatsheet.html                   |
+| .gitignore 헬퍼  | http://gitignore.io/                                         |
 
 
 
@@ -186,11 +188,54 @@ user.name=Mr-Laughaway
      >>>>>>>> aslkdfjasdaslkkdfks11283lsfskdf
      ```
 
-     
 
-3. 
 
-4. 1
+## [4](). 되돌리기
+
+1. staging area 에서 `unstage`
+
+   ```bash
+   $ git status
+   $ git reset HEAD b.txt
+   ```
+
+2. `commit` 메시지 수정하기
+
+   ```bash
+   $ git commit --ament
+   ```
+
+   - 커밋 메시지를 수정하게 되면 해시값이 변경되어 이력이 변화하게 된다.
+   - 따라서 원격 저장소에 push된 이력이라면 절대 변경하면 안된다!
+   - 커밋하는 과정에서 파일을 빠뜨렸다면, 위의 명령어를 통해서 수정할 수도 있다.
+
+   ```bash
+   $ git add omit_file.txt
+   $ git commit --amend
+   ```
+
+3. working directory 변경사항 버리기
+
+   ```bash
+   $ git checkout -- 파일명
+   ```
+
+   변경사항이 모두 삭제되고, 해당 파일의 이전 커밋 상태로 변화한다.
+
+4. 기타 꿀팁
+
+   ```bash
+   # 팁
+   # 커밋된 사항이면 어떤 것이든 복구가 가능하다
+   # 아래는 여러가지 상황을 알 수 있는 유용한 command
+   $ git reflog
+   $ git diff
+   
+   # 한번에 add + commit 하기
+   $ git commit -a -m '한번에 한다'
+   ```
+
+   
 
 
 
