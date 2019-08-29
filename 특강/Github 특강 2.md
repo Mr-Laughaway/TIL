@@ -190,7 +190,7 @@ user.name=Mr-Laughaway
 
 
 
-## [4](). 되돌리기
+## 4. 되돌리기
 
 1. staging area 에서 `unstage`
 
@@ -238,4 +238,8 @@ user.name=Mr-Laughaway
    
 
 
+
+# Github Pages
+
+지킬, 갯츠비
 
