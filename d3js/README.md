@@ -12,7 +12,7 @@ I. [일단 해 보기](#I-일단-해-보기)
 
 II. [여러 개의 데이터 처리하기](#ii-여러-개의-데이터-처리하기)
 
-III. [CSV 읽어오기 / 애니메이션](#iii-csv-읽어오기-/-애니메이션)
+III. [CSV 읽어오기 / 애니메이션](#iii-csv-읽어오기--애니메이션)
 
 IV. [세로 막대 그래프](#iv-세로-막대-그래프 )
 
@@ -25,7 +25,7 @@ VI. [꺾은 선 차트](#vi-꺾은-선-차트)
 
 VII. [TreeMap](#vii-treemap)
 
-VIII. [Plot 그리기](#VIII. Plot 그리기 (scatter))
+VIII. [Plot 그리기](#viii-Plot-그리기--scatter)
 
 
 
