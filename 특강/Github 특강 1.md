@@ -10,7 +10,7 @@ Github로 취업하기
 
 - `#`은 대제목
   - ex) `# 대제목`
-    - `tab` 들려쓰기
+    - `tab` 들여쓰기
 - `##`은 중제목
 - `###`은 소제목
 
@@ -47,9 +47,7 @@ class Person:
 
 살짝 수정 테스트
 
-
-
-# IV.  Github First!!!
+## IV.  Github First!!!
 
 Github에 가입하고 설치하고 이 파일을 올려보자!
 
