@@ -83,7 +83,7 @@ d3.select("#myGraph")
     .attr("height", "20px");
 ```
 
-
+<br>
 
 ## II. 여러 개의 데이터 처리하기 
 
@@ -106,7 +106,7 @@ var dataSet = [300, 150, 10, 80, 230];
 		.attr("height", "20px");
 ```
 
-
+<br>
 
 ## III. CSV 읽어오기 / 애니메이션
 
@@ -163,7 +163,7 @@ d3.csv("data.csv").then(function(data){
 });
 ```
 
-
+<br>
 
 ## IV. 세로 막대 그래프 
 
@@ -318,7 +318,7 @@ window.addEventListener("load", function(){
 
 ```
 
-
+<br>
 
 ## V. 파이 차트
 
@@ -458,7 +458,7 @@ function drawPie(filename) {
 
 ```
 
-
+<br>
 
 ## VI. 꺾은 선 차트
 
@@ -589,7 +589,7 @@ window.addEventListener("load", function(){
 
 ```
 
-
+<br>
 
 ### 2. 여러개의 꺾은선 그래프와 회전된 축 텍스트
 
@@ -772,7 +772,7 @@ window.addEventListener("load", function(){
 
 ```
 
-
+<br>
 
 ### 3. 영역 안을 칠한 꺾은선 그래프
 
@@ -858,7 +858,7 @@ window.addEventListener("load", function(){
 }, false); //addEventListener() end
 ```
 
-
+<br>
 
 ## VII. TreeMap
 
@@ -962,7 +962,7 @@ window.addEventListener("load", function(){
 
 ```
 
-
+<br>
 
 ## VIII. Plot 그리기 (scatter)
 
@@ -1203,6 +1203,4 @@ window.addEventListener("load", function(){
 	
 }, false);
 ```
-
-
 
