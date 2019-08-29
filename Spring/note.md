@@ -80,7 +80,7 @@
 
 
 
-```
+```java
 drop table products purge;
 
 create table products (
