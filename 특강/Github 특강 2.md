@@ -139,15 +139,15 @@ user.name=Mr-Laughaway
    $ git pull origin master
    ```
 
-   
-
-3. 1
+3. 테스트로 넣어본다
 
 4. 1
 
 5. 1
 
 6. 1
+
+7. 1
 
 
 
