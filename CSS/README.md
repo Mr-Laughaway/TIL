@@ -6,8 +6,8 @@ Cascading Style Sheets
 
 ## 목차
 
-* [I. 문법](#i._문법)
-* [II. 대표적인 속성들](#ii._대표적인_속성들)
+* [I. 문법](#i-문법)
+* [II. 대표적인 속성들](#ii-대표적인-속성들)
   + [background](#background)
   + [background-image](#background-image)
   + [float](#float)
