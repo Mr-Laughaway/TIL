@@ -1,5 +1,7 @@
 # D3.js
 
+![â² D3js.org ííì´ì§ íë©´ ê°ë¬´ë¦¬](README.assets/dsjs1-800x448.png)
+
 > D3는 ‘Data Drivened Document’(데이터 기반 문서)의 약자다. D3.js는 데이터에 기반을 둔 문서를 다룰 수 있는 자바스크립트 기반 라이브러리다. D3.js는 HTML, SVG(Scalable Vector Graphics), CSS를 사용해 데이터를 시각적인 결과물로 나타낸다. D3.js는 최신 표준 기술을 지원하는 웹브라우저에서 구동하며,‘인터넷 익스플로러8’ 이하 버전에서는 동작하지 않는다.
 
 
