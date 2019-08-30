@@ -166,5 +166,79 @@
 
 heroku 가입
 
-heroku cli 다운로드
+heroku cli 다운로드 -> 설치
 
+
+
+Procfile
+
+```
+
+```
+
+
+
+runtime.txt
+
+```
+python-3.7.3
+```
+
+
+
+```bash
+# 현재 라이브러리를  저장
+pip freeze > requirements.txt
+# 다음에 일관 인스톨 하려면?
+pip install -l requirements.txt
+
+```
+
+
+
+```bash
+git add .
+git commit -m 'heroku setting'
+```
+
+
+
+작업 디렉토리에서 정식 git bash 를 연다(vscode 에서 안 되는 듯?)
+
+```bash
+$ heroku login
+heroku: Press any key to open up the browser to login or q to exit:
+Opening browser to https://cli-auth.heroku.com/auth/browser/15c343c8-81e0-4547-aef3-028de9c53a5d
+heroku: Waiting for login...
+Logging in... done
+Logged in as mr.laughaway@gmail.com
+^C▒ϰ▒ ▒۾▒▒▒ ▒▒▒▒▒ðڽ▒▒ϱ▒ (Y/N)? y
+
+$ heroku create fromlyra0xff-bot #fromlyra0xff-bot은 프로젝트명이다 
+Creating fromlyra0xff-bot... done
+https://fromlyra0xff-bot.herokuapp.com/ | https://git.heroku.com/fromlyra0xff-bot.git
+
+$ git push heroku master
+remote: Verifying deploy... done.
+To https://git.heroku.com/fromlyra0xff-bot.git
+ * [new branch]      master -> master
+
+```
+
+
+
+heroku site에서 환경설정
+
+
+
+{project} > settings > Config Vars > Reveal ...
+
+KEY : TELEGRAM_TOKEN
+
+VALUE: 어쩌구어쩌구어쩌구어쩌구어쩌구키
+
+
+
+overview > Configure Add-ons > **Heroku Scheduler** 설치
+
+Heroku Scheduler > Add Job >
