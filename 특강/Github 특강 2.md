@@ -13,15 +13,36 @@ Github 특강 - 2
 
 # 목차
 
-- Git
-- Github Pages
-- Branch
+- [Git](#i-git)
+  - [git 설정](#1-git-설정)
+  - [git 활용 기초](#2-git-활용-기초)
+  - [원격저장소(remote) 활용하기](#3-원격저장소remote-활용하기)
+    - [기초](#i-기초)
+    - [push-pull](#ii-push-pull)
+    - [push-pull 시나리오](#iii-push-pull-시나리오)
+  - [되돌리기](#4-되돌리기)
+- [Github Pages](#ii-github-pages)
+  - [Github에 page repository 생성](#1-github에-page-repository-생성)
+  - [Bootstrap start templet의 RESUME](#2-bootstrap-start-templet의-resume)
+  - [기타](#3-기타)
+- [Branch](#iii-branch)
+  - [Branch 기본](#1-branch-기본)
+  - [fast-forward](#2-fast-forward-strategy)
+  - [merge commit recursive](#3-recursive-strategy)
+  - [충돌 및 직접해결](#4-충돌-및-직접해결)
+  - [stash - 임시 공간](#5-stash---임시-공간)
+- [Reset vs. Revert](#iv-reset-vs-revert)
+  - [Reset](#1-reset)
+  - [Revert](#2-revert)
+  - [reflog](#3-reflog)
 
 <br>
 
 <br>
 
 # I. Git
+
+![1567136483225](Github 특강 2.assets/1567136483225.png)
 
 > Git 은 분산버전관리시스템(DVCS)이다.
 >
@@ -248,11 +269,15 @@ user.name=Mr-Laughaway
 
 <br>
 
+<br>
+
 # II. Github Pages
 
 ## 1. Github에 page repository 생성
 
 > github에서 new repository를 통하여 `{github id}.github.io` 라는 이름의 레포지토리를 생성한다.
+
+<br>
 
 ## 2. Bootstrap start templet의 RESUME 
 
@@ -280,11 +305,11 @@ user.name=Mr-Laughaway
 
 <br>
 
+<br>
+
 # III. Branch
 
-## 1. fast-forward
-
-> (master)가 그대로인 상황에서 다른 브랜치의 내용을 merge 하는 경우 ```fast-forward``` 방식으로 자동 merge 가 이루어 진다.
+## 1. Branch 기본
 
 ```bash
 $ git branch {브랜치명} #브랜치 생성
@@ -301,10 +326,16 @@ $ git merge {브랜치명} #브랜치명을 지금 브랜치로 병합
 (master) $ git merge feature/index #feathre/index 브랜치를 master로 병합
 ```
 
+<br>
+
+## 2. fast-forward strategy
+
+> (master)가 그대로인 상황에서 다른 브랜치의 내용을 merge 하는 경우 ```fast-forward``` 방식으로 자동 merge 가 이루어 진다.
+
 **시나리오**
 
 ```bash
-(master) $ git branch -b feature/test
+(master) $ git checkout -b feature/test
 (feature/test) $ touch test.html
 (feature/test) $ git add .
 (feature/test) $ git commit -m 'test commit'
@@ -319,24 +350,40 @@ Fast-forward
 Deleted branch feature/test (was 7a7cb08).
 ```
 
-## 2. merget commit recursive
+<br>
+
+## 3. recursive strategy
 
 > (master)에서 변경이 발생하고 다른 브랜치에서 **다른** 파일 을 수정하여 변경이 발생한 상태에서 merge를 시도할 경우 `recursive` 전략으로 머지가 발생한다.
 
 **시나리오**
 
 ```bash
-(master) $ git branch -b feature/signin #브랜치 생성과 동시에 이동(checkout)
+(master) $ git checkout -b feature/signin #브랜치 생성과 동시에 이동(checkout)
 (feature/signin) $ touch singin.html
 (feature/signin) $ git add .
 (feature/signin) $ git commit -m 'Complete Signin'
 (feature/signin) $ git checkout master
+```
+
+```bash
 (master) $ #index.html 수정
 (master) $ git add .
 (master) $ git commit -m 'index.html 수정'
 # conflict가 있음을 알리는 창이 뜬다
-# 저장하고 빠져나오기
+#--------------------------------------
+Merge branch 'feature/signout'
 
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
+#--------------------------------------
+# 저장하고 빠져나오기
+```
+
+```bash
 (master) $ git merge feature/signin
 Merge made by the 'recursive' strategy.
  siginin.html | 0
@@ -345,7 +392,7 @@ Merge made by the 'recursive' strategy.
  create mode 100644 siginin.html
  create mode 100644 signin.css
  
-(master) $ git log --oneline --graph
+(master) $ git log --oneline --graph #오 이거 재밌네
 *   8c1308b (HEAD -> master) Merge branch 'feature/signin'
 |\
 | * 242d53e (feature/signin) Complete signin
@@ -355,3 +402,132 @@ Merge made by the 'recursive' strategy.
 * 08fe688 Init index.html
 ```
 
+<br>
+
+## 4. 충돌 및 직접해결
+
+> (master)와 (다른 브랜치)에서 같은 파일을 수정하고 commit 한 뒤 ```merge```를 수행한 경우 충돌이 발생한다.
+
+```bash
+#사전 작업
+(master) $ git touch .gitignore
+(master) $ git add .
+(master) $ git commit -m 'add .gitignore'
+```
+
+```bash
+#브랜치 생성 후 파일 수정
+(master) $ git checkout -b feature/conflict
+(feature/conflict) $ vi .gitignore #vi 로 수정
+(feature/conflict) $ git add .
+(feature/conflict) $ git commit -m 'sub branch에서 수정'
+(feature/conflict) $ git checkout master #master branch로 이동
+```
+
+```bash
+(master) $ vi .gitignore #vi 로 같은 파일 수정
+(master) $ git add .
+(master) $ git commit -m 'master branch에서 수정'
+
+#merge 시도 -> 충돌 발생
+(master) $ git merge feature/conflict
+Auto-merging .gitignore
+CONFLICT (content): Merge conflict in .gitignore
+Automatic merge failed; fix conflicts and then commit the result.
+
+##충돌 확인
+(master|MERGING) $ vi .gitignore
+#-------------------------------------
+<<<<<<< HEAD
+*.txt
+=======
+*.xlsx
+>>>>>>> feature/conflict
+#-------------------------------------
+
+# 다음과 같이 수정후 :wq
+#-------------------------------------
+*.txt
+*.xlsx
+#-------------------------------------
+
+(master|MERGING) $ git add .
+(master|MERGING) $ git commit
+# vim 창이 뜨고 메시지 수정 가능 -> :wq
+[master 91e2938] Merge branch 'feature/conflict'
+(master) $ git log --oneline --graph
+*   91e2938 (HEAD -> master) Merge branch 'feature/conflict'
+|\
+| * b335d81 (feature/conflict) sub branch에서 수정
+* | 1a56236 master branch에서 수정
+|/
+* 0784fa4 clean
+```
+
+<br>
+
+## 5. stash - 임시 공간
+
+> 작업 중에 작업이 완료되지 않아서 커밋을 하기 애매한 상황일 경우 임시적으로 현재의 변경사항을 저장할 수 있는 공간이 있다.
+
+1. 현재 작업 파일 stash로 이동
+
+   working directory 작업 이력을 `stash`로 이동시킨다
+
+   ```bash
+   $ git stash
+   ```
+
+2. working directory에 반영
+
+   다시 작업 이력을 불러온다.
+
+   ```bash
+   $ git stash pop #apply + drop
+   
+   ```
+
+   위 명령어는 아래의 두 개의 명령어를 실행시키는 것과 동일하다.
+
+   ```bash
+   $ git stash apply #불러오기
+   $ git stash drop #삭제하기
+   ```
+
+<br>
+
+<br>
+
+# IV. Reset vs Revert
+
+## 1. Reset
+
+> 특정 시점의 이력으로 되돌릴 수 있다.
+
+1.  특정 시점  + 변경사항을 staging area
+
+   ```bash
+   $ git reset {커밋해시코드}
+   ```
+
+2. 특정 시점 (기존의 변경사항을 남겨주지 않음!)
+
+   ```bash
+   $ git reset --hard {커밋해시코드}
+   ```
+
+<br>
+
+## 2. Revert
+
+> 특정 시점의 이력으로 돌아갔다는 커밋과 함께 되돌릴 수 있다.
+
+```bash
+$ git revert {커밋해시코드}
+```
+
+<br>
+
+## 3. reflog
+
+> `git rebase` 또는 `git reset` 등으로 커밋이 삭제될 수 있다. 하지만, git 이력은 보관되고 있는데 이러한 이력을 볼 수 있는 명령어가 `git reflog` 이다. `reflog` 이력을 통해 확인한 hashcode 들로 여러 복구 작업을 할 수 있다.
