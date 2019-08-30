@@ -9,7 +9,17 @@ Github 특강 - 2
 | 치트시트!        | http://ndpsoftware.com/git-cheatsheet.html                   |
 | .gitignore 헬퍼  | http://gitignore.io/                                         |
 
+<br>
 
+# 목차
+
+- Git
+- Github Pages
+- Branch
+
+<br>
+
+<br>
 
 # I. Git
 
@@ -38,7 +48,7 @@ user.email=mr.laughaway@gmail.com
 user.name=Mr-Laughaway
 ```
 
-
+<br>
 
 ## 2. git 활용 기초
 
@@ -101,11 +111,11 @@ user.name=Mr-Laughaway
    $ git status
    ```
 
-
+<br>
 
 ## 3. 원격저장소(remote) 활용하기
 
-### 1. 기초
+### i. 기초
 
 1. remote 저장소 등록
 
@@ -127,7 +137,7 @@ user.name=Mr-Laughaway
    $ git remote rm {저장소 이름}
    ```
 
-### 2. Push - Pull
+### ii. Push-Pull
 
 1. 원격 저장소로 보내기(push)
 
@@ -141,9 +151,9 @@ user.name=Mr-Laughaway
    $ git pull origin master
    ```
 
-### 3. Push-Pull 시나리오
+### iii. Push-Pull 시나리오
 
- Local A, Local B, Github 로 활용하는 경우 원격저장소 이력과 달라져서 충돌이 발생할 수 있다. 따라서, 항상 작업을 시작하기전에 pull을 받고, 작업을 완료한 이후에 push 를 진행하면 충돌 사항이 발생하지 않는다.
+> Local A, Local B, Github 로 활용하는 경우 원격저장소 이력과 달라져서 충돌이 발생할 수 있다. 따라서, 항상 작업을 시작하기전에 pull을 받고, 작업을 완료한 이후에 push 를 진행하면 충돌 사항이 발생하지 않는다.
 
 1. auto-merge
 
@@ -188,7 +198,7 @@ user.name=Mr-Laughaway
      >>>>>>>> aslkdfjasdaslkkdfks11283lsfskdf
      ```
 
-
+<br>
 
 ## 4. 되돌리기
 
@@ -235,17 +245,16 @@ user.name=Mr-Laughaway
    $ git commit -a -m '한번에 한다'
    ```
 
-   
 
-
+<br>
 
 # II. Github Pages
 
-### 1. Github에 page repository 생성
+## 1. Github에 page repository 생성
 
-​	github에서 new repository를 통하여 `{github id}.github.io` 라는 이름의 레포지토리를 생성한다.
+> github에서 new repository를 통하여 `{github id}.github.io` 라는 이름의 레포지토리를 생성한다.
 
-### 2. Bootstrap start templet의 RESUME 
+## 2. Bootstrap start templet의 RESUME 
 
 - 다운로드 [링크](https://startbootstrap.com/themes/resume/)
 
@@ -262,11 +271,87 @@ user.name=Mr-Laughaway
 
 - https://mr-laughaway.github.io/ 페이지 확인
 
-### 3. 기타
+## 3. 기타
 
 - 블로그 관리 도구
 
   [지킬](https://jekyllrb-ko.github.io/), [갯츠비](https://www.gatsbyjs.org/)
 
-- 
+
+<br>
+
+# III. Branch
+
+## 1. fast-forward
+
+> (master)가 그대로인 상황에서 다른 브랜치의 내용을 merge 하는 경우 ```fast-forward``` 방식으로 자동 merge 가 이루어 진다.
+
+```bash
+$ git branch {브랜치명} #브랜치 생성
+$ git checkout {브랜치명} #브랜치 이동
+$ git branch -d {브랜치명} #브랜치 삭제
+```
+
+```bash
+$ git checkout -b {브랜치명} #브랜치 생성 및 이동
+```
+
+```bash
+$ git merge {브랜치명} #브랜치명을 지금 브랜치로 병합
+(master) $ git merge feature/index #feathre/index 브랜치를 master로 병합
+```
+
+**시나리오**
+
+```bash
+(master) $ git branch -b feature/test
+(feature/test) $ touch test.html
+(feature/test) $ git add .
+(feature/test) $ git commit -m 'test commit'
+(feature/test) $ git checkou master
+(master) $ git merge feature/test
+Updating 8c1308b..7a7cb08
+Fast-forward
+ test.html | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 test.html
+(master) $ git branch -d feature/test #브랜치 삭제
+Deleted branch feature/test (was 7a7cb08).
+```
+
+## 2. merget commit recursive
+
+> (master)에서 변경이 발생하고 다른 브랜치에서 **다른** 파일 을 수정하여 변경이 발생한 상태에서 merge를 시도할 경우 `recursive` 전략으로 머지가 발생한다.
+
+**시나리오**
+
+```bash
+(master) $ git branch -b feature/signin #브랜치 생성과 동시에 이동(checkout)
+(feature/signin) $ touch singin.html
+(feature/signin) $ git add .
+(feature/signin) $ git commit -m 'Complete Signin'
+(feature/signin) $ git checkout master
+(master) $ #index.html 수정
+(master) $ git add .
+(master) $ git commit -m 'index.html 수정'
+# conflict가 있음을 알리는 창이 뜬다
+# 저장하고 빠져나오기
+
+(master) $ git merge feature/signin
+Merge made by the 'recursive' strategy.
+ siginin.html | 0
+ signin.css   | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 siginin.html
+ create mode 100644 signin.css
+ 
+(master) $ git log --oneline --graph
+*   8c1308b (HEAD -> master) Merge branch 'feature/signin'
+|\
+| * 242d53e (feature/signin) Complete signin
+* | 0d8b097 index.html 수정
+|/
+* 15e9860 Complete Index page
+* 08fe688 Init index.html
+```
 
