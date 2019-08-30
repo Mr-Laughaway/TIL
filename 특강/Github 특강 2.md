@@ -531,3 +531,30 @@ $ git revert {커밋해시코드}
 ## 3. reflog
 
 > `git rebase` 또는 `git reset` 등으로 커밋이 삭제될 수 있다. 하지만, git 이력은 보관되고 있는데 이러한 이력을 볼 수 있는 명령어가 `git reflog` 이다. `reflog` 이력을 통해 확인한 hashcode 들로 여러 복구 작업을 할 수 있다.
+
+<br>
+
+<br>
+
+# V. Github Flow
+
+![github-flow](special.assets/github-flow.png)
+
+>- `release` 브런치가 명확하지 않은 시스템에서 사용에 맞게 되어있다.
+>- 여기에는 GitHub의 서비스 특성상. 릴리즈라는 개념이 없는 서비스를 진행하고 있어서 그런 것으로 보이며, 웹 서비스들이 릴리즈라는 개념이 없이지고 있으니 사용하기 편할 것으로 보인다.
+>- `hotfix`와 가장 작은 기능을 구분하지 않는다. 어차피 둘 다 개발자가 수정해야 되는 일중에 하나이다. 단지 우선순위가 어디가 높냐라는 단계이다.
+
+pull request
+
+fork
+
+
+
+
+
+
+
+
+
+
+
