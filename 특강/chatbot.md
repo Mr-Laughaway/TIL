@@ -241,4 +241,9 @@ VALUE: 어쩌구어쩌구어쩌구어쩌구어쩌구키
 
 overview > Configure Add-ons > **Heroku Scheduler** 설치
 
-Heroku Scheduler > Add Job >
+Heroku Scheduler > Add Job > **설정**
+
+
+
+텔레그렘 확인
+
