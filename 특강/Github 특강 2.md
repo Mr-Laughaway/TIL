@@ -42,7 +42,7 @@ Github 특강 - 2
 
 # I. Git
 
-![github log](Github 특강 2.assets/what-is-github-1-1.png)
+![github log](special.assets/what-is-github-1-1.png)
 
 > Git 은 분산버전관리시스템(DVCS)이다.
 >
