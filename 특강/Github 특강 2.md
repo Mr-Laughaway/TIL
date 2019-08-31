@@ -703,7 +703,7 @@ $ git revert {커밋해시코드}
 3. 메시지 보내보기 (chat_id는 update에서 확인한 것을 사용)
 
    ```
-   https://api.telegram.org/bot939234540:AAF0wj3-H_eicf5YEuTu8THaXr5rUV1uELg/sendMessage?chat_id=936561044&text=안녕
+   https://api.telegram.org/bot********************************************/sendMessage?chat_id=936561044&text=안녕
    ```
 
 
