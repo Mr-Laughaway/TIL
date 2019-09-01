@@ -38,7 +38,7 @@
     - [reflog](#143-reflog)
   - [Github Flow](#15-github-flow)
 - [Python 입문](#2-Python-입문)
-  - [Papago NMT 사용해보기](21-papago-nmt-사용해보기)
+  - [Papago NMT 사용해보기](#21-papago-nmt-사용해보기)
   - [텔레그램 봇 만들기](#22-텔레그램-봇-만들기)
   - [HEROKU에 배포](#23-heroku에-배포)
 
