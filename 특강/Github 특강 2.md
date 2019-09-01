@@ -1,4 +1,4 @@
-Github 특강 - 2
+**Github 특강 - 2**
 
 [bit.do/openb](http://bit.do/openb)
 
@@ -13,29 +13,34 @@ Github 특강 - 2
 
 # 목차
 
-- [Git](#i-git)
-  - [git 설정](#1-git-설정)
-  - [git 활용 기초](#2-git-활용-기초)
-  - [원격저장소(remote) 활용하기](#3-원격저장소remote-활용하기)
-    - [기초](#i-기초)
-    - [push-pull](#ii-push-pull)
-    - [push-pull 시나리오](#iii-push-pull-시나리오)
-  - [되돌리기](#4-되돌리기)
-- [Github Pages](#ii-github-pages)
-  - [Github에 page repository 생성](#1-github에-page-repository-생성)
-  - [Bootstrap start templet의 RESUME](#2-bootstrap-start-templet의-resume)
-  - [기타](#3-기타)
-- [Branch](#iii-branch)
-  - [Branch 기본](#1-branch-기본)
-  - [fast-forward](#2-fast-forward-strategy)
-  - [merge commit recursive](#3-recursive-strategy)
-  - [충돌 및 직접해결](#4-충돌-및-직접해결)
-  - [stash - 임시 공간](#5-stash---임시-공간)
-- [Reset vs. Revert](#iv-reset-vs-revert)
-  - [Reset](#1-reset)
-  - [Revert](#2-revert)
-  - [reflog](#3-reflog)
-- [Github Flow](#v-github-flow)
+- [Git](#1-git)
+  - [기본 사용법](#11-기본-사용법)
+    - [git 설정](#111-git-설정)
+    - [git 활용 기초](#112-git-활용-기초)
+    - [원격저장소(remote) 활용하기](#113-원격저장소remote-활용하기)
+      - [저장소 등록](#1-저장소-등록)
+      - [push-pull](#2-push-pull)
+      - [push-pull 시나리오](#3-push-pull-시나리오)
+    - [되돌리기](#114-되돌리기)
+  - [Github Pages](#12-github-pages)
+    - [Github에 page repository 생성](#121-github에-page-repository-생성)
+    - [Bootstrap start templet의 RESUME](#122-bootstrap-start-templet의-resume)
+    - [기타](#123-기타)
+  - [Branch](#13-branch)
+    - [Branch 기본](#131-branch-기본)
+    - [fast-forward](#132-fast-forward-strategy)
+    - [merge commit recursive](#133-recursive-strategy)
+    - [충돌 및 직접해결](#134-충돌-및-직접해결)
+    - [stash - 임시 공간](#135-stash---임시-공간)
+  - [Reset vs. Revert](#14-reset-vs-revert)
+    - [Reset](#141-reset)
+    - [Revert](#142-revert)
+    - [reflog](#143-reflog)
+  - [Github Flow](#15-github-flow)
+- [Python 입문](#2-Python-입문)
+  - [Papago NMT 사용해보기](21-papago-nmt-사용해보기)
+  - [텔레그램 봇 만들기](#22-텔레그램-봇-만들기)
+  - [HEROKU에 배포](#23-heroku에-배포)
 
 <br>
 
@@ -57,7 +62,7 @@ Github 특강 - 2
 
 ## 1.1 기본 사용법
 
-### 1.1.1 git 설정
+### 1.1.1. git 설정
 
 git 커밋을 하기 위해서는 초기에 작성자(author) 설정을 반드시 하여야 한다.
 
@@ -76,7 +81,7 @@ user.name=Mr-Laughaway
 
 <br>
 
-### 1.1.2 git 활용 기초
+### 1.1.2. git 활용 기초
 
 1. 로컬 git 저장소 설정
 
@@ -139,7 +144,7 @@ user.name=Mr-Laughaway
 
 <br>
 
-###  1.1.3 원격저장소(remote) 활용하기
+###  1.1.3. 원격저장소(remote) 활용하기
 
 #### (1) 저장소 등록
 
@@ -572,20 +577,20 @@ $ git revert {커밋해시코드}
 
 4. 코딩
 
-   .env
+   *.env*
 
    ```properties
    NAVER_CLIENT_ID="***************************"
    NAVER_CLIENT_SECRET="***********"
    ```
 
-   .gitignore
+   *.gitignore*
 
    ```
    .env
    ```
 
-   papago.py
+   *papago.py*
 
    ```python
    import requests
@@ -651,147 +656,193 @@ $ git revert {커밋해시코드}
 
 2. Web browser에서 아래 API 들이 작동하는지 확인
 
-   /getMe
+   - ```https://api.telegram.org/bot******************/getMe```
 
-   ```
-   https://api.telegram.org/bot******************/getMe
-   ```
-
-   /getUpdates
-
-   ```
-   https://api.telegram.org/bot******************/getUpdates
-   ```
-
-   ```json
-   {
-     "ok": true,
-     "result": [
-       {
-         "update_id": 246240855,
-         "message": {
-           "message_id": 1,
-           "from": {
-             "id": 936561044,
-             "is_bot": false,
-             "first_name": "Jaehyun",
-             "last_name": "Kim",
-             "language_code": "ko"
-           },
-           "chat": {
-             "id": 936561044,
-             "first_name": "Jaehyun",
-             "last_name": "Kim",
-             "type": "private"
-           },
-           "date": 1567147408,
-           "text": "/start",
-           "entities": [
-             {
-               "offset": 0,
-               "length": 6,
-               "type": "bot_command"
-             }
-           ]
-         }
-       },
-   ...
-   ```
-
-   ***id : 936561044*** 확인해 놓는다.
-
-3. 메시지 보내보기 (chat_id는 update에서 확인한 것을 사용)
+   - ```https://api.telegram.org/bot******************/getUpdates```
+   
+     ```json
+  {
+       "ok": true,
+    "result": [
+         {
+           "update_id": 246240855,
+           "message": {
+          "message_id": 1,
+             "from": {
+               "id": 936561044,
+               "is_bot": false,
+               "first_name": "Jaehyun",
+               "last_name": "Kim",
+               "language_code": "ko"
+             },
+             "chat": {
+               "id": 936561044,
+               "first_name": "Jaehyun",
+               "last_name": "Kim",
+               "type": "private"
+             },
+             "date": 1567147408,
+             "text": "/start",
+             "entities": [
+               {
+                 "offset": 0,
+                 "length": 6,
+                 "type": "bot_command"
+               }
+             ]
+           }
+         },
+     ...
+     ```
+   
+     ***id : 936561044*** 확인해 놓는다.
+   
+3. 메시지 보내 보기 (*chat_id는 update에서 확인한 것을 사용*)
 
    ```
    https://api.telegram.org/bot********************************************/sendMessage?chat_id=936561044&text=안녕
    ```
 
-
+<br>
 
 ## 2.3. HEROKU에 배포
 
-heroku 가입
+1. [heroku](https://www.heroku.com/) 가입
 
-heroku cli 다운로드 -> 설치
+2. [heroku cli](https://devcenter.heroku.com/articles/heroku-cli) 다운로드 -> 설치
+
+3. 프로젝트 폴더 및 설정 파일들 작성
+
+   *Procfile*
+
+   ```bash
+   #아무것도 안 씀...
+   ```
+
+   *runtime.txt* (내 환경이 아니라 heroku에 지시하는 설정)
+
+   ```
+   python-3.7.2
+   ```
+
+4. 기타 설정 저장*(optional)*
+
+   ```bash
+   # 현재 라이브러리를  저장
+   pip freeze > requirements.txt
+   # 다음에 일관 인스톨 하려면?
+   pip install -l requirements.txt
+   ```
+
+   *requirements.txt*
+
+   ```properties
+   astroid==2.2.5
+   certifi==2019.6.16
+   chardet==3.0.4
+   colorama==0.4.1
+   idna==2.8
+   isort==4.3.21
+   lazy-object-proxy==1.4.2
+   mccabe==0.6.1
+   pylint==2.3.1
+   python-decouple==3.1
+   requests==2.22.0
+   six==1.12.0
+   typed-ast==1.4.0
+   urllib3==1.25.3
+   wrapt==1.11.2
+   
+   ```
+
+5. 소스코드 작성*(로또 번호 생성기)*
+
+   *.env*
+
+   ```properties
+   TELEGRAM_TOKEN=********************************
+   ```
+
+   *lotto-bot.py*
+
+   ```python
+   import requests
+   from decouple import config
+   
+   # 0
+   import random
+   numbers = range(1, 46) # 1 이상 46 미만
+   text = sorted(random.sample(numbers, 6))
+   
+   # 1. 토큰 값 설정
+   token = config('TELEGRAM_TOKEN')
+   
+   # 2. url 설정
+   # chat_id, text 요청 변수 설정!
+   # string interpolation - 문자열 내에 변수 값 삽입(f-string)
+   base_url = f'https://api.telegram.org/bot{token}'
+   chat_id = '936561044'
+   #text = '안녕'
+   url = f'{base_url}/sendMessage?chat_id={chat_id}&text={text}'
+   
+   # 3. 메시지보내기
+   requests.get(url)
+   ```
+
+6. Heroku에 `push`
+
+   작업 디렉토리에서 정식 *git bash* 를 연다(*vscode*에서 안 되는 듯?)
+
+   ```bash
+   $ heroku login
+   heroku: Press any key to open up the browser to login or q to exit:
+   Opening browser to https://cli-auth.heroku.com/auth/browser/15c343c8-81e0-4547-aef3-028de9c53a5d
+   heroku: Waiting for login...
+   Logging in... done
+   Logged in as mr.laughaway@gmail.com
+   ^C▒ϰ▒ ▒۾▒▒▒ ▒▒▒▒▒ðڽ▒▒ϱ▒ (Y/N)? y
+   
+   $ heroku create fromlyra0xff-bot #fromlyra0xff-bot은 프로젝트명이다 
+   Creating fromlyra0xff-bot... done
+   https://fromlyra0xff-bot.herokuapp.com/ | https://git.heroku.com/fromlyra0xff-bot.git
+   
+   $ git push heroku master
+   remote: Verifying deploy... done.
+   To https://git.heroku.com/fromlyra0xff-bot.git
+    * [new branch]      master -> master
+   
+   ```
+
+7. [heroku site](https://dashboard.heroku.com/apps/fromlyra0xff-bot)에서 환경설정
+
+   {project} > settings > Config Vars > Reveal ...
+
+   ```
+   KEY : TELEGRAM_TOKEN
+   VALUE: 어쩌구어쩌구어쩌구어쩌구어쩌구키
+   ```
+
+   overview > Configure Add-ons > **Heroku Scheduler** 설치
+
+   ```
+   Heroku Scheduler > Add Job > 스케쥴 설정
+   ```
+
+8.  기다렸다가 텔레그렘 확인
 
 
 
-Procfile
-
-```
-
-```
 
 
 
-runtime.txt
-
-```
-python-3.7.3
-```
 
 
 
-```bash
-# 현재 라이브러리를  저장
-pip freeze > requirements.txt
-# 다음에 일관 인스톨 하려면?
-pip install -l requirements.txt
-
-```
 
 
 
-```bash
-git add .
-git commit -m 'heroku setting'
-```
 
 
-
-작업 디렉토리에서 정식 git bash 를 연다(vscode 에서 안 되는 듯?)
-
-```bash
-$ heroku login
-heroku: Press any key to open up the browser to login or q to exit:
-Opening browser to https://cli-auth.heroku.com/auth/browser/15c343c8-81e0-4547-aef3-028de9c53a5d
-heroku: Waiting for login...
-Logging in... done
-Logged in as mr.laughaway@gmail.com
-^C▒ϰ▒ ▒۾▒▒▒ ▒▒▒▒▒ðڽ▒▒ϱ▒ (Y/N)? y
-
-$ heroku create fromlyra0xff-bot #fromlyra0xff-bot은 프로젝트명이다 
-Creating fromlyra0xff-bot... done
-https://fromlyra0xff-bot.herokuapp.com/ | https://git.heroku.com/fromlyra0xff-bot.git
-
-$ git push heroku master
-remote: Verifying deploy... done.
-To https://git.heroku.com/fromlyra0xff-bot.git
- * [new branch]      master -> master
-
-```
-
-
-
-heroku site에서 환경설정
-
-
-
-{project} > settings > Config Vars > Reveal ...
-
-KEY : TELEGRAM_TOKEN
-
-VALUE: 어쩌구어쩌구어쩌구어쩌구어쩌구키
-
-
-
-overview > Configure Add-ons > **Heroku Scheduler** 설치
-
-Heroku Scheduler > Add Job > **설정**
-
-
-
-텔레그렘 확인
 
 
 
