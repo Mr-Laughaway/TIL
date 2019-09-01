@@ -1,3 +1,5 @@
+<h1>Github 특강</h1>
+
 # 목차
 
 - [Github 특강](#github-특강)
@@ -63,7 +65,7 @@ class Person:
 
 <br>
 
-## IV.  Github First!!!
+## IV. Github First!!!
 
 Github에 가입하고 설치하고 이 파일을 올려보자!
 
