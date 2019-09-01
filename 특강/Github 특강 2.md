@@ -661,7 +661,7 @@ $ git revert {커밋해시코드}
    - ```https://api.telegram.org/bot******************/getUpdates```
    
      ***id : 936561044*** 확인해 놓는다.
-
+   
 3. 메시지 보내 보기 (*chat_id는 update에서 확인한 것을 사용*)
 
    ```
