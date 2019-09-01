@@ -109,7 +109,7 @@ user.name=Mr-Laughaway
    - ```add``` 명령어를 통해서 `Working Directory`에서 `INDEX(staging area)`로 특정 파일들을 이동시킨다.
    - 커밋할 목록을 쌓는 것이다.
 
-3.  commit
+3. commit
 
    ```bash
    $ git commit -m '커밋메시지'
