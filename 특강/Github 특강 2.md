@@ -198,16 +198,16 @@ user.name=Mr-Laughaway
    - 다른 이력(커밋)으로 동일한 파일이 수정되는 경우 merge conflict 발생
    - 직접 충돌 파일을 해결해야 한다.
 
-   ```
-   1. Local A에서 작업 후 Push
-   2. Local B에서 작업 시 pull을 받지 않음
-   3. Local B에서 동일 파일 작업 후 commit -> push
-   4. 오류 발생(~~git pull~~)
-   5. Local B에서 git pull
-   6. 충돌 발생(merge conflict)
-   7. 직접 오류 수정 및 add, commit
-   8. Local B에서 git push
-   ```
+     ```
+     1. Local A에서 작업 후 Push
+     2. Local B에서 작업 시 pull을 받지 않음
+     3. Local B에서 동일 파일 작업 후 commit -> push
+     4. 오류 발생(~~git pull~~)
+     5. Local B에서 git pull
+     6. 충돌 발생(merge conflict)
+     7. 직접 오류 수정 및 add, commit
+     8. Local B에서 git push
+     ```
 
    - ```git status``` 명령어를 통해 어느 파일에서 충돌이 발생하였는지 확인 가능
 
