@@ -660,44 +660,10 @@ $ git revert {커밋해시코드}
 
    - ```https://api.telegram.org/bot******************/getUpdates```
    
-     ```
-  {
-       "ok": true,
-    "result": [
-         {
-           "update_id": 246240855,
-           "message": {
-          "message_id": 1,
-             "from": {
-               "id": 936561044,
-               "is_bot": false,
-               "first_name": "Jaehyun",
-               "last_name": "Kim",
-               "language_code": "ko"
-             },
-             "chat": {
-               "id": 936561044,
-               "first_name": "Jaehyun",
-               "last_name": "Kim",
-               "type": "private"
-             },
-             "date": 1567147408,
-             "text": "/start",
-             "entities": [
-               {
-                 "offset": 0,
-                 "length": 6,
-                 "type": "bot_command"
-               }
-             ]
-           }
-         },
-     ```
-   
      ***id : 936561044*** 확인해 놓는다.
-   
-     메시지 보내 보기 (*chat_id는 update에서 확인한 것을 사용*)
-   
+
+3. 메시지 보내 보기 (*chat_id는 update에서 확인한 것을 사용*)
+
    ```
    https://api.telegram.org/bot********************************************/sendMessage?chat_id=936561044&text=안녕
    ```
