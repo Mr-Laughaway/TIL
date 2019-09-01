@@ -1,13 +1,4 @@
-**Github 특강 - 2**
-
-[bit.do/openb](http://bit.do/openb)
-
-| Github 정보      |                                                              |
-| ---------------- | ------------------------------------------------------------ |
-| 기술 면접 가이드 | https://github.com/JaeYeopHan/Interview_Question_for_Beginner |
-| 채용 관련 가이드 | https://github.com/jojoldu/junior-recruit-scheduler          |
-| 치트시트!        | http://ndpsoftware.com/git-cheatsheet.html                   |
-| .gitignore 헬퍼  | http://gitignore.io/                                         |
+<h1>Github 특강 - 2</h1>
 
 <br>
 
@@ -37,6 +28,7 @@
     - [Revert](#142-revert)
     - [reflog](#143-reflog)
   - [Github Flow](#15-github-flow)
+  - [용용한 github 관련 페이지](#16-유용한-github-관련-페이지)
 - [Python 입문](#2-Python-입문)
   - [Papago NMT 사용해보기](#21-papago-nmt-사용해보기)
   - [텔레그램 봇 만들기](#22-텔레그램-봇-만들기)
@@ -555,6 +547,21 @@ $ git revert {커밋해시코드}
 >여기에는 GitHub의 서비스 특성상. 릴리즈라는 개념이 없는 서비스를 진행하고 있어서 그런 것으로 보이며, 웹 서비스들이 릴리즈라는 개념이 없이지고 있으니 사용하기 편할 것으로 보인다.
 >
 >`hotfix`와 가장 작은 기능을 구분하지 않는다. 어차피 둘 다 개발자가 수정해야 되는 일중에 하나이다. 단지 우선순위가 어디가 높냐라는 단계이다.
+
+<br>
+
+<br>
+
+## 1.6. 유용한 github 관련 페이지 
+
+| Github 정보      |                                                              |
+| ---------------- | ------------------------------------------------------------ |
+| 기술 면접 가이드 | https://github.com/JaeYeopHan/Interview_Question_for_Beginner |
+| 채용 관련 가이드 | https://github.com/jojoldu/junior-recruit-scheduler          |
+| 치트시트!        | http://ndpsoftware.com/git-cheatsheet.html                   |
+| .gitignore 헬퍼  | http://gitignore.io/                                         |
+
+<br>
 
 <br>
 
