@@ -3024,3 +3024,14 @@ Spark에서 데이터를 처리하기 위해 추상화된 모델. 복구 가능�
 - collect
 - map, flatMap
 - mkString(["구분자"])
+
+<br>
+
+<br>
+
+<br>
+
+# 복습 - 2
+
+## dd
+
