@@ -1,4 +1,4 @@
-# Spark
+Spark
 
 ![Image result for spark](spark.assets/1200px-Apache_Spark_Logo.svg.png)
 
@@ -1982,7 +1982,7 @@ odd, [1, 3, 5, 7, 9]
 
 <br>
 
-### 3.2.10.cogroup
+### 3.2.10. cogroup
 
 RDD의 구성요소가 키와 값 쌍으로 이뤄진 경우에 사용 가능한 메서드. RDD에서 같은 키를 갖는 값 요소를 찾아서 키와 그 키에 속하는 요소으 ㅣ시퀀스로 구성된 튜플을 만들고, 그 튜플들로 구성된 새로운 RDD를 생성한다.
 
@@ -2619,9 +2619,9 @@ println(result.collect.mkString(", "))
 
 <br>
 
-## 4. Spark SQL
+# 4. Spark SQL
 
-- RDD로 부터 데이터 프레임 만들고 쿼리 날리고 내장 함수 써보기
+- RDD 로부터 데이터 프레임 만들고 쿼리 날리고 내장 함수 써보기
 
   ```scala
   import org.apache.spark.sql.hive.HiveContext
@@ -2814,7 +2814,7 @@ println(result.collect.mkString(", "))
   //-------------------------------------------
   //집약처리
   val avgKcalDF = dessertDF.agg(avg($"kcal") as "avg_of_kcal")
-  scala> avgKcalDF.show
+  avgKcalDF.show
   +-----------------+
   |      avg_of_kcal|
   +-----------------+
@@ -2875,8 +2875,8 @@ println(result.collect.mkString(", "))
   
   
   val amntPerSlipDF = amntPerMenuPerSlipDF.groupBy($"sId").agg(
-       |   sum($"amount_per_menu_per_slip") as "amount_per_slip").select(
-       |     $"sId", $"amount_per_slip")
+      	sum($"amount_per_menu_per_slip") as "amount_per_slip"
+  	).select($"sId", $"amount_per_slip")
   amntPerSlipDF.show
   +-----+---------------+
   |  sId|amount_per_slip|
@@ -2905,6 +2905,9 @@ println(result.collect.mkString(", "))
   // 구조화된 각종 데이터셋 다루기
   // 파일 형식의 구조화된 데이터셋 다루기
   val dfWriter = dessertDF.write
+  //아래에서 다룰 SaveMode 미리 해보기
+  //import org.apache.spark.sql.SaveMode
+  //dfWriter.format("parquet").mode(SaveMode.Overwrite).save("/data/spark/dessert_parquet")
   dfWriter.format("parquet").save("/data/spark/dessert_parquet")
   
   val dfReader = sqlContext.read
@@ -2919,7 +2922,7 @@ println(result.collect.mkString(", "))
   +------+-------------+-----+----+
   only showing top 3 rows
   
-  
+  )
   dessertDF.write.format("parquet").saveAsTable("dessert_tbl_parquet")
   sqlContext.read.format("parquet").table("dessert_tbl_parquet").show(3)
   +------+-------------+-----+----+
@@ -2941,13 +2944,343 @@ println(result.collect.mkString(", "))
   |   D-2|  딸기 파르페| 5200| 320|
   +------+-------------+-----+----+
   
+  
+  //--------------------------
+  //세이브 모드
+  //출력 장소에 지정한 데이터셋이 이미 존재할 경우 어떻게 처리할지를 결정
+  dessertDF.write.save("/data/spark/dessert_json")
+  import org.apache.spark.sql.SaveMode
+  dessertDF.write.format("json").mode(SaveMode.Overwrite).save("/data/spark/dessert_json")
+  
+  
+  //---------------------------
+  //명시적으로 스키마 정보 부여하기
+  import java.math.BigDecimal
+  case class DecimalTypeContainer(data: BigDecimal)
+  val bdContainerDF = sc.parallelize(
+      List(new BigDecimal("12345.6789999999999"))
+  ).map(data => DecimalTypeContainer(data)).toDF    
+  
+  bdContainerDF.printSchema
+  root
+   |-- data: decimal(38,18) (nullable = true)
+  
+  bdContainerDF.show(false)
+  +-------------------+
+  |data               |
+  +-------------------+
+  |12345.6789999999999|
+  +-------------------+
+  
+  
+  bdContainerDF.write.format("orc").save("/data/spark/bdContainerORC")
+  val bdContainerORCDF = sqlContext.read.format("orc").load("/data/spark/bdContainerORC")
+  bdContainerORCDF.printSchema
+  root
+   |-- data: decimal(38,18) (nullable = true)
+  
+  bdContainerORCDF.show(false)
+  +------------------------+
+  |data                    |
+  +------------------------+
+  |12345.678999999999900000|
+  +------------------------+
+  
+  
+  //그런데 json은 자료형이 보존되지 않는다
+  //JSON 포맷용 프로바이더는 파일 내용을 근거로 스키마 정보를 자동보여 하는데 이떼 실수형 데이터는 기본으로 DoubleType으로 해석되어 형변환 시 오차가 발생하는 것이다.
+  dbContainerDF.write.format("json").save("/data/spark/bdContainerJSON")
+  val bdContainerJSONDF = sqlContext.read.format("json").load("/data/spark/bdContainerJSON")
+  bdContainerJSONDF.printSchema
+  
+  root
+   |-- data: double (nullable = true)
+  
+  bdContainerJSONDF.show(false)
+  +---------+
+  |data     |
+  +---------+
+  |12345.679|
+  +---------+
+  
+  
+  //스키마 정보를 정의하려면 StructField, StructType 등 스파크 SLQ의 각 자료형에 접근해야한다.
+  //org.spache.spark.sql.types.DataTypes._ 를 임포트하면 됨
+  import org.apache.spark.sql.types.DataTypes._
+  val schema = createStructType(Array(
+  	createStructField("data", createDecimalType(38, 18), true)
+  ))
+  val bdContainerJSONDF = sqlContext.read.schema(schema).format("json").load("/data/spark/bdContainerJSON")
+  
+  bdContainerJSONDF.printSchema
+  root
+   |-- data: decimal(38,18) (nullable = true)
+  
+  bdContainerJSONDF.show(false)
+  +------------------------+
+  |data                    |
+  +------------------------+
+  |12345.678999999999900000|
+  +------------------------+
+  
+  
+  
+  //---------------------------------------
+  //파티셔닝 180p
+  //DataFrame이 나타내는 데이터셋을 파티셔닝해서 출력할 수 있다. 파티셔닝된 데이터셋을 읽어들일 경우에는 WHERE절이나 where메서드의 필터링 조건식에 파티션을 지정함으로써 해당 파티션 이외의 데이터를 읽어들이지 않게 할 수 있다.
+  import org.apache.spark.sql.types.DataTypes._
+  val priceRangeDessertDF = dessertDF.select(
+  	((($"price" / 1000) cast IntegerType) * 1000) as "price_range",
+      dessertDF("*")
+  )
+  priceRangeDessertDF.write.format("parquet").
+  	save("/data/spark/price_range_dessert_parquet_non_partitioned")
+  priceRangeDessertDF.write.format("parquet").partitionBy("price_range").
+  	save("/data/spark/price_range_dessert_parquet_partitioned")
+  
+  val nonPartitionedDessertDF = sqlContext.read.format("parquet").
+  	load("/data/spark/price_range_dessert_parquet_non_partitioned")
+  nonPartitionedDessertDF.where($"price_range" >= 5000).explain
+  == Physical Plan ==
+  *(1) Project [price_range#137, menuId#138, name#139, price#140, kcal#141]
+  ...
+  
+  val partitionedDessertDF = sqlContext.read.format("parquet").
+  	load("/data/spark/price_range_dessert_parquet_partitioned")
+  partitionedDessertDF.where($"price_range" >= 5000).explain
+  == Physical Plan ==
+  *(1) FileScan parquet [menuId#148,name#149,price#150,kcal#151,price_range#152]
+  ...
+  
+  
   ```
 
 <br>
 
+- 동적 쿼리
+
+  ```sql
+  # 설정파일에 설정 해 줘야 함
+  # 잘 안될땐 spark 홈에서?
+  $ spark-sql
+  
+  CREATE TABLE dessert_tbl_json USING org.apache.spark.sql.json OPTIONS (path "/data/spark/dessert_json"));
+  
+  SELECT name, price FROM dessert_tbl_json LIMIT 3;
+  초콜릿 파르페   4900
+  푸딩 파르페     5300
+  딸기 파르페     5200
+  Time taken: 1.047 seconds, Fetched 3 row(s)
+  
+  
+  
+  ```
+
+- JDBC를 통해 스파크 SQL 이용하기
+
+  ```bash
+  # 넘어감
+  ```
+
+- Spark SQL 튜닝
+
+  - cache
+
+    ```
+    //DataFrame 캐시
+    df.cache()
+    
+    //테이블 캐시
+    sqlContext.cacheTable("tbl")
+    
+    ```
+
+    
+
+  - df
+
+  - df
+
+  - df
+
+  - df
+
+  - 
+
+## 4.1. Spark SQL API
+
+### 4.1.1. RDD로부터 DataFrame 생성하기
+
+```scala
+import org.apache.spark.sql.hive.HiveContext
+val sqlContext = new HiveContext(sc)
+import sqlContext.implicits._
+
+case class Dessert(menuId: String, name: String, price: Int, kcal: Int)
+
+val dessertRDD = sc.textFile("/data/spark/dessert-menu.csv")
+val dessertDF = dessertRDD.map { record =>
+  val splitRecord = record.split(",")
+  val menuId = splitRecord(0)
+  val name = splitRecord(1)
+  val price = splitRecord(2).toInt
+  val kcal = splitRecord(3).toInt
+  Dessert(menuId, name, price, kcal)
+}.toDF
+
+dessertDF.printSchema
+root
+ |-- menuId: string (nullable = true)
+ |-- name: string (nullable = true)
+ |-- price: integer (nullable = false)
+ |-- kcal: integer (nullable = false)
+```
+
+<br>
+
+### 4.1.2. DataFrame으로부터 RDD 생성하기
+
+### 4.1.3. where
+
+### 4.1.4. orderBy
+
+### 4.1.5. agg
+
+### 4.1.6. groupBy
+
+### 4.1.7. 
+
 <br>
 
 <br>
+
+<br>
+
+# 5. Spark Streaming
+
+- 넷켓(Netcat)
+
+  >넷켓(Netcat)dms TCP나 UDP 프로토콜을 사용하는 네트워크 연결에서 데이터를 읽고 쓴느 간단한 유틸리티 프로그램이다.
+  >
+  >nc는 network connection에 읽거나 쓴다.
+  >
+  >Network connection 에서 raw-data read, write를 할수 있는 유틸리트 프로그램으로 원하는 프토로 원하는 데이터를 주고 받을 수 있는 특징때문에 해킹에도 널리 이용되며, 컴퓨터 포렌식에 있어서 라이브시스템의 데이터를 손상없이 가져오기위해서도 사용될 수 있다.
+
+  
+
+  - 문자 전송
+
+    ```bash
+    master $ nc -lk 9999
+    
+    slave1 $ nc 192.168.21.131 9999
+    야 인마
+    
+    #결과
+    master $ nc -lk 9999
+    야 인마
+    ```
+
+  
+
+  - 파일 전송
+
+    ```bash
+    #master에서
+    master $ nc -l 9999 > ./listen.txt
+     
+    #slave1에서
+    slave1 $ nc 192.168.21.131 9999 < ./input.txt
+     
+    #master에서 결과 확인
+    master $ nc -l 9999 > ./listen.txt
+    [1]+  Killed                  nc -lk 9999
+    master $ cat listen.txt
+    input.txt 파일의 내용이다
+    잘 보내지나?
+    갔냐?
+    잘 받았냐고!!
+    ```
+
+- Spark에서 해보기
+
+  ```scala
+  import org.apache.spark.{SparkContext, SparkConf}
+  import org.apache.spark.streaming.{Seconds, StreamingContext}
+  import org.apache.spark.storage.StorageLevel
+  import org.apache.log4j.{Level, Logger}
+  
+  Logger.getRootLogger.setLevel(Level.WARN)
+  
+  val ssc = new StreamingContext(sc, Seconds(10))
+  
+  val lines = ssc.socketTextStream("localhost", 9999, StorageLevel.MEMORY_AND_DISK_SER)
+  
+  val words = lines.flatMap(_.split(" "))
+  
+  val pairs = words.map((_, 1))
+  val wordCounts = pairs.reduceByKey(_ + _)
+  
+  wordCounts.print()
+  
+  ssc.start()
+  ssc.awaitTermination()
+  
+  ```
+
+  
+
+- 같은 것 file streaming
+
+  ```scala
+  //hadoop fs -mkdir /data/simple_dir
+  
+  import org.apache.spark.{SparkContext, SparkConf}
+  import org.apache.spark.streaming.{Seconds, StreamingContext}
+  import org.apache.spark.storage.StorageLevel
+  import org.apache.log4j.{Level, Logger}
+  
+  Logger.getRootLogger.setLevel(Level.WARN)
+  
+  val ssc = new StreamingContext(sc, Seconds(10))
+  
+  val lines = ssc.textFileStream("/data/simple_dir/")
+  
+  val words = lines.flatMap(_.split(" "))
+  
+  val pairs = words.map((_, 1))
+  val wordCounts = pairs.reduceByKey(_ + _)
+  
+  wordCounts.print()
+  
+  ssc.start()
+  ssc.awaitTermination()
+  
+  // hadoop fs -put simple-word.txt /data/simple_dir/
+  
+  ```
+
+  
+
+- 센서 데이터 스트림처리
+
+  ```scala
+  //제공되는 샘플데이터가 너무 오래되어 repo가 존재하지 않아 dependency를 만족하지 못하여 컴파일이 안 됨... 패스...
+  
+  ```
+
+  
+
+# 6. Spark MLlib
+
+
+
+
+
+- ㅇㄹ
+- 
+
+
 
 # 복습 - 1
 
