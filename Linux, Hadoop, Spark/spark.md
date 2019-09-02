@@ -3273,12 +3273,164 @@ root
 
 # 6. Spark MLlib
 
+- k-means 
+
+  ```scala
+  import org.apache.spark.mllib.clustering.KMeans
+  import org.apache.spark.mllib.linalg.Vectors
+  val sparkHome = sys.env("SPARK_HOME")
+  val data = sc.textFile (
+      "file://" + sparkHome + "/data/mllib/kmeans_data.txt"
+  )
+  val parsedData = data.map{ s =>
+      Vectors.dense(
+          s.split(' ').map(_.toDouble)
+      )
+  }.cache()
+  val numClusters = 2
+  val numIterations = 20
+  val clusters = KMeans.train(parsedData, numClusters, numIterations)
+  clusters.k
+  clusters.clusterCenters
+  
+  val vec1 = Vectors.dense(0.3, 0.3, 0.3)
+  clusters.predict(vec1)
+  res2: Int = 1
+  
+  val vec2 = Vectors.dense(8.0, 8.0, 8.0)
+  clusters.predict(vec2)
+  res2: Int = 0
+  
+  parsedData.foreach(vec =>
+  	println(vec + " => " + clusters.predict(vec))
+  )
+  [0.0,0.0,0.0] => 1
+  [0.1,0.1,0.1] => 1
+  [0.2,0.2,0.2] => 1
+  [9.0,9.0,9.0] => 0
+  [9.1,9.1,9.1] => 0
+  [9.2,9.2,9.2] => 0
+  
+  //저장
+  val predictedLabels = parsedData.map(vector => clusters.predict(vector))
+  predictedLabels.saveAsTextFile("output")
+  
+  //계산된 모델을 저장
+  clusters.save(sc, "kmenas_model")
+  
+  //모델 metadata 보기
+   $ hadoop fs -cat /user/hadoop/kmeans_model/metadata/part-00000
+  {"class":"org.apache.spark.mllib.clustering.KMeansModel","version":"2.0","k":3,"distanceMeasure":"euclidean","trainingCost":0.07500000000004324}
+  ```
+
+  ※ K 값을 몇 개로 하는게 좋을까?
+
+  ```scala
+  val WSSSE = clusters.computeCost(parsedData)
+  println("Within Set Sum of Squared Errors = " + WSSSE)
+  Within Set Sum of Squared Errors = 0.11999999999994547
+  ```
+
+  
+
+- 문서에서 단어 추출하기(형태소 분석)
+
+  ```scala
+  // 형태소 분석은 MLlib에 포함되지 않지만, 이 예에서는 한 문장씩만 분석하면 충분하므로, 기존의 간단한 형태소 분석 라이브러리를 스파크의 분산처리 태스크에서 이용하도록 구현해본다. 이 예에서는 트위터가 만든 twitter-korean-text를 이용한다.
+  
+  // libraryDependencies += "com.twitter.penguin" %% "korean-text" % "4.0"
+  $ ${SPARK_HOME}/bin/spark-shell --master yarn --packages com.twitter.penguin:korean-text:4.0
+  
+  Spark session available as 'spark'.
+  Welcome to
+        ____              __
+       / __/__  ___ _____/ /__
+      _\ \/ _ \/ _ `/ __/  '_/
+     /___/ .__/\_,_/_/ /_/\_\   version 2.4.3
+        /_/
+  
+  Using Scala version 2.11.12 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_221)
+  Type in expressions to have them evaluated.
+  Type :help for more information.
+  
+  //---------------------------------------
+  $ spark-shell --master yarn --packages com.twitter.penguin:korean-text:4.0 --conf spark.serializer=org.apache.spark.serializer.KryoSerializer
+  
+  import java.io.StringReader
+  import org.apache.spark.mllib.feature.{Word2Vec, Word2VecModel}
+  import com.twitter.penguin.korean.TwitterKoreanProcessor
+  import com.twitter.penguin.korean.tokenizer.KoreanTokenizer.KoreanToken
+  import org.apache.spark.mllib.linalg.Vectors
+  
+  val sentence = "이 책은 무슨 책 입니까"
+  val normalized: CharSequence = TwitterKoreanProcessor.normalize(sentence)
+  
+  //토크나이즈
+  val tokens: Seq[KoreanToken] = TwitterKoreanProcessor.tokenize(normalized)
+  tokens: Seq[com.twitter.penguin.korean.tokenizer.KoreanTokenizer.KoreanToken] = List(이(Noun: 0, 1),  (Space: 1, 1), 책(Noun: 2, 1), 은(Josa: 3, 1),  (Space: 4, 1), 무슨(Noun: 5, 2),  (Space: 7, 1), 책(Noun: 8, 1),  (Space: 9, 1), 입(Noun: 10, 1), 니까(Josa: 11, 2))
+  
+  //어근 추출
+  val stemmed: Seq[KoreanToken] = TwitterKoreanProcessor.stem(tokens)
+  stemmed: Seq[com.twitter.penguin.korean.tokenizer.KoreanTokenizer.KoreanToken] = List(이(Noun: 0, 1),  (Space: 1, 1), 책(Noun: 2, 1), 은(Josa: 3, 1),  (Space: 4, 1), 무슨(Noun: 5, 2),  (Space: 7, 1), 책(Noun: 8, 1),  (Space: 9, 1), 입(Noun: 10, 1), 니까(Josa: 11, 2))
+  
+  
+  
+  ```
+
+- 유사 단어 추출
+
+  ```scala
+  //위 환경 이어서 해야함
+  
+  //스파크에서 텍스트를 읽고 처리하는 내용을 기술한다.
+  //SparkContext의 textFile 메서드를 이요해 입력용 RDD를 정의한다.
+  //이때 입력 텍스트 파일의 각 줄을 인수로 받고 각 줄에 대해 tokenize메서드를 적용
+  val input = sc.textFile("/data/spark/hanguel-article.txt").map(line => TwitterKoreanProcessor.tokensToStrings(TwitterKoreanProcessor.tokenize(TwitterKoreanProcessor.normalize(line))))
+  
+  //Word2Vec에 단어의 출현횟수의 최솟값과 생성하는 벡터의 ㅊ원 수를 인수로 건네준다.
+  val word2vec = new Word2Vec()
+  word2vec.setMinCount(3)
+  word2vec.setVectorSize(30)
+  //fit메서드로 단어와 벡터가 포함된 모델을 생성한다. 이때 내부적으로 스파크의 액션이 실행되므로 스프카의 분산처리가 예약ㄷ괸다. 로그 레벨을 특별히 변경하지 않은 상태라면, 스파크 셸의 표준 출력으로 분산처리가 진행되는 상황이 출력될 것이다.
+  val model = word2vec.fit(input)
+  
+  //특정한 단어와 유사한 단어를 추출해본다.
+  //findSynonyms 라는 메서드를 이용하면 주어진 단어와 유사한 단어 상위 N개와 유사도(벡터간의 코사인 유사도)를 함께 얻을 수 있다. 또한 스파크 셸에서 실행하면 정의한 식의 결괏값을 println처럼 명시적으로 출력하지 않아도 표준 출력으로 출력할 수 있다.
+  model.findSynonyms("소년", 3)
+  
+  //비커즈라는 소설책을 넣었더니...
+  model.findSynonyms("인간", 3)
+  res18: Array[(String, Double)] = Array((드래곤,0.8470436930656433), (오크,0.7707846760749817), (보통,0.7554001212120056))
+  
+  model.findSynonyms("사랑", 3)
+  res27: Array[(String, Double)] = Array((자기,0.7772539258003235), (간섭,0.7626800537109375), (부담,0.759609580039978))
+  ```
+
+  
+
+- 단어 관계성 벡터 연산
+
+  ```scala
+  def relationWords(w1: String, w2: String, target: String, model: Word2VecModel) :Array[(String, Double)] = {
+      //scala의 행렬계산 등을 가능하게 하는 Breeze 라이브러리를 이용한다.
+      val b = breeze.linalg.Vector(model.getVectors(w1))
+      val a = breeze.linalg.Vector(model.getVectors(w2))
+      val c = breeze.linalg.Vector(model.getVectors(target))
+      
+      //target에 w2-w1의 관계성을 적용한다.
+      val x = c + (a - b)
+      
+      //관계성이 적용된 x와 유사한 단어를 찾는다.
+      model.findSynonyms(Vectors.dense(x.toArray.map(_.toDouble)), 10)
+  }
+  
+  relationWords("남자", "여자", "사랑", model)
+  res34: Array[(String, Double)] = Array((성장한,0.6855924129486084), (똑같,0.6855884194374084), (가르침,0.6750491261482239), (불능,0.6736375093460083), (훌륭한,0.6527679562568665), (보신,0.6462168097496033), (......!!",0.643253743648529), (농락,0.6370927691459656), (나서서,0.6370558738708496), (사랑,0.6349859833717346))
+  
+  
+  ```
 
 
-
-
-- ㅇㄹ
-- 
 
 
 
