@@ -1,5 +1,5 @@
 <h1>Hadoop</h1>
-![Hadoop consulting and support services - ScienceSoft](hadoop.assets/hadoop-consulting-and-support.svg)
+![Image result for hadoop](hadoop.assets/Hadoop-Ecosystem.png)
 
 > **아파치 하둡**(Apache Hadoop, High-Availability Distributed Object-Oriented Platform)은 대량의 자료를 처리할 수 있는 큰 컴퓨터 클러스터에서 동작하는 분산 응용 프로그램을 지원하는 [프리웨어](https://ko.wikipedia.org/wiki/프리웨어) [자바](https://ko.wikipedia.org/wiki/자바_(프로그래밍_언어))[소프트웨어 프레임워크](https://ko.wikipedia.org/wiki/소프트웨어_프레임워크)이다. 원래 [너치](https://ko.wikipedia.org/wiki/너치)의 [분산 처리](https://ko.wikipedia.org/wiki/분산_파일_시스템)를 지원하기 위해 개발된 것으로, [아파치](https://ko.wikipedia.org/wiki/아파치_웹_서버) [루씬](https://ko.wikipedia.org/wiki/루씬)의 하부 프로젝트이다[[2\]](https://ko.wikipedia.org/wiki/아파치_하둡#cite_note-2). 분산처리 시스템인 [구글 파일 시스템](https://ko.wikipedia.org/wiki/구글_파일_시스템)을 대체할 수 있는 하둡 분산 파일 시스템(HDFS: Hadoop Distributed File System)과 [맵리듀스](https://ko.wikipedia.org/wiki/맵리듀스)를 구현한 것이다.
 >
@@ -476,13 +476,13 @@ $ hadoop fs {-커맨드 [-옵션]} {경로} [경로]
 $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
 ```
 
-- fsck : 파일 시스템 상태 체크
+- `fsck` : 파일 시스템 상태 체크
 
-- balancer : HDFS 재균형
+- `balancer` : HDFS 재균형
 
-- deamonlog : 로그 레벨 동적 변경
+- `deamonlog` : 로그 레벨 동적 변경
 
-- dfsadmin : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
+- `dfsadmin` : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
 
 <br>
 
