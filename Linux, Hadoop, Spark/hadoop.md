@@ -1,5 +1,4 @@
 <h1>Hadoop</h1>
-
 ![Hadoop consulting and support services - ScienceSoft](hadoop.assets/hadoop-consulting-and-support.svg)
 
 > **아파치 하둡**(Apache Hadoop, High-Availability Distributed Object-Oriented Platform)은 대량의 자료를 처리할 수 있는 큰 컴퓨터 클러스터에서 동작하는 분산 응용 프로그램을 지원하는 [프리웨어](https://ko.wikipedia.org/wiki/프리웨어) [자바](https://ko.wikipedia.org/wiki/자바_(프로그래밍_언어))[소프트웨어 프레임워크](https://ko.wikipedia.org/wiki/소프트웨어_프레임워크)이다. 원래 [너치](https://ko.wikipedia.org/wiki/너치)의 [분산 처리](https://ko.wikipedia.org/wiki/분산_파일_시스템)를 지원하기 위해 개발된 것으로, [아파치](https://ko.wikipedia.org/wiki/아파치_웹_서버) [루씬](https://ko.wikipedia.org/wiki/루씬)의 하부 프로젝트이다[[2\]](https://ko.wikipedia.org/wiki/아파치_하둡#cite_note-2). 분산처리 시스템인 [구글 파일 시스템](https://ko.wikipedia.org/wiki/구글_파일_시스템)을 대체할 수 있는 하둡 분산 파일 시스템(HDFS: Hadoop Distributed File System)과 [맵리듀스](https://ko.wikipedia.org/wiki/맵리듀스)를 구현한 것이다.
@@ -132,9 +131,7 @@ export JAVA_HOME=/usr/local/jdk1.8.0_221/
 
 #### 1.8.2. core-site.xml
 
-```bash
-[hadoop@master hadoop]$ vi core-site.xml
-#----------------------------------------------------------
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -147,67 +144,114 @@ export JAVA_HOME=/usr/local/jdk1.8.0_221/
 		<value>/usr/local/hadoop-2.7.7/tmp</value>
 	</property>
 </configuration>
-#----------------------------------------------------------
 ```
 
+#### 1.8.3. hdfs-site.xml
 
-
-### hdfs-site.xml
-
-vi hdfs-site.xml
-
-```
-<?xml version="1.0"?>
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<!-- Put site-specific property overrides in this file. -->
 <configuration>
-<property>
-<name>dfs.replication</name>
-<value>1</value>
-</property>
-<property>
-<name>dfs.permissions.enabled</name>
-<value>false</value>
-</property>
-<property>
-<name>dfs.secondary.http.address</name>
-<value>secondary:50090</value>
-</property>
+	<property>
+		<name>dfs.replication</name>
+		<value>2</value>
+	</property>
+	<property>
+		<name>dfs.permissions.enabled</name>
+		<value>false</value>
+	</property>
+	<property>
+		<name>dfs.secondary.http.address</name>
+		<value>secondary:50090</value>
+	</property>
 </configuration>
 ```
 
-### mapred-site.xml
+#### 1.8.4. mapred-site.xml
 
-저 파일이 없기때문에 복사해와서
-
-[hadoop@master hadoop]$ cp mapred-site.xml.template mapred-site.xml
-
-```
+```xml
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
-<property>
-<name>mapreduce.framework.name</name>
-<value>yarn</value>
-</property>
+	<property>
+		<name>mapreduce.framework.name</name>
+		<value>yarn</value>
+	</property>
 </configuration>
 ```
 
-### yarn-site.xml
+#### 1.8.5. yarn-site.xml
 
-```
+`yarn.nodemanager.resource.cpu-vcores`, `yarn.scheduler.maximum-allocation-mb` 등은 가상 머신을 세팅한 것을 확인 후 설정한다.
+
+```xml
 <?xml version="1.0"?>
 <configuration>
-<property>
-<name>yarn.nodemanager.aux-services</name>
-<value>mapreduce_shuffle</value>
-</property>
-<property>
-<name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
-<value>org.apache.hadoop.mapred.ShuffleHandler</value>
-</property>
+    <property>  
+    	<name>yarn.resourcemanager.hostname</name>  
+    	<value>master</value>  
+    </property>
+    <property>
+    	<name>yarn.nodemanager.aux-services</name>
+    	<value>mapreduce_shuffle</value>
+    </property>
+    <property>
+    	<name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+    	<value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+    <property>
+    	<name>yarn.log-aggregation-enable</name>
+    	<value>true</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>2048</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>1024</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-pmem-ratio</name>
+        <value>2.1</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
 </configuration>
+
 ```
+
+#### 1.8.6. tmp 디렉토리 생성
+
+hadoop에서 작업을 진행할 tmp 디렉토리를 생성한다. 이 디렉토리는 `core-site.xml`에 설정 되어 있다.
+
+```bash
+[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp
+```
+
+### 1.9 설정 동기화
+
+master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
+
+```bash
+[hadoop@master ~]$ cd /usr/local/hadoop-2.7.7
+
+[hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7
+```
+
+
+
+
 
 ### 다른 노드 설정 파일 동기화
 
