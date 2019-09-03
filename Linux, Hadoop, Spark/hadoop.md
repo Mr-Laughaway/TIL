@@ -10,7 +10,9 @@
 > - 하둡 YARN
 > - 하둡 맵리듀스
 
+<br>
 
+<br>
 
 # Apache Hadoop
 
@@ -21,6 +23,8 @@
 - [oracle](https://www.oracle.com/technetwork/java/javase/downloads/index.html) 에서 Java SE Development Kit 8u221 를 다운받는다(linux x64).
 - [apache hadoop](https://hadoop.apache.org/) Apache Hadoop 3.1.2 를 다운 받는다.
 - eclipse-jee-photon-R-linux-gtk-x86_64 를 다운 받는다.
+
+<br>
 
 ### 1.2. 압축 해제 및 설치
 
@@ -37,6 +41,8 @@
 [root@master local]# chown -R hadoop:hadoop /usr/local/hadoop-2.7.7/
 ```
 
+<br>
+
 ### 1.3. Hostname 변경
 
 > CentOS를 처음 시작하면 다음과 같이 Hostname이 localhost로 설정된다. 관리해야될 서버가 한대라면 모르지만 여러대를 관리한다면 서버별로 hostname을 지정해 주는것이 좋다.
@@ -49,6 +55,8 @@
 /bin/hostname -F /etc/hostname
 ```
 
+<br>
+
 ### 1.4. hosts 파일 설정
 
 ```bash
@@ -58,6 +66,8 @@
 192.168.21.132  slave1
 192.168.21.131  slave2
 ```
+
+<br>
 
 ### 1.5. .bash_profile 설정
 
@@ -87,13 +97,17 @@ export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin
 #------------------------------------------------------
 ```
 
-### 1.6 worker node 만들기
+<br>
+
+### 1.6. worker node 만들기
 
 - 위 1.1 ~ 1.6을 각각의 worker node에서도 동일하게 하여야 하지만, 가상머신 소프트웨어를 이용중이므로 편의상 가상머신 이미지를 복사하여 원하는 수 만큼의 노드를 생성한다.
 - 그 후 hostname을 각각의 worker node에 맞게 지정한다.
 - 나머지는 같다
 
-### 1.7 ssh 설정
+<br>
+
+### 1.7. ssh 설정
 
 ```bash
 #Hadoop  home 디렉토리아래 ssh 디렉토리 생성 후 접근 권한 변경
@@ -116,6 +130,8 @@ authorized_keys id_rsa id_rsa.pub
 [hadoop@master ~]$ ssh hadoop@slave1 date
 [hadoop@master ~]$ ssh hadoop@slave2 date
 ```
+
+<br>
 
 ### 1.8 셸 스크립트 및 설정 파일 수정
 
@@ -239,315 +255,307 @@ hadoop에서 작업을 진행할 tmp 디렉토리를 생성한다. 이 디렉토
 [hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp
 ```
 
+<br>
+
 ### 1.9 설정 동기화
 
 master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 
 ```bash
-[hadoop@master ~]$ cd /usr/local/hadoop-2.7.7
-
-[hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7
+[hadoop@master ~]$ cd /usr/local/hadoop-2.7.7/etc/hadoop
+[hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7/etc/hadoop/
 ```
 
+<br>
 
+### 1.10. 방화벽 설정
 
+#### 1.10.1. iptables 설치
 
+- 설치
 
-### 다른 노드 설정 파일 동기화
+  ```bash
+  [hadoop@master ~]$ yum install iptables-services
+  ```
+
+- 설정
+
+  ```bash
+  [hadoop@master local]$ ssudo vi /etc/sysconfig/iptables
+  
+  #------------------------------------------------------------
+  # sample configuration for iptables service
+  # you can edit this manually or use system-config-firewall
+  # please do not ask us to add additional ports/services to this default configuration
+  *filter
+  :INPUT ACCEPT [0:0]
+  :FORWARD ACCEPT [0:0]
+  :OUTPUT ACCEPT [0:0]
+  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+  -A INPUT -p icmp -j ACCEPT
+  -A INPUT -i lo -j ACCEPT
+  -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+  # master node의 경우 외부에서 접근하여 resource 등을 볼 수 있게 아래와 같이 설정한다.
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 8088 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 4040 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 50070 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 50090 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 50100 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 5432 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 8032 -j ACCEPT
+  -A INPUT -m state --state NEW -m tcp -p tcp --dport 12000 -j ACCEPT
+  # IPV4의 C class 수준에서 모든 연결을 pass 시켜주는 설정을 넣는다.
+  # master node 와 기타 다른 node들 간의 연결은 모두 허용되게 된다.
+  # master node 외의 다른 node 들은 아래의 두 줄만 있으면 된다.
+  -A INPUT -s 192.168.21.0/24 -d 192.168.21.0/24 -j ACCEPT
+  -A OUTPUT -s 192.168.21.0/24 -d 192.168.21.0/24 -j ACCEPT
+  -A INPUT -j REJECT --reject-with icmp-host-prohibited
+  -A FORWARD -j REJECT --reject-with icmp-host-prohibited
+  COMMIT
+  ```
+
+#### 1.10.2. firewalld deamon 해제
+
+위에서 설치한 `iptables`를 사용할 것이므로 기본 방화벽인 `firewalld` deamon을 해제한다. 해제 하지 않으면 `iptables` 보다 우선순위로 작동하기 때문에 리부팅 시 `iptables`가 제대로 설정되지 않는다.
+
+```bash
+[root@master ~]# systemctl stop firewalld
+[root@master ~]# systemctl mask firewalld
+```
+
+#### 1.10.3. iptables service 등록 및 재시작
+
+- `iptables` 설정도 마쳤고 기본 방화벽인 `firewalld` 도 해제하였으므로 `iptables`를 동작시킨다. 
+
+- 위 설정들은 `/etc/sysconfig/iptables` 파일의 약간을 설정 차이만 유념하여, 각 slave node에서도 모두 적용한다.
+
+```bash
+[root@master ~]# systemctl enable iptables
+[root@master ~]# systemctl start iptables
+
+# 재시작이 필요할 경우
+[root@master ~]# service iptables restart
+```
+
+<br>
+
+### 1.11. namenode 포맷
 
 ```bash
 #마스터 노드에서
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs/name
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs/data
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred/system
-[hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred/local
-[hadoop@master ~]$ chmod 755 /usr/local/hadoop-2.7.7/tmp/dfs
-
-[hadoop@master ~]$ cd /usr/local/hadoop-2.7.7
-
-[hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7
-
-[hadoop@master ~]$ cd /usr/local/hadoop-2.7.7/etc/hadoop
-
-[hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7/etc/hadoop
+[hadoop@master ~]$ hadoop namenode -format 
 ```
 
-### 방화벽 설정
+<br>
 
-root 에서 ( su -)
+<br>
 
-yum install iptables-services-y 설치를 미리 하고
+## 2. hadoop 실행과 정지
 
-아래를 dport 22 아래에 추가해 주어야 한다!
+### 2.1. hadoop 기동
 
-아래 있는 192.168.234.0/24 에서 0전 까지는 나의 ip를 작성해주도록 하자! 255였으므로
+#### 2.1.1. 기동
 
-192.168.255.0/24다
-
-```
-[root@master local]# vi /etc/sysconfig/iptables
--A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 8088 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 50070 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 5432 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 8032 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 12000 -j ACCEPT
--A INPUT -s 192.168.234.0/24 -d 192.168.234.0/24 -j ACCEPT
--A OUTPUT -s 192.168.234.0/24 -d 192.168.234.0/24 -j ACCEPT
--A INPUT -j REJECT --reject-with icmp-host-prohibited
--A FORWARD -j REJECT --reject-with icmp-host-prohibited
-COMMIT
-```
-
-[root@master local]# service iptables restart 작성해서 다시 시작해주자
-
-slave1에도 같은 설정을 해주고 양쪽다 systemctl status iptables 로 active상태를 확인하자
-
-### Namenode포맷을 해야한다!
-
-```
-#마스터 노드에서
-[hadoop@master ~]$ hadoop  namenode  -format 
-```
-
-su hadoop 하면 하둡으로 가지며
-
-만약 위에께 안된다면
-
-[hadoop@master ~] $ source ~/.bash_profile 해주면 위에것이 된다
-
-### hadoop 시작
-
-전체 한번에 시작시키는 명령어는
-
-master의 namenode와 datanode2, slave의 secondary와 datanode1를 동시 시작!하기 위해서
-
-```
+```bash
 #마스터 노드에서
 [hadoop@master ~]$ cd /usr/local/hadoop-2.7.7/sbin
-[hadoop@master ~]$ ls
-하면 다양한 명령어가 뜬다!
-[hadoop@master sbin]$  ./start-all.sh
-히스토리의 경우 따로 해주어야 실행이 된다
+[hadoop@master sbin]$ ./start-all.sh
+
 [hadoop@master sbin]$  ./mr-jobhistory-daemon.sh start historyserver
 [hadoop@master sbin]$ jps
 ```
 
-해서 확인해보자~
+#### 2.1.2. history server 기동
 
+```bash
+[hadoop@master sbin]$  ./mr-jobhistory-daemon.sh start historyserver
+```
 
+#### 2.1.3. jps 로 기동 상황 확인
 
-이리 나온 상태에서 (위에는 historyserver가 빠졌다 있어야 한다)
+- master node
 
-브라우저에서
+  ```bash
+  [hadoop@master hadoop]$ jps
+  12643 NameNode
+  17763 JobHistoryServer
+  17831 Jps
+  12779 DataNode
+  13293 NodeManager
+  13166 ResourceManager
+  ```
 
-http://master:50070/dfshealth.html 를 입력해보자
+- other node
 
-livenode 를 클릭해서 라이브노드가 2개임을 확인하자
+  ```bash
+  [hadoop@secondary ~]$ jps
+  12485 DataNode
+  12568 SecondaryNameNode
+  12717 NodeManager
+  17166 Jps
+  ```
 
-### 종료하는 방법
+#### 2.1.4. namedoe information 체크(WEB UI)
+
+http://master:50070
+
+![1567487601748](hadoop.assets/1567487601748.png)
+
+#### 2.1.5. hadoop cluster 체크 (WEB UI)
+
+http://master:8088
+
+![1567487627510](hadoop.assets/1567487627510.png)
+
+### 2.2. 종료
 
 ```bash
 [hadoop@master sbin]$ ./stop-all.sh
 ```
 
+<br>
 
+### 2.3. safemode
 
----
-
-
-
-#### 티빔 2차
-
-### 만약 확인시 라이브노드가 1개라면 다시 설정 해 볼 내용!
-
-1. systemctl enable iptables 를 입력하여 activedt상태인지 확인!(slave도!)
-
-Live Node가 2개가 아닐 시
-
-먼저 master 와 slave둘다
+비정상 종료 등의 이유로 `hadoop`이 `safemode `로 빠졌다면 문제상황을 확인하고 해결 후, 다음 커맨드를 이용하여 `safemode`로부터 빠져 나온다.
 
 ```bash
-[hadoop@master sbin]$ ./stop-all.sh
-//먼저다 스탑!
-[hadoop@slave .ssh]$ cd /usr/local/
-[hadoop@slave hadoop-2.7.7]$ ls
-[hadoop@slave hadoop-2.7.7]$ cd tmp
-[hadoop@slave tmp]$ rm -rf *
-[hadoop@slave tmp]$ cd ..
-[hadoop@slave hadoop-2.7.7]$ ls
-//tmp 아래의 정보만 삭제! master와 slave둘다!
-//그후 마스터노드에서
-[hadoop@master hadoop-2.7.7]$ hadoop namenode -format
-[hadoop@master sbin]$ ./start-all.sh
- //시작한 후 slave 에서 tmp 파일 아래 자료가 생기는 것을 확인 후! 브라우저에서 live node가 2개임을 확인한다!
-Live Node가 2개가 아닌경우 다시 설정해볼 내용
-[hadoop@master hadoop-2.7.7]$ ls
-#tmp 삭제
-[hadoop@master hadoop-2.7.7]$ rm -rfR tmp
-[hadoop@master hadoop-2.7.7]$ ls
-
-#Slave1 노드에서도 삭제
-[hadoop@slave1 hadoop-2.7.7]$ ls
-bin  include  libexec      logs        README.txt  share
-etc  lib      LICENSE.txt  NOTICE.txt  sbin        tmp
-[hadoop@slave1 hadoop-2.7.7]$ rm -rfR tmp
-[hadoop@slave1 hadoop-2.7.7]$ ls
-
-#master 노드에서 tmp 디렉토리 다시 생성
-[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs/name
-[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/dfs/data
-[hadoop@master hadoop-2.7.7]$ ls -R /usr/local/hadoop-2.7.7/tmp
-
-[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred/system
-[hadoop@master hadoop-2.7.7]$ mkdir -p /usr/local/hadoop-2.7.7/tmp/mapred/local
-[hadoop@master hadoop-2.7.7]$ ls -R /usr/local/hadoop-2.7.7/tmp
-
-[hadoop@master hadoop-2.7.7]$rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7
-
-[hadoop@master hadoop-2.7.7]$ cd etc/hadoop
-[hadoop@master hadoop-2.7.7]$ rsync -av . hadoop@slave2:/usr/local/hadoop-2.7.7
-[hadoop@master hadoop-2.7.7]$ rsync -av . hadoop@secondary:/usr/local/hadoop-2.7.7
-
-[hadoop@master hadoop-2.7.7]$ rm -rf ./logs/yarn*
-[hadoop@master hadoop-2.7.7]$ rm -rf ./logs/hadoop*
-
-[hadoop@master ~]$ hadoop namenode -format
-
-그 후 다시 생성하자
+[hadoop@master ~]$ hadoop dfsadmin -safemode leave
 ```
 
-### 조심하자
+<br>
 
-#### 하둡 세이프모드 해제(비정상종료시 강제 세이프모드)
+<br>
 
-$ hadoop dfsadmin -safemode leave
+## 3. HDFS 관리
 
-## hadooop
-
-### 하둡 분산 파일 시스템(HDFS)관리
-
-**hadoop** **fs -옵션 …**
-
-1. 파일 목록 보기 : ls, lsr
-2. 파일 용량 확인 : du, dus
-3. 파일 내용 보기 : cat, text
-4. 디렉토리 생성 : mkdir
-5. 파일 복사 : put, get, getmerge, cp, copyFromLocal, copyToLocal
-6. 파일 이동 : mv, moveFromLocal
-7. 카운트 값 조회 : count
-8. 파일삭제, 디렉토리 삭제 : rm, rmr
-9. 파일의 마지막 내용 확인 : tail
-10. 권한 변경 : chmod, chown, chgrp
-11. 0바이트파일 생성 : touchz
-12. 통계 정보 조회 : stat
-13. 복제 데이터 개수 변경 : setrep
-14. 휴지통 비우기 : expunge
-15. 파일 형식 확인 : test
+### 3.1. 기본적인 명령어
 
 ```bash
-[hadoop@master ~]$ hadoop fs mkdir /lab // 먼저 하둡에 파일 생성
-[hadoop@master ~]$ vi test.txt
-//내용 아무것이나 넣고 저장~(파일 생성한 것!)
-
-[hadoop@master ~]$ hadoop fs -put ./test.txt /lab/
-//하둡에 그 파일을 저장~
-
-[hadoop@master ~]$ hadoop fs -ls /lab/
-//저장된 파일 확인!
-
-[hadoop@master ~]$ rm test.txt
-[hadoop@master ~]$ ls
-//로컬에서 삭제!
-
-[hadoop@master ~]$ hadoop fs -get /lab/test.txt
-[hadoop@master ~]$ ls
-//하둡에서 파일 가져와서 다시 확인!
-
-
-[hadoop@master ~]$ hadoop fs -rm /lab/test.txt
-//하둡에서 그 파일을 삭제!
-[hadoop@master ~]$ vi sample.txt 
-//내용입력
-[hadoop@master ~]$ vi sample2.txt
-//내용입력
-
-[hadoop@master ~]$ hadoop fs -put sampl* /lab/
-//두개를 하둡에 올린다!
-[hadoop@master ~]$ hadoop fs -ls /lab/
-//잘 올라가있는지 확인!
-
-[hadoop@master ~]$ hadoop fs -mkdir /data
-[hadoop@master ~]$ hadoop fs -ls /
-Found 2 items
-drwxr-xr-x   - hadoop supergroup          0 2019-08-16 10:24 /data
-drwxr-xr-x   - hadoop supergroup          0 2019-08-16 10:23 /lab
-
-//data 디텍토리 생긴것을 확인!
-
-[hadoop@master ~]$ hadoop fs -mv /lab/sample* /data/
-//파일을 data디렉토리로 옮긴다!
-
-[hadoop@master ~]$ hadoop fs -ls /lab
-[hadoop@master ~]$ hadoop fs -ls /data
-Found 2 items
--rw-r--r--   1 hadoop supergroup         27 2019-08-16 10:23 /data/sample.txt
--rw-r--r--   1 hadoop supergroup         22 2019-08-16 10:23 /data/sample2.txt
-//옮겨진것을 확인하자
-
-[hadoop@master ~]$ hadoop fs -getmerge /data/sample* ./sample3.txt
-[hadoop@master ~]$ ls
-Desktop    Downloads  Pictures  sample2.txt  sample.txt  test.txt
-Documents  Music      Public    sample3.txt  Templates   Videos
-[hadoop@master ~]$ cat sample3.txt
-haha~ today is friday!!!!!
-Tomorrow is saturday!
-
-//두 파일이 합쳐져서 만들어진것을 확인할 수 있다!
+$ hadoop fs {-커맨드 [-옵션]} {경로} [경로]
 ```
 
+- 파일 목록 확인 : `ls`, `lsr`
 
+- 파일 용량 확인 : `du`, `dus`
 
-### 안전모드
+- 파일 내용 보기 : `cat`, `text`
+- 파일 병합 : `getmerge`
 
-하둡 실행 후 ^z 나 ^s와 같이 비정상 종료를 할 경우 hadoop은 safe모드로 진입한다. 이때는 파일 복사 삭제 등이 안된다.
+- 디렉토리 생성 : `mkdir`
 
-### 도구
+- 파일 복사 : `put`, `get`, `getmerge`, `cp`, `copyFromLocal`, `copyToLocal`
 
-### dfsadmin
+- 파일 이동 : `mv`, `moveFromLocal`
 
-hadoop dfsadmin -help 하면 다양한 관리 동작 명령어를 알 수 있다.
+- 카운트 값 조회 : `count`
 
-1. fsck : 파일 시스템 상태 체크
-2. balancer : HDFS 재균형
-3. deamonlog : 로그 레벨 동적 변경
-4. dfsadmin : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
+- 파일삭제, 디렉토리 삭제 : `rm`, `rmr`
 
-### 로깅
+- 파일의 마지막 내용 확인 : `tail`
 
-log4j는
+- 권한 변경 : `chmod`, `chown`, `chgrp`
 
-### 클러스터에서 노드를 추가하기
+- 0바이트파일 생성 : `touch`
 
-1. nclude 파일에 새 노드의 네트워크 주소를 추가한다.
-   - dfs.hosts와 mapreduce.jobtracker.hosts.filename속성을 통해 하나의 공유 파일을 참조한다.
-2. 네임노드에 허가된 데이터 노드 집합을 반영한다.
+- 통계 정보 조회 : `stat`
 
-- `$ hadoop dfsadmin -refreshNodes`
+- 복제 데이터 개수 변경 : `setrep`
 
-1. 새로 허가된 태스크트래커 집합을 잡트래커에 반영한다.
+- 휴지통 비우기 : `expunge`
 
-- `$ hadoop mradmin -refreshNodes`
+- 파일 형식 확인 : `test`
 
-1. 새 노드가 하둡 제어 스크립트에 의해 장차 클러스터에서 사용될 수 있게 slaves 파일을 갱신한다.
-2. 새로운 데이터 노드와 대스크 트래커를 시작한다.
-3. 새로운 데이터 노드와 태스크 트래커가 웹 UI에 나타나는지를 확인한다.
+<br>
 
-## MapReduce Programming
+### 3.2. 기타 관리 명령
+
+```bash
+$ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
+```
+
+- fsck : 파일 시스템 상태 체크
+
+- balancer : HDFS 재균형
+
+- deamonlog : 로그 레벨 동적 변경
+
+- dfsadmin : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
+
+<br>
+
+### 3.3. 로깅
+
+기본적으로 `log4j`를 사용한다.
+
+<br>
+
+### 3.4. node 추가 및 삭제
+
+#### 3.4.1. node 삭제
+
+- `$HADOOP_HOME/conf/hdfs-site.xml` 파일에 아래 내용 추가
+
+  ```xml
+  <property>
+  	<name>dfs.hosts.exclude</name>
+      <value>${HADOOP_HOME}/conf/exclude_list</value>
+  </property>
+  ```
+
+- 위에서 지정한`$HADOOP_HOME/conf/exclude_list` 파일에 삭제하고자 하는 데이터노드의 호스트명을 기록.
+
+  ```txt
+  datanode_to_remove1
+  datanode_to_remove2
+  ```
+
+- hadoop 에게 알림
+
+  ```bash
+  [hadoop@master ~]$ hadoop dfsadmin -refreshNodes #갱신하라고 명령
+  [hadoop@master ~]$ hadoop dfsadmin -report #상태 확인
+  
+  # replicationFactor를 맞추기 위해 나머지 data node 들이 data 를 분배하는 과정이 필요하므로, server 성능과 data 상황에 따라 오래 걸릴 수 있다.
+  
+  [hadoop@master ~]$ hadoop mradmin -refreshNodes #완료되면 잡 트래커에게도 알린다
+  ```
+
+#### 3.4.2. note 추가
+
+- `$HADOOP_HOME/conf/hdfs-site.xml` 파일에 아래 내용 추가
+
+  ```xml
+  <property>
+  	<name>dfs.hosts</name>
+      <value>${HADOOP_HOME}/conf/include_list</value>
+  </property>
+  ```
+
+- 위에서 지정한`$HADOOP_HOME/conf/include_list` 파일에 추가하고자 하는 데이터노드의 호스트명을 기록.
+
+  ```txt
+  datanode_to_add1
+  datanode_to_add2
+  ```
+
+- hadoop 에게 알림
+
+  ```bash
+  [hadoop@master ~]$ hadoop dfsadmin -refreshNodes #갱신하라고 명령
+  [hadoop@master ~]$ hadoop dfsadmin -report #상태 확인
+  
+  [hadoop@master ~]$ hadoop balancer -threshold 20 #완료되면 데이터를 분산시킨다
+  [hadoop@master ~]$ hadoop mradmin -refreshNodes #완료되면 잡 트래커에게도 알린다
+  ```
+
+<br>
+
+<br>
+
+# MapReduce Programming
 
 1. MapReduce 프레임워크는 페타바이트 이상의 대용량 데이터를 신뢰할 수 없는 컴퓨터로 구성된 클러스터 환경에서 병렬 처리를 지원하기 위해서 개발되었습니다.
 2. MapReduce프레임워크는 함수형 프로그래밍에서 일반적으로 사용되는 Map()과 Reduce() 함수 기반으로주로 구성
