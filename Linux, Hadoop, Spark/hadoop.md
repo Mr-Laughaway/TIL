@@ -321,8 +321,6 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 [root@master ~]# service iptables restart
 ```
 
-<br>
-
 ### 1.11. namenode 포맷
 
 ```bash
@@ -523,18 +521,26 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
 
 <br>
 
+<br>
+
 # MapReduce Programming
 
-1. MapReduce 프레임워크는 페타바이트 이상의 대용량 데이터를 신뢰할 수 없는 컴퓨터로 구성된 클러스터 환경에서 병렬 처리를 지원하기 위해서 개발되었습니다.
-2. MapReduce프레임워크는 함수형 프로그래밍에서 일반적으로 사용되는 Map()과 Reduce() 함수 기반으로주로 구성
-   - Map()은 (key, value) 쌍을 처리하여 또 다른 (key ,value) 쌍을 생성하는 함수입니다.
-   - Reduce()는 맵(map)으로부터 생성된 (key, list(value)) 들을 병합(merge)하여 최종적으로 list(value) 들을 생성하는 함수입니다
-   - 데이터 처리를 위한 프로그래밍 모델
-   - 분산컴퓨팅에 적합한 함수형 프로그래밍
-   - 배치형 데이터 처리 시스템
-   - 자동화된 병렬처리 및 분산처리
-   - Fault-tolerance(내고장성, 결함허용)
-   - 프로그래머를 위한 추상클래스
+![img](hadoop.assets/1_KKm4roOpsum147kKk5qp7A.jpeg)
+
+
+
+> MapReduce 프레임워크는 페타바이트 이상의 대용량 데이터를 신뢰할 수 없는 컴퓨터로 구성된 클러스터 환경에서 병렬 처리를 지원하기 위해서 개발되었다.
+>
+> MapReduce프레임워크는 함수형 프로그래밍에서 일반적으로 사용되는 Map()과 Reduce() 함수 기반으로주로 구성되어있다.
+>
+> - Map()은 (key, value) 쌍을 처리하여 또 다른 (key ,value) 쌍을 생성하는 함수입니다.
+> - Reduce()는 맵(map)으로부터 생성된 (key, list(value)) 들을 병합(merge)하여 최종적으로 list(value) 들을 생성하는 함수입니다
+> - 데이터 처리를 위한 프로그래밍 모델
+> - 분산컴퓨팅에 적합한 함수형 프로그래밍
+> - 배치형 데이터 처리 시스템
+> - 자동화된 병렬처리 및 분산처리
+> - Fault-tolerance(내고장성, 결함허용)
+> - 프로그래머를 위한 추상클래스
 
 ### 용어
 
