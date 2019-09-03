@@ -14,8 +14,6 @@
 
 <br>
 
-<br>
-
 # Apache Hadoop
 
 ## 1. 설치 절차
@@ -25,8 +23,6 @@
 - [oracle](https://www.oracle.com/technetwork/java/javase/downloads/index.html) 에서 Java SE Development Kit 8u221 를 다운받는다(linux x64).
 - [apache hadoop](https://hadoop.apache.org/) Apache Hadoop 3.1.2 를 다운 받는다.
 - eclipse-jee-photon-R-linux-gtk-x86_64 를 다운 받는다.
-
-<br>
 
 ### 1.2. 압축 해제 및 설치
 
@@ -43,8 +39,6 @@
 [root@master local]# chown -R hadoop:hadoop /usr/local/hadoop-2.7.7/
 ```
 
-<br>
-
 ### 1.3. Hostname 변경
 
 > CentOS를 처음 시작하면 다음과 같이 Hostname이 localhost로 설정된다. 관리해야될 서버가 한대라면 모르지만 여러대를 관리한다면 서버별로 hostname을 지정해 주는것이 좋다.
@@ -57,8 +51,6 @@
 /bin/hostname -F /etc/hostname
 ```
 
-<br>
-
 ### 1.4. hosts 파일 설정
 
 ```bash
@@ -68,8 +60,6 @@
 192.168.21.132  slave1
 192.168.21.131  slave2
 ```
-
-<br>
 
 ### 1.5. .bash_profile 설정
 
@@ -99,15 +89,11 @@ export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin
 #------------------------------------------------------
 ```
 
-<br>
-
 ### 1.6. worker node 만들기
 
 - 위 1.1 ~ 1.6을 각각의 worker node에서도 동일하게 하여야 하지만, 가상머신 소프트웨어를 이용중이므로 편의상 가상머신 이미지를 복사하여 원하는 수 만큼의 노드를 생성한다.
 - 그 후 hostname을 각각의 worker node에 맞게 지정한다.
 - 나머지는 같다
-
-<br>
 
 ### 1.7. ssh 설정
 
@@ -132,8 +118,6 @@ authorized_keys id_rsa id_rsa.pub
 [hadoop@master ~]$ ssh hadoop@slave1 date
 [hadoop@master ~]$ ssh hadoop@slave2 date
 ```
-
-<br>
 
 ### 1.8 셸 스크립트 및 설정 파일 수정
 
@@ -257,8 +241,6 @@ hadoop에서 작업을 진행할 tmp 디렉토리를 생성한다. 이 디렉토
 [hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp
 ```
 
-<br>
-
 ### 1.9 설정 동기화
 
 master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
@@ -267,8 +249,6 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 [hadoop@master ~]$ cd /usr/local/hadoop-2.7.7/etc/hadoop
 [hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7/etc/hadoop/
 ```
-
-<br>
 
 ### 1.10. 방화벽 설정
 
@@ -352,8 +332,6 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 
 <br>
 
-<br>
-
 ## 2. hadoop 실행과 정지
 
 ### 2.1. hadoop 기동
@@ -417,8 +395,6 @@ http://master:8088
 [hadoop@master sbin]$ ./stop-all.sh
 ```
 
-<br>
-
 ### 2.3. safemode
 
 비정상 종료 등의 이유로 `hadoop`이 `safemode `로 빠졌다면 문제상황을 확인하고 해결 후, 다음 커맨드를 이용하여 `safemode`로부터 빠져 나온다.
@@ -426,8 +402,6 @@ http://master:8088
 ```bash
 [hadoop@master ~]$ hadoop dfsadmin -safemode leave
 ```
-
-<br>
 
 <br>
 
@@ -470,8 +444,6 @@ $ hadoop fs {-커맨드 [-옵션]} {경로} [경로]
 
 - 파일 형식 확인 : `test`
 
-<br>
-
 ### 3.2. 기타 관리 명령
 
 ```bash
@@ -486,13 +458,9 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
 
 - `dfsadmin` : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
 
-<br>
-
 ### 3.3. 로깅
 
 기본적으로 `log4j`를 사용한다.
-
-<br>
 
 ### 3.4. node 추가 및 삭제
 
@@ -552,8 +520,6 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
   [hadoop@master ~]$ hadoop balancer -threshold 20 #완료되면 데이터를 분산시킨다
   [hadoop@master ~]$ hadoop mradmin -refreshNodes #완료되면 잡 트래커에게도 알린다
   ```
-
-<br>
 
 <br>
 
