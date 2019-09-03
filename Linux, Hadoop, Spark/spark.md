@@ -1,4 +1,6 @@
-Spark
+<h1>Spark</h1>
+
+
 
 ![Image result for spark](spark.assets/1200px-Apache_Spark_Logo.svg.png)
 
@@ -9,8 +11,6 @@ Spark
 > 스파크는 **스칼라**로 작성되어 자바 보다 간결한 코드로 같은 작업을 표현할 수 있습니다. 또한 스칼라는 JVM에서 동작하기 때문에 기존에 사용하던 자바 라이브러리를 모두 사용할 수 있습니다.
 
 :link: [참고 사이트](http://wikidocs.net/book/2350)
-
-<br>
 
 <br>
 
@@ -27,10 +27,6 @@ Spark
   - 함수를 마치 하나의 값으로 취급하여 이를 변수 또는 파라미터로 넘길 수 있다
   - 모든 것을 함수로 해결하면 의도하지 않은 동작(side effect)이 발생할 일이 없고, 한 번 검증된 함수는 신뢰할 수 있기 때문에 버그가 줄어드는 효과가 있다.
   - ```Immutable``` 변수는 문제를 단순화시켜주기 때문에 데이터 공유, 병렬처리에 강하다.
-
-<br>
-
-<br>
 
 ## 1.1. 스칼라 언어의 특성
 
@@ -55,10 +51,6 @@ Spark
 - 익명 함수
 - 고차 함수
 
-<br>
-
-<br>
-
 ## 1.2. 설치
 
 - Java 8 JDK install
@@ -71,10 +63,6 @@ Spark
 - 이클립스는 마켓플레이스에서 스칼라 IDE를 설치하면 스칼라 프로젝트를 생성할 수 있다
 
   Help -> Eclipse Marketplace > scala ide
-
-<br>
-
-<br>
 
 ## 1.3. 실습
 
@@ -92,8 +80,6 @@ c:> scalac Ex1.scala
 c:> scala Ex1
 Hello, Scala!
 ```
-
-<br>
 
 ### 1.3.2. 기본
 
@@ -149,8 +135,6 @@ scala> println(s"${minus(2,3)}")
 
 ```
 
-<br>
-
 ### 1.3.3. 반복문
 
 ```scala
@@ -202,8 +186,6 @@ for( x <-1 until 5; y <- 1 until 5) {
 
 ※ zipWIthIndex
 
-<br>
-
 ### 1.3.4. 함수 정의
 
 ```scala
@@ -231,17 +213,15 @@ def name3() = {
     val a = 10
     return a
 }
-
+On line 3: error: method name3 has return statement; needs result type
 
 // 
-scala> scala> def addOne(m: Int): Int = m + 1
+scala> def addOne(m: Int): Int = m + 1
 scala> val three = addOne(2)
 scala> def three() = 1 + 2
 scala> three()
 scala> three
 ```
-
-<br>
 
 ### 1.3.5. 익명 함수
 
@@ -249,15 +229,12 @@ scala> three
 (x: Int) => x + 1
 //인터프리터가 부여한 이름(1)
 
-
 def adder(m:Int, n:Int) = m + n
 val add2 = adder(2, _:Int)
 print(add2(3))
 ```
 
 ※ _: ***만능???***
-
-<br>
 
 ### 1.3.6. 커리 함수(Curried functions)
 
@@ -307,8 +284,6 @@ val g:(Int => Int) = f; // 에러 발생하지 않음
 val g = f _ // 에러 발생하지 않음
 ```
 
-<br>
-
 ### 1.3.8. 재귀함수
 
 ```scala
@@ -352,8 +327,6 @@ str3
 
 ```
 
-<br>
-
 ### 1.3.10. 함수 기본 값
 
 ```scala
@@ -364,8 +337,6 @@ println("기본값은 " + default(11, 6))
 �⺻���� 9
 �⺻���� 17
 ```
-
-<br>
 
 ### 1.3.11. apply
 
@@ -385,8 +356,6 @@ println(something.method2("하"))
 4
 5
 ```
-
-<br>
 
 ### 1.3.12. 암묵적 형변환
 
@@ -432,8 +401,6 @@ val x:Int = 18.0
 warning: there was one feature warning; re-run with -feature for details
 ```
 
-<br>
-
 ### 1.3.13. object 예약어
 
 스칼라에서는 public class 대신 object 예약어를 통해 처음부터 메모리에 객체를 생성하고 컴파일러는 객체에 main 이라는 이름이 있으며 main을 프로그램의 시작점으로 컴파일 한다.
@@ -445,8 +412,6 @@ object Ex4 {
     }
 }
 ```
-
-<br>
 
 ### 1.3.14. case class
 
@@ -677,7 +642,7 @@ print(c.getArea)
   Kwarrrrrrrrr
   ```
 
-- 모두의 기능을 실행하도록 사위 클래스 super를 호출해서 해당하는 메서드를 실행되게 할 수 있다.
+- 모두의 기능을 실행하도록 상위 클래스 super를 호출해서 해당하는 메서드를 실행되게 할 수 있다.
 
   ```scala
   abstract class AnotherRobot {
@@ -934,20 +899,6 @@ aa
 맵(Map) 의 주요기능
 
 ```scala
-val map = Map(
-    "number1" -> "aa",
-    "number2" -> "bb",
-    "number3" -> 3,
-    5 -> "cc"
-)
-
-println(map.isEmpty)
-println("whole map : " + map)
-println("keys : " + map.keys)
-println("values : " + map.values)
-println(map("number1"))
-
-
 println("------")
 //추가
 val mapTest01 = map + ("num4" ->  44)
@@ -1001,7 +952,7 @@ println(basket.diff(basket2))
 println(basket | basket2)
 
 // 결과 (해쉬 셋???)
-Set(aaa, bbb, ccc, ddd)
+Set("aaa", "bbb", "ccc", "ddd")
 Set(bbb, ccc, ddd)
 HashSet(hhh, ddd, ggg, ccc, bbb, aaa, fff)
 ```
@@ -1599,7 +1550,7 @@ object SundayCount {
 
             //sundayRDD에 들어있는 일요일 갯수를 센다
             val numOfSunday = sundayRDD.count
-            println("주어진 데이터에는 일요일이 ${numOfSunday}개 들어 있습니다.")
+            println(s"주어진 데이터에는 일요일이 ${numOfSunday}개 들어 있습니다.")
 
         } finally {
             sc.stop()
@@ -1705,8 +1656,39 @@ hadoop$ spark-submit --master local \
 [hadoop@master ~]$ mkdir -p src/main/scala/lab/spark/example
 [hadoop@master ~]$ cd  src/main/scala/lab/spark/example
 [hadoop@master ~]$ vi WordCount.scala
+#------------------------------------------------------
+package lab.spark.example
 
+import org.apache.spark.rdd.RDD
+import org.apache.spark.{SparkConf, SparkContext}
 
+object WordCount {  def main(args: Array[String]): Unit = {    
+        require(args.length == 3, "Usage: WordCount <Master> <Input> <Output>")   
+        val sc = getSparkContext("WordCount", args(0))    
+        val inputRDD = getInputRDD(sc, args(1))    
+        val resultRDD = process(inputRDD)    
+        handleResult(resultRDD, args(2))  
+    }
+    def getSparkContext(appName: String, master: String) = {    
+        val conf = new SparkConf().setAppName(appName).setMaster(master)    
+        new SparkContext(conf) 
+    }
+
+    def getInputRDD(sc: SparkContext, input: String) = {    
+        sc.textFile(input) 
+    }  
+
+    def process(inputRDD: RDD[String]) = {    
+        val words = inputRDD.flatMap(str => str.split(" "))    
+        val wcPair = words.map((_, 1))    wcPair.reduceByKey(_ + _)  
+    }  
+
+    def handleResult(resultRDD: RDD[(String, Int)], output: String) {    
+        resultRDD.saveAsTextFile(output); 
+    }
+}
+
+#------------------------------------------------------
 [hadoop@master ~]$ cd ~/wordcount-app
 [hadoop@master ~]$ vi build.sbt
 
