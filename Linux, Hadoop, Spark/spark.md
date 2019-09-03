@@ -112,7 +112,7 @@ Hello! David
 scala> println("${1 + 1}")
 ${1 + 1}
 
-scala> println("s${1 + 1}")
+scala> println(s"${1 + 1}")
 2
 
 
