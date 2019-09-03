@@ -1,5 +1,5 @@
 <h1>Hadoop</h1>
-![hadoop](hadoop.assets/hadoop.png)
+![hadoop](hadoop.assets/hadoop.jpg)
 
 
 
