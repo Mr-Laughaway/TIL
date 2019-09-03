@@ -1,4 +1,5 @@
-<h1>Hadoop</h1>
+<h1>Hadoop Ecosystem</h1>
+
 
 
 ![img](hadoop.assets/hadoop.jpg)
@@ -14,17 +15,17 @@
 
 <br>
 
-# Apache Hadoop
+# 1. Apache Hadoop
 
-## 1. 설치 절차
+## 1.1 설치 절차
 
-### 1.1. Download
+### 1.1.1 Download
 
 - [oracle](https://www.oracle.com/technetwork/java/javase/downloads/index.html) 에서 Java SE Development Kit 8u221 를 다운받는다(linux x64).
 - [apache hadoop](https://hadoop.apache.org/) Apache Hadoop 3.1.2 를 다운 받는다.
 - eclipse-jee-photon-R-linux-gtk-x86_64 를 다운 받는다.
 
-### 1.2. 압축 해제 및 설치
+### 1.1.2. 압축 해제 및 설치
 
 ```bash
 [hadoop@master ~]$ su -
@@ -39,7 +40,7 @@
 [root@master local]# chown -R hadoop:hadoop /usr/local/hadoop-2.7.7/
 ```
 
-### 1.3. Hostname 변경
+### 1.1.3. Hostname 변경
 
 > CentOS를 처음 시작하면 다음과 같이 Hostname이 localhost로 설정된다. 관리해야될 서버가 한대라면 모르지만 여러대를 관리한다면 서버별로 hostname을 지정해 주는것이 좋다.
 
@@ -51,7 +52,7 @@
 /bin/hostname -F /etc/hostname
 ```
 
-### 1.4. hosts 파일 설정
+### 1.1.4. hosts 파일 설정
 
 ```bash
 [root@master ~]# vi /etc/hosts
@@ -61,7 +62,7 @@
 192.168.21.131  slave2
 ```
 
-### 1.5. .bash_profile 설정
+### 1.1.5. .bash_profile 설정
 
 ```bash
 [hadoop@master ~]$ vi .bash_profile
@@ -89,13 +90,13 @@ export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin
 #------------------------------------------------------
 ```
 
-### 1.6. worker node 만들기
+### 1.1.6. worker node 만들기
 
 - 위 1.1 ~ 1.6을 각각의 worker node에서도 동일하게 하여야 하지만, 가상머신 소프트웨어를 이용중이므로 편의상 가상머신 이미지를 복사하여 원하는 수 만큼의 노드를 생성한다.
 - 그 후 hostname을 각각의 worker node에 맞게 지정한다.
 - 나머지는 같다
 
-### 1.7. ssh 설정
+### 1.1.7. ssh 설정
 
 ```bash
 #Hadoop  home 디렉토리아래 ssh 디렉토리 생성 후 접근 권한 변경
@@ -119,9 +120,9 @@ authorized_keys id_rsa id_rsa.pub
 [hadoop@master ~]$ ssh hadoop@slave2 date
 ```
 
-### 1.8 셸 스크립트 및 설정 파일 수정
+### 1.1.8 셸 스크립트 및 설정 파일 수정
 
-#### 1.8.1 hadoop-env.sh
+#### 1.1.8.1 hadoop-env.sh
 
 ```bash
 [hadoop@master ~]$ cd /usr/local/hadoop-2.7.7/etc/hadoop
@@ -131,7 +132,7 @@ authorized_keys id_rsa id_rsa.pub
 export JAVA_HOME=/usr/local/jdk1.8.0_221/
 ```
 
-#### 1.8.2. core-site.xml
+#### 1.1.8.2. core-site.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -148,7 +149,7 @@ export JAVA_HOME=/usr/local/jdk1.8.0_221/
 </configuration>
 ```
 
-#### 1.8.3. hdfs-site.xml
+#### 1.1.8.3. hdfs-site.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -169,7 +170,7 @@ export JAVA_HOME=/usr/local/jdk1.8.0_221/
 </configuration>
 ```
 
-#### 1.8.4. mapred-site.xml
+#### 1.1.8.4. mapred-site.xml
 
 ```xml
 <?xml version="1.0"?>
@@ -182,7 +183,7 @@ export JAVA_HOME=/usr/local/jdk1.8.0_221/
 </configuration>
 ```
 
-#### 1.8.5. yarn-site.xml
+#### 1.1.8.5. yarn-site.xml
 
 `yarn.nodemanager.resource.cpu-vcores`, `yarn.scheduler.maximum-allocation-mb` 등은 가상 머신을 세팅한 것을 확인 후 설정한다.
 
@@ -233,7 +234,7 @@ export JAVA_HOME=/usr/local/jdk1.8.0_221/
 
 ```
 
-#### 1.8.6. tmp 디렉토리 생성
+#### 1.1.8.6. tmp 디렉토리 생성
 
 hadoop에서 작업을 진행할 tmp 디렉토리를 생성한다. 이 디렉토리는 `core-site.xml`에 설정 되어 있다.
 
@@ -241,7 +242,7 @@ hadoop에서 작업을 진행할 tmp 디렉토리를 생성한다. 이 디렉토
 [hadoop@master ~]$ mkdir -p /usr/local/hadoop-2.7.7/tmp
 ```
 
-### 1.9 설정 동기화
+### 1.1.9 설정 동기화
 
 master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 
@@ -250,9 +251,9 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 [hadoop@master ~]$ rsync -av . hadoop@slave1:/usr/local/hadoop-2.7.7/etc/hadoop/
 ```
 
-### 1.10. 방화벽 설정
+### 1.1.10. 방화벽 설정
 
-#### 1.10.1. iptables 설치
+#### 1.1.10.1. iptables 설치
 
 - 설치
 
@@ -298,7 +299,7 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
   COMMIT
   ```
 
-#### 1.10.2. firewalld deamon 해제
+#### 1.1.10.2. firewalld deamon 해제
 
 위에서 설치한 `iptables`를 사용할 것이므로 기본 방화벽인 `firewalld` deamon을 해제한다. 해제 하지 않으면 `iptables` 보다 우선순위로 작동하기 때문에 리부팅 시 `iptables`가 제대로 설정되지 않는다.
 
@@ -307,7 +308,7 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 [root@master ~]# systemctl mask firewalld
 ```
 
-#### 1.10.3. iptables service 등록 및 재시작
+#### 1.1.10.3. iptables service 등록 및 재시작
 
 - `iptables` 설정도 마쳤고 기본 방화벽인 `firewalld` 도 해제하였으므로 `iptables`를 동작시킨다. 
 
@@ -321,7 +322,7 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 [root@master ~]# service iptables restart
 ```
 
-### 1.11. namenode 포맷
+### 1.1.11. namenode 포맷
 
 ```bash
 #마스터 노드에서
@@ -330,11 +331,11 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 
 <br>
 
-## 2. hadoop 실행과 정지
+## 1.2. hadoop 실행과 정지
 
-### 2.1. hadoop 기동
+### 1.2.1. hadoop 기동
 
-#### 2.1.1. 기동
+#### 1.2.1.1. 기동
 
 ```bash
 #마스터 노드에서
@@ -345,13 +346,13 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
 [hadoop@master sbin]$ jps
 ```
 
-#### 2.1.2. history server 기동
+#### 1.2.1.2. history server 기동
 
 ```bash
 [hadoop@master sbin]$  ./mr-jobhistory-daemon.sh start historyserver
 ```
 
-#### 2.1.3. jps 로 기동 상황 확인
+#### 1.2.1.3. jps 로 기동 상황 확인
 
 - master node
 
@@ -375,25 +376,25 @@ master에서 설정한 내용을 다른 node 들에도 모두 적용한다.
   17166 Jps
   ```
 
-#### 2.1.4. namedoe information 체크(WEB UI)
+#### 1.2.1.4. namedoe information 체크(WEB UI)
 
 http://master:50070
 
 ![1567487601748](hadoop.assets/1567487601748.png)
 
-#### 2.1.5. hadoop cluster 체크 (WEB UI)
+#### 1.2.1.5. hadoop cluster 체크 (WEB UI)
 
 http://master:8088
 
 ![1567487627510](hadoop.assets/1567487627510.png)
 
-### 2.2. 종료
+### 1.2.2. 종료
 
 ```bash
 [hadoop@master sbin]$ ./stop-all.sh
 ```
 
-### 2.3. safemode
+### 1.2.3. safemode
 
 비정상 종료 등의 이유로 `hadoop`이 `safemode `로 빠졌다면 문제상황을 확인하고 해결 후, 다음 커맨드를 이용하여 `safemode`로부터 빠져 나온다.
 
@@ -403,9 +404,9 @@ http://master:8088
 
 <br>
 
-## 3. HDFS 관리
+## 1.3. HDFS 관리
 
-### 3.1. 기본적인 명령어
+### 1.3.1. 기본적인 명령어
 
 ```bash
 $ hadoop fs {-커맨드 [-옵션]} {경로} [경로]
@@ -442,7 +443,7 @@ $ hadoop fs {-커맨드 [-옵션]} {경로} [경로]
 
 - 파일 형식 확인 : `test`
 
-### 3.2. 기타 관리 명령
+### 1.3.2. 기타 관리 명령
 
 ```bash
 $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
@@ -456,13 +457,13 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
 
 - `dfsadmin` : HDFS 상태 확인. HDFS 퇴거, DataNode 참가 등
 
-### 3.3. 로깅
+### 1.3.3. 로깅
 
 기본적으로 `log4j`를 사용한다.
 
-### 3.4. node 추가 및 삭제
+### 1.3.4. node 추가 및 삭제
 
-#### 3.4.1. node 삭제
+#### 1.3.4.1. node 삭제
 
 - `$HADOOP_HOME/conf/hdfs-site.xml` 파일에 아래 내용 추가
 
@@ -491,7 +492,7 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
   [hadoop@master ~]$ hadoop mradmin -refreshNodes #완료되면 잡 트래커에게도 알린다
   ```
 
-#### 3.4.2. note 추가
+#### 1.3.4.2. note 추가
 
 - `$HADOOP_HOME/conf/hdfs-site.xml` 파일에 아래 내용 추가
 
@@ -523,7 +524,7 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
 
 <br>
 
-# MapReduce Programming
+# 2. MapReduce Programming
 
 ![img](hadoop.assets/1_KKm4roOpsum147kKk5qp7A.jpeg)
 
@@ -533,72 +534,85 @@ $ hadoop dfsadmin {-커맨드 [-옵션]} {경로} [경로]
 >
 > MapReduce프레임워크는 함수형 프로그래밍에서 일반적으로 사용되는 Map()과 Reduce() 함수 기반으로주로 구성되어있다.
 >
-> - Map()은 (key, value) 쌍을 처리하여 또 다른 (key ,value) 쌍을 생성하는 함수입니다.
-> - Reduce()는 맵(map)으로부터 생성된 (key, list(value)) 들을 병합(merge)하여 최종적으로 list(value) 들을 생성하는 함수입니다
+> - Map()은 (key, value) 쌍을 처리하여 또 다른 (key ,value) 쌍을 생성
+> - Reduce()는 맵(map)으로부터 생성된 (key, list(value)) 들을 병합(merge)하여 최종적으로 list(value) 들을 생성
 > - 데이터 처리를 위한 프로그래밍 모델
 > - 분산컴퓨팅에 적합한 함수형 프로그래밍
 > - 배치형 데이터 처리 시스템
 > - 자동화된 병렬처리 및 분산처리
 > - Fault-tolerance(내고장성, 결함허용)
-> - 프로그래머를 위한 추상클래스
+> - 프로그래머를 위한 추상클래스 제공
 
-### 용어
+## 2.1. 용어
 
-1. 작업(Job)
+### 2.1.1.작업(Job)
 
-- 데이터 집합을 이용하여 Mapper와 Reducer를 실행하는 "전체 프로그램“입니다.
-- 20개의 파일로부터 "Word Count"를 실행하는 것은 1개의 작업(Job)입니다.
+- 데이터 집합을 이용하여 `Mapper`와 `Reducer`를 실행하는 "전체 프로그램“
+- 20개의 파일로부터 `WordCount`를 실행하는 것은 1개의 작업(Job)
 
-1. 태스크(Task)
+### 2.1.2. 태스크(Task)
 
-- 1개의 데이터 조각을 처리하는 1개의 Mapper 또는 Reducer의 실행입니다.
-- 20개의 파일은 20개의 Map 태스크에 의해 처리됩니다.
+- 1개의 데이터 조각을 처리하는 1개의` Mapper` 또는 `Reducer`의 실행
+- 20개의 파일은 20개의 `Map` 태스크에 의해 처리
 
-1. 태스크 시도(Task Attempt)
+### 2.1.3.태스크 시도(Task Attempt)
 
-- 머신 위에서 1개의 태스크를 실행하는 특정 시도입니다.
-- 최소한 20개의 Map 태스크 시도들이 수행됩니다. 서버 장애 시에는 더 많은 시도들이 수행됩니다.
+- 머신 위에서 1개의 태스크를 실행하는 특정 시도
+- 최소한 20개의 Map 태스크 시도들이 수행됩니다. 서버 장애 시에는 더 많은 시도들이 수행
 
-1. Map
+### 2.1.4. Map
 
-- 어떤 데이터의 집합을 받아들여 데이터를 생성하는 프로세스입니다.
-- 주로 입력 파일을 한 줄씩 읽어서 filtering등의 처리를 수해
+- 어떤 데이터의 집합을 받아들여 데이터를 생성하는 프로세스
+- 주로 입력 파일을 한 줄씩 읽어서 filtering등의 처리를 수행
 
-1. Reduce
+### 2.1.5. Reduce
 
-- Map에 의해서 만들어진 데이터를 모아서 최종적으로 원하는 결과로 만들어 내는 프로세스입니다
+- Map에 의해서 만들어진 데이터를 모아서 최종적으로 원하는 결과로 만들어 내는 프로세스
 - 데이터 집약 처리
 
-1. 어떤 처리든 데이터는 키(key)와 밸류(value)의 쌍으로 이루어지고, 해당 쌍의 집합을 처리한다.
-2. 입력 데이터도 출력 데이터도 key-value의 집합으로 구성된다.
-3. Shuffle
+<br>
 
-- Map 처리 후 데이터를 정렬해서, 같은 키를 가진 데이터를 같은 장소에 모은다.
+>※ 어떤 처리든 데이터는 키(key)와 밸류(value)의 쌍으로 이루어지고, 해당 쌍의 집합을 처리한다.
+>
+>※ 입력 데이터도 출력 데이터도 key-value의 집합으로 구성된다.
+
+<br>
+
+### 2.1.6. Shuffle
+
+- Map 처리 후 데이터를 정렬해서, 같은 키를 가진 데이터를 같은 장소에 모으는 작업
 - 슬레이브 서버 간에 네트워크를 통한 전송이 발생한다
 
-### 이클립스 설치
+## 2.2. MapReduce 프로그래밍 준비(이클립스 설치)
+
+```bash
+[hadoop@master ~]$ su - 
+[root@master ~]# cd /usr/local
+[root@master ~]# tar -xvf /home/hadoop/Downloads/eclipse-jee-photon-R-linux-gtk-x86_64.tar.gz
+[root@master ~]# chown -R hadoop:hadoop /usr/local/eclipse/
+
+
+ls -al(로 그룹명 변화 확인)
+
+```
+
+## 2.3. Hello HDFS
+
+> `HDFS`에 지정한 파라미터로 텍스트파일을 작성하고 읽어오는 간단한 `jar` 파일을 만들어본다.
+
+### 2.3.1. 프로젝트 생성 및 hadoop shared library 추가
 
 ```java
-su - 
-//root 계정
-cd /usr/local
-
-tar -xvf /home/hadoop/Downloads/eclipse-jee-photon-R-linux-gtk-x86_64.tar.gz
-ls -al (로 설치 확인)
-chown -R hadoop:hadoop /usr/local/eclipse/
-ls -al(로 그룹명 변화 확인)
-postgresql(추가해야하는 자르파일이다)
 $HADOOP-HOME/share/hadoop/common/lib/common-cli-1.2.jar
 $HADOOP-HOME/share/hadoop/common/hadoop-common-2.7.7.jar
 $HADOOP-HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-2.7.7.jar
-$HADOOP-HOME/share/hadoop/mapreduce/lib/log4j ~.jar
+$HADOOP-HOME/share/hadoop/mapreduce/lib/log4j ~.jar //없어도 됨
+```
 
+### 2.3.2. 코드 작성
 
-
-
-
-
-package lab.hadoop.fileio;
+```java
+package lab.hadoop.io;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -627,7 +641,7 @@ public class SingleFileWriteRead {
 
 		// 파일 저장
 		FSDataOutputStream outStream = hdfs.create(path);
-		outStream.writeUTF(args[1]);
+		outStream.writeUTF(args[1] + "\n");
 		outStream.close();
 
 		// 파일 출력
@@ -635,10 +649,10 @@ public class SingleFileWriteRead {
 		String inputString = inputStream.readUTF();
 		inputStream.close();
 
-		System.out.println("## inputString:" +inputString);
-                . System.out.println(path.getFileSystem(conf).getHomeDirectory()); //hdfs 홈 경로
- System.out.println(path.toUri()); //패스의 파일명
- System.out.println(path.getFileSystem(conf).getUri().getPath());
+		System.out.println("## inputString:" + inputString);
+        System.out.println(path.getFileSystem(conf).getHomeDirectory()); //hdfs 홈 경로
+        System.out.println(path.toUri()); //패스의 파일명
+        System.out.println(path.getFileSystem(conf).getUri().getPath());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -647,18 +661,27 @@ public class SingleFileWriteRead {
 }
 ```
 
-export 해서 jar파일을 이름을 fileio.jar 로 해서 home 에 저장하자
+### 2.3.3. jar export
+
+- project > export > jar file > **경로/이름지정** > **main class 지정**
+
+### 2.3.4. 실행
 
 ```bash
-Hello hadoop HDFS[hadoop@master ~]$ hadoop jar ./fileio.jar test.txt "Hello hadoop HDFS"
+[hadoop@master ~]$ hadoop jar ./writeread.jar test.txt "Hello hadoop HDFS"
+## inputString:Hello hadoop HDFS
 
-[hadoop@master ~]$ hadoop fs -ls -R /
+hdfs://master:9000/user/hadoop
+test.txt
 
-[hadoop@master ~]$ hadoop fs -cat test.txt 
-//확인해보자!!! 잘 나오는가!?
+[hadoop@master ~]$ hadoop fs -cat /user/hadoop/test.txt
+Hello hadoop HDFS
+[hadoop@master ~]$
 ```
 
-#### WordCount 프로그래밍 순서
+## 2.4. WordCount 만들기
+
+### 2.4.1. Mapper Class 작성
 
 ```java
 package lab.hadoop.wordcount;
@@ -671,15 +694,15 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+//org.apache.hadoop.mapreduce.Mapper를 상속 받아 map 을 override 한다
 public class WordCountMapper  extends Mapper<LongWritable, Text, Text, IntWritable>{
+	
 	private final static IntWritable one=new IntWritable(1);
 	private Text word=new Text();
 	
-
 	@Override
 	protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, IntWritable>.Context context)
 			throws IOException, InterruptedException {
-		
 		
 		StringTokenizer itr=new StringTokenizer(value.toString());
 		while(itr.hasMoreTokens()) {
@@ -689,39 +712,410 @@ public class WordCountMapper  extends Mapper<LongWritable, Text, Text, IntWritab
 	}
 
 }
+```
+
+### 2.4.2. Reducer Class 작성
+
+```java
 package lab.hadoop.wordcount;
 
 import java.io.IOException;
 
-
 import org.apache.hadoop.io.IntWritable;
-
 import org.apache.hadoop.io.Text;
-
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class WordCountReducer  extends Reducer<Text, IntWritable, Text, IntWritable>{
-	private final static IntWritable result=new IntWritable();
-	
-	
+//org.apache.hadoop.mapreduce.Reducer 를 상속받아 reduce 를 override 한다.
+public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
+	private final static IntWritable result = new IntWritable();
 	
+	@Override
 	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		
-		
-		int sum=0;
-		for(IntWritable val: values) {
-			sum+= val.get();
+		int sum = 0;
+		for(IntWritable val : values) {
+			sum += val.get();
 		}
 		result.set(sum);
 		context.write(key,result);
 	}	
-
 }
+
+```
+
+### 2.4.3. Driver Class 작성
+
+```java
 package lab.hadoop.wordcount;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+public class WordCount {
+
+	public static void main(String[] args) throws Exception {
+		Configuration conf = new Configuration();
+		if(args.length != 2) {
+			System.err.println("Usage: WordCount <input> <output>");
+			System.exit(2);
+		}
+		Job job = new Job(conf, "WordCount");
+		
+		job.setJarByClass(WordCount.class);
+		job.setMapperClass(WordCountMapper.class);
+		job.setReducerClass(WordCountReducer.class);
+		
+		job.setInputFormatClass(TextInputFormat.class);
+	
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(IntWritable.class);
+		
+		//file system control object making
+		FileSystem hdfs = FileSystem.get(conf);
+		
+		//route check
+		Path path = new Path(args[1]);
+		if(hdfs.exists(path)) {
+			hdfs.delete(path,true);
+		}
+		FileInputFormat.addInputPath(job, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		
+		job.waitForCompletion(true);
+	}
+}
+```
+
+### 2.4.4. 실행 및 결과 확인
+
+```bash
+#실행
+[hadoop@master ~]$ hadoop jar wordcount.jar README.txt output/wordcount
+2019-09-03 17:49:46,340 INFO client.RMProxy: Connecting to ResourceManager at master/192.168.153.128:8032
+2019-09-03 17:49:47,162 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+2019-09-03 17:49:47,196 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/hadoop/.staging/job_1567475125668_0002
+2019-09-03 17:49:47,591 INFO input.FileInputFormat: Total input files to process : 1
+2019-09-03 17:49:47,799 INFO mapreduce.JobSubmitter: number of splits:1
+2019-09-03 17:49:48,412 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1567475125668_0002
+2019-09-03 17:49:48,415 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2019-09-03 17:49:48,680 INFO conf.Configuration: resource-types.xml not found
+2019-09-03 17:49:48,681 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2019-09-03 17:49:48,782 INFO impl.YarnClientImpl: Submitted application application_1567475125668_0002
+2019-09-03 17:49:48,844 INFO mapreduce.Job: The url to track the job: http://master:8088/proxy/application_1567475125668_0002/
+2019-09-03 17:49:48,845 INFO mapreduce.Job: Running job: job_1567475125668_0002
+2019-09-03 17:50:00,184 INFO mapreduce.Job: Job job_1567475125668_0002 running in uber mode : false
+2019-09-03 17:50:00,186 INFO mapreduce.Job:  map 0% reduce 0%
+2019-09-03 17:50:09,679 INFO mapreduce.Job:  map 100% reduce 0%
+2019-09-03 17:50:21,906 INFO mapreduce.Job:  map 100% reduce 100%
+2019-09-03 17:50:21,922 INFO mapreduce.Job: Job job_1567475125668_0002 completed successfully
+2019-09-03 17:50:22,102 INFO mapreduce.Job: Counters: 53
+        File System Counters
+                FILE: Number of bytes read=2419
+                FILE: Number of bytes written=436423
+                FILE: Number of read operations=0
+                FILE: Number of large read operations=0
+                FILE: Number of write operations=0
+                HDFS: Number of bytes read=1472
+                HDFS: Number of bytes written=1306
+                HDFS: Number of read operations=8
+                HDFS: Number of large read operations=0
+                HDFS: Number of write operations=2
+        Job Counters
+                Launched map tasks=1
+                Launched reduce tasks=1
+                Data-local map tasks=1
+                Total time spent by all maps in occupied slots (ms)=6902
+                Total time spent by all reduces in occupied slots (ms)=9598
+                Total time spent by all map tasks (ms)=6902
+                Total time spent by all reduce tasks (ms)=9598
+                Total vcore-milliseconds taken by all map tasks=6902
+                Total vcore-milliseconds taken by all reduce tasks=9598
+                Total megabyte-milliseconds taken by all map tasks=7067648
+                Total megabyte-milliseconds taken by all reduce tasks=9828352
+        Map-Reduce Framework
+                Map input records=31
+                Map output records=179
+                Map output bytes=2055
+                Map output materialized bytes=2419
+                Input split bytes=106
+                Combine input records=0
+                Combine output records=0
+                Reduce input groups=131
+                Reduce shuffle bytes=2419
+                Reduce input records=179
+                Reduce output records=131
+                Spilled Records=358
+                Shuffled Maps =1
+                Failed Shuffles=0
+                Merged Map outputs=1
+                GC time elapsed (ms)=942
+                CPU time spent (ms)=2960
+                Physical memory (bytes) snapshot=463089664
+                Virtual memory (bytes) snapshot=5582635008
+                Total committed heap usage (bytes)=397934592
+                Peak Map Physical memory (bytes)=273211392
+                Peak Map Virtual memory (bytes)=2787102720
+                Peak Reduce Physical memory (bytes)=189878272
+                Peak Reduce Virtual memory (bytes)=2795532288
+        Shuffle Errors
+                BAD_ID=0
+                CONNECTION=0
+                IO_ERROR=0
+                WRONG_LENGTH=0
+                WRONG_MAP=0
+                WRONG_REDUCE=0
+        File Input Format Counters
+                Bytes Read=1366
+        File Output Format Counters
+                Bytes Written=1306
+
+#결과 파일 목록 확인
+[hadoop@master ~]$ hadoop fs -ls -R output
+drwxr-xr-x   - hadoop supergroup          0 2019-09-03 17:50 output/wordcount
+-rw-r--r--   3 hadoop supergroup          0 2019-09-03 17:50 output/wordcount/_SUCCESS
+-rw-r--r--   3 hadoop supergroup       1306 2019-09-03 17:50 output/wordcount/part-r-00000
+
+#결과 파일 내용 확인
+[hadoop@master ~]$ hadoop fs -cat output/wordcount/part-r-00000
+(BIS),  1
+(ECCN)  1
+(TSU)   1
+(see    1
+5D002.C.1,      1
+740.13) 1
+<http://www.wassenaar.org/>     1
+Administration  1
+Apache  1
+BEFORE  1
+BIS     1
+Bureau  1
+Commerce,       1
+Commodity       1
+Control 1
+Core    1
+Department      1
+ENC     1
+Exception       1
+Export  2
+For     1
+Foundation      1
+Government      1
+Hadoop  1
+Hadoop, 1
+Industry        1
+Jetty   1
+License 1
+Number  1
+Regulations,    1
+SSL     1
+Section 1
+Security        1
+See     1
+Software        2
+Technology      1
+The     4
+This    1
+U.S.    1
+Unrestricted    1
+about   1
+algorithms.     1
+and     6
+and/or  1
+another 1
+any     1
+as      1
+asymmetric      1
+at:     2
+both    1
+by      1
+check   1
+classified      1
+code    1
+code.   1
+concerning      1
+country 1
+country's       1
+country,        1
+cryptographic   3
+currently       1
+details 1
+distribution    2
+eligible        1
+encryption      3
+exception       1
+export  1
+following       1
+for     3
+form    1
+from    1
+functions       1
+has     1
+have    1
+http://hadoop.apache.org/core/  1
+http://wiki.apache.org/hadoop/  1
+if      1
+import, 2
+in      1
+included        1
+includes        2
+information     2
+information.    1
+is      1
+it      1
+latest  1
+laws,   1
+libraries       1
+makes   1
+manner  1
+may     1
+more    2
+mortbay.org.    1
+object  1
+of      5
+on      2
+or      2
+our     2
+performing      1
+permitted.      1
+please  2
+policies        1
+possession,     2
+project 1
+provides        1
+re-export       2
+regulations     1
+reside  1
+restrictions    1
+security        1
+see     1
+software        2
+software,       2
+software.       2
+software:       1
+source  1
+the     8
+this    3
+to      2
+under   1
+use,    2
+uses    1
+using   2
+visit   1
+website 1
+which   2
+wiki,   1
+with    1
+written 1
+you     1
+your    1
+```
+
+## 2.5. 항공기 출발 지연 건수 확인
+
+### 2.5.1. data file 준비
+
+- http://stat-computing.org/dataexpo/2009/the-data.html 에서 2007년과 2008년의 .csv파일 다운
+
+- 압축해제
+
+  ```bash
+  [hadoop@master Downloads]$ bunzip2 ./2007.csv.bz2
+  [hadoop@master Downloads]$ bunzip2 ./2008.csv.bz2
+  ```
+
+- HDFS put
+
+  ```bash
+  [hadoop@master ~]$ hadoop fs -mkdir -p /data/airline
+  [hadoop@master ~]$ hadoop fs -put *.csv /data/airline/
+  ```
+
+### 2.5.2. Mapper Class 작성
+
+```java
+package lab.hadoop.airline;
+
+import java.io.IOException;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+
+public class DepartureDelayCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+	
+	//map 출력키(key)
+	private Text outputKey = new Text();
+	//map 출력값(value)
+	private final static IntWritable outputValue = new IntWritable(1);
+	
+
+	public void map(LongWritable key, Text value, Context context) 
+			throws IOException,InterruptedException {
+		if( key.get() > 0) {
+			//콤마 구분자 분리
+			String[] colums = value.toString().split(",");
+			if(colums != null && colums.length > 0) {
+				try{
+					//출력키 설정
+					outputKey.set(colums[0]+ "," + colums[1]);
+					if(!colums[15].equals("NA")) {
+						int depDelayTime = Integer.parseInt(colums[15]);
+						if(depDelayTime > 0) {
+			                        	//출력데이터 설정
+							context.write(outputKey, outputValue);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+}
+```
+
+### 2.5.3. Reduce Class 작성
+
+```java
+package lab.hadoop.airline;
+
+import java.io.IOException;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class DelayCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+	
+	private IntWritable result = new IntWritable();
+
+	public void reduce(Text key, Iterable<IntWritable>values, Context context)throws IOException, InterruptedException{
+		
+		int sum = 0;
+		for(IntWritable value: values) {
+			sum += value.get();
+		}
+		result.set(sum);
+		context.write(key, result);
+	}
+}
+```
+
+### 2.5.4.  Driver Class 작성
+
+```java
+package lab.hadoop.airline;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -734,36 +1128,41 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-public class WordCount {
+public class DepartureDelayCount {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf= new Configuration();
+		
 		if(args.length !=2) {
-			System.err.println("Usage: WordCount <input> <output>");
-			System.exit(2);
+			System.err.println("Usage: DepartureDelayCount <input> <output>");
+			System.exit(2);//셀 커맨드 잘못 사용시 종료!
 		}
-		Job job=new Job(conf, "WordCount");
-		
-		job.setJarByClass(WordCount.class);
-		job.setMapperClass(WordCountMapper.class);
-		job.setReducerClass(WordCountReducer.class);
-		
-		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputValueClass(TextOutputFormat.class);
-	
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(IntWritable.class);
-		
-		//file system control object making
-		FileSystem hdfs =FileSystem.get(conf);
-		
-		//route check
-		Path path= new Path(args[1]);
+		FileSystem hdfs = FileSystem.get(conf);
+
+		//경로 체크
+		Path path = new Path(args[1]);
 		if(hdfs.exists(path)) {
-			hdfs.delete(path,true);
+			hdfs.delete(path, true);
 		}
+				
+		//job 이름 설정
+		Job job = new Job(conf, "DepartureDelayCount");
+		//입출력 데이터 경로 설정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		
+		//job 클래스 설정
+		job.setJarByClass(DepartureDelayCount.class);        
+		job.setMapperClass(DepartureDelayCountMapper.class); 	//Mapper 클래스 설정
+		job.setReducerClass(DelayCountReducer.class);			//Reducer 클래스 설정
+		
+		//입출력 데이터 포맷 설정
+		job.setInputFormatClass(TextInputFormat.class);
+		//job.setOutputValueClass(TextOutputFormat.class);
+	    	
+		//출력키 및 출력값 유형 설정
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(IntWritable.class);
 		
 		job.waitForCompletion(true);
 	}
@@ -771,186 +1170,50 @@ public class WordCount {
 }
 ```
 
-
-
-이 과정을 실험해 보았따!
+### 2.5.6. 실행
 
 ```bash
-[hadoop@master ~]$ hadoop jar ./WordCount.jar /data/input.txt /output/
-
-[hadoop@master ~]$ hadoop fs -ls -R /output
-[hadoop@master ~]$ hadoop fs -cat /output/part-r-00000
-로 확인해보자!!!!!
+[hadoop@master ~]$ hadoop jar ./departure-delay-count.jar /data/airline /output/airline
+[hadoop@master ~]$ hadoop fs -ls /output/airline
+[hadoop@master ~]$ hadoop fs -cat /output/airline/part-r-00000
+2007,1  255777
+2007,10 231129
+2007,11 217557
+2007,12 304011
+2007,2  259288
+2007,3  276261
+2007,4  249097
+2007,5  241699
+2007,6  307986
+2007,7  307864
+2007,8  298530
+2007,9  195615
+2008,1  247948
+2008,10 162531
+2008,11 157278
+2008,12 263949
+2008,2  252765
+2008,3  271969
+2008,4  220864
+2008,5  220614
+2008,6  271014
+2008,7  253632
+2008,8  231349
+2008,9  147061
 ```
 
+## 2.6. 옵션에 따른 지연 건수 확인시
 
+- 앞의 예와는 다르게 실행시 옵션을 주어 **출발/도착** 중 하나를 골라 건수를 확인하는 jar를 만든다.
 
----
+- DriverClass에서  `ToolRunner`를 이용하여 실행해 본다.
+- ```extends Configured``` : *org.apache.hadoop.conf.Configured*
+- ```implements Tool```: *org.apache.hadoop.util.Tool*
 
-
-
-#### 티빔 3
-
-## 항공기 정보 정리해보기
-
-1. http://stat-computing.org/dataexpo/2009/the-data.html 에서 2007년과 2008년의 .csv파일 다운
-
-2. 압축 풀기
-
-   - [hadoop@master Downloads]$ bunzip2 ./2007.csv.bz2
-   - [hadoop@master Downloads]$ bunzip2 ./2008.csv.bz2
-
-3. 하둡에 파일을 만들기
-
-   - [hadoop@master ~]$ hadoop fs -mkdir /data/airline
-   - [hadoop@master ~]$ hadoop fs -put ./Downloads/2008.csv /data/airline/
-   - [hadoop@master ~]$ hadoop fs -ls /data/airline (하둡에 넣은 파일 확인해보자)
-   - [hadoop@master ~]$ hadoop fs -mkdir /output/airline
-   - [hadoop@master ~]$ hadoop fs -ls /output
-
-4. 이클립스에서 작업
-
-   ```java
-   package lab.hadoop.airline;
-   
-   import java.io.IOException;
-   
-   import org.apache.hadoop.io.IntWritable;
-   import org.apache.hadoop.io.LongWritable;
-   import org.apache.hadoop.io.Text;
-   import org.apache.hadoop.mapreduce.Mapper;
-   
-   
-   
-   public class DepartureDelayCountMapper extends 
-   	Mapper<LongWritable, Text, Text, IntWritable> {
-   		
-   	//map 출력값(value)
-   		private final static IntWritable outputValue = new IntWritable(1);
-   	//map 출력키(key)
-   		private Text outputKey = new Text();
-   	
-   public void map(LongWritable key, Text value, Context context) throws IOException,InterruptedException {
-   	if( key.get()>0) {
-   		//콤마 구분자 분리
-   		String[] colums = value.toString().split(",");
-   		if(colums != null && colums.length >0) {
-   			try{
-   				//출력키 설정
-   				outputKey.set(colums[0]+ "," +colums[1]);
-   				if(!colums[15].equals("NA")) {
-   					int depDelayTime =Integer.parseInt(colums[15]);
-   					if(depDelayTime >0) {
-                           //출력데이터 설정
-   						context.write(outputKey,outputValue);
-   					}
-   						
-   					}
-   				}catch(Exception e) {
-   					e.printStackTrace();
-   				}
-   		}
-   	}
-   }
-   }
-   ```
-
-   ```java
-   package lab.hadoop.airline;
-   
-   import java.io.IOException;
-   
-   import org.apache.hadoop.io.IntWritable;
-   import org.apache.hadoop.io.Text;
-   import org.apache.hadoop.mapreduce.Reducer;
-   
-   public class DelayCountReducer extends Reducer<Text,IntWritable, Text, IntWritable> {
-   	private IntWritable result =new IntWritable();
-   	//
-   	public void reduce(Text key, Iterable<IntWritable>values, Context context)throws IOException, InterruptedException{
-   		int sum=0;
-   		for(IntWritable value: values)
-   			sum+= value.get();
-   		result.set(sum);
-   		context.write(key, result);
-   	}
-   
-   }
-   ```
-
-   
-
-5. 출력할 드라이브 설정
-
-   ```java
-   package lab.hadoop.airline;
-   
-   
-   
-   import org.apache.hadoop.conf.Configuration;
-   import org.apache.hadoop.fs.FileSystem;
-   import org.apache.hadoop.fs.Path;
-   import org.apache.hadoop.io.IntWritable;
-   import org.apache.hadoop.io.Text;
-   import org.apache.hadoop.mapreduce.Job;
-   import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-   import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-   import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-   import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-   
-   public class DepartureDelayCount {
-   
-   	public static void main(String[] args) throws Exception {
-   		Configuration conf= new Configuration();
-   		
-   		if(args.length !=2) {
-   			System.err.println("Usage: DepartureDelayCount <input> <output>");
-   			System.exit(2);//셀 커맨드 잘못 사용시 종료!
-   		}
-   		FileSystem hdfs=FileSystem.get(conf);
-   		//route check 
-   				//경로 체크
-   				Path path= new Path(args[1]);
-   				if(hdfs.exists(path)) {
-   					hdfs.delete(path,true);
-   				}
-   				
-   		//job 이름 설정
-   		Job job=new Job(conf, "DepartureDelayCount");
-   		//입출력 데이터 경로 설정
-   		FileInputFormat.addInputPath(job, new Path(args[0]));
-   		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-   		//job 클래스 설정
-   		job.setJarByClass(DepartureDelayCount.class);
-           //mapper클래스 설정
-   		job.setMapperClass(DepartureDelayCountMapper.class);
-           //Reducer 클래스 설정
-   		job.setReducerClass(DelayCountReducer.class);
-   		
-           //입출력 데이터 포맷 설정
-   		job.setInputFormatClass(TextInputFormat.class);
-   		job.setOutputValueClass(TextOutputFormat.class);
-   	    //출력키 및 출력값 유형 설정
-   		job.setOutputKeyClass(Text.class);
-   		job.setOutputValueClass(IntWritable.class);
-   		
-   		job.waitForCompletion(true);
-   	}
-   
-   }
-   ```
-
-6. 아카이브를 만들자
-
-   - 먼저 이클립스에서 자르파일로 export하고 export 저장위치는 home아래 (main class설정! 자동으로 뜬다)
-   - [hadoop@master ~]$ hadoop jar ./departure.jar /data/airline /output/airline
-   - [hadoop@master ~]$ hadoop fs -ls /output/airline(파일 완료 확인)
-   - [hadoop@master ~]$ hadoop fs -cat /output/airline/part-r-00000(이것으로 누적 합계를 확인!)
-
-### 연습2
+### 2.6.1.  Mapper Class 작성
 
 ```java
-package lab.hadoop.delaycount;
+package lab.hadoop.airline;
 
 import java.io.IOException;
 
@@ -959,20 +1222,18 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class DelayCountMapper extends Mapper<LongWritable,Text , Text, IntWritable>{
-    //<입력키 유형, 입력값 유형, 출력키 유형, 출력값 유형>을 의미
-
+public class ArrivalDelayCountMapper extends Mapper<LongWritable,Text , Text, IntWritable>{
 
 	private String workType;
-	private Text outputKey =new Text();
-	private final static IntWritable outputValue= new IntWritable(1);
+	private Text outputKey = new Text();
+	private final static IntWritable outputValue = new IntWritable(1);
 
-
+	//setup은 Mapper class에서 작업시작  시 한 번 호출되는 메서드
 	@Override
 	protected void setup(Mapper<LongWritable, Text, Text, IntWritable>.Context context)
-			throws IOException, InterruptedException {//setup은 Mapper class에서 작업시작히 한번 호출 되는 메서드
+			throws IOException, InterruptedException {
 
-		workType=context.getConfiguration().get("workType");
+		workType = context.getConfiguration().get("workType");
 	}
 	
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{//입력 분할에서 각 키 / 값 쌍마다 한 번씩 호출된다.
@@ -980,24 +1241,23 @@ public class DelayCountMapper extends Mapper<LongWritable,Text , Text, IntWritab
 			String[] colums=value.toString().split(",");
 			if(colums !=null && colums.length>0) {
 				try {
-					if(workType.equals("departure")) {//실행시 옵션을 줄때 그것이 departure인가?
+					if(workType.equals("departure")) {
 						if(!colums[15].equals("NA")){
-							int depDelayTime=Integer.parseInt(colums[15]);
-							if(depDelayTime>0) {
-								outputKey.set(colums[0]+","+colums[1]);
-                                //colums[0]=year colums[1]=month
-                                //출력 데이터 생성
+							int depDelayTime = Integer.parseInt(colums[15]);
+							if(depDelayTime > 0) {
+								//출력키 설정
+								outputKey.set(colums[0]+ "," + colums[1]);
+                                				//출력 데이터 생성
 								context.write(outputKey, outputValue);
 							}
 						}
-                        //도착 지연 데이터 출력
-					}else if(workType.equals("arrival")) {//실행시 옵션을 줄때 그것이 arrival 인가?
+					}else if(workType.equals("arrival")) {
 						if(!colums[14].equals("NA")) {
-							int arrDelayTime=Integer.parseInt(colums[14]);
-							if(arrDelayTime>0) {
-                                //출력키 설정
-								outputKey.set(colums[0]+","+colums[1]);
-                                //출력 데이터 생성
+							int arrDelayTime = Integer.parseInt(colums[14]);
+							if(arrDelayTime > 0) {
+                               					//출력키 설정
+								outputKey.set(colums[0] + "," + colums[1]);
+                                				//출력 데이터 생성
 								context.write(outputKey, outputValue);
 							}
 						}
@@ -1009,29 +1269,18 @@ public class DelayCountMapper extends Mapper<LongWritable,Text , Text, IntWritab
 		}
 	}
 }
-package lab.hadoop.delaycount;
+```
 
-import java.io.IOException;
+### 2.6.2. Reducer Class 작성
 
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer;
+```java
+// Reducer Class 는 앞의 2.5에서 사용했던 것을 그대로 사용한다.
+```
 
-public class DelayCountReducer extends Reducer<Text,IntWritable, Text, IntWritable> {
-	private IntWritable result =new IntWritable();
-	
-	public void reduce(Text key, Iterable<IntWritable>values, Context context)throws IOException, InterruptedException{
-		int sum=0;
-		for(IntWritable value: values)
-			sum+= value.get();
-		result.set(sum);
-		context.write(key, result);
-	}
+### 2.6.3. Driver Class 작성
 
-}
-package lab.hadoop.delaycount;
-
-
+```java
+package lab.hadoop.airline;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -1048,67 +1297,97 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class DelayCount extends Configured implements Tool{
+public class DelayCount extends Configured implements Tool {
 	
 	public int run(String[] args) throws Exception{
 	
-		String[] otherArgs=new GenericOptionsParser(getConf(),args).getRemainingArgs();
-		//입추력 데이터 경로 확
+		String[] otherArgs = new GenericOptionsParser(getConf(),args).getRemainingArgs();
+		//입출력 경로 인자 확인
 		if(args.length !=2) {
 			System.err.println("Usage: DelayCount <in> <out>");
 			System.exit(2);
 		}
-		//job이름 설정 
-		Job job=new Job(getConf(), "DelayCount");
+
+		Job job = new Job(getConf(), "DelayCount");
 		
-		FileSystem hdfs=FileSystem.get(getConf());
-		//route check 
-				//경로 체크
-				Path path= new Path(args[1]);
-				if(hdfs.exists(path)) {
-					hdfs.delete(path,true);
-				}
-		//입출력 데이터 경로 설
+		FileSystem hdfs = FileSystem.get(getConf());
+
+		Path path= new Path(args[1]);
+		if(hdfs.exists(path)) {
+			hdfs.delete(path,true);
+		}
+
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-		//job클래스 설
+
 		job.setJarByClass(DelayCount.class);
 		job.setMapperClass(DelayCountMapper.class);
 		job.setReducerClass(DelayCountReducer.class);
 		
 		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputValueClass(TextOutputFormat.class);
+		//job.setOutputValueClass(TextOutputFormat.class);
 	
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		
 		job.waitForCompletion(true);
-        //실행시키는 코드!
+
 		return 0;
 	}
-	public static void main(String[] args)throws Exception{
+	
+	public static void main(String[] args) throws Exception {
 		//Tool 인터페이스 실행
-		int res=ToolRunner.run(new Configuration(),new DelayCount(),args);
-		System.out.println("##RESULT:"+res);
+		int res = ToolRunner.run(new Configuration(), new DelayCount(), args);
+		System.out.println("##RESULT:" + res);
 	}
 }
 ```
 
-- 실행해 보자
-- [hadoop@master ~]$ hadoop fs -mkdir /output/delaycount
-- [hadoop@master ~]$ hadoop jar ./delaycount.jar -D workType=arrival /data/airline /output/delaycount
-  - 여기서 -D workType 은 처음 Mapper class 시 주었던 것 arrival 로
-- [hadoop@master ~]$ hadoop fs -mkdir /output/delaycount2
-- [hadoop@master ~]$ hadoop jar ./delaycount.jar -D workType=departure /data/airline /output/delaycount2
-  - 이번에는 -D workType =departure로 해보자.
+### 2.6.4.  실행
 
-## 정렬
+```bash
+[hadoop@master ~]$ hadoop jar delay-count.jar -D workType=arrival /data/airline /output/delaycount
+[hadoop@master ~]$ hadoop fs -cat /output/delaycount/part-r-00000
+2007,1  286334
+2007,10 270098
+2007,11 242722
+2007,12 332449
+2007,2  284152
+2007,3  293360
+2007,4  273055
+2007,5  275332
+2007,6  326446
+2007,7  326559
+2007,8  317197
+2007,9  225751
+2008,1  279427
+2008,10 183582
+2008,11 181506
+2008,12 280493
+2008,2  278902
+2008,3  294556
+2008,4  256142
+2008,5  254673
+2008,6  295897
+2008,7  264630
+2008,8  239737
+2008,9  169959
+```
 
-1. 맵리듀스의 핵심 기능
-2. 하나의 리듀스 테스크만 실행되게 하면 쉽게 해결 가능 하지만, 여러 데이터 노드가 구성된 상황에서 하나의 리듀스 테스크만 실행하는 것은 분산 환경의 장점을 살리지 못하는 것!
-3. 대량의 데이터를 정렬시 부하도 상당함
-4. 하둡이 제공하는 정렬 방식
-   - 보조 정렬,
+## 2.7. 정렬
+
+- 맵리듀스의 핵심 기능
+
+- 하나의 리듀스 테스크만 실행되게 하면 쉽게 해결 가능 하지만, 여러 데이터 노드가 구성된 상황에서 하나의 리듀스 테스크만 실행하는 것은 분산 환경의 장점을 살리지 못하는 것
+
+- 대량의 데이터를 정렬시 부하도 상당함
+
+- 하둡이 제공하는 정렬 방식
+  - 보조 정렬(Secondary Sort)
+
+  - 부분 정렬(Partial Sort)
+
+  - 전체 정렬(Total Sort)
 
 ### 보조 정렬
 
