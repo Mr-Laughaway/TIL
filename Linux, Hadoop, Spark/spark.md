@@ -3277,18 +3277,73 @@ root
 
 - Window 연산
 
+  ![1567581572590](spark.assets/1567581572590.png)
+
   - StreamingContext는 정해진 주기마다 새로 생성된 데이터를 읽어서 RDD를 생성하며, 생성된 RDD는 DStream이 제공하는 API를 이용해 처리할 수 있습니다.
   - 스트리밍 데이터의 가장 마지막에 수행된 배치의 결과 뿐 아니라 이전에 수행된 배치의 결과까지 함께 사용해야 하는 경우, 윈도우 연산을 활용할 수 있습니다.
   - 윈도우 연산은 마지막 배치가 수행됐을 때 읽어온 데이터뿐 아니라 그 이전에 수행된 배치의 입력 데이터까지 한꺼번에 처리할 수 있도록 지원하는 연산입니다.
   - 윈도우 연산은 수행하기 위해서는 얼마만큼의 간격으로 윈도우 연산을 수행할 것인지와 한번 수행할 때 얼마만큼의 과거 배치 수행 결과를 가져올 것인지에 대한 정보를 지정해야 합니다.
   - spark의 window 연산은 여러 배치 들의 결과를 합쳐서 StreamingContext의 배치 간격보다 훨씬 긴 시간 간격에 대한 결과를 계산한다
 
-- 
+  ```scala
+  import org.apache.spark.streaming.StreamingContext
+  import org.apache.spark.streaming.Seconds
+  import scala.collection.mutable
+  
+  val ssc = new StreamingContext(sc, Seconds(1))
+  ssc.checkpoint(".")
+  val input = for (i <- mutable.Queue(1 to 100: _*)) yield sc.parallelize(i :: Nil)
+  val ds = ssc.queueStream(input)
+  ds.window(Seconds(3), Seconds(2)).print
+  
+  ds.countByWindow(Seconds(3), Seconds(2)).print
+  
+  ds.reduceByWindow( (a, b) => Math.max(a, b), Seconds(3), Seconds(2)).print
+  
+  ds.map( v => (v%2, 1)).reduceByKeyAndWindow((a: Int, b: Int) => a+b, Seconds(4), Seconds(2)).print
+  
+  ds.countByValueAndWindow(Seconds(3), Seconds(2)).print
+  
+  //위 각각의 ds 마다 테스트 해봐야 함
+  ssc.start()
+  
+  ```
+
+  
 
 
 
 # 6. Spark MLlib
 
+- Vectors
+
+  - 프로그램 상에서 double 타입의 값들을 포함하는 컬렉션으로 구현되며 벡터에 포함된 각 데이터는 정의된 순서에 따라 0부터 시작하는 정수형 인덱스를 부여 받습니다.
+  - org.apache.spark.ml.linalg 패키지에 정의된 트레이트
+  - Vector 인스턴스를 만들기 위해서는 값에 대한 정보만 가지고 있는 DenseVector 클래스나 값에 대한 인덱스 정보를 모두 가지고 있는 SparseVector 클래스 중 하나를 선택해서 해당 클래스의 인스턴스를 생성해야 합니다.
+  - desnse(), sparse() – 팩토리 메서드
+  
+  ```scala
+  //static Vector	sparse(int size, int[] indices, double[] values)
+  //Creates a sparse vector providing its index array and value array.
+  
+  
+  import org.apache.spark.ml.linalg.Vectors
+  val v1 = Vectors.dense(0.1, 0.0, 0.2, 0.3)
+  val v2 = Vectors.dense(Array(0.1, 0.0, 0.2, 0.3))
+  val v3 = Vectors.sparse(4, Seq((0, 0.1), (2, 0.2), (3, 0.3)))
+  val v4 = Vectors.sparse(4, Array(0, 2, 3), Array(0.1, 0.2, 0.3))
+  
+  println(v1.toArray.mkString(“,"))
+  println(v3.toArray.mkString(", "))
+  
+  scala> val v5 = Vectors.sparse(9, Array(1, 3, 5), Array(11.0, 12.0, 13.0))
+  scala> println(v5.toArray.mkString(","))
+  0.0,11.0,0.0,12.0,0.0,13.0,0.0,0.0,0.0
+  
+  ```
+  
+  
+  
 - k-means 
 
   ```scala
