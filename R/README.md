@@ -144,15 +144,35 @@
     dev.off()
     ```
 
+- R에서 제공하는 기본 함수 사용 예제 보기
 
+  ```R
+  exmaple(seq)
+  ```
+
+- R에서 제공하는 함수의 파라미터 형식 보기
+
+  ```R
+  args(max)
+  ```
+
+- help
+
+  ```R
+  help(mean)
+  ?sum #R document에서 확인
+  ??mean #이건 뭐다? 
+  ```
 
 ## 1.3. 변수
 
 ### 1.3.1. 변수 선언
 
-- 첫 문자는 영문자로 시작
+- 첫 문자는 영문자 혹은 . 으로 시작
 
-- 두 번쨰 둠나부터는 숫자, _, . 사용 가능
+- 첫 문자가 .으로 시작한다면 .뒤에는 숫자가 올 수 없다.
+
+- 두 번 째 문자부터는 숫자, _, . 사용 가능
 
 - 대소문자 구분
 
@@ -176,6 +196,14 @@
 
 ```
 ls()
+objects()
+```
+
+### 1.3.3. 변수 삭제
+
+```
+rm(list=ls())
+rm(변수)
 ```
 
 ## 1.4. 자료형
@@ -207,7 +235,9 @@ class(age)
 [1] "logical"
 ```
 
-#### 1.4.1.3. NA - 결측치
+#### 1.4.1.3. NA 
+
+결측치, 즉 값이 빠져 있는 경우를 뜻한다.
 
 ```R
 age <- NA
@@ -229,11 +259,104 @@ sum(10, 20, 30)
 
 #### 1.4.1.4. NULL
 
+프로그래밍의 편의를 위해 미정(undefined) 값을 표현하는데 사용.
+
 ```R
 age <- NULL
 class(a)
 [1] "NULL"
 ```
+
+#### 1.4.1.5. 문자열
+
+```R
+a <- "hello"
+print(a)
+
+a <- 'hello'
+print(a)
+```
+
+#### 1.4.1.6. 진리값
+
+```R
+TRUE & TRUE
+TRUE & FALSE
+
+c(TRUE, TRUE) & c(TRUE, FALSE)
+[1]  TRUE FALSE
+
+#short circuit operator ?
+c(TRUE, TRUE) && c(TRUE, FALSE)
+[1] TRUE
+```
+
+#### 1.4.1.7. 날짜와 시간
+
+- format
+
+  - `%d` 일자를 숫자로 인식
+  - `%m` 월을 숫자로 인식
+  - `%b` 월을 영어 약어로 인식
+  - `%B`월을 전체 이름으로 인식
+  - `%y`년도를 숫자 두 자리로 인식
+  - `%Y` 년도를 숫자 네 자리로 인식
+
+  ```R
+  Sys.date() #날짜만 보여주는 함수
+  sys.time() #날짜와 시간을 보여주는 함수
+  date() #미국식 날짜와 시간을 출력하는 함수
+  as.Date('2017-12-01') #문자형텨의 날짜를 날짜타입으로 변환해주는 함수
+  as.Date('2017/07/04')
+  as.Date('04-07-2017') #오류 날짜가 이상하게 들어감
+  as.Date('04-07-2017', format='%d-%m-%Y') #이렇게 형식을 맞추어 줄 수 있다.
+  as.Date(10, origin='2017-12-01') #주어진 날짜 기준으로 10일 후의 날짜
+  as.Date(-10, origin='2017-12-01') #주어진 날짜 기준으로 10일 이전의 날짜
+  ```
+
+- 로케일이 안 맞는 경우
+
+  ```R
+  #Sys.setlocale(category="LC_ALL", locale="언어_국가")
+  Sys.setlocale(category="LC_ALL", locale="Korean_Korea")
+  Sys.setlocale(category="LC_ALL", locale="English_US")
+  ```
+
+- 날짜 산술 연산
+
+  ```R
+  as.Date("2017-07-31") - as.Date("2017-07-04")
+  Time difference of 27 days
+  ```
+
+- POSIX
+
+  - POSIXt 날짜를 년, 월,일로 표시하는 리스트형 클래스
+  - POSIXct 날짜를 연속적인 데이터로 인식해서 1970년을 기준으로 초 단위... 회기분석 때에 많이 쓴다.
+
+  ```R
+  as.Date("2017-07-04 20:00:00") - as.Date("2017-07-04 18:30")
+  Time difference of 0 days
+  as.POSIXct("2017-07-04 20:00:00") - as.POSIXct("2017-07-04 18:30")
+  Time difference of 1.5 hours
+  ```
+
+- lubridate 패키지로 날짜와 시간 제어하기
+
+  ```R
+  install.packages("lubridate")
+  library(lubridate)
+  date<-now() #현재 날짜와 시간 넣기
+  date
+  year(date) #년도만 출력
+  month(date,label=T) #월을 영문으로 출력
+  month(date,label=F) #월을 숫자로 출력
+  day(date)
+  ```
+
+  
+
+
 
 ### 1.4.2. 자료형 확인
 
@@ -307,11 +430,225 @@ as.Date(객체)
   [1] -3
   ```
 
+### 1.4.4. Factor 형
+
+>- 여러번 중복으로 나오는 데이터들을 각 값으로 모아서 대표 값을 출력해 주는 형태
+>- stringAsFactors=FALSE 옵션은 대표값으로 정리하지 않고 중복되는 상태 그대로 사용하게 해줌
+>- 범주형(Categorical) 데이터(자료)를 표현하기 위한 데이터 타입
+>- 범주형 데이터 - 데이터가 사전에 정해진 특정 유형으로만 분류되는 경우
+>- 범주형 데이터는 또 다시 명목형Nominal과 순서형Ordinal으로 구분
+>- 명목형 데이터는 값들 간에 크기 비교가 불가능한 경우
+>- 순서형 데이터는 대, 중, 소와 같이 값에 순서를 둘 수 있는 경우
+
+```R
+sex <- factor("m", c("m", "f"))
+sex
+[1] m
+Levels: m f
+
+nlevels(sex)
+[1] 2
+
+levels(sex)
+[1] "m" "f"
+
+levels(sex)[1]
+[1] "m"
+levels(sex)[2]
+[1] "f"
+
+levels(sex) <- c("male", "female") #팩터 변수에서 레벨 값을 직접 수정
+sex
+
+#명목형(Norminal)
+factor(c("m", "m", "f"), c("m", "f"))
+
+#순서형(Ordinal)
+ordered("a", c("a", "b", "c")))
+```
+
+- 범주형 데이터로 plot 그려보기
+
+  ```R
+  gender <- c("man", "woman", "woman", "man", "man")
+  plot(gender) #error
   
+  class(gender)
+  [1] "character"
+  mode(gender)
+  [1] "character"
+  
+  ngender <- as.factor(gender)
+  class(ngender)
+  [1] "factor"
+  mode(ngender)
+  [1] "numeric"
+  
+  table(ngender) # 빈도수 반환
+  plot(ngender)
+  
+  is.factor(ngender)
+  [1] TRUE
+  
+  ngender #Levels 속성에서 범주를 확인 (알파벳 순서?)
+  [1] man   woman woman man   man  
+  Levels: man woman
+  
+  args(factor) #factor()함수의 매개변수 확인
+  [1] man   woman woman man   man  
+  Levels: man woman
+  
+  
+  ogender <- factor(gender, levels=c("woman", "man"), ordered=T)
+  ogender #범주의 순서 확인
+  [1] man   woman woman man   man  
+  Levels: woman < man
+  
+  par(mfrow=c(1,2))
+  plot(ngender)
+  plot(ogender)
+  
+  #ggsave( "output.png", result, device="png", dpi=300, scale=2.5 ,width=map.ratio.geo, height=1) 
+  ```
+
+#### 1.4.4.1. 명목형
+
+```R
+
+```
+
+#### 1.4.4.2. 순서형
+
+```R
+
+```
+
+### 1.4.5. Vector 형
+
+>- 동일한 형태의 데이터를 모아서 함께 저장.
+>- 1차원 배열과 비슷한 개념, 특정 항목의 요소를 사용하려면 벡터명[색인] 벡터 자체를 연산 할 수 있다.
+>- 각 벡터의 요소에 names() 함수를 사용해서 이름 지정할 수 있다.
+>- seq(), rep() 함수를 사용해서 벡터에 연속적인 데이터 할당 할 수 있다.
+>- length() 함수는 벡터의 길이를 리턴
+>- %in%는 벡터에 특정 문자의 포함 여부를 리턴합니다
+
+#### 1.4.5.1. 접근
+
+- 요소의 접근은 변수[index]로 접근한다. 
+- index는 1부터 시작한다.
+
+#### 1.4.5.2. 벡터 생성 힘수
+
+- c()
+- seq()
+- rep()
+
+#### 1.4.5.3. 벡터 자료 처리 함수
+
+- union()
+- setdiff(),
+- intersect()
+
+```R
+c(1:20)
+1:20
+c(1,1,2,3,3,3,4,5,5,5,5)
+seq(1, 20)
+seq(1, 20, 2) #순차적으로 값을 증감시켜서 벡터 자료 구조 생성
+
+rep(1:3, 3)
+[1] 1 2 3 1 2 3 1 2 3
+
+rep(1:3, each=3)
+[1] 1 1 1 2 2 2 3 3 3
 
 
+```
+
+**나중에 위에다가 정리해라...나눠서...**
+
+```R
+a <- c(1:5)
+b <- a + 1
+c <- a * 2
+
+d <- rep(1:3, 3)
+union(a, d)
+[1] 1 2 3 4 5
+
+setdiff(a, d)
+[1] 4 5
+
+intersect(a, d)
+[1] 1 2 3
 
 
+#벡터는 같은 자료만 담을 수 있기때문에 큰 타입으로 자동 형변환 된다.
+f <- c(33, -5, "4", 5:9) 
+f
+[1] "33" "-5" "4"  "5"  "6"  "7"  "8"  "9"  #문자열로 변환 됨
+class(f)
+[1] "character"
+mode(f)
+[1] "character"
+
+
+#접근
+a <- c(1:20)
+a[3:10]
+[1]  3  4  5  6  7  8  9 10
+
+a[c(3, 10)]
+[1]  3 10
+
+a[-c(2:18)] # 벡터의 첨자에 -를 지정하면 해당 위치의 원소는 제외
+[1]  1 19 20
+
+```
+
+## 1.5. 기타 기본 명령어
+
+### 1.5.1. 작업 디렉토리
+
+#### 1.5.1.1. getwd
+
+```R
+getwd()
+[1] "C:/workspace_R"
+```
+
+#### 1.5.1.2. setwd
+
+```R
+setwd("C:/workspace_R")
+```
+
+### 1.5.2. 출력
+
+#### 1.5.2.1. print
+
+한번에 한 가지만
+
+```R
+print(result)
+[1] 3 6 9
+```
+
+#### 1.5.2.2. cat
+
+연속된 값 출력
+
+```R
+cat(result)
+3 6 9
+```
+
+### 1.5.3. 산술연산자
+
+- / - 나누기(실수 가능)
+- %/% - 정수 나누기
+- %% - 나머지 구하기
+- ^, ** - 승수 구하기
 
 
 
