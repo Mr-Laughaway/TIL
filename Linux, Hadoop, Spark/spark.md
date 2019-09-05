@@ -3315,13 +3315,18 @@ root
 
 # 6. Spark MLlib
 
-- Vectors
+## 6.1. 자료형
 
-  - 프로그램 상에서 double 타입의 값들을 포함하는 컬렉션으로 구현되며 벡터에 포함된 각 데이터는 정의된 순서에 따라 0부터 시작하는 정수형 인덱스를 부여 받습니다.
-  - org.apache.spark.ml.linalg 패키지에 정의된 트레이트
-  - Vector 인스턴스를 만들기 위해서는 값에 대한 정보만 가지고 있는 DenseVector 클래스나 값에 대한 인덱스 정보를 모두 가지고 있는 SparseVector 클래스 중 하나를 선택해서 해당 클래스의 인스턴스를 생성해야 합니다.
-  - desnse(), sparse() – 팩토리 메서드
-  
+### 6.1.1. Vectors
+
+- 프로그램 상에서 double 타입의 값들을 포함하는 컬렉션으로 구현되며 벡터에 포함된 각 데이터는 정의된 순서에 따라 0부터 시작하는 정수형 인덱스를 부여 받습니다.
+
+- org.apache.spark.ml.linalg 패키지에 정의된 트레이트
+
+- Vector 인스턴스를 만들기 위해서는 값에 대한 정보만 가지고 있는 DenseVector 클래스나 값에 대한 인덱스 정보를 모두 가지고 있는 SparseVector 클래스 중 하나를 선택해서 해당 클래스의 인스턴스를 생성해야 합니다.
+
+- desnse(), sparse() – 팩토리 메서드
+
   ```scala
   //static Vector	sparse(int size, int[] indices, double[] values)
   //Creates a sparse vector providing its index array and value array.
@@ -3341,68 +3346,220 @@ root
   0.0,11.0,0.0,12.0,0.0,13.0,0.0,0.0,0.0
   
   ```
-  
-  
-  
-- k-means 
+
+- 파일을 이용한 `SparseVector`  생성
 
   ```scala
-  import org.apache.spark.mllib.clustering.KMeans
-  import org.apache.spark.mllib.linalg.Vectors
-  val sparkHome = sys.env("SPARK_HOME")
-  val data = sc.textFile (
-      "file://" + sparkHome + "/data/mllib/kmeans_data.txt"
-  )
-  val parsedData = data.map{ s =>
-      Vectors.dense(
-          s.split(' ').map(_.toDouble)
-      )
-  }.cache()
-  val numClusters = 2
-  val numIterations = 20
-  val clusters = KMeans.train(parsedData, numClusters, numIterations)
-  clusters.k
-  clusters.clusterCenters
+  //파일을 이용한 SparseVector  생성
+  import org.apache.spark.ml.linalg.Vectors
+  import org.apache.spark.ml.feature.LabeledPoint
+  import org.apache.spark.mllib.util.MLUtils
   
-  val vec1 = Vectors.dense(0.3, 0.3, 0.3)
-  clusters.predict(vec1)
-  res2: Int = 1
+  val path = "file:///usr/local/spark/data/mllib/sample_libsvm_data.txt"
+  val v6 = MLUtils.loadLibSVMFile(sc, path)
+  val lp1 = v6.first
   
-  val vec2 = Vectors.dense(8.0, 8.0, 8.0)
-  clusters.predict(vec2)
-  res2: Int = 0
   
-  parsedData.foreach(vec =>
-  	println(vec + " => " + clusters.predict(vec))
-  )
-  [0.0,0.0,0.0] => 1
-  [0.1,0.1,0.1] => 1
-  [0.2,0.2,0.2] => 1
-  [9.0,9.0,9.0] => 0
-  [9.1,9.1,9.1] => 0
-  [9.2,9.2,9.2] => 0
+  println(s"label:${lp1.label}, features:${lp1.features}")
   
-  //저장
-  val predictedLabels = parsedData.map(vector => clusters.predict(vector))
-  predictedLabels.saveAsTextFile("output")
+  scala> lp1.features.toArray
+  res12: Array[Double] = Array(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 51.0, 159.0, 253.0, 159.0, 50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...
   
-  //계산된 모델을 저장
-  clusters.save(sc, "kmenas_model")
-  
-  //모델 metadata 보기
-   $ hadoop fs -cat /user/hadoop/kmeans_model/metadata/part-00000
-  {"class":"org.apache.spark.mllib.clustering.KMeansModel","version":"2.0","k":3,"distanceMeasure":"euclidean","trainingCost":0.07500000000004324}
-  ```
-
-  ※ K 값을 몇 개로 하는게 좋을까?
-
-  ```scala
-  val WSSSE = clusters.computeCost(parsedData)
-  println("Within Set Sum of Squared Errors = " + WSSSE)
-  Within Set Sum of Squared Errors = 0.11999999999994547
   ```
 
   
+
+
+
+### 6.1.2. LabeledPoint
+
+변수에 레이블을 붙인다.
+
+```scala
+import org.apache.spark.ml.feature.LabeledPoint
+import org.apache.spark.ml.linalg.Vectors
+
+val v1 = Vectors.dense(0.1, 0.0, 0.2, 0.3)
+val v5 = LabeledPoint(1.0, v1)
+
+println(s"label:${v5.label}, features:${v5.features}")
+//결과
+label:1.0, features:[0.1,0.0,0.2,0.3]
+```
+
+
+
+##  6.2. 기본 기능
+
+### 6.2.1. 파이프라인
+
+> 머신러닝은 데이터 수집부터, 가공, 특성 추출, 알고리즘 적용 및 모델 생성, 평가, 배포 및 활용에 이르는 일련의 작업을 반복하며 수행됩니다.
+>
+> 파이프라인은 여러 종류의 알고리즘을 순차적으로 실행할 수 있게 지원하는 고차원 API이며, 파이프 라인 API를 이용해 머신러닝을 위한 워크 플로우를 생성할 수 있습니다.
+>
+> 파이프라인은 데이터 프레임을 사용합니다.
+>
+> Transformer – org.apache.spark.ml 패키지에 선언된 추상 클래스. 데이터프레임을 변형해 새로운 데이터프레임을 생성하는 용도로 사용
+>
+> Estimator - org.apache.spark.ml 패키지에 선언된 추상 클래스. 데이터프레임에 알고리즘을 적용해 새로운 트랜스포머를 생성하는 역할을 합니다.
+>
+> Pipeline - org.apache.spark.ml 패키지에 선언된 클래스. 여러 알고리즘을 순차적으로 실행할 수 있는 워크플로우를 생성하는 평가자. 하나의 파이프라인은 여러 개의 파이프라인 스테이지(PipelineStage)로 구성되며, 등록된 파이프라인 스테이지들은 우선순위에 따라 순차적으로 실행됩니다.
+>
+> ParamMap : 평가자나 트랜스포머에 파라미터를 전달하기 위한 목적으로 사용되는 클래스
+
+- 예) 로지스틱 회귀
+
+```scala
+import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
+import org.apache.spark.ml.feature.VectorAssembler
+//import org.apache.spark.sql.SparkSession
+//object PipelineSample {  
+//   def main(args: Array[String]) {    
+//val spark = SparkSession.builder().appName("PipelineSample") .master("local[*]").getOrCreate()
+
+// 훈련용 데이터 (키, 몸무게, 나이, 성별)
+val training = spark.createDataFrame(
+    Seq(      
+        (161.0, 69.87, 29, 1.0),      
+        (176.78, 74.35, 34, 1.0),      
+        (159.23, 58.32, 29, 0.0)
+    )
+).toDF("height", "weight", "age", "gender")
+//빠른  계산을 위해 캐싱
+training.cache() 
+training.show(false) 
+
+// 테스트용 데이터    
+val test = spark.createDataFrame(
+    Seq(      
+        (169.4, 75.3, 42),      
+        (185.1, 85.0, 37),      
+        (161.6, 61.2, 28)
+    )
+).toDF("height", "weight", "age")    
+test.show(false) 
+
+//VectorAssembler는 특성변환 알고리즘 클래스
+val assembler = new VectorAssembler().setInputCols(
+    Array("height", "weight", "age")
+).setOutputCol("features")
+
+// training 데이터에 features 컬럼 추가    
+val assembled_training = assembler.transform(training)
+assembled_training.show(false)
+
+// 모델 생성 알고리즘 (로지스틱 회귀 평가자 - 이진분류 알고리즘)   
+val lr = new LogisticRegression().setMaxIter(10).setRegParam(0.01).setLabelCol("gender") 
+
+// 모델 생성    
+val model = lr.fit(assembled_training)  
+
+// 예측값 생성    
+model.transform(assembled_training).show()    
+
+// 파이프라인 (트랜스포머와 평가자를 하나의 파이프라인으로 묶어서 워크 플로우 생성)
+val pipeline = new Pipeline().setStages(Array(assembler, lr))    
+
+// 파이프라인 모델 생성    
+val pipelineModel = pipeline.fit(training)    
+
+// 파이프라인 모델을 이용한 예측값 생성    
+pipelineModel.transform(training).show()    
+
+// 모델 저장 
+val path1 = "/output/sparkmllib/regression-model"    
+val path2 = "/output/sparkmllib/pipeline-model"    
+model.write.overwrite().save(path1)    
+pipelineModel.write.overwrite().save(path2)    
+
+// 저장된 모델 불러오기   
+val loadedModel = LogisticRegressionModel.load(path1)    
+val loadedPipelineModel = PipelineModel.load(path2) 
+
+//저장된 모델이 잘 작동하는 지 확인
+loadedModel.transform(assembled_training).show()
+loadedPipelineModel.transform(training).show()
+
+//파이프라인 모델로 test 데이터를 예측해보기!!
+loadedPipelineModel.transform(test).show()
++------+------+---+-----------------+--------------------+--------------------+----------+
+|height|weight|age|         features|       rawPrediction|         probability|prediction|
++------+------+---+-----------------+--------------------+--------------------+----------+
+| 169.4|  75.3| 42|[169.4,75.3,42.0]|[-3.0855217899660...|[0.04370843319542...|       1.0|
+| 185.1|  85.0| 37|[185.1,85.0,37.0]|[-4.8418050943384...|[0.00783098559169...|       1.0|
+| 161.6|  61.2| 28|[161.6,61.2,28.0]|[1.56028508363867...|[0.82639425682107...|       0.0|
++------+------+---+-----------------+--------------------+--------------------+----------+
+
+
+//spark.stop
+```
+
+
+
+
+
+
+
+## 6. 3 k-means 
+
+```scala
+import org.apache.spark.mllib.clustering.KMeans
+import org.apache.spark.mllib.linalg.Vectors
+val sparkHome = sys.env("SPARK_HOME")
+val data = sc.textFile (
+    "file://" + sparkHome + "/data/mllib/kmeans_data.txt"
+)
+val parsedData = data.map{ s =>
+    Vectors.dense(
+        s.split(' ').map(_.toDouble)
+    )
+}.cache()
+val numClusters = 2
+val numIterations = 20
+val clusters = KMeans.train(parsedData, numClusters, numIterations)
+clusters.k
+clusters.clusterCenters
+
+val vec1 = Vectors.dense(0.3, 0.3, 0.3)
+clusters.predict(vec1)
+res2: Int = 1
+
+val vec2 = Vectors.dense(8.0, 8.0, 8.0)
+clusters.predict(vec2)
+res2: Int = 0
+
+parsedData.foreach(vec =>
+	println(vec + " => " + clusters.predict(vec))
+)
+[0.0,0.0,0.0] => 1
+[0.1,0.1,0.1] => 1
+[0.2,0.2,0.2] => 1
+[9.0,9.0,9.0] => 0
+[9.1,9.1,9.1] => 0
+[9.2,9.2,9.2] => 0
+
+//저장
+val predictedLabels = parsedData.map(vector => clusters.predict(vector))
+predictedLabels.saveAsTextFile("output")
+
+//계산된 모델을 저장
+clusters.save(sc, "kmenas_model")
+
+//모델 metadata 보기
+ $ hadoop fs -cat /user/hadoop/kmeans_model/metadata/part-00000
+{"class":"org.apache.spark.mllib.clustering.KMeansModel","version":"2.0","k":3,"distanceMeasure":"euclidean","trainingCost":0.07500000000004324}
+```
+
+※ K 값을 몇 개로 하는게 좋을까?
+
+```scala
+val WSSSE = clusters.computeCost(parsedData)
+println("Within Set Sum of Squared Errors = " + WSSSE)
+Within Set Sum of Squared Errors = 0.11999999999994547
+```
+
+
 
 - 문서에서 단어 추출하기(형태소 분석)
 
