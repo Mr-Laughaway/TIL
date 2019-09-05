@@ -3495,13 +3495,152 @@ loadedPipelineModel.transform(test).show()
 //spark.stop
 ```
 
+Java 코드
+
+```java
+import org.apache.spark.ml.Pipeline;
+import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.PipelineStage;
+import org.apache.spark.ml.classification.LogisticRegression;
+import org.apache.spark.ml.classification.LogisticRegressionModel;
+import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
+import java.util.Arrays;
+import java.util.List;
+public class PipelineSample {
+public static void main(String[] args) throws Exception {
+    SparkSession spark = SparkSession.builder()
+            .appName("PipelineSample")
+            .master("local[*]")
+ .getOrCreate();
+   StructField sf1 = DataTypes.createStructField("height", DataTypes.DoubleType, true);
+   StructField sf2 = DataTypes.createStructField("weight", DataTypes.DoubleType, true);
+   StructField sf3 = DataTypes.createStructField("age", DataTypes.IntegerType, true);
+   StructField sf4 = DataTypes.createStructField("label", DataTypes.DoubleType, true);
+  StructType schema1 = DataTypes.createStructType(Arrays.asList(sf1, sf2, sf3, sf4));
+    List<Row> rows1 = Arrays.asList(RowFactory.create(161.0, 69.87, 29, 1.0),
+        RowFactory.create(176.78, 74.35, 34, 1.0),
+            RowFactory.create(159.23, 58.32, 29, 0.0));
+    // 훈련용 데이터 (키, 몸무게, 나이, 성별)
+    Dataset<Row> training = spark.createDataFrame(rows1, schema1);
+training.cache();
+List<Row> rows2 = Arrays.asList(RowFactory.create(169.4, 75.3, 42),
+            RowFactory.create(185.1, 85.0, 37),
+            RowFactory.create(161.6, 61.2, 28));
+    StructType schema2 = DataTypes.createStructType(Arrays.asList(sf1, sf2, sf3));
+    // 테스트용 데이터
+    Dataset<Row> test = spark.createDataFrame(rows2, schema2);
+   training.show(false);
+   VectorAssembler assembler = new VectorAssembler();
+    assembler.setInputCols(new String[]{"height", "weight", "age"});
+   assembler.setOutputCol("features");
+   Dataset<Row> assembled_training = assembler.transform(training);
+  assembled_training.show(false);
+// 모델 생성 알고리즘 (로지스틱 회귀 평가자)
+ LogisticRegression lr = new LogisticRegression();
+ lr.setMaxIter(10).setRegParam(0.01);
+ // 모델 생성
+   LogisticRegressionModel model = lr.fit(assembled_training);
+ // 예측값 생성
+ model.transform(assembled_training).show();
+    // 파이프라인
+   Pipeline pipeline = new Pipeline();
+    pipeline.setStages(new PipelineStage[]{assembler, lr});
+    // 파이프라인 모델 생성
+   PipelineModel pipelineModel = pipeline.fit(training); 
+    // 파이프라인 모델을 이용한 예측값 생성
+    pipelineModel.transform(training).show();
+    String path1 = "/output/sparkmllib/regression-model" ;
+    String path2 = "/output/sparkmllib/pipelinemodel";
+    // 모델 저장
+   model.write().overwrite().save(path1);
+   pipelineModel.write().overwrite().save(path2);
+    // 저장된 모델 불러오기
+  LogisticRegressionModel loadedModel = LogisticRegressionModel.load(path1);
+  PipelineModel loadedPipelineModel = PipelineModel.load(path2);
+    spark.stop();
+  }
+}
+
+```
+
+python 코드
+
+```python
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml.classification import LogisticRegressionModel
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.pipeline import Pipeline
+from pyspark.ml.pipeline import PipelineModel
+from pyspark.sql import SparkSession
+spark = SparkSession
+.builde
+.appName("pipeline_sample")
+.master("local[*]")
+.getOrCreate()
+# 훈련용 데이터 (키, 몸무게, 나이, 성별)
+training = spark.createDataFrame([
+  (161.0, 69.87, 29, 1.0),
+ (176.78, 74.35, 34, 1.0),
+(159.23, 58.32, 29, 0.0)]).toDF("height", "weight", "age", "gender")
+training.cache()
+# 테스트용 데이터
+test = spark.createDataFrame([
+(169.4, 75.3, 42),
+ (185.1, 85.0, 37),
+(161.6, 61.2, 28)]).toDF("height", "weight", "age")
+training.show(truncate=False)
+assembler = VectorAssembler(inputCols=["height", "weight", "age"], outputCol="features")
+# training 데이터에 features 컬럼 추가
+assembled_training = assembler.transform(training)
+assembled_training.show(truncate=False)
+# 모델 생성 알고리즘 (로지스틱 회귀 평가자)
+lr = LogisticRegression(maxIter=10, regParam=0.01, labelCol="gender")
+# 모델 생성
+model = lr.fit(assembled_training)
+# 예측값 생성
+model.transform(assembled_training).show()
+# 파이프라인
+pipeline = Pipeline(stages=[assembler, lr])
+# 파이프라인 모델 생성
+pipelineModel = pipeline.fit(training)
+# 파이프라인 모델을 이용한 예측값 생성
+pipelineModel.transform(training).show()
+ 
+  path1 = "/output/sparkmllib/regression-model" 
+  path2 = "/output/sparkmllib/pipelinemodel" 
+# 모델 저장
+model.write().overwrite().save(path1)
+pipelineModel.write().overwrite().save(path2)
+# 저장된 모델 불러오기
+loadedModel = LogisticRegressionModel.load(path1)
+loadedPipelineModel = PipelineModel.load(path2)
+spark.stop
+```
+
+## 6.3 알고리즘
+
+### 6.3.1. Tokenizer
+
+- Tokenizer – 공백 문자를 기준으로 입력 문자열을 개별 단어의 배열로 변환하고 이 배열을 값으로 하는 새로운 컬럼을 생성하는 트랜스포머. 문자열을 기반으로 하는 특성 처리에 자주 사용됨
+
+- RegexTokenizer – 정규식을 사용하여 문자열을 기반으로 하는 특성 처리  
+
+```scala
+
+```
 
 
 
 
 
-
-## 6. 3 k-means 
+## 6.4 k-means 
 
 ```scala
 import org.apache.spark.mllib.clustering.KMeans
