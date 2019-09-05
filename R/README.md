@@ -2,9 +2,7 @@
 
 
 
-![Statistics](http://zoonek2.free.fr/UNIX/48_R/title.png)
-
-
+![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
 >   데이터, 함수, 차트 등 모든 데이터는 객체 형태로 관리된다.
@@ -354,10 +352,6 @@ c(TRUE, TRUE) && c(TRUE, FALSE)
   day(date)
   ```
 
-  
-
-
-
 ### 1.4.2. 자료형 확인
 
 #### 1.4.2.1. 자료구조의 Type 확인
@@ -388,25 +382,25 @@ is.matrix(변수)
 
 ### 1.4.3. 자료형 변환
 
-#### 1.4.3.1. as
+- 기본 변환 방법
 
-```R
-as.numeric(변수)
-as.logical(변수)
-as.character(변수)
-as.na(변수)
-as.list(객체)
-as.data.frame(객체)
-as.array(객체)
-as.matrix(객체)
-as.integer(변수)
-as.double(변수)
-as.complex(변수) #복소수
-as.factor(객체)
-as.Date(객체)
-```
+  ```R
+  as.numeric(변수)
+  as.logical(변수)
+  as.character(변수)
+  as.na(변수)
+  as.list(객체)
+  as.data.frame(객체)
+  as.array(객체)
+  as.matrix(객체)
+  as.integer(변수)
+  as.double(변수)
+  as.complex(변수) #복소수
+  as.factor(객체)
+  as.Date(객체)
+  ```
 
-- ex1
+- 사용 예1)
 
   ```R
   x <- c("1", "2", "3")
@@ -417,7 +411,7 @@ as.Date(객체)
   print(result)
   ```
 
-- ex2
+- 사용 예2)
 
   ```R
   z <- 5.3-3i #복소수 자료형 생성
@@ -436,9 +430,11 @@ as.Date(객체)
 >- stringAsFactors=FALSE 옵션은 대표값으로 정리하지 않고 중복되는 상태 그대로 사용하게 해줌
 >- 범주형(Categorical) 데이터(자료)를 표현하기 위한 데이터 타입
 >- 범주형 데이터 - 데이터가 사전에 정해진 특정 유형으로만 분류되는 경우
->- 범주형 데이터는 또 다시 명목형Nominal과 순서형Ordinal으로 구분
+>- 범주형 데이터는 또 다시 명목형(Nominal)과 순서형(Ordinal)으로 구분
 >- 명목형 데이터는 값들 간에 크기 비교가 불가능한 경우
 >- 순서형 데이터는 대, 중, 소와 같이 값에 순서를 둘 수 있는 경우
+
+#### 1.4.4.1. 기본 사용법
 
 ```R
 sex <- factor("m", c("m", "f"))
@@ -467,61 +463,65 @@ factor(c("m", "m", "f"), c("m", "f"))
 ordered("a", c("a", "b", "c")))
 ```
 
-- 범주형 데이터로 plot 그려보기
+#### 1.4.4.2. 명목형 - Norminal
 
-  ```R
-  gender <- c("man", "woman", "woman", "man", "man")
-  plot(gender) #error
-  
-  class(gender)
-  [1] "character"
-  mode(gender)
-  [1] "character"
-  
-  ngender <- as.factor(gender)
-  class(ngender)
-  [1] "factor"
-  mode(ngender)
-  [1] "numeric"
-  
-  table(ngender) # 빈도수 반환
-  plot(ngender)
-  
-  is.factor(ngender)
-  [1] TRUE
-  
-  ngender #Levels 속성에서 범주를 확인 (알파벳 순서?)
-  [1] man   woman woman man   man  
-  Levels: man woman
-  
-  args(factor) #factor()함수의 매개변수 확인
-  [1] man   woman woman man   man  
-  Levels: man woman
-  
-  
-  ogender <- factor(gender, levels=c("woman", "man"), ordered=T)
-  ogender #범주의 순서 확인
-  [1] man   woman woman man   man  
-  Levels: woman < man
-  
-  par(mfrow=c(1,2))
-  plot(ngender)
-  plot(ogender)
-  
-  #ggsave( "output.png", result, device="png", dpi=300, scale=2.5 ,width=map.ratio.geo, height=1) 
-  ```
-
-#### 1.4.4.1. 명목형
+명목형 데이터로 `plot` 그려보기
 
 ```R
+gender <- c("man", "woman", "woman", "man", "man")
+plot(gender) #error
 
+class(gender)
+[1] "character"
+mode(gender)
+[1] "character"
+
+ngender <- as.factor(gender)
+class(ngender)
+[1] "factor"
+mode(ngender)
+[1] "numeric"
+
+table(ngender) # 빈도수 반환
+plot(ngender)
+
+is.factor(ngender)
+[1] TRUE
+
+ngender #Levels 속성에서 범주를 확인 (알파벳 순서?)
+[1] man   woman woman man   man  
+Levels: man woman
+
+args(factor) #factor()함수의 매개변수 확인
+[1] man   woman woman man   man  
+Levels: man woman
 ```
 
-#### 1.4.4.2. 순서형
+![img](assets/norminal.jpg)
+
+#### 1.4.4.3. 순서형 - Ordinal
+
+순서형 데이터로 `plot` 그려보기
 
 ```R
+#1.4.4.1. 이어서
+ogender <- factor(gender, levels=c("woman", "man"), ordered=T)
+ogender #범주의 순서 확인
+[1] man   woman woman man   man  
+Levels: woman < man
 
+#저장 준비
+jpeg("both.jpg", width = 350, height = 350)
+
+par(mfrow=c(1,2))
+plot(ngender)
+plot(ogender)
+
+#저장 완료
+dev.off()
 ```
+
+![img](assets/both.jpg)
 
 ### 1.4.5. Vector 형
 
@@ -537,63 +537,7 @@ ordered("a", c("a", "b", "c")))
 - 요소의 접근은 변수[index]로 접근한다. 
 - index는 1부터 시작한다.
 
-#### 1.4.5.2. 벡터 생성 힘수
-
-- c()
-- seq()
-- rep()
-
-#### 1.4.5.3. 벡터 자료 처리 함수
-
-- union()
-- setdiff(),
-- intersect()
-
 ```R
-c(1:20)
-1:20
-c(1,1,2,3,3,3,4,5,5,5,5)
-seq(1, 20)
-seq(1, 20, 2) #순차적으로 값을 증감시켜서 벡터 자료 구조 생성
-
-rep(1:3, 3)
-[1] 1 2 3 1 2 3 1 2 3
-
-rep(1:3, each=3)
-[1] 1 1 1 2 2 2 3 3 3
-
-
-```
-
-**나중에 위에다가 정리해라...나눠서...**
-
-```R
-a <- c(1:5)
-b <- a + 1
-c <- a * 2
-
-d <- rep(1:3, 3)
-union(a, d)
-[1] 1 2 3 4 5
-
-setdiff(a, d)
-[1] 4 5
-
-intersect(a, d)
-[1] 1 2 3
-
-
-#벡터는 같은 자료만 담을 수 있기때문에 큰 타입으로 자동 형변환 된다.
-f <- c(33, -5, "4", 5:9) 
-f
-[1] "33" "-5" "4"  "5"  "6"  "7"  "8"  "9"  #문자열로 변환 됨
-class(f)
-[1] "character"
-mode(f)
-[1] "character"
-
-
-#접근
 a <- c(1:20)
 a[3:10]
 [1]  3  4  5  6  7  8  9 10
@@ -603,7 +547,75 @@ a[c(3, 10)]
 
 a[-c(2:18)] # 벡터의 첨자에 -를 지정하면 해당 위치의 원소는 제외
 [1]  1 19 20
+```
 
+#### 1.4.5.2. 벡터 생성 힘수
+
+- c()
+
+  ```R
+  c(1:20)
+  1:20
+  c(1,1,2,3,3,3,4,5,5,5,5)
+  ```
+
+- seq()
+
+  ```R
+  seq(1, 20)
+  seq(1, 20, 2) #순차적으로 값을 증감시켜서 벡터 자료 구조 생성
+  ```
+
+- rep()
+
+  ```R
+  rep(1:3, 3)
+  [1] 1 2 3 1 2 3 1 2 3
+  
+  rep(1:3, each=3)
+  [1] 1 1 1 2 2 2 3 3 3
+  ```
+
+#### 1.4.5.3. 벡터 자료 처리 함수
+
+- union()
+
+  ```R
+  a <- c(1:5)
+  b <- a + 1
+  c <- a * 2
+  
+  d <- rep(1:3, 3)
+  union(a, d)
+  [1] 1 2 3 4 5
+  ```
+
+- setdiff()
+
+  ```R
+  setdiff(a, d)
+  [1] 4 5
+  ```
+
+- intersect()
+
+  ```R
+  intersect(a, d)
+  [1] 1 2 3
+  ```
+
+#### 1.4.5.4. 자동 형 변환
+
+벡터는 같은 자료만 담을 수 있기때문에 큰 타입으로 자동 형변환 된다.
+
+```R
+f <- c(33, -5, "4", 5:9) 
+f
+[1] "33" "-5" "4"  "5"  "6"  "7"  "8"  "9"  #문자열로 변환 됨
+class(f)
+[1] "character"
+mode(f)
+[1] "character"
 ```
 
 ## 1.5. 기타 기본 명령어
