@@ -3628,12 +3628,292 @@ spark.stop
 
 ### 6.3.1. Tokenizer
 
-- Tokenizer – 공백 문자를 기준으로 입력 문자열을 개별 단어의 배열로 변환하고 이 배열을 값으로 하는 새로운 컬럼을 생성하는 트랜스포머. 문자열을 기반으로 하는 특성 처리에 자주 사용됨
+- `Tokenizer` – 공백 문자를 기준으로 입력 문자열을 개별 단어의 배열로 변환하고 이 배열을 값으로 하는 새로운 컬럼을 생성하는 트랜스포머. 문자열을 기반으로 하는 특성 처리에 자주 사용됨.
 
-- RegexTokenizer – 정규식을 사용하여 문자열을 기반으로 하는 특성 처리  
+- `RegexTokenizer` – 정규식을 사용하여 문자열을 기반으로 하는 특성 처리 .
 
 ```scala
+import org.apache.spark.ml.feature.Tokenizer
 
+val data = Seq("Tokenization is the process", "Refer to the Tokenizer").map(Tuple1(_))
+val inputDF = spark.createDataFrame(data).toDF("input")    
+val tokenizer = new Tokenizer().setInputCol("input").setOutputCol("output")   
+val outputDF = tokenizer.transform(inputDF)    
+outputDF.printSchema()    
+outputDF.show(false)
++---------------------------+--------------------------------+
+|input                      |output                          |
++---------------------------+--------------------------------+
+|Tokenization is the process|[tokenization, is, the, process]|
+|Refer to the Tokenizer     |[refer, to, the, tokenizer]     |
++---------------------------+--------------------------------+
+```
+
+### 6.3.2. TF-IDF
+
+> TF-IDF(Term Frequency – Inverse Document Frequency) – 여러 문서 집합에서 특정 단어가 특정 문서 내에서 가지는 중요도를 수치화한 통계적 수치
+>
+> TF-IDF는 문서 내에서 단어의 출현 빈도를 나타내는 TF(단어 빈도)와 문서군 내에서 출현 빈도를 나타내는 IDF(문서 빈도, 빈도가 높을 수록 점수가 낮아짐)의 조합으로 결정되며, 문서 내에서 출현 빈도가 높은 단어일수록 높은 점수를 부여하되 특정 문서가 아닌 모든 문서에서 동일한 현상이 나타나면 흔하게 사용되는 중요하지 않은 단어로 간주해서 가중치를 낮춰주는 방법을 사용합니ㅏㄷ.
+>
+> 스파크 MLlib에서 TF-IDF 알고리즘은 TF 처리에 해당하는 부분은 트랜스포머 클래스로, IDF에 해당하는 부분은 평가자 클래스로 제공하고 있습니다.
+
+df
+
+```scala
+import org.apache.spark.ml.feature.{HashingTF, IDF, Tokenizer}
+
+val df1 = spark.createDataFrame(
+    Seq(      
+        (0, "a a a b b c"),
+        (0, "a b c"),
+        (1, "a c a a d")
+    )
+).toDF("label", "sentence")
+
+val tokenizer = new Tokenizer().setInputCol("sentence").setOutputCol("words")    
+// 각 문장을 단어로 분리
+val df2 = tokenizer.transform(df1)    
+df2.show()
++-----+-----------+------------------+
+|label|   sentence|             words|
++-----+-----------+------------------+
+|    0|a a a b b c|[a, a, a, b, b, c]|
+|    0|      a b c|         [a, b, c]|
+|    1|  a c a a d|   [a, c, a, a, d]|
++-----+-----------+------------------+
+
+val hashingTF = new HashingTF().setInputCol("words").setOutputCol("TF-Features").setNumFeatures(20)
+val df3 = hashingTF.transform(df2)
+df3.cache()   
+
+val idf = new IDF().setInputCol("TF-Features").setOutputCol("Final-Features")
+val idfModel = idf.fit(df3)   
+val rescaledData = idfModel.transform(df3)    
+rescaledData.select("words", "TF-Features", "Final-Features").show(false)
++------------------+----------------------------+-------------------------------------------+
+|words             |TF-Features                 |Final-Features                             |
++------------------+----------------------------+-------------------------------------------+
+|[a, a, a, b, b, c]|(20,[1,2,10],[2.0,1.0,3.0]) |(20,[1,2,10],[0.5753641449035617,0.0,0.0]) |
+|[a, b, c]         |(20,[1,2,10],[1.0,1.0,1.0]) |(20,[1,2,10],[0.28768207245178085,0.0,0.0])|
+|[a, c, a, a, d]   |(20,[2,10,14],[1.0,3.0,1.0])|(20,[2,10,14],[0.0,0.0,0.6931471805599453])|
++------------------+----------------------------+-------------------------------------------+
+```
+
+### 6.3.3. 회귀분석에 의한 매출 분석
+
+1. 데이터 전처리 - MLlib 입력 데이터 형으로 변환하기 위해 DataFrame으로 생성
+
+2. Schema 정의 - case class 정의
+
+   df
+
+   ```bash
+   spark-shell --master yarn --conf spark.serializer=org.apache.spark.serializer.KryoSerializer
+   ```
+
+   
+
+   df
+
+   
+
+   ```scala
+   case class Weather( date: String,
+                       day_of_week: String,
+                       avg_temp: Double,
+                       max_temp: Double,
+                       min_temp: Double,
+                       rainfall: Double,
+                       daylight_hours: Double,
+                       max_depth_snowfall: Double,
+                       total_snowfall: Double,
+                       solar_radiation: Double,
+                       mean_wind_speed: Double,
+                       max_wind_speed: Double,
+                       max_instantaneous_wind_speed: Double,
+                       avg_humidity: Double,
+                       avg_cloud_cover: Double)
+   case class Sales(date: String, sales: Double)
+   ```
+
+3. Weather RDD 정의
+
+4. 
+
+
+
+```scala
+import spark.implicits._
+import org.apache.spark.mllib.regression.{LabeledPoint,LinearRegressionWithSGD}
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.feature.StandardScaler
+import org.apache.spark.mllib.evaluation.RegressionMetrics
+import org.apache.spark.sql.functions.udf
+import org.apache.spark.mllib.regression.LinearRegressionModel
+
+case class Weather( date: String,
+                    day_of_week: String,
+                    avg_temp: Double,
+                    max_temp: Double,
+                    min_temp: Double,
+                    rainfall: Double,
+                    daylight_hours: Double,
+                    max_depth_snowfall: Double,
+                    total_snowfall: Double,
+                    solar_radiation: Double,
+                    mean_wind_speed: Double,
+                    max_wind_speed: Double,
+                    max_instantaneous_wind_speed: Double,
+                    avg_humidity: Double,
+                    avg_cloud_cover: Double)
+
+case class Sales(date: String, sales: Double)
+
+// 기상 데이터를 읽어 DataFrame으로 변환한다
+val weatherCSVTmp = sc.textFile("/data/sales/weather.csv")
+val weatherHeader = sc.parallelize(Array(weatherCSVRDD.first))
+val weatherCSV = weatherCSVRDD.subtract(headerOfWeatherCSVRDD)
+val weatherDF = weatherCSV.map(_.split(",")).map { p =>
+    Weather(
+        p(0),
+        p(1),
+        p(2).trim.toDouble,
+        p(3).trim.toDouble,
+        p(4).trim.toDouble,
+        p(5).trim.toDouble,
+        p(6).trim.toDouble,
+        p(7).trim.toDouble,
+        p(8).trim.toDouble,
+        p(9).trim.toDouble,
+        p(10).trim.toDouble,
+        p(11).trim.toDouble,
+        p(12).trim.toDouble,
+        p(13).trim.toDouble,
+        p(14).trim.toDouble
+    )
+}.toDF()
+
+println(weatherDF.printSchema)
+root
+ |-- date: string (nullable = true)
+ |-- day_of_week: string (nullable = true)
+ |-- avg_temp: double (nullable = false)
+ |-- max_temp: double (nullable = false)
+ |-- min_temp: double (nullable = false)
+ |-- rainfall: double (nullable = false)
+ |-- daylight_hours: double (nullable = false)
+ |-- max_depth_snowfall: double (nullable = false)
+ |-- total_snowfall: double (nullable = false)
+ |-- solar_radiation: double (nullable = false)
+ |-- mean_wind_speed: double (nullable = false)
+ |-- max_wind_speed: double (nullable = false)
+ |-- max_instantaneous_wind_speed: double (nullable = false)
+ |-- avg_humidity: double (nullable = false)
+ |-- avg_cloud_cover: double (nullable = false)
+
+()
+
+
+//Sales DF도 동일한 방식으로 만든다.
+case class Sales(date: String, sales: Double)
+
+val salesCSVTmp = sc.textFile("/data/sales/sales.csv")
+val salesHeader = sc.parallelize(Array(salesCSVTmp.first))
+val salesCSV = salesCSVTmp.subtract(salesHeader)
+
+val salesDF = salesCSV.map(_.split(",")).map { p =>
+    Sales(
+        p(0),
+        p(1).trim.toDouble
+    )
+}.toDF()
+
+println(salesDF.printSchema)
+root
+ |-- date: string (nullable = true)
+ |-- sales: double (nullable = false)
+
+()
+
+//date 컬럼을 이용해 두 데이터를 결합(join)
+val salesAndWeatherDF = salesDF.join(weatherDF, "date")
+salesAndWeatherDF.show
+
+//주말인지 아닌지 분류
+val isWeekend = udf( (t: String) => 
+	if(t.contains("일") || t.contains("토")) 1d
+	else 0d
+)
+val replacedSalesAndWeatherDF = salesAndWeatherDF.withColumn("weekend", isWeekend(salesAndWeatherDF("day_of_week"))).drop("day_of_week")
+
+//상관관계가 높은 독립변수를 사용할 경우 모델의 성능이 떨어지기 때문에 독립변수를 취사선택하여 새로운 데이터 프레임을 생성한다
+val selectedDataDF = replacedSalesAndWeatherDF.select(
+    "sales",
+    "avg_temp",
+    "rainfall",
+    "weekend"
+)
+
+
+//데이터프레임을 회기분석을 위한 Vector, LabeledPoint로 변환
+val labeledPoints = selectedDataDF.rdd.map{ row =>
+    LabeledPoint(
+        row.getDouble(0),
+        Vectors.dense(
+            row.getDouble(1),
+            row.getDouble(2),
+            row.getDouble(3)
+        )
+    )
+}
+
+//데이터 특성을 표준화(평균 0, 분산 1인 스케일러 사용)
+var scaler = new StandardScaler(withMean = true, withStd = true).fit(
+    labeledPoints.map( x => x.features)
+)
+
+val scaledLabeledPoints = labeledPoints.map { x =>
+    LabeledPoint(x.label, scaler.transform(x.features))
+}
+
+//모델 생성
+val numIter = 20
+scaledLabeledPoints.cache
+val linearRegressionModel = LinearRegressionWithSGD.train(scaledLabeledPoints, numIter)
+
+//예측할 데이터를 백터 형식으로 작성
+val targetDataVector1 = Vectors.dense(15.0, 15.4, 1)
+val targetDataVector2 = Vectors.dense(20.0, 0, 0)
+val targetScaledDataVector1 = scaler.transform(targetDataVector1)
+val targetScaledDataVector2 = scaler.transform(targetDataVector2)
+
+//예측 해보기!!!!!!!
+linearRegressionModel.predict(targetScaledDataVector1)
+linearRegressionModel.predict(targetScaledDataVector2)
+
+//예측 모델의 평가
+val splitScaledLabeledPoints = scaledLabeledPoints.randomSplit(Array(0.6, 0.4), seed = 11L)
+val trainingScaledLabeledPoints = splitScaledLabeledPoints(0).cache()
+val testScaledLabeledPoints = splitScaledLabeledPoints(1)
+
+val linearRegressionModel2 = LinearRegressionWithSGD.train(trainingScaledLabeledPoints, numIter)
+
+val scoreAndLabels = testScaledLabeledPoints.map { point =>
+    val score = linearRegressionModel2.predict(point.features)
+    (score, point.label)
+}
+
+val metrics = new RegressionMetrics(scoreAndLabels)
+metrics.rootMeanSquaredError
+
+
+//예측 모델의 보존
+linearRegressionModel.save(sc, "/output/sales/regressionModel")
+val sameLinearRegressionModel = LinearRegressionModel.load(sc, "/output/sales/regressionModel")
+
+//PMML 형식으로 출력
+//스파크를 실행시킨 데렉토리 경로 아래에 파일 생성
+linearRegressionModel.toPMML("/output/sales/model.pmml")
 ```
 
 
