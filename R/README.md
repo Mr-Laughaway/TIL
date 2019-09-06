@@ -1514,13 +1514,184 @@ str(result)
 
 #### 1.4.9.2. Dataframe 요소 접근
 
-ㅇㄹㅇㄹ
+- 변수명$컬럼명 형식으로 요소 접근, 결과는 벡터로 반환.
+
+  ```R
+  #컬럼 이름으로 data.frame의 특정 컬럼 데이터 모두 access
+  print(df1$Fruit)
+  [1] "Apple"  "Peach"  "Banana" "Graph" 
+  ```
+
+- 조건에 맞는 요소에 접근 
+
+  subset(데이터프레임 객체, 조건)
+
+  ```R
+  #df1 데이터 프레임에서 수량이 5보다 큰 추출 출력
+  subset.df1 <- subset(df1, Qty > 5)
+  print(subset.df1)
+    No Fruit Price Qty
+  4  4 Graph    50   7
+  str(subset.df1)
+  'data.frame':	1 obs. of  4 variables:
+   $ No   : chr "4"
+   $ Fruit: chr "Graph"
+   $ Price: num 50
+   $ Qty  : num 7
+  
+  #문> df1 데이터 프레임에서 가격이 150보다 작은 데이터들 출력
+  
+  df1[df1$Price < 150, ]
+    No  Fruit Price Qty
+  3  3 Banana   100   4
+  4  4  Graph    50   7
+  #문> df2 데이터 프레임에서 과일명이 바나나인 것만 data.frame, 구조로 출력
+  df1[df1$Fruit == 'Banana',]
+    No  Fruit Price Qty
+  3  3 Banana   100   4
+  
+  df2 <- data.frame(
+      x = c(1:5),
+      y = seq(2, 10, 2),
+      z = c('a', 'b', 'c', 'd', 'e')
+  )
+  #문> df2 데이터 프레임객체의 x컬럼의 값이 2 이상이고 y컬럼은 6 이하인
+  df2[df2$x >=2 & df2$y <= 6,]
+    x y z
+  2 2 4 b
+  3 3 6 c
+  
+  #문> df2 데이터 프레임객체의 x컬럼의 값이 2 이상 또는 y컬럼은 6 이하인
+  df2[df2$x >=2 | df2$y <= 6, ]
+    x  y z
+  1 1  2 a
+  2 2  4 b
+  3 3  6 c
+  4 4  8 d
+  5 5 10 e
+  
+  
+  
+  #데이터 프레임에서 특정 컬럼만 추출해서 새로운 형태의 데이터 프레임 생성
+  df5 <- subset(df1, select=c(Fruit, Price, Qty))
+  str(df5)
+  'data.frame':	4 obs. of  3 variables:
+   $ Fruit: chr  "Apple" "Peach" "Banana" "Graph"
+   $ Price: num  500 200 100 50
+   $ Qty  : num  5 2 4 7
+  print(df5)
+     Fruit Price Qty
+  1  Apple   500   5
+  2  Peach   200   2
+  3 Banana   100   4
+  4  Graph    50   7
+  
+  df6 <- subset(df1, select=-No)
+  str(df6)
+  'data.frame':	4 obs. of  3 variables:
+   $ Fruit: chr  "Apple" "Peach" "Banana" "Graph"
+   $ Price: num  500 200 100 50
+   $ Qty  : num  5 2 4 7
+  print(df6)
+     Fruit Price Qty
+  1  Apple   500   5
+  2  Peach   200   2
+  3 Banana   100   4
+  4  Graph    50   7
+  
+  
+  
+  ####
+  emp.data <- data.frame(
+     emp_id = c(1:5), 
+     emp_name = c("Rick","Dan","Michelle","Ryan","Gary"),
+     salary = c(623.3,515.2,611.0,729.0,843.25), 
+     
+     start_date = as.Date(c("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11",
+        "2015-03-27")),
+     stringsAsFactors = FALSE
+  )
+  print(emp.data) 
+  str(emp.data)
+  
+  #문> emp.data객체에서  3행, 5행의 2열과 4열의 데이터만 추출해서 출력
+  emp.data[c(3, 5), c(2, 4)]
+    emp_name start_date
+  3 Michelle 2014-11-15
+  5     Gary 2015-03-27
+  
+  
+  
+  #summary()는 데이터프레임 객체의 데이터를 대상으로 최솟값, 최댓값, 중위수, 평균, 사분위수 값을 요약하여 결과로 리턴
+  summary(df2)
+         x           y      z    
+   Min.   :1   Min.   : 2   a:1  
+   1st Qu.:2   1st Qu.: 4   b:1  
+   Median :3   Median : 6   c:1  
+   Mean   :3   Mean   : 6   d:1  
+   3rd Qu.:4   3rd Qu.: 8   e:1  
+   Max.   :5   Max.   :10  
+  apply(df2[, c(1,2)], 2, sum)
+   x  y 
+  15 30 
+  
+  
+  df4 <- data.frame(
+      name = c('apple', 'banana', 'cherry'),
+      price = c(300, 200, 100)
+  )
+  df5 <- data.frame(
+      name = c('apple', 'banana', 'berry'),
+      qty = c(10, 20, 30)
+  )
+  
+  #두 데이터프레임 객체의 요소를 병합
+  result1 <- merge(df4, df5)
+  #첫번재 열 데이터 기준으로 일치하는 데이터의 열 결합
+  print(result1)
+      name price qty
+  1  apple   300  10
+  2 banana   200  20
+  str(result1)
+  
+  result2 <- merge(df4, df5, all=T)
+  #첫 번째 열 데이터 기준으로 모든 데이터의 열 결합
+  #Data가 없으면 NA
+  print(result2)
+      name price qty
+  1  apple   300  10
+  2 banana   200  20
+  3 cherry   100  NA
+  4  berry    NA  30
+  str(result2)
+  
+  
+  
+  ######유용한 함수
+  str(mtcars)
+  head(mtcars) # 1~6 개만
+  head(mtcars, 20)
+  tail(mtcars) # last-5 ~ last 행까지 출력해줌
+  data(mtcars)
+  view(mtcars)
+  summary(mtcars)
+  summary(emp.data)
+  ```
+
+  
 
 ```R
-dfdf
+
 ```
 
+#### 1.4.9.3. Dtaframe 에 새로운 열 추가
 
+```R
+df1$new <- c(10, 20, 30 ,40)
+str(df1)
+```
+
+#### 1.4.9.4. 
 
 ## 1.5. 기타 기본 명령어
 
@@ -1566,11 +1737,208 @@ cat(result)
 - %% - 나머지 구하기
 - ^, ** - 승수 구하기
 
+## 1.6. 데이터 입출력
+
+### 1.6.1 scan
+
+- 키보드로부터 데이터 입력을 받기위해 사용
+- 입력할 데이터가 없으면 엔터키만 누르면 종료됨
+- 문자열로 입력받으려면 waht=character()옵션 사용
+
+#### 1.6.1.1. 키보드로 숫자 입력받기
+
+```R
+num <- scan()
+print(num)
+
+sum(num)
+```
+
+#### 1.6.1.2. 키보드로 문자 입력받기
+
+```R
+name <- scan(what=character())
+print(name)
+```
+
+### 1.6.2. edit
+
+- 데이터 입력을 돕기 위해 표 형식의 데이터 편집기 제공
+
+```R
+df <- data.frame()
+df <- edit(df) #데이터 편집기
+print(df)
+  var1   var2 var3 var4 var5
+1 학번   이름 국어 영어 수학
+2    1 홍길동   80   80   90
+3    2 이순신   95   90   95
+4    3 강감찬   95   95  100
+5    4 유관순   85   85   85
+```
+
+### 1.6.3. 파일로부터 데이터 입력받기
+
+지원되는 파일 유형:  text, csv, xml, html, json, db, excel, bigdata 저장소
+
+#### 1.6.3.1. 파일 목록 보기
+
+```R
+setwd("c:/workspace_R")
+
+print(list.files(recursive=T))
+...         
+[17] "depth1/depth2/detph2.file.txt"
+[18] "depth1/detph1.file.txt"       
+...
+
+print(list.files(recursive=T, all.files=T))
+...
+  [1] ".Rhistory"                    
+...
+```
+
+#### 1.5.3.2. 파일 읽어오기
+
+- csv
+
+  ```R
+  data1 <- read.csv("./data/emp.csv")
+  print(data1)
+     no   name pay
+  1 101 홍길동 150
+  2 102 이순신 450
+  3 103 강감찬 500
+  4 104 유관순 350
+  5 105 김유신 400
+  str(data1)
+  'data.frame':	5 obs. of  3 variables:
+   $ no  : int  101 102 103 104 105
+   $ name: Factor w/ 5 levels "강감찬","김유신",..: 5 4 1 3 2
+   $ pay : int  150 450 500 350 400
+  
+  #사원 데이터에서 최대 급여를 출력
+  max_sal <- max(data1$pay)
+  print(max_sal)
+  
+  #최대 급여를 받는 레코드(행)만 출력
+  person1 <- subset(data1, pay==max(pay))
+  #data1[data1$pay == max(data1$pay), ] 도 된다.
+  print(person1)
+     no   name pay
+  3 103 강감찬 500
+  
+  ```
+
+  
 
 
 
 
-## 복습
+
+
+
+# 나중에 분류
+
+## 나중에 분류 1
+
+```R
+install.packages("stringr")
+
+str_length()
+str_c(), # str concatenate
+str_join()
+str_sub(), str_split()
+str_replace()
+str_extract() #정규표현식을 사용하여 문자열 추출
+str_extract_all() #정규표현식을 사용하여 문자열 모두 추출
+str_locate() #특정 문자열 패턴의 첫 번째 위치 찾기
+str_locate_all()
+...
+
+fruits <- c('apple', 'banana', 'pineapple', 'berry', 'APPLE')
+#패턴을 포함한 요소에서 패턴 출현 횟수 리턴
+print(str_count(fruits, "a"))
+[1] 1 3 1 0 0
+
+#문자열을 결합하는 기본 R 함수
+rs1 <- paste('hello', '~R')
+print(rs1)
+[1] "hello ~R"
+
+print(str_c('hello', '~R'))
+print(str_c(fruits, " name is " , fruits))
+print(str_c(fruits, collapse=" "))
+print(str_c(fruits, collapse="-"))
+
+print(str_detect(fruits, 'A')) #dataset 객체의 요소별로 'A'포함 여부를
+[1] FALSE FALSE FALSE FALSE  TRUE
+print(str_detect(fruits, '^a')) #정규표현식의 형식문자^는 시작을 의미
+[1]  TRUE FALSE FALSE FALSE FALSE
+print(str_detect(fruits, 'a$')) # $는 끝을 의미
+[1] FALSE  TRUE FALSE FALSE FALSE
+print(str_detect(fruits, '^[aA]'))
+[1]  TRUE FALSE FALSE FALSE  TRUE
+print(str_detect(fruits, '[^a]'))  #[]안의 ^는 not을 의미
+[1] TRUE TRUE TRUE TRUE TRUE
+
+print(str_sub(fruits, start=1, end=3)) #부분추출
+[1] "app" "ban" "pin" "ber" "APP"
+print(str_sub(fruits, start=6, end=9))
+[1] ""     "a"    "pple" 
+print(str_sub(fruits, start=-5))
+[1] "apple" "anana" "apple" "berry" "APPLE"
+   
+             
+str_length("  apple   banana  ")
+str_length(str_trim("   apple   banana   ")) #앞 뒤 공백 제거 trim()
+
+#dataset 객체의 요소 문자열의 길이를 벡터로 리턴
+print(str_length(fruits))
+[1] 5 6 9 5 5
+print(str_dup(fruits, 3))
+[1] "appleappleapple"             "bananabananabanana"         
+[3] "pineapplepineapplepineapple" "berryberryberry"            
+[5] "APPLEAPPLEAPPLE"
+
+#리스트로 반환하네?
+str_extract("홍길동35이순신45유관순25", "[1-9]{2}")
+[1] "35"
+str_extract_all("홍길동35이순신45유관순25", "[1-9]{2}")
+[[1]]
+[1] "35" "45" "25"
+str_extract_all("honggil305koreaseoul1004you25"), 
+str_extract_all("honggil305koreaseoul1004you25"), 
+
+str1 <- "korea123456-1234567seoul"
+#문) str1 객채에 저장된 문자열로부터 주민번호만 추출
+str_extract(str1, "[0-9]{6}-[0-9]{7}")
+[1] "123456-1234567"
+str_extract(str1, "[0-9]{6}-[1234]{1}[0-9]{6}")
+[1] "123456-1234567"
+
+
+str2 <- "홍길동1357,이순신,유관순1012"
+#문) str2 객체에 저장된 문자열로부터 7글자 이상의 단어만 추출
+str_extract_all(str2, "\\w{7,}")
+[[1]]
+[1] "홍길동1357" "유관순1012"
+
+#str_to_upper()
+#str_to_lower()
+```
+
+
+
+
+
+## 나중에 분류 2
+
+
+
+
+
+
 
 
 
