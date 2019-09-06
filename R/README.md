@@ -2019,6 +2019,14 @@ cat(
     file="./output/mySales.txt", sep="\n", append=T
 )
 
+#파일로 저장하는 다른 방법
+sink("패스")
+cat("내용1")
+cat("내용2")
+sink() #저장 완료됨
+
+
+
 
 
 ```
