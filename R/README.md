@@ -1759,6 +1759,18 @@ sum(num)
 ```R
 name <- scan(what=character())
 print(name)
+
+
+
+```
+
+#### 1.6.1.3. 공백 delim
+
+```R
+input1 <- scan(what="") #korea seoul chongro-gu 입력하기
+print(input1)
+str(input1) #공백으로 분리해서 단어별로 item으로 저장
+
 ```
 
 ### 1.6.2. edit
@@ -1777,11 +1789,29 @@ print(df)
 5    4 유관순   85   85   85
 ```
 
-### 1.6.3. 파일로부터 데이터 입력받기
+### 1.6.3. readline
+
+한 라인의 입력 data를 문자열로 입력 받음
+
+```R
+address <- readline()
+print(address)
+str(address)
+```
+
+안내 표시
+
+```R
+address <- readline("Input Your Address: ")
+```
+
+
+
+### 1.6.4. 파일로부터 데이터 입력받기
 
 지원되는 파일 유형:  text, csv, xml, html, json, db, excel, bigdata 저장소
 
-#### 1.6.3.1. 파일 목록 보기
+#### 1.6.4.1. 파일 목록 보기
 
 ```R
 setwd("c:/workspace_R")
@@ -1800,39 +1830,198 @@ print(list.files(recursive=T, all.files=T))
 
 #### 1.5.3.2. 파일 읽어오기
 
-- csv
+##### 1.5.3.2.1. csv file
 
-  ```R
-  data1 <- read.csv("./data/emp.csv")
-  print(data1)
-     no   name pay
-  1 101 홍길동 150
-  2 102 이순신 450
-  3 103 강감찬 500
-  4 104 유관순 350
-  5 105 김유신 400
-  str(data1)
-  'data.frame':	5 obs. of  3 variables:
-   $ no  : int  101 102 103 104 105
-   $ name: Factor w/ 5 levels "강감찬","김유신",..: 5 4 1 3 2
-   $ pay : int  150 450 500 350 400
-  
-  #사원 데이터에서 최대 급여를 출력
-  max_sal <- max(data1$pay)
-  print(max_sal)
-  
-  #최대 급여를 받는 레코드(행)만 출력
-  person1 <- subset(data1, pay==max(pay))
-  #data1[data1$pay == max(data1$pay), ] 도 된다.
-  print(person1)
-     no   name pay
-  3 103 강감찬 500
-  
-  ```
+```R
+read.csv(file="경로/파일명" [,sep=","][,header=TRUE])
+```
 
-  
+```R
+data1 <- read.csv("./data/emp.csv")
+print(data1)
+   no   name pay
+1 101 홍길동 150
+2 102 이순신 450
+3 103 강감찬 500
+4 104 유관순 350
+5 105 김유신 400
+str(data1)
+'data.frame':	5 obs. of  3 variables:
+ $ no  : int  101 102 103 104 105
+ $ name: Factor w/ 5 levels "강감찬","김유신",..: 5 4 1 3 2
+ $ pay : int  150 450 500 350 400
+
+#사원 데이터에서 최대 급여를 출력
+max_sal <- max(data1$pay)
+print(max_sal)
+
+#최대 급여를 받는 레코드(행)만 출력
+person1 <- subset(data1, pay == max(pay))
+#data1[data1$pay == max(data1$pay), ] 도 된다.
+print(person1)
+   no   name pay
+3 103 강감찬 500
+
+###################
+  id     name salary  startdate       dept
+1  1     Rick 623.30 2012-01-01         IT
+2  2      Dan 515.20 2013-09-23 Operations
+3  3 Michelle 611.00 2014-11-15         IT
+4  4     Ryan 729.00 2014-11-05         HR
+5  5     Gary 843.25 2015-03-27    Finance
+6  6     Nina 578.00  5/21/2013         IT
+#문) emp3.csv파일의 데이터를 data.frame객체에 저장한 후에 IT부서에서 굽여가 600이상인 사원추출
+emp3 <- read.csv("./data/emp3.csv")
+person1 <- emp3[emp3$dept =='IT' & emp3$salary >= 600, ]
+  id     name salary  startdate dept
+1  1     Rick  623.3 2012-01-01   IT
+3  3 Michelle  611.0 2014-11-15   IT
+
+#문) emp3.csv파일의 데이터를 data.frame객체에 저장한 후에 입사날짜가 2014년 7월 01일 이후인 사원 추울
+person2 <- emp3[as.Date(emp3$startdate) >= as.Date("2014-07-01"), ]
+   id     name salary  startdate    dept
+3   3 Michelle 611.00 2014-11-15      IT
+4   4     Ryan 729.00 2014-11-05      HR
+5   5     Gary 843.25 2015-03-27 Finance
+NA NA     <NA>     NA       <NA>    <NA>
 
 
+#IT 부서 사원만 추출해서 csv 파일에 저장
+itperson <- subset(emp3, dept == "IT")
+print(itperson)
+write.csv(itperson, "./output/itperson.csv", row.names=FALSE)
+list.files("./output/")
+newdata <- read.csv("./output/itperson.csv")
+print(newdata)
+  id     name salary  startdate dept
+1  1     Rick  623.3 2012-01-01   IT
+2  3 Michelle  611.0 2014-11-15   IT
+3  6     Nina  578.0  5/21/2013   IT
+
+```
+
+##### 1.5.3.2.2. xlsx file
+
+>read.xlsx() 엑셀 파일로부터 데이터 읽기
+>xlsx 패키지가 필요하면 의존하고 있는 rJava패키지를 먼저 로드해야 합니다.
+>sheetIndex=1은 선택한 엑셀 파일에서 첫 번째 시트 탭을 지정
+
+```R
+install.packages("xlsx")   # xlsx 패키지 설치 
+install.packages("rJava")   # rJava 패키지 설치 
+#Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_151')
+
+library(rJava)
+library(xlsx)
+
+studentex <- read.xlsx(
+    file.choose(),
+    sheetIndex=1,
+    encoding="UTF-8"
+)
+print(studentex)
+  NA. 학번   이름 성적 평가
+1   1  101 홍길동   80    B
+2   2  102 이순신   95   A+
+3   3  103 강감찬   78   C+
+4   4  104 유관순   85   B+
+5   5  105 김유신   65   D+
+
+itperson <- subset(emp3, dept == "IT")
+print(itperson)
+write.xlsx(itperson, "./output/itperson.xlsx", sheetName="IT",
+           row.names=FALSE, col.names=FALSE)
+list.files("./output/")
+newdata <- read.xlsx("./output/itperson.xlsx", sheetIndex=1, header=FALSE)
+print(newdata)
+  X1     Rick X623.3 X2012.01.01 IT
+1  3 Michelle    611  2014-11-15 IT
+2  6     Nina    578   5/21/2013 IT
+
+```
+
+##### 1.5.3.2.3. txt file
+
+```
+readLines("경로")
+read.table("경로")
+```
+
+```R
+# 텍스트 파일 읽기, 라인 단위를 문자열로 로딩, 라인단위로 저장되는 벡터 객체로 생성함
+file1 <- readLines("./data/fruits.txt")
+print(file1)
+[1] "no  name  price   qty" "1   apple   500     5"
+[3] "2   banana  200     2" "3   peach   200     7"
+[5] "4   berry    50     9"
+str(file1)
+ chr [1:5] "no  name  price   qty" "1   apple   500     5" ...
+
+#텍스트 파일의 내용을 읽어서 data.frame객체로 생성함
+fruits1 <- read.table("./data/fruits.txt" ) 
+print(fruits1)
+  V1     V2    V3  V4
+1 no   name price qty
+2  1  apple   500   5
+3  2 banana   200   2
+4  3  peach   200   7
+5  4  berry    50   9
+str(fruits1)
+'data.frame':	5 obs. of  4 variables:
+ $ V1: Factor w/ 5 levels "1","2","3","4",..: 5 1 2 3 4
+ $ V2: Factor w/ 5 levels "apple","banana",..: 4 1 2 5 3
+ $ V3: Factor w/ 4 levels "200","50","500",..: 4 3 1 1 2
+ $ V4: Factor w/ 5 levels "2","5","7","9",..: 5 2 1 3 4
+
+# hearer 포함
+fruits1 <- read.table("./data/fruits.txt", header=T)
+print(fruits1)
+  no   name price qty
+1  1  apple   500   5
+2  2 banana   200   2
+3  3  peach   200   7
+4  4  berry    50   9
+str(fruits1) 
+'data.frame':	4 obs. of  4 variables:
+ $ no   : int  1 2 3 4
+ $ name : Factor w/ 4 levels "apple","banana",..: 1 2 4 3
+ $ price: int  500 200 200 50
+ $ qty  : int  5 2 7 9
+
+# 문자열 그대로 읽어오기
+fruits1 <- read.table("./data/fruits.txt", header=T, stringsAsFactor=FALSE)
+print(fruits1)
+  no   name price qty
+1  1  apple   500   5
+2  2 banana   200   2
+3  3  peach   200   7
+4  4  berry    50   9
+str(fruits1)
+'data.frame':	4 obs. of  4 variables:
+ $ no   : int  1 2 3 4
+ $ name : chr  "apple" "banana" "peach" "berry"
+ $ price: int  500 200 200 50
+ $ qty  : int  5 2 7 9
+
+
+# 를 제외한 레코드 2개 skip(제외)하고, 2개의 record만 읽어옴
+fruits2 <- read.table("./data/fruits.txt", header=T, skip=2, nrows=2)
+print(fruit2)
+  X2 banana X200 X2.1
+1  3  peach  200    7
+2  4  berry   50    9
+
+
+#벡터의 데이터를 텍스트 파일로 저장
+cat(
+    "My Sales", 
+    file1, 
+    file="./output/mySales.txt", sep="\n", append=T
+)
+
+
+
+```
 
 
 
