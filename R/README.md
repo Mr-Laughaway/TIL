@@ -1,5 +1,4 @@
 <h1>R</h1>
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -185,6 +184,8 @@ help(mean)
 > - 예약어 사용 불가
 > - 변수에 저장된 값은 불변
 > - R은 변수를 선언할 때 자료형(type)을 선언하지 않는다.
+
+:point_right: 불변 객체 확인
 
 ```R
 x <- 3
@@ -540,7 +541,9 @@ dev.off()
 ### 1.4.5. Vector
 
 >- 동일한 형태의 데이터를 모아서 함께 저장.
->- 1차원 배열과 비슷한 개념, 특정 항목의 요소를 사용하려면 벡터명[색인] 벡터 자체를 연산 할 수 있다.
+>- 1차원 배열과 비슷한 개념. 
+>- 특정 항목의 요소를 사용하려면 벡터명[색인] 
+>- 벡터 자체를 연산 할 수 있다.
 >- 각 벡터의 요소에 `names()` 함수를 사용해서 이름 지정할 수 있다.
 >- `seq()`, `rep()` 함수를 사용해서 벡터에 연속적인 데이터 할당 할 수 있다.
 >- `length()` 함수는 벡터의 길이를 리턴
@@ -548,9 +551,8 @@ dev.off()
 
 #### 1.4.5.1. 접근
 
-- 요소의 접근은 변수[index]로 접근한다. 
-
-- index는 1부터 시작한다.
+> - 요소의 접근은 변수[index]로 접근한다. 
+> - index는 1부터 시작한다.
 
 - 특정 요소만 추출
 
@@ -578,7 +580,7 @@ dev.off()
 
 - 특정 요소만 제외
 
-  벡터의 첨자에 -를 지정하면 해당 위치의 원소는 제외
+  벡터의 첨자에 `-`를 지정하면 해당 위치의 원소는 제외
 
   ```R
   a[-c(2:18)]
@@ -851,7 +853,7 @@ matrix(
    int [1:4, 1:3] 3 6 9 12 4 7 10 13 5 8 ...
   ```
 
-- rbind()를 이용하여 생성
+- rbind() 를 이용하여 생성
 
   ```R
   x1 <- c(5, 40, 50:52)
@@ -866,6 +868,24 @@ matrix(
    - attr(*, "dimnames")=List of 2
     ..$ : chr [1:2] "x1" "x2"
     ..$ : NULL
+  ```
+
+- cbind 를 이용하여 생성
+
+  ```R
+  x1 <- c(1, 2, 3)
+  x2 <- c(4, 5, 6)
+  M4 <- cvind(x1, x2)
+  print(M4)
+       x1 x2
+  [1,]  1  4
+  [2,]  2  5
+  [3,]  3  6
+  str(M4)
+   num [1:3, 1:2] 1 2 3 4 5 6
+   - attr(*, "dimnames")=List of 2
+    ..$ : NULL
+    ..$ : chr [1:2] "x1" "x2"
   ```
 
 - 요소 자동 채움
@@ -883,12 +903,9 @@ matrix(
   [2,]   11   13   15   17   19   10
   ```
 
-  
+#### 1.4.5.2 행과 열의 이름 추가
 
 ```R
-
-
-##
 rownames = c("row1", "row2", "row3", "row4")
 colnames = c("col1", "col2", "col3")
 M5 <- matrix(c(3:14), nrow=4, byrow = TRUE, dimnames=list(rownames, colnames))
@@ -898,35 +915,120 @@ row1    3    4    5
 row2    6    7    8
 row3    9   10   11
 row4   12   13   14
-
-
-####
-P1 <- cbind(M5, c(13, 14, 15, 16)) #cbind()는 컬럼을 추가
-print(p1)
-     col1 col2 col3   
-row1    3    4    5 13
-row2    6    7    8 14
-row3    9   10   11 15
-row4   12   13   14 16
-
-P2 <- rbind(M5, c(13, 14, 15)) #rbind()는 행을 추가
-print(P2)
-    col1 col2 col3
-row1    3    4    5
-row2    6    7    8
-row3    9   10   11
-row4   12   13   14
-       13   14   15
-
-print(M5 + P1) #열 갯수가 달라서 error 발생
-Error in M5 + P1 : non-conformable arrays
-print(M5 + P2) #행 갯수가 달라서 error 발생
-Error in M5 + P2 : non-conformable arrays
-
-
 ```
 
-#### 1.4.6.2. Matrix 접근
+#### 1.4.5.3. Matrix 속성 확인
+
+- 요소 길이 확인
+
+  ```R
+  length(M5)
+  [1] 12
+  ```
+
+- 행 갯수 확인
+
+  ```R
+  nrow(M5)
+  [1] 4
+  ```
+
+- 열 갯수 확인
+
+  ```R
+  ncol(M5)
+  [1] 3
+  ```
+
+- 차원 확인
+
+  ```R
+  dim(M5)
+  [1] 4 3
+  ```
+
+- 행 이름 확인
+
+  ```R
+  rownames(M5)
+  [1] "row1" "row2" "row3" "row4"
+  ```
+
+- 열 이름 확인
+
+  ```R
+  colnames(M5)
+  [1] "col1" "col2" "col3"
+  ```
+
+#### 1.4.5.4. 행과 열의 추가 및 삭제
+
+- cbind() - 열 추가
+
+  ```R
+  P1 <- cbind(M5, c(13, 14, 15, 16)) #cbind()는 컬럼을 추가
+  print(p1)
+       col1 col2 col3   
+  row1    3    4    5 13
+  row2    6    7    8 14
+  row3    9   10   11 15
+  row4   12   13   14 16
+  ```
+
+- rbind() - 행 추가
+
+  ```R
+  P2 <- rbind(M5, c(13, 14, 15)) #rbind()는 행을 추가
+  print(P2)
+      col1 col2 col3
+  row1    3    4    5
+  row2    6    7    8
+  row3    9   10   11
+  row4   12   13   14
+         13   14   15
+  ```
+
+- 행과 열의 제거
+
+  실제 제거가 아니라 새로 추출하여 새로운 matrix를 생성하는 방식
+
+  ```R
+  print(m1)
+       [,1] [,2] [,3]
+  [1,]    1    2    3
+  [2,]    4    5    6
+  [3,]    7    8    9
+  
+  #matrix에서 하나의 열을 남겨놓고, 모든 열을 제거하면 벡터가 됨
+  m2 <- m1[, -c(1,3)] 
+  print(m2)
+  [1] 2 5 8
+  str(m3)
+  int [1:3] 2 5 8
+  
+  #벡터로 변환되지 않도록 matrix의 구조를 유지
+  m3 <- m1[, -c(1, 3), drop=FALSE] 
+  print(m3)
+       [,1]
+  [1,]    2
+  [2,]    5
+  [3,]    8
+  str(m3)
+   int [1:3, 1] 2 5 8
+  
+  
+  #문> 행이름과 열이름 제거
+  rownames(M5) <-  NULL
+  ```
+
+- 행과 열의 이름 제거
+
+  ```R
+  rownames(M5) <- NULL
+  connames(M5) <- NULL
+  ```
+
+#### 1.4.6.5. Matrix 접근
 
 ```R
 #Matrix 요소에 접근 - 변수[첨자, 첨자]
@@ -936,162 +1038,138 @@ print(M5[2, ]) #2행 전체 요소에 접근
 print(M5[, 3]) #3열 전체 요소에 접근
 print(M5["row1", ]) #"row1"행 전체 요소에 접근
 print(M5[, "col3"]) #"col3"열 전체 요소에 접근
-```
-
-#### 1.4.6.3. Matrix 연산
-
-```R
-#Matrix 연산
-matrix1 <- matrix(c(3, 9, -1, 4, 2, 6), nrow=2)
-     [,1] [,2] [,3]
-[1,]    3   -1    2
-[2,]    9    4    6
-matrix2 <- matrix(c(5, 2, 0, 9, 3, 4), nrow=2)
-     [,1] [,2] [,3]
-[1,]    5    0    3
-[2,]    2    9    4
-
-result <- matrix1 + matrix2
-     [,1] [,2] [,3]
-[1,]    8   -1    5
-[2,]   11   13   10
-
-###
-result <- matrix1 + 10
-print(result)
-     [,1] [,2] [,3]
-[1,]   13    9   12
-[2,]   19   14   16
-print(length(result))
-[1] 6
-print(nrow(result))
-[1] 2
-print(ncol(result))
-[1] 3
-
-
-#Base패키지의 apply함수
-#apply(행렬객체, margin(1:행, 2:열), function)
-     [,1] [,2] [,3]
-[1,]    3   -1    2
-[2,]    9    4    6
-
-f <- function(x) {
-    x * c(1, 2, 3)
-}
-
-result <- apply(matrix1, 1, f)
-print(result)
-     [,1] [,2]
-[1,]    3    9
-[2,]   -2    8
-[3,]    6   18
-
-result <- apply(matrix(1:9, ncol=3), 2, f)
-print(result)
-     [,1] [,2] [,3]
-[1,]    1    4    7
-[2,]    4   10   16
-[3,]    9   18   27
-
-
-
-#####
-print(dim(M5)) # matrix의 차원 리턴
-[1] 4 3
-
-
-####
-m1 <- matrix(c(1:9), ncol=3, byrow=TRUE)
-print(m1)
-     [,1] [,2] [,3]
-[1,]    1    2    3
-[2,]    4    5    6
-[3,]    7    8    9
-print(t(m1)) #전치행렬 리턴 함수
-     [,1] [,2] [,3]
-[1,]    1    4    7
-[2,]    2    5    8
-[3,]    3    6    9
-
-### 행렬의 곱 연산
-m2 <- matrix(rep(1:3, times=3), nrow=3)
-print(m2)
-     [,1] [,2] [,3]
-[1,]    1    1    1
-[2,]    2    2    2
-[3,]    3    3    3
-print(m1 %*% m2)
-     [,1] [,2] [,3]
-[1,]   14   14   14
-[2,]   32   32   32
-[3,]   50   50   50
-
-
 
 #문 P2 matrix객체에서 2행과 4행을 제외하고 출력
-P2[-c(2,4), ]
+P2[-c(2, 4), ]
 
 #문 P2 matrix객체에서 1열과 3열을 제외하고 출력
 P2[, -c(1, 3)]
-
-
-##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-####
-print(m1)
-     [,1] [,2] [,3]
-[1,]    1    2    3
-[2,]    4    5    6
-[3,]    7    8    9
-m3 <- m1[, -c(1,3)] #matrix에서 하나의 열을 남겨놓고, 모든 열을 제거하면, 벡터가 됨.
-print(m3)
-[1] 2 5 8
-str(m3)
-int [1:3] 2 5 8
-
-m3 <- m1[, -c(1, 3), drop=FALSE] #벡터로 변환되지 않도록 matrix의 구조를 유지
-print(m3)
-     [,1]
-[1,]    2
-[2,]    5
-[3,]    8
-str(m3)
- int [1:3, 1] 2 5 8
-
-
-#####
-rownames(M5)
-colnames(M5)
-
-#문> 행이름과 열이름 제거
-rownames(M5)  NULL
-
-
-###역행렬
-m4 <- matrix(c(1,2,3,4,5,4,3,2,1), ncol=3)
-     [,1] [,2] [,3]
-[1,]    1    4    3
-[2,]    2    5    2
-[3,]    3    4    1
-result <- solve(m4) #역형렬 결과 리턴
-print(result)
-       [,1] [,2]   [,3]
-[1,]  0.375   -1  0.875
-[2,] -0.500    1 -0.500
-[3,]  0.875   -1  0.375
-
-
 ```
+
+#### 1.4.6.6. Matrix 연산
+
+- 기본 연산
+
+  ```R
+  #matrix and matrix
+  matrix1 <- matrix(c(3, 9, -1, 4, 2, 6), nrow=2)
+       [,1] [,2] [,3]
+  [1,]    3   -1    2
+  [2,]    9    4    6
+  matrix2 <- matrix(c(5, 2, 0, 9, 3, 4), nrow=2)
+       [,1] [,2] [,3]
+  [1,]    5    0    3
+  [2,]    2    9    4
+  
+  result <- matrix1 + matrix2
+       [,1] [,2] [,3]
+  [1,]    8   -1    5
+  [2,]   11   13   10
+  
+  #matrix and scala
+  result <- matrix1 + 10
+  print(result)
+       [,1] [,2] [,3]
+  [1,]   13    9   12
+  [2,]   19   14   16
+  ```
+
+- apply 함수를 이용한 연산
+
+  ```R
+  f <- function(x) {
+      x * c(1, 2, 3)
+  }
+  ```
+
+  예1)
+
+  ```R
+  matrix1 <- rbind(c(1, 2, 3), c(4, 5, 6))
+       [,1] [,2] [,3]
+  [1,]    1    2    3
+  [2,]    4    5    6
+  
+  result <- apply(matrix1, 1, f)
+       [,1] [,2]
+  [1,]    1    4
+  [2,]    4   10
+  [3,]    9   18
+  ```
+
+  예2)
+
+  ```R
+  matrix2 <- matrix(1:9, ncol=3)
+       [,1] [,2] [,3]
+  [1,]    1    4    7
+  [2,]    2    5    8
+  [3,]    3    6    9
+  
+  result <- apply(matrix2, 2, f)
+       [,1] [,2] [,3]
+  [1,]    1    4    7
+  [2,]    4   10   16
+  [3,]    9   18   27
+  ```
+
+- 전치행렬
+
+  ```R
+  m1 <- matrix(c(1:9), ncol=3, byrow=TRUE)
+       [,1] [,2] [,3]
+  [1,]    1    2    3
+  [2,]    4    5    6
+  [3,]    7    8    9
+  
+  t(m1) 	#전치행렬 리턴 함수
+       [,1] [,2] [,3]
+  [1,]    1    4    7
+  [2,]    2    5    8
+  [3,]    3    6    9
+  ```
+
+-  행렬의 곱
+
+  ```R
+  m2 <- matrix(rep(1:3, times=3), nrow=3)
+  print(m2)
+       [,1] [,2] [,3]
+  [1,]    1    1    1
+  [2,]    2    2    2
+  [3,]    3    3    3
+  print(m1 %*% m2)
+       [,1] [,2] [,3]
+  [1,]   14   14   14
+  [2,]   32   32   32
+  [3,]   50   50   50
+  ```
+
+- 역행렬 계산
+
+  ```R
+  m4 <- matrix(c(1,2,3,4,5,4,3,2,1), ncol=3)
+       [,1] [,2] [,3]
+  [1,]    1    4    3
+  [2,]    2    5    2
+  [3,]    3    4    1
+  
+  solve(m4) #역형렬 결과 리턴
+         [,1] [,2]   [,3]
+  [1,]  0.375   -1  0.875
+  [2,] -0.500    1 -0.500
+  [3,]  0.875   -1  0.375
+  ```
 
 ### 1.4.7. Array
 
-동일한 자료형을 갖는 다차원 배열 구조
-
-행, 열, 면의 3차원 배열 형태의 객체를 생성
-
-첨자로 접근
-
-다른 자료구조에 비해 상대적으로 활용도가 낮음
+> - 동일한 자료형을 갖는 다차원 배열 구조
+>
+> - 행, 열, 면의 3차원 배열 형태의 객체를 생성
+>
+> - 첨자로 접근
+>
+> - 다른 자료구조에 비해 상대적으로 활용도가 낮음
 
 #### 1.4.7.1. Array 생성
 
@@ -1099,8 +1177,8 @@ print(result)
 vector1 <- c(5, 9, 3)
 vector2 <- c(10, 11, 12, 13, 14, 15)
 
-result <- array(c(vector1, vector2), dim=(3, 3, 2)) #row, col, layer
-print(result)
+array1 <- array(c(vector1, vector2), dim=(3, 3, 2)) #row, col, layer
+print(array1)
 , , 1
 
      [,1] [,2] [,3]
@@ -1114,24 +1192,23 @@ print(result)
 [1,]    5   10   13
 [2,]    9   11   14
 [3,]    3   12   15
-str(result)
+str(array1)
  num [1:3, 1:3, 1:2] 5 9 3 10 11 12 13 14 15 5 ..
-
-
 ```
 
 #### 1.4.7.2. Array 요소에 접근
 
 ```R
-#2 Layer의 3행 모든 데이터 접근 [] 3 12 15
-print(result[3, ,2])
+#2 Layer의 3행 모든 데이터 접근
+print(array1[3, ,2])
 [1]  3 12 15
 
-#1 Layer의 1행의 3열 데이터 접근 13
-print(result[1, 3, 1])
+#1 Layer의 1행의 3열 데이터 접근
+print(array1[1, 3, 1])
 [1] 13
 
-print(result[, , 2])
+# 2 Layer의 모든 데이터 접근
+print(array1[, , 2])
      [,1] [,2] [,3]
 [1,]    5   10   13
 [2,]    9   11   14
@@ -1143,10 +1220,24 @@ print(result[, , 2])
 ```R
 vector3 <- c(9, 1, 0)
 vector4 <- c(6, 0, 11, 3, 14, 1, 2, 6, 9)
+
 array2 <- array(c(vector3, vector4), dim = c(3, 3, 2))
 print(array2)
+, , 1
 
-matrix1 <- result[, , 2]
+     [,1] [,2] [,3]
+[1,]    9    6    3
+[2,]    1    0   14
+[3,]    0   11    1
+
+, , 2
+
+     [,1] [,2] [,3]
+[1,]    2    9    6
+[2,]    6    1    0
+[3,]    9    0   11
+
+matrix1 <- array1[, , 2]
 matrix2 <- array2[, , 2]
 print(matrix1 + matrix2)
      [,1] [,2] [,3]
@@ -1155,9 +1246,11 @@ print(matrix1 + matrix2)
 [3,]   12   12   26
 ```
 
-#### 1.4.7.4. Apply
+#### 1.4.7.4. Apply 적용
 
 ```R
+array2 <- array(c(vector3, vector4), dim = c(3, 3, 2))
+print(array2)
 , , 1
 	 [,1] [,2] [,3]
 [1,]    9    6    3
@@ -1173,7 +1266,6 @@ print(matrix1 + matrix2)
 rs1 <- apply(array2, c(1), sum)
 print(rs1)
 [1] 35 22 32 #9+6+3 + 2+9+6, 1+0+14 + 6+1+0, 0+11+1 + 9+0+11
-
 ```
 
 ### 1.4.8. List
@@ -1185,96 +1277,157 @@ print(rs1)
 >- value에 저장되는 자료구조는 벡터, 행렬, 리스트, 데이터프레임 등 대부분의 R객체 저장 가능
 >- 함수 내에서 여러 값을 하나의 키로 묶어서 반환하는 경우 유용
 >- list() - 생성자 함수
->- list(key =value1, key2=value2, ...)
+>- list(key=value1, key2=value2, ...)
 
 #### 1.4.8.1. List 생성
 
-```R
-#key가 생략된 부분은 [[n]]형식으로 출력되고 , 
-#해당 key에 저장된 value는 [n]형식으로 출력되며, 
-#한 개의 값이 Vector 형식으로 저장
-list1 <- list("lee", "이순신", 95)
-print(list1)
-[[1]]
-[1] "lee"
+> - key가 생략된 부분은 [[n]]형식으로 출력되고 , 
+> - 해당 key에 저장된 value는 [n]형식으로 출력되며, 
+> - 한 개의 값이 Vector 형식으로 저장
 
-[[2]]
-[1] "이순신"
+- key 없이 생성
 
-[[3]]
-[1] 95
-List of 3
- $ : chr "lee"
- $ : chr "이순신"
- $ : num 95
+  예1)
 
-emp1 <-  list(name="kim", address="seoul", age=30, hiredate=as.Date("2017-01-30"))
-print(emp1)
-str(emp1)
+  ```R
+  #
+  list1 <- list("lee", "이순신", 95)
+  print(list1)
+  [[1]]
+  [1] "lee"
+  
+  [[2]]
+  [1] "이순신"
+  
+  [[3]]
+  [1] 95
+  List of 3
+   $ : chr "lee"
+   $ : chr "이순신"
+   $ : num 95
+  ```
 
+  예2)
 
-#####
-list_data <- list("Red", "Green", c(21, 32, 11), TRUE, 51.23, 119.1)
-print(list_data)
-[[1]]
-[1] "Red"
+  ```R
+  list_data <- list("Red", "Green", c(21, 32, 11), TRUE, 51.23, 119.1)
+  
+  print(list_data)
+  [[1]]
+  [1] "Red"
+  
+  [[2]]
+  [1] "Green"
+  
+  [[3]]
+  [1] 21 32 11
+  
+  [[4]]
+  [1] TRUE
+  
+  [[5]]
+  [1] 51.23
+  
+  [[6]]
+  [1] 119.1
+  
+  str(list_data)
+  List of 6
+   $ : chr "Red"
+   $ : chr "Green"
+   $ : num [1:3] 21 32 11
+   $ : logi TRUE
+   $ : num 51.2
+   $ : num 119
+  ```
 
-[[2]]
-[1] "Green"
+- key와 함께 생성
 
-[[3]]
-[1] 21 32 11
-
-[[4]]
-[1] TRUE
-
-[[5]]
-[1] 51.23
-
-[[6]]
-[1] 119.1
-str(list_data)
-List of 6
- $ : chr "Red"
- $ : chr "Green"
- $ : num [1:3] 21 32 11
- $ : logi TRUE
- $ : num 51.2
- $ : num 119
-
-
-
-
-
-```
-
-
+  ```R
+  emp1 <-  list(name="kim", address="seoul", age=30, hiredate=as.Date("2017-01-30"))
+  
+  print(emp1)
+  $name
+  [1] "kim"
+  
+  $address
+  [1] "seoul"
+  
+  $age
+  [1] 30
+  
+  $hiredate
+  [1] "2017-01-30"
+  
+  str(emp1)
+  List of 4
+   $ name    : chr "kim"
+   $ address : chr "seoul"
+   $ age     : num 30
+   $ hiredate: Date[1:1], format: "2017-01-30"
+  ```
 
 #### 1.4.8.2. List 요소 접근
 
+- 인덱스로 접근
+
+  ```R
+  emp1[1:2]
+  $name
+  [1] "kim"
+  
+  $address
+  [1] "seoul"
+  ```
+
+- key 로 접근
+
+  ```R
+  emp1$age
+  [1] 30
+  
+  #문] 아래 list_data리스트의 요소중에서 k3에 저장된 세번 째요소만 출력
+  list_data <- list(
+      k1="Red", 
+      k2="Green", 
+      k3=c(21,32,11),     
+      k4=TRUE, 
+      k5=51.23, 
+      k6=119.1
+  )
+  
+  list_data$k3[3]
+  [1] 11
+  ```
+
+#### 1.4.8.3. 요소 추가
+
 ```R
-print(emp1[1:2]) #색인으로 데이터 값 access
-print(emp1$age) #key로 데이터 값 access
+newValue <-append(emp1, 99, after=3) #3번 째 요소 뒤에 99가 추가된 리스트를 리턴함
 
-
-#문] 아래 list_data리스트의 요소중에서 k3에 저장된 세번 째요소만 출력
-list_data <- list(k1="Red", k2="Green", k3=c(21,32,11),
-                  k4=TRUE, k5=51.23, k6=119.1 )
-
- ist_data$k3[3]
-[1] 11
-
-## 불변 객체??
-
-tracemem(emp1)
-[1] "<000000001222CAF0>"
-emp1$deptno <- 10
-tracemem(emp1)
-[1] "<0000000013659818>"
-
-newValue <-append(nums, 99, after=3) #data가 추가된 벡터를 리턴함
-print(nums)
 print(newValue)
+$name
+[1] "kim"
+
+$address
+[1] "seoul"
+
+$age
+[1] 30
+
+[[4]]
+[1] 99
+
+$hiredate
+[1] "2017-01-30"
+```
+
+ㄻㄴㅇㄻㄴㅇㄻㄴㅇㄹdu여기부터 정리
+
+```R
+
+
+
  
 
 #리스트 요소 제거
