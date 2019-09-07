@@ -1,17 +1,15 @@
 <h1>R</h1>
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
->
->   데이터, 함수, 차트 등 모든 데이터는 객체 형태로 관리된다.
->
-> - 통계 분석과 data의 시각화를 지원하는 소프트웨어 환경
->
-> - 컴퓨터 언어이자 다양한 패키지의 집합
->
-> - data의 시각화를 위한 다양한 그래픽 도구를 제공
+>- 데이터, 함수, 차트 등 모든 데이터는 객체 형태로 관리된다.
+>   
+>- 통계 분석과 data의 시각화를 지원하는 소프트웨어 환경
+> 
+>- 컴퓨터 언어이자 다양한 패키지의 집합
+> 
+>- data의 시각화를 위한 다양한 그래픽 도구를 제공
 
 <br>
 
@@ -21,7 +19,7 @@
 
 ### 1.1.1 R 설치
 
-[r-project.org](https://www.r-project.org)
+:link:[다운로드](https://www.r-project.org)
 
 - mirror site 설정
 - download
@@ -32,7 +30,7 @@
 
 ### 1.1.2 R Studio 설치
 
-[rstudio.com](https://www.rstudio.com/products/rstudio/download/)
+:link:[다운로드](https://www.rstudio.com/products/rstudio/download/)
 
 ## 1.2. 기본 동작 확인
 
@@ -40,136 +38,141 @@
 
 ```R
 dim(available.packages())
+[1] 14883    17
 
 available.packages()
+                              Package                        
+A3                            "A3"                           
+aaSEA                         "aaSEA"   
+...
 ```
 
-### 1.2.2. R session
-
-사용자가 R 프로그램을 시작한 후 R콘솔 시작 ~종료 까지의 모든 정보를 담고있는 객체이다.
+#### 1.2.1.1. 설치된 R 패키지 목록 확인
 
 ```R
-sessioninfo()
+installed.packages()
 ```
 
-- 설치된 R 패키지 목록 확인
+#### 1.2.1.2. R 패키지 설치
+
+```R
+install.packages("패키지명")
+```
+
+#### 1.2.1.3. R 패키지 삭제
+
+```R
+remove.packasges("패키지명")
+```
+
+#### 1.2.1.4. R 패키지 로드
+
+- library()
 
   ```R
-  installed.packages()
+  library("패키지명") 
   ```
 
-- R 패키지 설치
+- require()
 
   ```R
-  install.packages({"패키지명"})
+  require("패키지명")
   ```
 
-- R 패키지 삭제
+#### 1.2.1.5. 메모리에 로드된 패키지 검색
+
+```R
+serach()
+[1] ".GlobalEnv"        "package:stringr"  
+[3] "tools:rstudio"     "package:stats"    
+[5] "package:graphics"  "package:grDevices"
+[7] "package:utils"     "package:datasets" 
+[9] "package:methods"   "Autoloads"        
+[11] "package:base
+```
+
+#### 1.2.1.6.  설치된 R 패키지의 저장위치 확인
+
+```R
+.libPaths()
+[1] "C:/Program Files/R/R-3.6.1/library"
+```
+
+### 1.2.2. R 살펴보기 - 맛보기
+
+#### 1.2.2.1. 기본 제공 data set 보기
+
+```R
+data()
+```
+
+- Nile 이라는 기본 데이터로 histogram 그려보기
 
   ```R
-  remove.packasges({"패키지명"})
+  hist(Nile)
   ```
 
-- 패키지 load
+  ![1567834872349](assets/1567834872349.png)
 
-  - library()
-
-    ```R
-    library(stringr)
-    ```
-
-  - require()
-
-    ```R
-    require(stringr)
-    ```
-
-- 메모리에 load 된 패키지 검색 search
+- 밀도 기준 histogram
 
   ```R
-  serach()
-  [1] ".GlobalEnv"        "package:stringr"  
-  [3] "tools:rstudio"     "package:stats"    
-  [5] "package:graphics"  "package:grDevices"
-  [7] "package:utils"     "package:datasets" 
-  [9] "package:methods"   "Autoloads"        
-  [11] "package:base
+  hist(Nile, freq=F)
   ```
 
-- 설치된 패키지의 저장 위치 확인
+- 분포 곡선 그리기
 
   ```R
-  .libPaths()
-  [1] "C:/Program Files/R/R-3.6.1/library"
+  lines(density(Nile))
   ```
 
   
 
-- 기본 데이터 셋 보기
+  ![1567835109816](assets/1567835109816.png)
 
-  R에서 제공해주는 기본 데이터 셋
-
-  ```R
-  data()
-  ```
-
-- 히스토그램
-
-  - 빈도수 히스토그램
-
-    ```R
-    hist(Nile)
-    ```
-
-  - 밀도 기준 히스토그램
-
-    ```R
-    hist(Nile, freq=F)
-    ```
-
-  - 분포곡선 그리기
-
-    ```R
-    lines(density(Nile))
-    ```
-
-  - plots 영역에 표시할 그래프 갯수 설정
-
-    ```R
-    par(mfrow=c(1,1))
-    ```
-
-  - 파일 출력 경로
-
-    ```R
-    pdf("c:/workspace_R/sample.pdf")
-    
-    #정규분포를 따르는 난수 20개 생성해서 히스토그램 생성
-    hist(rnorm(20)) 
-    
-    #출력 파일 닫기
-    dev.off()
-    ```
-
-- R에서 제공하는 기본 함수 사용 예제 보기
+- plot 영역 설정 및 결과 저장
 
   ```R
-  exmaple(seq)
+  # 출력 영역 설정
+  par(mfrow=c(1,1))
+  
+  #pdf 형식의 출력 파일 열기
+  pdf("c:/workspace_R/sample.pdf")
+  
+  #정규분포를 따르는 난수 20개 생성해서 히스토그램 생성
+  hist(rnorm(20)) 
+  
+  #출력 파일 닫기
+  dev.off()	
   ```
 
-- R에서 제공하는 함수의 파라미터 형식 보기
+#### 1.2.2.2. R session 정보 확인
 
-  ```R
-  args(max)
-  ```
+사용자가 R 프로그램을 시작한 후 R콘솔 시작 ~종료 까지의 모든 정보를 담고있는 객체이다.
 
-- help
+```R
+sessionInfo()
+```
 
-  ```R
-  help(mean)
-  ?sum #R document에서 확인
-  ??mean #이건 뭐다? 
-  ```
+#### 1.2.2.3. R 기본 함수 사용 예제 보기
+
+```R
+exmaple(seq)
+```
+
+####  1.2.3.4. R 기본 제공 함수의 파라미터 형식 보기
+
+```R
+args(max)
+```
+
+#### 1.2.3.5. help
+
+```R
+help(mean)
+?sum #R document에서 확인
+??mean #이건 뭐다? 
+```
 
 ## 1.3. 변수
 
@@ -222,8 +225,7 @@ rm(변수)
 #### 1.4.1.1 numeric
 
 ```R
-age <- 30
-# age 변수는 하나의 값을 저장하고 있는 벡터 타입
+age <- 30 #age 변수는 하나의 값을 저장하고 있는 벡터 타입
 
 class(age)
 [1] "numeric"
@@ -314,7 +316,7 @@ class(a)
   date() #미국식 날짜와 시간을 출력하는 함수
   as.Date('2017-12-01') #문자형텨의 날짜를 날짜타입으로 변환해주는 함수
   as.Date('2017/07/04')
-  as.Date('04-07-2017') #오류 날짜가 이상하게 들어감
+  as.Date('04-07-2017') #날짜가 이상하게 들어감
   as.Date('04-07-2017', format='%d-%m-%Y') #이렇게 형식을 맞추어 줄 수 있다.
   as.Date(10, origin='2017-12-01') #주어진 날짜 기준으로 10일 후의 날짜
   as.Date(-10, origin='2017-12-01') #주어진 날짜 기준으로 10일 이전의 날짜
@@ -352,7 +354,7 @@ class(a)
   ```R
   install.packages("lubridate")
   library(lubridate)
-  date<-now() #현재 날짜와 시간 넣기
+  date <- now() #현재 날짜와 시간 넣기
   date
   year(date) #년도만 출력
   month(date,label=T) #월을 영문으로 출력
@@ -385,7 +387,6 @@ is.list(변수)
 is.data.frame(변수)
 is.array(변수)
 is.matrix(변수)
-
 ```
 
 ### 1.4.3. 자료형 형변환
@@ -468,7 +469,7 @@ sex
 factor(c("m", "m", "f"), c("m", "f"))
 
 #순서형(Ordinal)
-ordered("a", c("a", "b", "c")))
+ordered("a", c("a", "b", "c"))
 ```
 
 #### 1.4.4.2. 명목형 - Norminal
@@ -476,6 +477,7 @@ ordered("a", c("a", "b", "c")))
 명목형 데이터로 `plot` 그려보기
 
 ```R
+# charater vector 는 plot 시 error 발생
 gender <- c("man", "woman", "woman", "man", "man")
 plot(gender) #error
 
@@ -484,14 +486,12 @@ class(gender)
 mode(gender)
 [1] "character"
 
+# character vector를 factor로 바꾸면 plot 을 그릴 수 있다.
 ngender <- as.factor(gender)
 class(ngender)
 [1] "factor"
 mode(ngender)
 [1] "numeric"
-
-table(ngender) # 빈도수 반환
-plot(ngender)
 
 is.factor(ngender)
 [1] TRUE
@@ -503,6 +503,9 @@ Levels: man woman
 args(factor) #factor()함수의 매개변수 확인
 [1] man   woman woman man   man  
 Levels: man woman
+
+table(ngender) # 빈도수 확인
+plot(ngender)
 ```
 
 ![img](assets/norminal.jpg)
@@ -519,7 +522,7 @@ ogender #범주의 순서 확인
 Levels: woman < man
 
 #저장 준비
-jpeg("both.jpg", width = 350, height = 350)
+jpeg("both.jpg", width=350, height=350)
 
 par(mfrow=c(1,2))
 plot(ngender)
@@ -535,10 +538,10 @@ dev.off()
 
 >- 동일한 형태의 데이터를 모아서 함께 저장.
 >- 1차원 배열과 비슷한 개념, 특정 항목의 요소를 사용하려면 벡터명[색인] 벡터 자체를 연산 할 수 있다.
->- 각 벡터의 요소에 names() 함수를 사용해서 이름 지정할 수 있다.
->- seq(), rep() 함수를 사용해서 벡터에 연속적인 데이터 할당 할 수 있다.
->- length() 함수는 벡터의 길이를 리턴
->- %in%는 벡터에 특정 문자의 포함 여부를 리턴합니다
+>- 각 벡터의 요소에 `names()` 함수를 사용해서 이름 지정할 수 있다.
+>- `seq()`, `rep()` 함수를 사용해서 벡터에 연속적인 데이터 할당 할 수 있다.
+>- `length()` 함수는 벡터의 길이를 리턴
+>- `%in%`는 벡터에 특정 문자의 포함 여부를 리턴합니다
 
 #### 1.4.5.1. 접근
 
@@ -550,18 +553,32 @@ dev.off()
 
   ```R
   a <- c(1:20)
+   [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+  
   a[3:10]
-  [1]  3  4  5  6  7  8  9 10
+   [1]  3  4  5  6  7  8  9 10
   
   a[c(3, 10)]
-  [1]  3 10
+   [1]  3 10
   
+  t <- c("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat")
+  
+  t[1]
+  [1] "Sun"
+  
+  t[7]
+  [1] "Sat"
+  
+  t[c(2,3,6)
+  [1] "Mon" "Tue" "Fri"
   ```
 
 - 특정 요소만 제외
 
+  벡터의 첨자에 -를 지정하면 해당 위치의 원소는 제외
+
   ```R
-  a[-c(2:18)] # 벡터의 첨자에 -를 지정하면 해당 위치의 원소는 제외
+  a[-c(2:18)]
   [1]  1 19 20
   ```
 
@@ -570,76 +587,67 @@ dev.off()
   ```R
   t <- c("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat")
   
-  print(t[1])
-  [1] "Sun"
-  print(t[7])
-  [1] "Sat"
-  
-  u <- t[c(2,3,6)]
-  u
-  [1] "Mon" "Tue" "Fri"
-  
-  v <- t[c(T, F, F, F, F, T, F)]
-  v
+  t[c(T, F, F, F, F, T, F)]
   [1] "Sun" "Fri"
   ```
-
+  
 - 연속된 인덱스로 접근
 
   ```R
-  y <- t[c(0, 0, 0, 0, 0, 0, 1)]
-  y
+  t <- c("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat")
+  
+  t[c(0, 0, 0, 0, 0, 0, 1)]
   [1] "Sun"
   
-  z <- t[c(1, 2, 3, 1, 2, 3)]
-  z
+  t[c(1, 2, 3, 1, 2, 3)]
   [1] "Sun" "Mon" "Tue" "Sun" "Mon" "Tue"
   ```
 
 - 요소 반복
 
+  연산 대상 벡터 요소 갯수가 가장 긴쪽에 맞춰서 싸이클링 된다.
+
   ```R
   v1 <- c(3, 8, 4, 5, 0, 11)
   v2 <- c(4, 11)
-  add.result <- v1 + v2 # 연산 대상 벡터 요소 갯수가 가장 긴쪽에 맞춰서 싸이클링
-  print(add.result)
-  [1]  7 19  8 16  4 22
   
+  v1 + v2
+  [1]  7 19  8 16  4 22
   ```
 
 - 조건 부 추출
 
   ```R
   nums <- c(3/2, 3%/%2, 5%%3, 2^10, 2**10)
-  print(nums)
   [1]    1.5    1.0    2.0 1024.0 1024.0
   
   #문> nums 벡터 요소 중 10보타 큰 요소만 출력(>, >=, ==, !=, <, <=)
-  print(nums[nums>10])
+  nums[nums > 10]
   [1] 1024 1024
   
   #문> nums 벡터 요소 중 짝수인 요소만 출력
-  print(nums[nums%%2 == 0])
+  nums[nums %% 2 == 0]
   [1]    2 1024 1024
   ```
-
+  
 - 이름으로 접근
 
   ```R
   loc <- c("02", "031", "062", "052")
-  names(loc) <-c ("서울", "경기", "광주", "부산")
+  names(loc) <- c("서울", "경기", "광주", "부산")
   print(loc["경기"]) #이름으로 벡터 요소 접근 가능
    경기 
   "031" 
   str(loc)
    Named chr [1:4] "02" "031" "062" "052"
    - attr(*, "names")= chr [1:4] "서울" "경기" "광주" "부산"
-  
   ```
 
 #### 1.4.5.2. 벡터 생성 함수
 
 - c()
+
+  combines
 
   ```R
   c(1:20)
@@ -649,6 +657,8 @@ dev.off()
 
 - seq()
 
+  sequences
+
   ```R
   seq(1, 20)
   seq(1, 20, 2) #순차적으로 값을 증감시켜서 벡터 자료 구조 생성
@@ -656,6 +666,8 @@ dev.off()
 
 - rep()
 
+  replicates
+  
   ```R
   rep(1:3, 3)
   [1] 1 2 3 1 2 3 1 2 3
@@ -666,70 +678,71 @@ dev.off()
 
 #### 1.4.5.3. 벡터에 요소 추가
 
-```R
-newValue <-append(nums, 99, after=3) #data가 추가된 벡터를 리턴함
-print(nums)
-[1]    1.5    1.0    2.0 1024.0 1024.0
-print(newValue)
-[1]    1.5    1.0    2.0   99.0 1024.0 1024.0
-```
+- append()
 
+  ```R
+  print(nums)
+  [1]    1.5    1.0    2.0 1024.0 1024.0
+  
+  newValue <-append(nums, 99, after=3) #data가 추가된 벡터를 리턴함
+  
+  print(newValue)
+  [1]    1.5    1.0    2.0   99.0 1024.0 1024.0
+  ```
 
-
-#### 1.4.5.4. 벡터 자료 처리 함수
+#### 1.4.5.4. 벡터 집합 연산자
 
 - union()
 
   ```R
   a <- c(1:5)
-  b <- a + 1
-  c <- a * 2
+  [1] 1 2 3 4 5
   
-  d <- rep(1:3, 3)
-  union(a, d)
+  b <- rep(1:3, 3)
+  [1] 1 2 3 1 2 3 1 2 3
+  
+  union(a, b)
   [1] 1 2 3 4 5
   ```
 
 - setdiff()
 
   ```R
-  setdiff(a, d)
+  setdiff(a, b)
   [1] 4 5
   ```
 
 - intersect()
 
   ```R
-  intersect(a, d)
+  intersect(a, b)
   [1] 1 2 3
   ```
 
-- ㅇㄹㅇㄹㄴㅇㄹㄴㅇㄹ
+- setequal
+
+  순서는 일치 하지 않아도 요소들만 일치하면 TRUE 를 리턴
+  
+  ```R
+  vec1 <- c(1, 2, 3, 4, 5)
+  vec2 <- c(1, 2, 3, 4, 5)
+  vec3 <- c(5, 4, 3, 2, 1)
+  
+  setequal(vec1, vec2)
+  [1] TRUE
+  setequal(vec1, vec3)
+  [1] TRUE					#주의
+  ```
+  
+- identical
+
+  요소 뿐 아니라 순서도 일치해야 TRUE 를 리턴
 
   ```R
-  #집합연산함수(교집합, 합집합, 차집합, 부분집합, ..)
-  #identical (객체1, 객체2) 두객체의 데이터 갯수, 순서도 일치
-  #union(객체1, 객체2)
-  #intersect(객체1, 객체2)
-  #setdiff(객체1, 객체2)
-  #setequal(객체1, 객체2)
-  
-  vec1 <- c(1, 2, 3, 4, 5)
-  vec2 <- c(10, 9, 8, 4, 5)
-  vec3 <- c(1, 2, 3, 4, 5)
-  print(identical(vec1, vec3))
+  identical(vec1, vec2)
   [1] TRUE
-  print(identical(vec1, vec2))
-  [1] FALSE
-  vec4 <- c(5, 3, 4, 1, 2)
-  print(setequal(vec1, vec4)) #순서는 일치하지 않아도 요소들만 일치하면
-  [1] TRUE
-  print(setequal(vec1, vec3))
-  [1] TRUE
-  
-  print(union(vec1, vec4))
-  print(intersect(vec1, vec2))
-  print(setdiff(vec1, vec2))
+  identical(vec1, vec3)
+  [1] FALSE					#주의
   ```
 
 #### 1.4.5.5. 자동 형 변환
@@ -738,7 +751,6 @@ print(newValue)
 
 ```R
 f <- c(33, -5, "4", 5:9) 
-f
 [1] "33" "-5" "4"  "5"  "6"  "7"  "8"  "9"  #문자열로 변환 됨
 class(f)
 [1] "character"
@@ -750,28 +762,32 @@ mode(f)
 
 ```R
 v <- c(3, 8, 4, 5, 0, 11, -9, 304)
-sort.result <- sort(v)
-print(sort.result)
+[1]   3   8   4   5   0  11  -9 304
 
-revsort.result <- sort(v, decreasing = TRUE)
-print(revsort.result)
+sort(v)
+[1]  -9   0   3   4   5   8  11 304
+
+sort(v, decreasing=TRUE)
+[1] 304  11   8   5   4   3   0  -9
 
 v <- c("Red", "Blue", "Yellow", "Violet")
-sort.result <- sort(v)
-print(sort.result)
+[1] "Red"    "Blue"   "Yellow" "Violet"
+
+sort(v)
+[1] "Blue"   "Red"    "Violet" "Yellow"
 ```
 
 ### 1.4.6. Matrix
 
 > - 벡터를 여러 개 합친 형태, 2차원으로 데이터를 저장
 > - 동일한 데이터 유형만 저장
-> - `rbind()`로 행을 추가할 수 있다
+> - `rbind()`로 행을 추가할 수 있다.
 > - `cbind()`로 컬럼을 추가할 수 있다.
 > - 컬럼 이름을 지정, 조회하려면 colnames() 사용
 > - 행이름 지정, 조회하려면 rownames() 사용
 
 ```R
-#Matrix
+#Matrix 생성 함수
 matrix(
     data,
     nrow = 1,			#default: 1
