@@ -178,29 +178,23 @@ help(mean)
 
 ### 1.3.1. 변수 선언
 
-- 첫 문자는 영문자 혹은 . 으로 시작
+> - 첫 문자는 영문자 혹은 . 으로 시작
+> - 첫 문자가 .으로 시작한다면 .뒤에는 숫자가 올 수 없다.
+> - 두 번 째 문자부터는 숫자, _, . 사용 가능
+> - 대소문자 구분
+> - 예약어 사용 불가
+> - 변수에 저장된 값은 불변
+> - R은 변수를 선언할 때 자료형(type)을 선언하지 않는다.
 
-- 첫 문자가 .으로 시작한다면 .뒤에는 숫자가 올 수 없다.
+```R
+x <- 3
+tracemem(x)
+[1] "<00000000182A0858>"
 
-- 두 번 째 문자부터는 숫자, _, . 사용 가능
-
-- 대소문자 구분
-
-- 예약어 사용 불가
-
-- 변수에 저장된 값은 불변
-
-  ```R
-  x <- 3
-  tracemem(x)
-  [1] "<00000000182A0858>"
-  
-  x <- 'a'
-  tracemem(x)
-  [1] "<0000000010384628>"
-  ```
-
-- R은 변수를 선언할 때 자료형(type)을 선언하지 않는다.
+x <- 'a'
+tracemem(x)
+[1] "<0000000010384628>"
+```
 
 ### 1.3.2. 변수 확인
 
@@ -220,7 +214,7 @@ rm(변수)
 
 ### 1.4.1. Scalar 변수
 
-단일 값(하나의 값)을 저장하는 변수
+> 단일 값(하나의 값)을 저장하는 변수
 
 #### 1.4.1.1 numeric
 
@@ -260,10 +254,12 @@ c(TRUE, TRUE) && c(TRUE, FALSE)
 
 ```R
 age <- NA
+[1] NA
 > class(a)
 [1] "logical"
 
 a <- NA + 10
+[1] NA
 class(a)
 [1] "numeric"
 
@@ -290,10 +286,10 @@ class(a)
 
 ```R
 a <- "hello"
-print(a)
+[1] "hello"
 
 a <- 'hello'
-print(a)
+[1] "hello"
 
 class(a)
 [1] "character"
@@ -311,8 +307,10 @@ class(a)
   - `%Y` 년도를 숫자 네 자리로 인식
 
   ```R
-  Sys.date() #날짜만 보여주는 함수
+  Sys.Date() #날짜만 보여주는 함수
+  [1] "2019-09-07"
   sys.time() #날짜와 시간을 보여주는 함수
+  [1] "2019-09-07 15:45:35 KST"
   date() #미국식 날짜와 시간을 출력하는 함수
   as.Date('2017-12-01') #문자형텨의 날짜를 날짜타입으로 변환해주는 함수
   as.Date('2017/07/04')
@@ -414,10 +412,15 @@ is.matrix(변수)
   ```R
   x <- c("1", "2", "3")
   result <- x * 3
+  Error in x * 3 : non-numeric argument to binary operator
+  
   result <- as.numeric(x) * 3
   print(result)
+  [1] 3 6 9
+  
   result <- as.integer(x) * 3
   print(result)
+  [1] 3 6 9
   ```
 
 - 사용 예2)
@@ -436,7 +439,7 @@ is.matrix(변수)
 ### 1.4.4. Factor
 
 >- 여러번 중복으로 나오는 데이터들을 각 값으로 모아서 대표 값을 출력해 주는 형태
->- stringAsFactors=FALSE 옵션은 대표값으로 정리하지 않고 중복되는 상태 그대로 사용하게 해줌
+>- `stringAsFactors=FALSE` 옵션은 대표값으로 정리하지 않고 중복되는 상태 그대로 사용하게 해줌
 >- 범주형(Categorical) 데이터(자료)를 표현하기 위한 데이터 타입
 >- 범주형 데이터 - 데이터가 사전에 정해진 특정 유형으로만 분류되는 경우
 >- 범주형 데이터는 또 다시 명목형(Nominal)과 순서형(Ordinal)으로 구분
@@ -447,7 +450,6 @@ is.matrix(변수)
 
 ```R
 sex <- factor("m", c("m", "f"))
-sex
 [1] m
 Levels: m f
 
@@ -501,8 +503,9 @@ ngender #Levels 속성에서 범주를 확인 (알파벳 순서?)
 Levels: man woman
 
 args(factor) #factor()함수의 매개변수 확인
-[1] man   woman woman man   man  
-Levels: man woman
+function (x = character(), levels, labels = levels, exclude = NA, 
+    ordered = is.ordered(x), nmax = NA) 
+NULL
 
 table(ngender) # 빈도수 확인
 plot(ngender)
@@ -888,7 +891,7 @@ matrix(
 ##
 rownames = c("row1", "row2", "row3", "row4")
 colnames = c("col1", "col2", "col3")
-M5 <- matrix(c(3:14) nrow=5, byrow = TRUE, dimnames = list(rownames, colnames))
+M5 <- matrix(c(3:14), nrow=4, byrow = TRUE, dimnames=list(rownames, colnames))
 print(M5)
      col1 col2 col3
 row1    3    4    5
