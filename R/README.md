@@ -1,6 +1,5 @@
 <h1>R</h1>
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -2180,6 +2179,7 @@ cat(result)
 | **x & y**     | x AND y                  | x 이고 y 인                       |
 | **x && y**    | x[1] AND y[1]            | x 와 y 의 첫 번째 요소에 대한 AND |
 | **isTRUE(x)** | test if X is TRUE        | x 가 TRUE 인지                    |
+| **xor(x, y)** | exclusive OR             | 배타적 연산자                     |
 
 ### 1.5.5. stringr 을 이용한 문자열 처리
 
@@ -2542,9 +2542,11 @@ print(newdata)
 
 ##### 1.6.3.2.2. xlsx file
 
->read.xlsx() 엑셀 파일로부터 데이터 읽기
->xlsx 패키지가 필요하면 의존하고 있는 rJava패키지를 먼저 로드해야 합니다.
->sheetIndex=1은 선택한 엑셀 파일에서 첫 번째 시트 탭을 지정
+>`read.xlsx()`
+>
+>엑셀 파일로부터 데이터 읽기
+>`xlsx` 패키지가 필요하면 의존하고 있는 `rJava`패키지를 먼저 로드해야 합니다.
+>`sheetIndex=1`은 선택한 엑셀 파일에서 첫 번째 시트 탭을 지정
 
 ```R
 install.packages("xlsx")   # xlsx 패키지 설치 
@@ -2644,7 +2646,6 @@ str(fruits1)
  $ price: int  500 200 200 50
  $ qty  : int  5 2 7 9
 
-
 # 를 제외한 레코드 2개 skip(제외)하고, 2개의 record만 읽어옴
 fruits2 <- read.table("./data/fruits.txt", header=T, skip=2, nrows=2)
 print(fruit2)
@@ -2661,17 +2662,299 @@ cat(
 )
 ```
 
+##### 1.6.3.2.4. xml file
+
+>사용하려면 `XML` 패키지를 설치해야한다.
+
+```R
+install.packages("XML")
+library(XML)
+data2 <- xmlParse(file="./data/emp.xml")
+print(data2)
+<RECORDS>
+  <EMPLOYEE>
+    <ID>1</ID>
+    <NAME>Rick</NAME>
+    <SALARY>623.3</SALARY>
+    <STARTDATE>1/1/2012</STARTDATE>
+    <DEPT>IT</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>2</ID>
+    <NAME>Dan</NAME>
+    <SALARY>515.2</SALARY>
+    <STARTDATE>9/23/2013</STARTDATE>
+    <DEPT>Operations</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>3</ID>
+    <NAME>Michelle</NAME>
+    <SALARY>611</SALARY>
+    <STARTDATE>11/15/2014</STARTDATE>
+    <DEPT>IT</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>4</ID>
+    <NAME>Ryan</NAME>
+    <SALARY>729</SALARY>
+    <STARTDATE>5/11/2014</STARTDATE>
+    <DEPT>HR</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>5</ID>
+    <NAME>Gary</NAME>
+    <SALARY>843.25</SALARY>
+    <STARTDATE>3/27/2015</STARTDATE>
+    <DEPT>Finance</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>6</ID>
+    <NAME>Nina</NAME>
+    <SALARY>578</SALARY>
+    <STARTDATE>5/21/2013</STARTDATE>
+    <DEPT>IT</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>7</ID>
+    <NAME>Simon</NAME>
+    <SALARY>632.8</SALARY>
+    <STARTDATE>7/30/2013</STARTDATE>
+    <DEPT>Operations</DEPT>
+  </EMPLOYEE>
+  <EMPLOYEE>
+    <ID>8</ID>
+    <NAME>Guru</NAME>
+    <SALARY>722.5</SALARY>
+    <STARTDATE>6/17/2014</STARTDATE>
+    <DEPT>Finance</DEPT>
+  </EMPLOYEE>
+</RECORDS> 
+
+str(data2)
+Classes 'XMLInternalDocument', 'XMLAbstractDocument' <externalptr> 
+
+
+#ROOT NODE만 추출
+rootnode <- xmlRoot(data2)
+print(rootnode)
+class(rootnode)
+str(rootnode)
+
+#rootnode의 자식 노드 갯수
+rootsize <- xmlSize(rootnode)
+print(rootsize)
+
+#rootnode의 첫 번째 자식 노드 출력
+print(rootnode[1])
+
+#rootnode의 천 번째 자식 노드의 이름과 부서와 급여 출력
+print(rootnode[[1]][[2]]);
+print(rootnode[[1]][[3]]);
+print(rootnode[[1]][[5]]);
+
+#XML을 R의 지원형식인 data.frame으로 로딩
+xmldataframe <- xmlToDataFrame("./data/emp.xml")
+print(xmldtaframe)
+str(xmldataframe)
+
+```
+
+##### 1.6.3.2.5. json file
+
+>사용하려면 `rjson` 패키지를 설치해야한다.
+
+- 읽어오기
+
+  ```R
+  install.packages("rjson")
+  library("rjson")
+  
+  rm(data1)
+  data1 <- fromJSON(file="./data/emp.json") #리스트 객체로 읽어옴
+  
+  print(data1)
+  $ID
+  [1] "1" "2" "3" "4" "5" "6" "7" "8"
+  
+  $Name
+  [1] "Rick"     "Dan"      "Michelle" "Ryan"     "Gary"    
+  [6] "Nina"     "Simon"    "Guru"    
+  
+  $Salary
+  [1] "623.3"  "515.2"  "611"    "729"    "843.25" "578"   
+  [7] "632.8"  "722.5" 
+  
+  $StartDate
+  [1] "1/1/2012"   "9/23/2013"  "11/15/2014" "5/11/2014" 
+  [5] "3/27/2015"  "5/21/2013"  "7/30/2013"  "6/17/2014" 
+  
+  $Dept
+  [1] "IT"         "Operations" "IT"         "HR"        
+  [5] "Finance"    "IT"         "Operations" "Finance"   
+  
+  str(data1)
+  List of 5
+   $ ID       : chr [1:8] "1" "2" "3" "4" ...
+   $ Name     : chr [1:8] "Rick" "Dan" "Michelle" "Ryan" ...
+   $ Salary   : chr [1:8] "623.3" "515.2" "611" "729" ...
+   $ StartDate: chr [1:8] "1/1/2012" "9/23/2013" "11/15/2014" "5/11/2014" ...
+   $ Dept     : chr [1:8] "IT" "Operations" "IT" "HR" ...
+  ```
+
+- `json`을 데이터 프레임으로 변환
+
+  ```R
+  emp.dataframe <- as.data.frame(data1)
+  print(emp.dataframe)
+    ID     Name Salary  StartDate       Dept
+  1  1     Rick  623.3   1/1/2012         IT
+  2  2      Dan  515.2  9/23/2013 Operations
+  3  3 Michelle    611 11/15/2014         IT
+  4  4     Ryan    729  5/11/2014         HR
+  5  5     Gary 843.25  3/27/2015    Finance
+  6  6     Nina    578  5/21/2013         IT
+  7  7    Simon  632.8  7/30/2013 Operations
+  8  8     Guru  722.5  6/17/2014    Finance
+  str(emp.dataframe)
+  'data.frame':	8 obs. of  5 variables:
+   $ ID       : Factor w/ 8 levels "1","2","3","4",..: 1 2 3 4 5 6 7 8
+   $ Name     : Factor w/ 8 levels "Dan","Gary","Guru",..: 6 1 4 7 2 5 8 3
+   $ Salary   : Factor w/ 8 levels "515.2","578",..: 4 1 3 7 8 2 5 6
+   $ StartDate: Factor w/ 8 levels "1/1/2012","11/15/2014",..: 1 8 2 4 3 5 7 6
+   $ Dept     : Factor w/ 4 levels "Finance","HR",..: 3 4 3 2 1 3 4 1
+  ```
+
+- 데이터 프레임을 `json`으로 변환하기
+
+  ```R
+  fruits1 <- read.table("./data/fruits.txt", header=T, stringsAsFactor=F)
+  print(fruits1)
+    no   name price qty
+  1  1  apple   500   5
+  2  2 banana   200   2
+  3  3  peach   200   7
+  4  4  berry    50   9
+  str(fruits1)
+  'data.frame':	4 obs. of  4 variables:
+   $ no   : int  1 2 3 4
+   $ name : chr  "apple" "banana" "peach" "berry"
+   $ price: int  500 200 200 50
+   $ qty  : int  5 2 7 9
+  class(fruits1)
+  [1] "data.frame"
+  
+  result <- toJSON(fruits1)
+  print(result)
+  [1] "{\"no\":[1,2,3,4],\"name\":[\"apple\",\"banana\",\"peach\",\"berry\"],\"price\":[500,200,200,50],\"qty\":[5,2,7,9]}"
+  str(result)
+   chr "{\"no\":[1,2,3,4],\"name\":[\"apple\",\"banana\",\"peach\",\"berry\"],\"price\":[500,200,200,50],\"qty\":[5,2,7,9]}"
+  write(result, "./output/fruits.json")
+  list.files("./output/")
+  ```
+
+##### 1.6.3.2.6. html file
+
+> 사용 하려면`httr`패키지를 설치해야 한다.
+>
+> httr 패키지는 지정한 url의 HTML소스를 가져오는 GET() 함수를 제공하고`<table>` 태그의 내용을 읽어올 수 있는 `readHTMLTable()`함수를 제공합니다.
+>
+> readHTMLTable()에 사용되는 속성 
+>
+> - get_url$content  : GET(url)함수에 의해서 가져온 HTML소스의 내용
+> - rawToChar() : 바이너리(binary) 소스를 HTML 태그로 변환
+> - stringsAsFactors = F : 문자열을 요인으로 처리하지 않고 순수한 문자열로 가져오기
+> https://ssti.org/blog/useful-stats-capita-personal-income-state-2010-2015
+
+```R
+install.packages("httr")
+library(httr)
+
+url <- "https://ssti.org/blog/useful-stats-capita-personal-income-state-2010-2015"
+
+get_url <- GET(url)
+html_cont <- readHTMLTable(rawToChar(get_url$content), stringAsFactors=F)
+str(html_cont)
+List of 1
+ $ NULL:'data.frame':	52 obs. of  7 variables:
+  ..$ State: Factor w/ 52 levels "Alabama","Alaska",..: 45 1 2 3 4 5 6 7 8 9 ...
+  ..$ 2010 : Factor w/ 52 levels "$30,783","$31,991",..: 32 9 46 10 2 38 35 51 34 52 ...
+  ..$ 2011 : Factor w/ 52 levels "$31,976","$33,544",..: 29 9 46 10 3 40 38 51 32 52 ...
+  ..$ 2012 : Factor w/ 52 levels "$33,127","$34,846",..: 29 8 45 10 9 41 38 51 32 52 ...
+  ..$ 2013 : Factor w/ 52 levels "$33,629","$35,163",..: 30 7 44 10 8 41 38 51 32 52 ...
+  ..$ 2014 : Factor w/ 52 levels "$34,431","$36,132",..: 31 7 44 10 9 41 38 51 32 52 ...
+  ..$ 2015 : Factor w/ 52 levels "$35,444","$37,047",..: 31 6 46 9 10 42 38 51 30 52 ...
+class(html_cont)
+[1] "list"
+
+html_cont <- as.data.frame(html_cont, stringsAsFactors=F)
+names(html_cont) <- c("State", "y2010", "y2011", "y2012", "y2013", "y2014", "y2015")
+tail(html_cont)
+           State   y2010   y2011   y2012   y2013   y2014   y2015
+47       Vermont $40,066 $42,735 $44,287 $44,839 $46,428 $47,864
+48      Virginia $45,412 $47,689 $49,320 $48,956 $50,345 $52,136
+49    Washington $42,821 $44,800 $47,344 $47,468 $49,610 $51,146
+50 West Virginia $32,104 $34,211 $35,374 $35,163 $36,132 $37,047
+51     Wisconsin $38,815 $40,837 $42,463 $42,737 $44,186 $45,617
+52       Wyoming $44,846 $49,140 $52,154 $51,791 $54,584 $55,303
+
+
+#sink() 작업한 모든 내용이 파일에 저장
+sink("./output/R_Processing.txt")
+url <- "https://ssti.org/blog/useful-stats-capita-personal-income-state-2010-2015"
+get_url <- GET(url)
+html_cont <- readHTMLTable(rawToChar(get_url$content), stringAsFactors=F)
+str(html_cont)
+class(html_cont)
+html_cont <- as.data.frame(html_cont, stringsAsFactors=F)
+names(html_cont) <- c("State", "y2010", "y2011", "y2012", "y2013", "y2014", "y2015")
+tail(html_cont)
+sink()
+```
+
 #### 1.6.3.3. 파일 저장
 
-- write.csv
+- `write.csv()`
 
   :point_right:[1.6.3.2.1. csv file 참고](#16321-csv-file)
 
-- write.xls
+- `write.xls`()
 
   :point_right:[1.6.3.2.2. xlsx file 참고](#16322-xlsx-file)
 
-- cat
+- `write.table`()
+
+  ```R
+  write.table(x, file = "", append = FALSE, quote = TRUE, sep = " ",
+              eol = "\n", na = "NA", dec = ".", row.names = TRUE,
+              col.names = TRUE, qmethod = c("escape", "double"),
+              fileEncoding = "")
+  
+    NA. 학번   이름 성적 평가
+  1   1  101 홍길동   80    B
+  2   2  102 이순신   95   A+
+  3   3  103 강감찬   78   C+
+  4   4  104 유관순   85   B+
+  5   5  105 김유신   65   D+
+  
+  write.table(studentex, "./output/std.txt") # 행번호, 따옴표 확인
+  "NA." "학번" "이름" "성적" "평가"
+  "1" "1" 101 "홍길동" 80 "B"
+  "2" "2" 102 "이순신" 95 "A+"
+  "3" "3" 103 "강감찬" 78 "C+"
+  "4" "4" 104 "유관순" 85 "B+"
+  "5" "5" 105 "김유신" 65 "D+"
+  
+  write.table(studentex, "./output/std2.txt", row.names=FALSE, quote=FALSE) #확인
+  NA. 학번 이름 성적 평가
+  1 101 홍길동 80 B
+  2 102 이순신 95 A+
+  3 103 강감찬 78 C+
+  4 104 유관순 85 B+
+  5 105 김유신 65 D+
+  
+  ```
+
+- `cat()`
 
   >Usage
   >cat(... , file = "", sep = " ", fill = FALSE, labels = NULL,
@@ -2686,7 +2969,7 @@ cat(
   )
   ```
 
-- sink
+- `sink()`
 
   ```R
   sink("경로/파일명")
@@ -2696,7 +2979,234 @@ cat(
   sink() #저장 완료됨
   ```
 
-## 1.7. 
+### 1.6.5. R 객체를 바이너리 파일로 관리
+
+#### 1.6.5.1. `save()`
+
+```R
+str(fruits1)
+'data.frame':	4 obs. of  4 variables:
+ $ no   : int  1 2 3 4
+ $ name : Factor w/ 4 levels "apple","banana",..: 1 2 4 3
+ $ price: int  500 200 200 50
+ $ qty  : int  5 2 7 9
+
+save(fruits1, file="./output/fruits.RData")
+rm(fruits1)
+```
+
+#### 1.6.5.2. `load()`
+
+```R
+fruits1 = load("./output/fruits.RData")
+
+print(fruits1)
+??????????????????????????
+
+str(fruits1)
+?????????????????????????????/
+
+
+```
+
+
+
+## 1.7. 연산자
+
+### 1.7.1. 산술연산자
+
+| **Operator** | **Description**             | 서술   |
+| ------------ | --------------------------- | ------ |
+| **+**        | addition                    | 더하기 |
+| **-**        | subtraction                 | 빼기   |
+| *****        | multiplication              | 곱하기 |
+| **/**        | division                    | 나누기 |
+| **^ or \**** | exponentiation              | 지수화 |
+| **x %% y**   | modulus (x mod y) 5%%2 is 1 | 나머지 |
+| **x %/% y**  | integer division 5%/%2 is 2 | 몫     |
+
+### 1.7.2. 논리 연산자
+
+| **Operator**  | **Description**          | 서술                              |
+| ------------- | ------------------------ | --------------------------------- |
+| **<**         | less than                | 작은                              |
+| **<=**        | less than or equal to    | 작거나 같은                       |
+| **>**         | greater than             | 큰                                |
+| **>=**        | greater than or equal to | 크거나 같은                       |
+| **==**        | exactly equal to         | 같은                              |
+| **!=**        | not equal to             | 같지 않은                         |
+| **!x**        | Not x                    | 아닌                              |
+| **x \| y**    | x OR y                   | x 이거나 y 인                     |
+| **x \|\| y**  | x[1] OR y[1]             | x 와 y 의 첫 번째 요소에 대한 OR  |
+| **x & y**     | x AND y                  | x 이고 y 인                       |
+| **x && y**    | x[1] AND y[1]            | x 와 y 의 첫 번째 요소에 대한 AND |
+| **isTRUE(x)** | test if X is TRUE        | x 가 TRUE 인지                    |
+| **xor(x, y)** | exclusive OR             | 배타적 연산자                     |
+
+### 
+
+## 1.8. 조건문
+
+### 1.8.1. if
+
+#### 1.8.1.1. if
+
+```R
+if(조건식) {참인 경우 처리문} else {거짓인 경우 처리문}
+```
+
+- 예1
+
+  ```R
+  x <- 3
+  y <- 5
+  if( x * y >= 30) {
+    cat("x * y의 결과는 30 이상입니다.\n")
+  } else {
+    cat("x * y의 결과는 30 미만입니다.\n")
+  }
+  
+  x * y의 결과는 30 미만입니다.
+  ```
+
+- 문1
+
+  ```R
+  # 사용자로부터 표준입력으로 점수를 입력받아서 학점을 출력하시오
+  score <- scan() #90
+  
+  if(score >= 90) {
+  	cat('A\n')
+  } else if(score >= 80) {
+  	cat('B\n')
+  } else if(score >= 70) {
+      cat('C\n')
+  } else if(score >= 60) {
+      cat('D\n')
+  } else {
+      cat('F\n')
+  }
+  
+  A
+  ```
+
+#### 1.8.1.2. ifelse 
+
+```R 
+ifelse(조건식, 침인 경우 처리문, 거짓인 경우 처리문)
+
+#삼항연산자와 비슷하다..
+#실행문에 함수 등 을 쓰면 알 수 없는 에러 발생
+```
+
+- 문1
+
+  ```R
+  # 사용자로부터 표준입력으로 정수를 입력받아서 짝수 또는 홀수 평가
+  num <- scan() #123
+  
+  ifelse(num %% 2 == 0, "짝수", "홀수")
+  [1] "홀수"
+  ```
+
+### 1.8.2. `switch()`
+
+> 비교문자의 내용에 따라서 실행 문장 중 하나를 선택
+>
+> 비교문의 변수의 값이 실행문에 잇는 변수와 일치할 때, 해당 변수에 할당된 값을 출력한다.
+
+```R
+switch(비교문, 실행문1, 실행문2, 실행문3, ...)
+switch("name", id="hong", pwd="1234", age=25, name="홍길동")
+```
+
+- 예1
+
+  ```R
+  #사원이름을 입력 받아서 해당 사원의 급여 출력
+  ename <- scan(what="")
+  print(ename)
+  [1] "무법도적"
+  
+  switch(ename, hong=250, lee=300, park=350, "무법도적"= 700)
+  [1] 700
+  ```
+
+### 1.8.3. `which()`
+
+```R
+names <- c("kim", "lee", "choi", "park")
+which(names == "choi")
+
+no <- c(1:5)
+name <- c("홍길동", "이순신", "강감찬", "유관순", "김유신")
+score <- c(85, 90, 78, 74, 80)
+exam <- data.frame(학번=no, 이름=name, 성적=score)
+  학번   이름 성적
+1    1 홍길동   85
+2    2 이순신   90
+3    3 강감찬   78
+4    4 유관순   74
+5    5 김유신   80
+
+#문) which 함수를 사용해서 유관순의 학번, 이름, 성적을 출력
+exam[which(exam$이름=="유관순"), ]
+  학번   이름 성적
+4    4 유관순   74
+```
+
+## 1.9. 반복문
+
+### 1.9.1. `for`
+
+```R
+for( index in 벡터)
+```
+
+- 예1
+
+  ```R
+  n <- c(1:10)
+  for( i in n ) {
+      if(i %% 2 == 0 ) {
+          print(i)
+      }
+  }
+  
+  
+  ```
+
+- 예2 - `next` 활용
+
+  ```R
+  for( i in n ) {
+      if(i %% 2 == 1 ) {
+          next  			#next : continue 와 같은 듯
+      } else {
+          print(i)
+      }
+  }
+  ```
+
+### 1.9.2. while
+
+```R
+while(조건)
+```
+
+- 예1
+
+  ```R
+  n <- 1
+  while(n <= 10) {
+      if(n %% 2 == 0 ) 
+          print(n)
+      
+      n <- n + 1
+  }
+  ```
+
+  
 
 
 
@@ -2711,6 +3221,206 @@ cat(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+아래는 R 단원 완료 후 정리 예정
+
+# 복습 1
+
+- 벡터 요소 접근 방법
+
+  - `벡터객체[첨자]`
+  - `백터객체[논리값]`
+  - 접근요소제외 : `백터객체[-첨자]`
+
+- 벡터 집합 연산
+
+  - `union` : 합집합
+  - `setdiff` : 차집합
+  - `intersect` : 교집합
+  - `setequa`l : 요소의 값만 값으면 TRUE
+  - `identical` : 요소의 값과 순서 모두 같아야 TRUE
+
+- 매트릭스
+
+  > 동일한 자료형의 2차원 배열 구조. 자료형이 다르면 큰 자료형으로 자동 형변환 된다.
+
+  - 생성
+
+    - matrix()
+
+      ```R
+      function (data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
+      ```
+
+    - rbind()
+
+    - cbind()
+
+  - 접근
+
+    ```R
+    mtrx[행 인덱스, 열 인덱스]
+    ```
+
+- 행렬 계산
+
+  - 행렬 곱
+
+    ```R
+    m1 %*% m2
+    ```
+
+  - 역행렬
+
+    ```R
+    slove(m)
+    ```
+
+  - 전치행렬
+
+    ```R
+    t(m)
+    ```
+
+- 행과 열의 이름
+
+  - rownames()
+
+  - colnames()
+
+  - 제거 시
+
+    ```R
+    colnames(객체) <- NULL
+    ```
+
+- Array
+
+  > 동일한 자료형을 갖는 다차원 배열 구조
+
+  ```R
+  function (data = NA, dim = length(data), dimnames = NULL)
+  # dim ex) c(3, 3, 2)
+  ```
+
+- 리스트
+
+  >서로 다른 자료구조(벡터, 행렬, 리스트, 데이터프레임 등)을 객체로 구성된 일차원 자료구조로서 키(key)와 값(value)의 한쌍으로 저장
+
+  - 접근
+
+    ```R
+    list객체$key
+    list리스트객체[[인덱스]]
+    ```
+
+  - 벡터로 변환
+
+    ```R
+    unlist(list객체)
+    ```
+
+- 데이터프레임
+
+  - 생성
+
+    ```R
+    function (..., row.names = NULL, check.rows = FALSE, check.names = TRUE, 
+        fix.empty.names = TRUE, stringsAsFactors = default.stringsAsFactors())
+    ```
+
+  - 접근
+
+  - 서브셋 추출
+
+    ```R
+    subset
+    ```
+
+  - 병합
+
+    ```R
+    merge
+    ```
+
+- 자료형 확인
+
+  - 자료구조 확인
+
+    ```R
+    str(객체)
+    ```
+
+  - 자료구조의 형 확인
+
+    ```
+    class
+    ```
+
+  - 자료의 형 확인
+
+    ```R
+    mode
+    ```
+
+- 키보드 입력 받기
+
+  - scan()
+  - readline()
+  - edit()
+
+- 파일 목록 확인
+
+  ```R
+  list.files()
+  ```
+
+- 파일 읽어오기
+
+  - read.txt()
+  - read.csv()
+  - read.xlsx()
+  - read.table()
+
+- 파일 저장하기
+
+  - write.table()
+  - write.csv()
+  - write.xlsx()
 
 
 
