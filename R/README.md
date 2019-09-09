@@ -1,5 +1,4 @@
 <h1>R</h1>
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -2790,19 +2789,27 @@ print(data2)
 str(data2)
 Classes 'XMLInternalDocument', 'XMLAbstractDocument' <externalptr> 
 
-
 #ROOT NODE만 추출
 rootnode <- xmlRoot(data2)
 print(rootnode)
 class(rootnode)
 str(rootnode)
+Classes 'XMLInternalElementNode', 'XMLInternalNode', 'XMLAbstractNode' <externalptr> 
 
 #rootnode의 자식 노드 갯수
 rootsize <- xmlSize(rootnode)
 print(rootsize)
+[1] 8
 
 #rootnode의 첫 번째 자식 노드 출력
 print(rootnode[1])
+<EMPLOYEE>
+  <ID>1</ID>
+  <NAME>Rick</NAME>
+  <SALARY>623.3</SALARY>
+  <STARTDATE>1/1/2012</STARTDATE>
+  <DEPT>IT</DEPT>
+</EMPLOYEE> 
 
 #rootnode의 천 번째 자식 노드의 이름과 부서와 급여 출력
 print(rootnode[[1]][[2]]);
