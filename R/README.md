@@ -212,6 +212,63 @@ rm(list=ls())
 rm(변수)
 ```
 
+### 1.3.4. 전역 변수와 지역 변수
+
+> :point_right:[1.10](#110-함수)의 함수를 공부한 다음에 테스트 가능
+
+```R
+g <- "global"
+f6 <- function() {
+    l <- "local"
+    print(l)
+    print(g)
+}
+
+f6()
+[1] "local"
+[1] "global"
+
+print(g)
+[1] "global"
+
+print(l)
+Error in print(l) : object 'l' not found
+```
+
+### 1.3.5. 변수의 scope
+
+함수 내부 -> 전역 메모리 -> 에러 발생
+
+``` R
+g1 <- 1000
+
+#
+f7 <- function() {
+    g1 <- 100 #로컬 변수를 선언한 것!
+    print(g1)
+}
+
+f7()
+[1] 100
+
+print(g1)
+[1] 1000
+
+#
+f7 <- function() {
+    g1 <<- 100 #전역 변수를 참조한 것!!!!!!!!!!!!!!
+    print(g1)
+}
+
+f7()
+[1] 100
+
+print(g1)
+[1] 100
+```
+
+
+
 ## 1.4. 자료형
 
 ### 1.4.1. Scalar 변수
@@ -3206,7 +3263,861 @@ while(조건)
   }
   ```
 
+### 1.9.3. repeat
+
+```R
+repeat { 반복 수행 문장들 } #탈출 조건이 있어야 한다.
+```
+
+- 예1
+
+  ```R
+  n <- 1
+  repeat{ 
+      if(n %% 2 == 0) print(n); 
+      if(n > 10) break;
+      n <- n+1;
+  }
+  ```
+
   
+
+## 1.10. 함수
+
+> 코드의 집합
+
+```R
+함수명 <- function(매개변수) { 실행문 ... }
+```
+
+### 1.10.1. 매개변수가 없는 함수
+
+```R
+f1 <- function() {
+    cat("매개변수 없는 함수")
+}
+f1()
+
+매개변수 없는 함수
+```
+
+### 1.10.2. 매개변수가 있는 함수
+
+```R
+f2 <- function(x) {
+    if(x %% 2 == 0)
+        cat("짝수")
+    else
+        cat("홀수")
+}
+f2(23)
+
+홀수
+```
+
+### 1.10.3. 결과를 반환하는 함수
+
+```R
+f3 <- function(a, b) {
+    add <- a + b
+    return(add)			#리턴을 함수로 하네...
+}
+
+result <- f3(11, 4)
+print(result)
+```
+
+- 문1
+
+  ```R
+  #매겨변수의; 값이 0 이면 0 을, 아니면 2배의 값을 반환하는 함수를 작성하시오
+  f4 <- function(x) {
+      return(x * 2)  	#return 키워드는 생략 가능
+  }
+  
+  print(f4(0))
+  [1] 0
+  print(f4(3))
+  [1] 6
+  print(f4(-3))
+  [1] -6
+  
+  ```
+
+- 문2
+
+  ```R
+  #첫 번째 매개변수는 벡터, 두 번재 매개변수는 함수(mean, sum, median)을 문자열로 입력 받아서 각각에 알맞는 연산을 수행부 반환하는 함수를 작성하시오
+  
+  nums <- 1:10
+  
+  #기본 방법
+  f5 <- function(vec, func) {
+      result <- NULL;
+      if(func == "mean") {
+          result <- mean(vec)
+      } else if(func == "sum") {
+          result <- sum(vec)
+      } else if (func == "median") {
+          result <- median(vec)
+      } else {
+          result <- "알맞은 함수가 없다."
+      }
+      
+      return(result)
+  }
+  
+  #더 좋은 방법
+  f5 <- function(vec, func) {
+      switch(func, mean=mean(vec), sum=sum(vec), median=median(vec))
+  }
+  
+  f5(nums, "sum")
+  [1] 55
+  f5(nums, "mean")
+  [1] 5.5
+  f5(nums, "median")
+  [1] 5.5
+  f5(nums, "hello")
+  [1] "알맞은 함수가 없다."
+  
+  ```
+
+### 1.10.4. 함수 내부의 함수
+
+#### 1.10.4.1. 기본 정의
+
+```R
+outer <- function(x, y) {
+    print(x)
+    inner <- function(y) {
+        print(y * 2)
+    }
+    inner(y) #내부 함수 호출
+}
+
+outer(3, 7)
+[1] 3
+[1] 14
+print(outer(3, 7))
+[1] 3
+[1] 14
+[1] 14
+
+inner(7)
+Error in inner(7) : could not find function "inner"
+
+str(outer)
+function (x, y)  
+ - attr(*, "srcref")= 'srcref' int [1:8] 1 10 7 1 10 1 1 7
+  ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x00000000110ff018> 
+```
+
+#### 1.10.4.2. caller 와 callee
+
+```R
+callee <- function(x) {
+    print(x * 2)
+}
+
+caller <- function(v, call) {
+    for(i in v) {
+        call(i)
+    }
+}
+
+print(caller(1:5, callee)) #함수의 매개변수로 함수 전달
+```
+
+### 1.10.5. 함수의 함수 반환
+
+- 클로저closure 형태의 반환
+
+```R
+f8 <- function(num1) {
+    local <- num1
+    return (function(num2) {
+        return(local + num2)
+    })
+}
+
+result.function <- f8(100)
+str(result.function)
+function (num2)  
+ - attr(*, "srcref")= 'srcref' int [1:8] 3 13 5 5 13 5 3 5
+  ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x00000000113fd878> 
+
+print(result.function(200))
+[1] 300
+```
+
+### 1.10.6. 이름 기반 파라미터 전달
+
+```R
+f9 <- function(a, b, c) {
+    print(b)
+}
+
+f9(5, 3, 11)
+[1] 3
+
+f9(c=5, a=3, b=1)
+[1] 1
+```
+
+### 1.10.7. 매개 변수 기본 값이 있는 함수
+
+```R
+f10 <- function(a=3, b=6) {
+    result <- a * b
+    print(result)
+}
+
+f10() #모든 파라미터가 기본 값으로 적용 됨
+[1] 18
+
+f10(9, 5) #모든 파라미터가 주어져서 기본 값 사용 안 됨
+[1] 45
+
+f10(50) #첫 번째 파라미터는 전달된 값을 사용하고 두 번째 파라미터는 기본 값으로 대체
+[1] 300
+```
+
+## 1.11 결측치 관리
+
+### 1.11.1. 결측치 제거
+
+```R
+data <- c(10, 20, 5, 4, 40, 7, NA, 6, 3, NA, 2, NA)
+
+mean(data, na.rm=T)
+[1] 10.77778
+```
+
+### 1.11.2. 결측치 대체
+
+#### 1.11.2.1. 0 으로 대체
+
+```R
+data1 = ifelse(!is.na(data), data, 0)
+print(data1)
+ [1] 10 20  5  4 40  7  0  6  3  0  2  0
+print(mean(data1))
+[1] 8.083333
+```
+
+#### 1.11.2.2. 평균 값으로 대체
+
+```R
+data2 = ifelse(!is.na(data), data, round(mean(data, na.rm=T), 2))
+print(data2)
+ [1] 10.00 20.00  5.00  4.00 40.00  7.00 10.78  6.00  3.00 10.78  2.00 10.78
+print(mean(data2))
+[1] 10.77833
+```
+
+## 1.12 기술 통계량 처리 관련 내장함수
+
+- `min()`
+
+- `max()`
+
+- `range()` - 대상 벡터 범위값 반환(최솟값~최댓값)
+
+  ```R
+  vec <- c(1, 10, 3, 6, 2, 9, 5, 8, 7, 4)
+  
+  range(vec)
+  [1]  1 10
+  ```
+
+- `mean()` - 평균
+
+- `median()` - 중앙값
+
+- `sum()`
+
+- `sort()`
+
+  ```R
+  sort(vec)
+   [1]  1  2  3  4  5  6  7  8  9 10
+  ```
+
+  
+
+- `order()` - 벡터의 정렬된 값의 색인(index)을 보여주는 함수
+
+  ```R
+  order(vec)
+   [1]  1  5  3 10  7  4  9  8  6  2
+  ```
+
+  
+
+- `rank()` - 순위
+
+  ```R
+  rank(vec)
+   [1]  1 10  3  6  2  9  5  8  7  4
+  ```
+
+- `sd()` - 표준편차
+
+  ```R
+  sd(vec)
+  [1] 3.02765
+  ```
+
+- `summary()`
+
+- `table()` - 빈도수
+
+  ```R
+  table(vec)
+  vec
+   1  2  3  4  5  6  7  8  9 10 
+   1  1  1  1  1  1  1  1  1  1 
+  ```
+
+- `sample()` - x 범위에서 y 만큼 sample 데이터를 생성하는 함수
+
+  ```R
+  sample(vec, 3)
+  [1] 8 9 1
+  ```
+
+- rnorm() - 정규분포(연속형)의 난수 생성
+
+  ```R
+  rnorm(생성할 난수 갯수, mean, sd)
+  
+  n <- 1000
+  result <- rnorm(n, mean=0, sd=1)
+  
+  head(result, 20)
+   [1] -0.91200749 -1.47736310  0.02921071 -1.25017299 -0.40352507  0.07542227
+   [7] -0.07695821 -0.27352941  0.86199424 -0.20026499  0.47292484  0.56830563
+  [13]  1.74710247 -0.24353914  0.01933329 -0.06840095  0.53559165 -1.05047805
+  [19]  0.43907888  1.69939264
+  
+  hist(result)
+  ```
+
+  ![1568009497959](assets/1568009497959.png)
+
+- runif() - 균등분포(연속형)의 난수 생성
+
+  ```R
+  n <- 1000
+  result <- runif(n, min=0, max=10)
+  
+  head(result, 20)
+   [1] 6.1726060 1.6516436 9.9788051 3.3243790 0.5590399 7.7608679 6.6426751
+   [8] 2.2732683 8.0273025 0.5208305 5.5656767 9.0465552 4.9891341 7.8694029
+  [15] 5.5944459 5.6617977 3.4459261 2.1683066 3.0183089 3.6510263
+  
+  hist(result)
+  ```
+
+  ![1568009531952](assets/1568009531952.png)
+
+- rbinom() - 이산변량(정수형)을 갖는 정규분포의 난수 생성
+
+  ```R
+  #0, 1의 이산변량을 0.5 확률로 20개 난수 생성
+  rbinom(20, 1, prob=1/2)
+   [1] 1 1 1 1 0 0 0 0 0 1 1 1 0 0 1 1 1 0 1 1
+  
+  #0, 1, 2의 이산변량을 0.5 확률로 20개 난수 생성
+  rbinom(20, 2, prob=1/2)
+  [1] 0 1 0 0 1 1 0 1 1 1 2 1 2 2 1 2 1 1 1 1
+  
+  #0~10의 이산변량을 0.5 확률로 20개 난수 생성
+  rbinom(20, 10, prob=1/2)
+  [1] 6 5 1 2 5 7 6 7 5 4 6 6 5 7 5 5 5 4 5 7
+  
+  n <- 1000
+  result <- rbinom(n, 5, prob=1/6)
+  hist(result)
+  
+  #시드 값이 같으면 같은 난수가 발생된다.
+  rnorm(5, mean=0, sd=1)
+  [1]  1.7150650  0.4609162 -1.2650612 -0.6868529 -0.4456620 #달라
+  rnorm(5, mean=0, sd=1)
+  [1]  1.2240818  0.3598138  0.4007715  0.1106827 -0.5558411 #달라
+  
+  set.seed(123)
+  rnorm(5, mean=0, sd=1)
+  [1] -0.56047565 -0.23017749  1.55870831  0.07050839  0.12928774 #같아
+  set.seed(123)
+  rnorm(5, mean=0, sd=1)
+  [1] -0.56047565 -0.23017749  1.55870831  0.07050839  0.12928774 #같아
+  
+  ```
+
+  
+
+## 1.13. 수학 관련 내장 함수
+
+- abs()
+
+- sqrt()
+
+- ceilling(), floor(), round()
+
+- factorial()
+
+- which.min(), which.max()
+
+  > 벡터 내 최솟값과 최댓값의 인덱스를 구한다
+
+- pmin()
+
+- prod() : 벡터의 원소들의 곱을 구하는 함수
+
+- cumsum() / cumprod() : 벡터의 원소들의 누적합과 누적곱을 구하는 함수
+
+- cos(x), sin(x), tan(x)  : 삼각함수
+
+- log(x) : 자연로그
+
+- log10(x) : 10을 밑으로 하는 일반로그 함수
+
+- exp(x) : 지수함수
+
+## 1.14. 행렬 관련 내장 함수
+
+- ncol(x) : x의 열(컬럼) 수를 구하는 함수
+- nrow(x) : x의 행 수를 구하는 함수
+- t(x) : x 대상의 전치행렬을 구하는 함수
+- cbind(...) : 열을 추가할 때 이용되는 함수
+- rbind(...) : 행을 추가할 때 이용되는 함수
+- diag(x) : x의 대각행렬을 구하는 함수
+- det(x) : x의 행렬식을 구하는 함수
+- apply(x, m, fun) :  행 또는 열에 지정된 함수를 적용하는 함수
+- solve(x) : x의 역행렬을 구하는 함수
+- eigen(x) : 정방행렬을 대상으로 고유값을 분해하는 함수
+- svd(x) : m x n 행렬을 대상으로 특이값을 분해하는 함수
+- x %*% y : 두 행렬의 곱을 구하는 수식
+
+
+
+# 2. R 기본 시각화
+
+## 2.1. 시각화 순서
+
+1. 데이터 분석의 도입부에서는 전체적인 데이터의 구조를 분석하거나 분석 방향을 제시
+2. 데이터 분석의 중반부에서는 잘못된 처리 결과를 확인
+3. 데이터 분석의 후반부에서는 분석결과를 도식화하여 의사결정에 반영하기 위해서 데이터를 시각화
+4. 이산변수로 구성된 데이터 셋을 이용하여 막대, 점, 원형 차트를 그릴 수 있다.
+5. 연속변수로 구성된 데이터프레임을 대상으로 히스토그램과 산점도를 그릴 수 있다.
+6. 데이터 분석의 도입부에서 전체적인 데이터의 구조를 살펴보기 위해서 시각화 도구를 사용한다.
+
+### 2.2. 기본 시각화 도구
+
+- 숫자형 컬럼 1개 시각화 도구 - hist, plot, barplot
+
+- 범주형 컬럼 1개 시각화 도구 - pie, barplot
+
+- 숫자형 컬럼 2개 시각화 도구 - plot, abline, boxplot
+
+- 숫자형 컬럼 3개 시각화 도구 - scatterplot3d(3차원 산점도)
+
+- n개의 컬럼 시각화 도구 - pairs(산점도 매트릭스)
+
+## 2.3. 시각화 예제
+
+### 2.3.1. barplot()
+
+```R
+barplot(height, width = 1, space = NULL,
+        names.arg = NULL, legend.text = NULL, beside = FALSE,
+        horiz = FALSE, density = NULL, angle = 45,
+        col = NULL, border = par("fg"),
+        main = NULL, sub = NULL, xlab = NULL, ylab = NULL,
+        xlim = NULL, ylim = NULL, xpd = TRUE, log = "",
+        axes = TRUE, axisnames = TRUE,
+        cex.axis = par("cex.axis"), cex.names = par("cex.axis"),
+        inside = TRUE, plot = TRUE, axis.lty = 0, offset = 0,
+        add = FALSE, ann = !add && par("ann"), args.legend = NULL, ...)
+```
+
+- 예1
+
+  ```R
+  chart_data <- c(305, 450, 320, 400, 330, 480, 380, 520)
+  names(chart_data) <- c(
+      "2014 1분기", "2015 1분기",
+      "2014 2분기", "2015 2분기",
+      "2014 3분기", "2015 3분기",
+      "2014 4분기", "2015 4분기"
+  )
+  str(chart_data)
+  print(chart_data)
+  
+  barplot(
+      	chart_data,
+          ylim=c(0, 600), col=rainbow(8),
+          main="2014년도 VS 2015년도 분기별 매출현황 비교",
+          ylab="매출액(단위:만원)", xlab="년도별 분기현황"
+  )
+  ```
+
+  ![1568011705290](assets/1568011705290.png)
+
+- 예2) 가로막대 차트 - horiz=TRUE
+
+  ```R
+  barplot(
+      	chart_data, horiz=T,
+          xlim=c(0, 600), col=rainbow(8),
+          main="2014년도 VS 2015년도 분기별 매출현황 비교",
+          ylab="매출액(단위:만원)", xlab="년도별 분기현황"
+  )
+  ```
+
+- 막대의 굵기와 간격 지정 - space
+
+- 축 이름 크기 설정 - cex.names
+
+  ```R
+  barplot(
+      	chart_data, horiz=T,
+          xlim=c(0, 600), col=rep(c(2,4), 4),
+          main="2014년도 VS 2015년도 분기별 매출현황 비교",
+          ylab="매출액(단위:만원)", xlab="년도별 분기현황",
+      	space=2, cex.names=0.8,
+  )
+  ```
+
+- 색상 index값 : 검은색(1), 빨간색(2), 초록색(3), 파란색(4), 하늘색(5)
+
+  ```R
+  barplot(
+      	chart_data, horiz=T,
+          xlim=c(0, 600), col=rep(c(1,7), 4),
+          main="2014년도 VS 2015년도 분기별 매출현황 비교",
+          ylab="매출액(단위:만원)", xlab="년도별 분기현황",
+      	space=6, cex.names=0.5,
+  )
+  ```
+
+
+
+- 예
+
+```R
+data(VADeaths)
+str(VADeaths)	#5행 4열
+class(VADeaths) #matrix
+mode(VADeaths)	#numeric
+head(VADeaths, 10)
+
+par(mfrow=c(1, 2))
+barplot(
+    VADeaths, beside=T, col=rainbow(5),  #beside 누적?
+    main="미국 버지니아주의 하위계층 사망비율"
+)
+
+#범례 출력
+legend(
+    15, 71, 
+    c("50-54", "55-59", "60-64", "65-69", "70-74"), 
+    cex=0.8, 
+    fil=rainbow(5)
+)
+
+#누적 막대 차트
+barplot(VADeaths, beside=F, col=rainbow(5))
+title(
+    main="미국 버지니아주의 하위계층 사망비율",
+    font.main=4
+)
+legend(
+    2.8, 200,
+    c("50-54", "55-59", "60-64", "65-69", "70-74"),
+    cex=0.8,
+    fil=rainbow(5)
+)
+
+#beside=T/F : X축 값이 측면으로 배열, F이면 하나의 막대에 누적
+#font.main : 제목 글꼴 지정
+#legend() : 범례 위치, 이름, 글자 크기, 색상 지정
+#title() : 차트 제목, 차트 글꼴 지정
+```
+
+### 2.3.2. plot()
+
+>점차트 - 점의 모양, 색상 설정 가능
+
+```R
+# lables : 점에 대한 설명문
+# cex : 점의 확대
+# pch : 점 모양. 원(1), 삼각형(2), ....
+# color : 점 색상
+# lcolor : 선 색상
+```
+
+- 예1
+
+  ```R
+  par(mfrow=c(1, 1))
+  dotchart(
+      chart_data
+      , color = c("blue", "red")
+      , pch=c(1, 2)
+      , xlab = "매출액"
+      , labels = names(chart_data)
+      , lcolor = "gray"
+      , main = "2014년도 VS 2015년도 분기별 매출현황 비교"
+      , cex = 1.2
+  )
+  
+  ```
+
+- 예2
+
+  ```R
+  par(mfrow=c(1, 1))
+  pie(chart_data, col=rainbow(8),
+      pch=1:2, labels=names(chart_data), 
+      main = "2014년도 VS 2015년도 분기별 매출현황 비교"
+      , cex=1.2
+  )
+  ```
+
+### 2.3.3. boxplot()
+
+```R
+#연속변수(Continuous quntitative data)는 시간, 길이 등과 같이 연속
+
+#boxplot은 요약 정보를 시각화하는데 효과적
+#데이터의 분포 정도와 이상치 발견을 목적으로 하는 경우 유용하게 사용되
+boxplot(VADeaths, range=0)
+#notch=T : 중위수(허리선) 비교
+boxplot(VADeaths, range=0, notch=T)
+#abline() : 기준선 추가 (선 스타일, 선 색상)
+abline(h=37, lty=3, col="red")
+```
+
+### 2.3.4. hist()
+
+```R
+# 히스토그램 - 측정값의 범위(구간)를 그래프의 x축으로 놓고, 범위에 속하는 측정값의 출현 빈도수를 y축으로 나타낸 그래프 형태
+# 히스토그램의 도수의 값을 선으로 연결하면 분포곡선을 얻을 수 있다
+data(iris)
+names(iris)
+str(iris)
+head(iris)
+levels(iris$Species)
+[1] "setosa"     "versicolor" "virginica" 
+
+#붓꽃 3종류의 관측 데이터 
+#Sepal(꽃받침)
+#Petal(꽃잎)
+
+#꽃받침 길이의 요약 통계
+summary(iris$Sepal.Length)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  4.300   5.100   5.800   5.843   6.400   7.900 
+
+
+hist(
+    iris$Sepal.Length
+    , xlab = "iris$Sepal.Length"
+    , col = "magenta"
+    , main = "꽃받침 길이 histogram"
+    #, xlim = c(4.3, 7.9)
+)
+
+par(mfrow=c(1, 2))
+#빈도수로 히스토그램 그리기
+hist(
+    iris$Sepal.Width
+    , xlab = "iris$Sepal.Width"
+    , col = "green"
+    , main = "꽃받침 넓이 histogram"
+    #, xlim = c(2.0, 4.5)
+)
+
+#확률 밀도로 히스토그램 그리기
+hist(
+    iris$Sepal.Width
+    , xlab = "iris$Sepal.Width"
+    , col = "mistyrose"
+    , freq = F
+    , main = "꽃받침 넓이 histogram"
+    #, xlim = c(2.0, 4.5)
+)
+lines(density(iris$Sepal.Width), col="red")
+
+#정규분포 추정 곡선 추가
+x <- seq(20, 4.5, -0.1)
+curve(
+    dnorm(
+        x
+        , mean=mean(iris$Sepal.Width)
+        , sd=sd(iris$Sepal.Width)
+    )
+    , col = "blue"
+    , add = T
+)
+```
+
+### 2.3.5. 연습문제
+
+#### 2.3.5.1. 연습문제 2.1
+
+``` R
+x1 <- 1:5
+y1 <- x1 ^ 2
+z1 <- 5:1
+mat1 <- cbind(x1, y1, z1)
+
+# 그래픽 윈도우의 화면 분할 (2행 3열)
+op <- par(no.readonly = TURE)
+par(mfrow=c(2, 3))
+# 일변량 그래프
+plot(y1, main="using index")
+# 이변량 그래프
+plot(x=x1, y=y1, main="x^2")
+# 이변량 그래프(행렬)
+plot(mat1, main="using matrix")
+plot(x1, y1, type="l", main="line")
+plot(x1, y1, type="h", main="high density")
+plot(x1, y1, type="n", main="no plotting")
+#그래픽 윈도우의화면 병합 (1행1열)
+par(op)
+
+# p: 점
+# l: 선
+# b: 점과 선
+# c: b 옵션에서 점이 빠진 모습
+# o: 겹친 점과 선(overplotted)
+# h: 수직선(high density)
+# s: 수평선 우선의 계단 모양(steps)
+# S: 수직선 우선의 계단 모양(steps)
+# n: 출력하지 않음(no plotting)
+```
+
+#### 2.3.5.2. 연습문제 2.2
+
+```R
+x <- rep(1:5, rep(5, 5))
+ [1] 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 4 4 4 4 4 5 5 5 5 5
+y <- rep(5:1, 5)
+ [1] 5 4 3 2 1 5 4 3 2 1 5 4 3 2 1 5 4 3 2 1 5 4 3 2 1
+
+pchs <- c("&", "z", "Z", "1", "가")
+plot(1:5, type = "n", xlim=c(0, 7.5), ylim=c(0.5, 5.5), main="points by 'pch'")
+points(x, y, pch = 1:25, cex = 1.5)
+text(x - 0.4, y, labels=as.character(1:25), cex=1.2)
+points(rep(6,5), 5:1, pch=65:69, cex=1.5)
+text(rep(6,5)-0.4, y, labels = as.character(65:69), cex = 1.2)
+points(rep(7,5), 5:1, pch=pchs, cex=1.5)
+text(rep(7, 5)-0.4, y, labels=paste("'", pchs,"'", sep=""), cex=1.2)
+```
+
+#### 2.3.5.3. 연습문제 2.3
+
+```R
+
+```
+
+
+
+
+
+
+
+
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+
+
+# 몬테카를로 시뮬레이션
+
+>몬테카를로 시뮬레이션은 현실적으로 불가능한 문제의 해답을 얻기 위해서 난수의 확률 분포를 이용하여  모의시험으로 근사적 해를 구하는 기법
+>* 동전 앞면과 뒷면의 난수 확률분포의 기대확률 모의시험 
+>- 일정한 시행 횟수 이하이면 기대확률이 나타나지 않지만,  시행 횟수를 무수히 반복하면 동전 앞면과 뒷면의 기대확률은 0.5에 가까워진다.
+
+```R
+coin <- function(n) {
+    r <- runif(n, min=0, max=1)
+    result <- numeric()
+    for(i in 1:n) {
+        if(r[i] <= 0.5) {
+            result[i] <- 0 #앞면
+        } else {
+            result[i] <- 1 #뒷면
+        }
+    }
+    
+    return(result)
+}
+
+coin(10) #동전 던지기 시행 횟수 10번
+
+monteCoin <- function(n) {
+    cnt <- 0
+    for(i in 1:n) {
+        cnt <- cnt + coin(1)
+    }
+
+    # 동전 앞면과 뒷면의 누적 결과를 시행횟수(n)으로 나
+    result <- cnt / n
+    return(result)
+}
+
+monteCoin(10)
+monteCoin(30)
+monteCoin(100)
+monteCoin(1000)
+monteCoin(10000)
+
+```
+
+
+
+
 
 
 
