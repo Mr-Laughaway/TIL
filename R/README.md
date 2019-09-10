@@ -1,4 +1,6 @@
 <h1>R</h1>
+
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -3516,7 +3518,7 @@ print(mean(data1))
 #### 1.11.2.2. 평균 값으로 대체
 
 ```R
-data2 = ifelse(!is.na(data), data, round(mean(data, na.rm=T), 2))
+data2 = ifelse(!(data), data, round(mean(data, na.rm=T), 2))
 print(data2)
  [1] 10.00 20.00  5.00  4.00 40.00  7.00 10.78  6.00  3.00 10.78  2.00 10.78
 print(mean(data2))
@@ -4708,11 +4710,9 @@ group_by(dataframe, 집단변수)
   5 nissan           2
   ```
 
-# 4. R과 DB 연동(oracle)
+### 3.1.3. RJDBC
 
-## 4.1. 데이터 가져오기
-
-OracleDB 로부터 R 실행환경(메모리)로 데이터 가져오기
+> 데이터 베이스 연동 관련 함수들 제공
 
 ```R
 RJDBC::JDBC("driver이름", "driver가 존재하는 클래스경로", "DB에서 문")
@@ -4721,7 +4721,7 @@ dbConnect(driver객체, DB_URL, user, password)
 dbGetQuery(connection객체, select sql문자)
 ```
 
-- 기본 사용 법
+- 기본 사용 법(oracle)
 
   ```R
   install.packages("RJDBC")
@@ -4738,13 +4738,163 @@ dbGetQuery(connection객체, select sql문자)
   View(rs)
   ```
 
+### 3.1.4. igraph
+
+> 관계도를 그려주는 함수들 제공
+
+```R
+install.packages("igraph")
+library(igraph)
+g1 <- graph(c(1, 2, 2, 3, 2, 4, 1, 4, 5, 5, 3, 6))
+plot(g1)
+
+name <- c("세종대왕", "일지매 부장", "김유신 과장", "손흥민 대리", "류현진 대리", "유관순 차장",  "이순신 부장", "신사임당 대리", "강감찬 부장", "광개토 과장", "정몽주 대리")
+pemp <- c("세종대왕", "세종대왕", "일지매 부장", "김유신 과장", "세종대왕", "이순신 부장", "유관순 차장", "세종대왕", "강감찬 부장", "광개토 과장", "김유신 과장")
+
+emp <- data.frame(이름=name, 상사이름=pemp)
+print(emp)
+g <- graph.data.frame(emp, direct=T)
+plot(g, layout=layout.fruchterman.reingold, vertex.size=8, edge.arrow.size=0.5)
+```
+
+### 3.1.5. reshape
+
+>데이터 셋의 구성이 구분변수(identifier variable)에 의해서 특정 변수가 분류된 경우 데이터 셋의 모양을 변경하는 패키지.
+
+```R
+#reshape(), melt() : 구분 변수를 기본으로 측정변수를 분류하여 새로운 컬럼을 생성
+
+reshape(
+    data.frame
+    , varying = "반복되는 측정 색인"
+    , v.names = "반복되는 측정값"
+    , timevar = "반복되는 측정 시간"
+    , idvar = "1개 이상의 값으로 분류되는 변수"
+    , direct="wide/long"
+)
+
+#wide는 기준변수와 관련 변수가 1:n 관계로 관측치가 구성되었을 때
+#long은 기준변수와 관련 변수가 1:1 관계로 관측치가 구성 되었을 때
+
+#구분변수(identifier variable) : 데이터 셋에 1개 이상으로 분류되는 집단변수
+#측정변수(measured variable): 구분변수에 의해서 구분되는 변수
+```
+
+- 기본 사용법
+
+  ```R
+  install.packages("reshape")
+  library(reshape)
+  
+  #데이터 파일을 가져오는 경우 컬럼명이 없으면 기본적으로 V1, V2, V3... 형식으로 기본 컬럼명이 적용되므로 데이터 셋의 컬럼명을 변경하려면 rename() 함수를 사용.
+  
+  result <- read.csv("./data/reshape.csv", header=F)
+  result <- rename(result, c(V1="total", V2="num1", V3="num2", V4="num3"))
+  
+  ################
+  data('Indometh') #항염증제에 대한 약물동태학에 관한 데이터 셋
+  str(Indometh) #생체내에서 약물의 흡수, 분포, 비축, 대사, 배설의 과정을 연구
+                #Subject(실험대상), time(약물 투여시간:hr), conc(농도:ml/mcg)
+  Indometh   #long형식
+    Subject time conc
+  1       1 0.25 1.50
+  2       1 0.50 0.94
+  3       1 0.75 0.78
+  4       1 1.00 0.48
+  5       1 1.25 0.37
+  6       1 2.00 0.19
+  
+  #기준변수: timervar="time", idvar="Subject"
+  #관측변수: v.names="conc"
+  #실험대상1을 기준으로 약물투여시간 0.25에서 8까지의 ... 농도를
+  wide <- reshape(Indometh,  idvar="Subject", v.names="conc", timevar="time", direction="wide")
+  wide
+     Subject conc.0.25 conc.0.5 conc.0.75 conc.1 conc.1.25 conc.2
+  1        1      1.50     0.94      0.78   0.48      0.37   0.19
+  12       2      2.03     1.63      0.71   0.70      0.64   0.36
+  23       3      2.72     1.49      1.16   0.80      0.80   0.39
+  34       4      1.85     1.39      1.02   0.89      0.59   0.40
+  45       5      2.05     1.04      0.81   0.39      0.30   0.23
+  56       6      2.31     1.44      1.03   0.84      0.64   0.42
+     conc.3 conc.4 conc.5 conc.6 conc.8
+  1    0.12   0.11   0.08   0.07   0.05
+  12   0.32   0.20   0.25   0.12   0.08
+  23   0.22   0.12   0.11   0.08   0.08
+  34   0.16   0.11   0.10   0.07   0.07
+  45   0.13   0.11   0.08   0.10   0.06
+  56   0.24   0.17   0.13   0.10   0.09
+  
+  reshape(wide, direction="long")
+  
+  #varying="반복되는 측정 색인" 사용
+  long <- reshape(wide, idvar="Subject", varying=2:12, v.names="conc", direction="long")
+       Subject time conc
+  1.1        1    1 1.50
+  2.1        2    1 2.03
+  3.1        3    1 2.72
+  4.1        4    1 1.85
+  5.1        5    1 2.05
+  6.1        6    1 2.31
+  1.2        1    2 0.94
+  2.2        2    2 1.63
+  3.2        3    2 1.49
+  4.2        4    2 1.39
+  5.2        5    2 1.04
+  6.2        6    2 1.44
+  ...
+  
+  
+  ##########################
+  #melt(data, id="기준변수", measured="측정변수")
+  #melt는 구분변수를 기준으로 측정변수를 긴형식에서 넓은 형식으로 변경
+  
+  smiths
+       subject time age weight height
+  1 John Smith    1  33     90   1.87
+  2 Mary Smith    1  NA     NA   1.54
+  
+  #기준변수 ("subject", "time")를 이용하여 측정변수 분류
+  melt(smiths, id=c("subject", "time"))
+       subject time variable value
+  1 John Smith    1      age 33.00
+  2 Mary Smith    1      age    NA
+  3 John Smith    1   weight 90.00
+  4 Mary Smith    1   weight    NA
+  5 John Smith    1   height  1.87
+  6 Mary Smith    1   height  1.54
+  
+  melt(smiths, id=c("subject", "time"), measured=c("age"))
+  
+  melt(smiths, id=c("subject", "time"), measured=c("age", "weight", "height"))
+  
+  melt(smiths, id=c(1:2), na.rm=T)
+  
+  #######################
+  #cast(): 측정변수에 집합함수를 적용
+  #cast(data, 포뮬러 식, ~측정변수, 집합함수)
+  smithsm <- melt(smiths, id=c(1:2))
+  smithsm 
+   
+  cast(smithsm, subject= ~ variable) #subject와 time 변수를 이용하여 측정변수(age, weight, height)를 분류
+  
+  #########
+  #문)
+  #Indometh 데이터셋으로부터 subject와 time을 구분변수로 long 형식으로 변환
+  
+  
+  #Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 합계 통계량 계산
+  
+  
+  #Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 평균, 최소값~최대값 범위를 계산
+  ```
+
   
 
 
 
 
 
-<br>
+
 
 <br>
 
@@ -4773,6 +4923,140 @@ dbGetQuery(connection객체, select sql문자)
 <br>
 
 <br>
+
+<br>
+
+
+
+# 워크샵-1 게임 매상 감소 원인 분석
+
+```R
+# CSV 파일을 읽어들이기
+#하루에 한 번 이상 게임을 이용한 유저
+dau <- read.csv("./data/dau.csv", header = T, stringsAsFactors = F)
+head(dau)
+    log_date app_name user_id
+1 2013-06-01  game-01     116
+2 2013-06-01  game-01   13491
+3 2013-06-01  game-01    7006
+4 2013-06-01  game-01     117
+5 2013-06-01  game-01   13492
+6 2013-06-01  game-01    9651
+
+#하루에 1원 이상 과금을 지불한 유저
+dpu <- read.csv("./data/dpu.csv", header = T, stringsAsFactors = F)
+head(dpu)
+    log_date app_name user_id payment
+1 2013-06-01  game-01     351   13330
+2 2013-06-01  game-01   12796     810
+3 2013-06-01  game-01     364    5710
+4 2013-06-01  game-01   13212    6480
+5 2013-06-01  game-01   13212   11420
+6 2013-06-01  game-01   13212    5710
+
+#유저별로 게임을 이용하기 시작한 날짜
+install <- read.csv("./data/install.csv", header = T, stringsAsFactors= F)
+head(install)
+  install_date app_name user_id
+1   2013-04-15  game-01       1
+2   2013-04-15  game-01       2
+3   2013-04-15  game-01       3
+4   2013-04-15  game-01       4
+5   2013-04-15  game-01       5
+6   2013-04-15  game-01       6
+
+
+# 1. DAU 데이터에 Install 데이터를 결합시키기 (merge함수)
+install.packages("plyr")
+library(plyr)
+### 내답
+df1 <- join(dau, install, by=c("user_id", "app_name"))
+###선생님 답
+dau.install <- merge(dau, install, by=c("user_id", "app_name"))
+
+
+# 2. 1차결합된 데이터에 DPU 데이터를 결합시키기 (merge함수)
+### 내 답
+df2 <- join(df1, dpu, by=c("user_id", "app_name", "log_date"))
+colnames(df2)[5] <- "log_date_pay"
+### 선생님 답
+dau.install.payment <- merge(
+    dau.install, dpu, 
+    by = c("log_date","app_name", "user_id"), 
+    all.x = T
+)
+
+
+# 3. 비과금 유저의 과금액에 0을 넣기 ( data[row,col]<-0)
+### 내 답
+df2$payment <- ifelse(!is.na(df2$payment), df2$payment, 0)
+### 선생님 답
+dau.install.payment$payment[is.na(dau.install.payment$payment)] <- 0
+    
+
+# 4. 월 항목 추가   (data.frame객체$새컬럼변수 <- 추가될 데이터, mutate, cbind 등 이용)
+library(dplyr)
+### 내 답
+df3 <- mutate(
+    df2 
+    ,log_month = as.character(as.Date(log_date), format="%Y-%m")
+)
+### 선생님 답
+dau.install.payment$log_month <-substr(dau.install.payment$log_date, 1, 7)
+dau.install.payment$install_month <- substr(dau.install.payment$install_date, 1, 7)
+   
+
+# 5. 추가된 월 항목으로 그룹핑후 과금액 집계 (ddply, aggregate, dplyr::group_by등 이용)
+### 내 답
+df3.summary <- df3 %>% group_by(log_month) %>% summarize(sum(payment))
+### 선생님 답
+mau.payment <- ddply(
+    dau.install.payment,
+    .(log_month, user_id, install_month), # 그룹화
+    summarize, # 집계 명령
+    payment = sum(payment) # payment 합계
+)           
+
+# 6. 신규 유저인지 기존 유저인지 구분하는 항목의 새 컬럼변수 추가
+### 내 답
+df4 <- mutate(
+    df3,
+    new_user = ifelse(as.Date(install_date) >= as.Date(paste(log_month, "-01", sep="")), "y", "n")
+)
+### 선생님 답
+mau.payment$user.type <-  ifelse(mau.payment$install_month == mau.payment$log_month, "new", "old")
+
+
+# 7. 추가된 월 항목으로 그룹핑후 과금액 집계
+### 내 답
+df4.summary <- df4 %>% group_by(log_month, new_user) %>% summarize(
+    sum(payment)
+)
+  log_month new_user `sum(payment)`
+  <chr>     <chr>             <dbl>
+1 2013-06   n               1778860
+2 2013-06   y                498370
+3 2013-07   n               1778860
+4 2013-07   y                291990
+#### 선생님 답
+#미정
+
+# 8. 그래프 그리기
+### 내 답
+df4.plot <- as.data.frame(
+    cbind(
+        df4.summary[df4.summary$log_month=="2013-06", 3]
+        , df4.summary[df4.summary$log_month=="2013-07", 3]
+    )
+) 
+colnames(df4.plot) <- c("pay.2013_06", "pay.2013_07")
+df4.plot <- arrange(df4.plot, pay.2013_06) 
+barplot(as.matrix(df4.plot), col=c("cyan", "magenta"))
+### 선생님 답
+#미정
+
+
+```
 
 
 
