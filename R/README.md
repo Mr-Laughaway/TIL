@@ -3721,16 +3721,12 @@ print(mean(data2))
 5. 연속변수로 구성된 데이터프레임을 대상으로 히스토그램과 산점도를 그릴 수 있다.
 6. 데이터 분석의 도입부에서 전체적인 데이터의 구조를 살펴보기 위해서 시각화 도구를 사용한다.
 
-### 2.2. 기본 시각화 도구
+## 2.2. 기본 시각화 도구
 
 - 숫자형 컬럼 1개 시각화 도구 - hist, plot, barplot
-
 - 범주형 컬럼 1개 시각화 도구 - pie, barplot
-
 - 숫자형 컬럼 2개 시각화 도구 - plot, abline, boxplot
-
 - 숫자형 컬럼 3개 시각화 도구 - scatterplot3d(3차원 산점도)
-
 - n개의 컬럼 시각화 도구 - pairs(산점도 매트릭스)
 
 ## 2.3. 시각화 예제
@@ -3857,6 +3853,8 @@ legend(
 ### 2.3.2. plot()
 
 >점차트 - 점의 모양, 색상 설정 가능
+>
+>산점도(scatter plot) : 두 개 이상의 변수들 사이의 분포를 점으로 표시. 두 변수의 관계를 시각적으로 분석할 때 유용
 
 ```R
 # lables : 점에 대한 설명문
@@ -3972,9 +3970,136 @@ curve(
 )
 ```
 
-### 2.3.5. 연습문제
+### 2.3.5. 고수준 및 저수준 시각화 함수의 조합
 
-#### 2.3.5.1. 연습문제 2.1
+#### 2.3.5.1. 산점도 예제
+
+>산점도(scatter plot) : 두 개 이상의 변수들 사이의 분포를 점으로 표시. 두 변수의 관계를 시각적으로 분석할 때 유용
+
+- 산점도
+
+  ```R
+  price <- runif(10, min=1, max=100)
+  
+  plot(price, col="red")
+  par(new=T) #차트 추가
+  
+  line_chart = 1:100
+  #x축은 생성된 난수의 순서, 
+  plot(				#대각선 추가
+      line_chart
+      , type="l"
+      , col="red"
+      , axes=F
+      , ann=F 
+  )
+  ```
+
+- 선을 연결하기
+
+  ```R
+  par(mfrow=c(2, 2))
+  plot(price, type="l")  #실선
+  plot(price, type="o")  #원형과 실선
+  plot(price, type="h")  #직선
+  plot(price, type="s")  #꺽은선
+  ```
+
+- 중복된 데이터의 수 만큼 plot 점 크기 확대 1
+
+  ```R
+  x <- c(1, 2, 3, 4, 2, 4)
+  y <- rep(2, 6)
+  table(x, y) #빈도수
+     y
+  x   2
+    1 1
+    2 2
+    3 1
+    4 2
+  
+  xy.df <- as.data.frame(table(x, y))
+    x y Freq
+  1 1 2    1
+  2 2 2    2
+  3 3 2    1
+  4 4 2    2
+  
+  plot(
+      x, y
+      , pch="@", col="blue", cex=0.5*xy.df$Freq
+      , xlab="x벡터 원소", ylab="y벡터 원소"
+  )
+  ```
+
+- 중복된 데이터의 수 만큼 plot 점 크기 확대 2
+
+  ```R
+  install.packages("psych")
+  library(psych)
+  data(galton)
+  
+  #child컬럼, parent컬럼을 대상으로 교차 테이블을 생성하여 데이터 프레임에 저장
+  galtondf <- as.data.frame(table(galton$child, galton$parent))
+  names(galtondf) <- c("child", "parent", "freq")
+  
+  parent <- as.numeric(galtondf$parent)
+  child <- as.numeric(galtondf$child)
+  
+  plot(
+      parent, child, pch=21, col="blue", bg="gray"
+      , cex=0.2*galtondf$freq
+      , xlab="parent"
+      , ylab="child"
+  )
+  
+  
+  ```
+
+#### 2.3.5.2. 변수간의 관계를 차트로 그려보기 - `pairs()`
+
+```R
+attributes(iris)
+
+pairs(iris[, 1:4])
+pairs(iris[iris$Species=="setosa", 1:4])
+```
+
+#### 2.3.5.3. 3차원 산점도
+
+>`scatterplot3d(밑변, 오른쪽변, 왼쪽변)`
+
+```R
+install.packages("scatterplot3d")
+library(scatterplot3d)
+levels(iris$Species)
+
+iris_setosa = iris[iris$Species=='setosa', ]
+iris_versicolor = iris[iris$Species=='versicolor', ]
+iris_virginica = iris[iris$Species=='virginica',]
+
+d3 <- scatterplot3d(
+    iris$Petal.Length, iris$Sepal.Length, iris$Sepal.Width
+    , type='n' #type='n' 은 기본 산점도를 표시하지 않는 것
+)
+
+d3$points3d(
+    iris_setosa$Petal.Length, iris_setosa$Sepal.Length, iris_setosa$Sepal.Width
+    , bg="orange", pch=21
+)
+d3$points3d(
+    iris_versicolor$Petal.Length, iris_versicolor$Sepal.Length, iris_versicolor$Sepal.Width
+    , bg="blue", pch=23
+)
+d3$points3d(
+    iris_virginica$Petal.Length, iris_virginica$Sepal.Length, iris_virginica$Sepal.Width
+    , bg="magenta", pch=25
+)
+```
+
+### 2.3.6. 연습문제
+
+#### 2.3.6.1. 연습문제 2.1
 
 ``` R
 x1 <- 1:5
@@ -4008,7 +4133,7 @@ par(op)
 # n: 출력하지 않음(no plotting)
 ```
 
-#### 2.3.5.2. 연습문제 2.2
+#### 2.3.6.2. 연습문제 2.2
 
 ```R
 x <- rep(1:5, rep(5, 5))
@@ -4026,23 +4151,598 @@ points(rep(7,5), 5:1, pch=pchs, cex=1.5)
 text(rep(7, 5)-0.4, y, labels=paste("'", pchs,"'", sep=""), cex=1.2)
 ```
 
-#### 2.3.5.3. 연습문제 2.3
+#### 2.3.6.3. 연습문제 2.3
 
 ```R
+cars[1:4, ]
+  speed dist
+1     4    2
+2     4   10
+3     7    4
+4     7   22
 
+z <- lm(dist ~ speed, data=cars)
+is(z)
+
+z$coef
+(Intercept)       speed 
+ -17.579095    3.932409 
+
+plot(cars, main = "abline")
+# horizontal
 ```
 
+# 3. R 데이터 전처리
+
+>데이터 분석 프로젝트에서는 70%이상의 시간이 데이터 변환과 조작, 필터링 등을 전처리 작업에 소요된다.
+
+## 3.1. 유용한 패키지
+
+`plyr`, `dplyr`, `reshape`, `reshape2`
+
+### 3.1.1. plyr
+
+> plyr 패키지는 두 개 이상의 데이터 프레임을 대상으로 key 값을 이용하여 merg, 함수적용, 요약 집계등의 기능을 제공
+
+#### 3.1.1.1. join()
+
+- 기본 사용
+
+  ```R
+  install.packages("plyr")
+  library(plyr)
+  
+  x <- data.frame(
+      id = c(1, 2, 3, 4, 5)
+      , height = c(160, 171, 173, 162, 165)
+  )
+  y <- data.frame(
+      id = c(5, 1, 3, 2, 4)
+      , weight = c(55, 73, 60, 57, 75)
+  )
+  # join() : 두 데이터프레임을 merge
+  xyjoin <- join(x, y, by="id")
+    id height weight
+  1  1    160     73
+  2  2    171     57
+  3  3    173     60
+  4  4    162     75
+  5  5    165     55
+  
+  
+  # left outer join (상동)
+  # 왼쪽 키를 기준으로 출력하고 join할 데이터가 없으면 NA로 출력
+  x <- data.frame(
+      id = c(1, 2, 3, 4, 6)
+      , height = c(160, 171, 173, 162, 165)
+  )
+  
+  leftjoin <- join(x, y, by="id") 
+    id height weight
+  1  1    160     73
+  2  2    171     57
+  3  3    173     60
+  4  4    162     75
+  5  6    165     NA
+  
+  # innerjoin
+  # 키가 존재하는 경우에만 조인
+  innerjoin <- join(x, y, by="id", type="inner")
+    id height weight
+  1  1    160     73
+  2  2    171     57
+  3  3    173     60
+  4  4    162     75
+  
+  # full outer join
+  # 양쪽 키를 모두 출력하고 join 할 데이터가 없으면 NA로 출력
+  fulljoin <- join(x, y, by="id", type="full")
+    id height weight
+  1  1    160     73
+  2  2    171     57
+  3  3    173     60
+  4  4    162     75
+  5  6    165     NA
+  6  5     NA     55
+  ```
+
+- 두 개의 키 사용
+
+  ``` R
+  x <- data.frame(
+      key1 = c(1, 1, 2, 2, 3)
+      , key2 = c('a', 'b', 'c', 'd', 'e')
+      , val = c(10, 20, 30, 40, 50)
+  )
+  y <- data.frame(
+      key1 = c(3, 2, 2, 1, 1)
+      , key2 = c('e', 'd', 'c', 'b', 'a')
+      , val1 = c(500, 300, 400, 100, 200)
+  )
+  
+  xyjoin <- join (x, y, by=c("key1", "key2"))
+    key1 key2 val val1
+  1    1    a  10  200
+  2    1    b  20  100
+  3    2    c  30  400
+  4    2    d  40  300
+  5    3    e  50  500
+  ```
+
+#### 3.1.1.2. tapply()
+
+> 데이터 셋에 집단 변수(이산형 범주)를 대상으로 그룹별 함수 적용
+>
+> - 기본 R 함수 참고
+>
+>   - apply(vec, func) - 결과를 벡터, 배열, 리스트로 반환
+>
+>   - lapply(vec, func) - 결과를 리스트로 반환
+>   - sapply(vec, func) - 결과를 벡터, 배열, 매트릭스로 반환
+>
+>   
+
+```R
+tapply(dataset, 집단변수(그룹핑할 변수), 함수)
+```
+
+- 기본 사용
+
+  ```R
+  #그룹핑할 데이터 확인
+  unique(iris$Species)
+  [1] setosa     versicolor virginica 
+  Levels: setosa versicolor virginica
+  
+  #적용
+  #각 종 별로 그룹핑하여 속성값에 통계함수를 적용
+  tapply(iris$Sepal.Length, iris$Species, mean)
+      setosa versicolor  virginica 
+       5.006      5.936      6.588 
+  tapply(iris$Sepal.Length, iris$Species, sd)
+      setosa versicolor  virginica 
+   0.3524897  0.5161711  0.6358796 
+  
+  ```
+
+#### 3.1.1.3. ddply()
+
+> 데이터셋에 집단 변수(이산형 범주)를 대상으로 그룹별 함수를 **여러개** 적용 하여 결과를 데이터 프레임으로 반환
+
+```R
+ddply(데이터 셋, 집단변수(그룹핑할 변수), 요약집계, 컬럼명=함수(변수), ...)
+```
+
+- 기본 사용
+
+  ```R
+  # 함수 한 개 적용
+  avg_df <- ddply(iris, .(Species), summarise, avg=mean(Sepal.Length))
+       Species   avg
+  1     setosa 5.006
+  2 versicolor 5.936
+  3  virginica 6.588
+  
+  # 함수 여러개 적용
+  result <- ddply(
+      iris, .(Species), summarise
+  	, std = sd(Sepal.Length)
+      , max = max(Sepal.Length)
+      , min = min(Sepal.Length)
+  )
+       Species       std max min
+  1     setosa 0.3524897 5.8 4.3
+  2 versicolor 0.5161711 7.0 4.9
+  3  virginica 0.6358796 7.9 4.9
+  ```
+
+
+
+### 3.1.2. dplyr
+
+> dplyr 패키지 -데이터 전처리( 조건 필터, 그룹핑,  함수적용, 변환, 집계연산, 정렬,.....)
+> filter() 조건에 맞는 데이터셋 추출, 행추출
+> select() 데이터 셋을 대상으로 컬럼을 선택하는 기능
+> mutate() 데이터 넷의 새로운 컬럼을 추가하는 기능
+> arrange() 데이터 셋의 특정 컬럼으로 정렬하는 기능
+> summarise() 데이터 셋의 특정 컬럼으로 요약집계 기능
+
+#### 3.1.2.1. filter()
+
+> filter() 조건에 맞는 데이터셋 추출, 행
+
+```R
+filter(.data, ..., .preserve = FALSE)
+filter(데이터셋, 조건, ...)
+```
+
+- 기본 사용
+
+  ```R
+  install.packages("dplyr")
+  library(dplyr)
+  
+  exam <- read.csv("./data/exam.csv", header=T)
+  
+  ###################################
+  # filter
+  # %>% 파이프 연산자 (다음 함수의 입력값으로 전달)
+  # class가 1인 record(행) 추출
+  class1 <- exam %>% filter(class==1)
+  # filter(exam, class == 1) 랑 같음
+    id class math english science
+  1  1     1   50      98      50
+  2  2     1   60      97      60
+  3  3     1   45      86      78
+  4  4     1   30      98      58
+  
+  # class가 1을 제외한 record(행) 추출
+  other_class <- exam %>% filter(class != 1)
+  # filter(exam, class != 1) 랑 같음
+  
+     id class math english science
+  1   5     2   25      80      65
+  2   6     2   50      89      98
+  3   7     2   80      90      45
+  4   8     2   90      78      25
+  5   9     3   20      98      15
+  6  10     3   50      98      45
+  7  11     3   65      65      65
+  8  12     3   45      85      32
+  9  13     4   46      98      65
+  10 14     4   48      87      12
+  11 15     4   75      56      78
+  12 16     4   58      98      65
+  13 17     5   65      68      98
+  14 18     5   80      78      90
+  15 19     5   89      68      87
+  16 20     5   78      83      58
+  
+  ```
+
+#### 3.1.2.2. select()
+
+> 데이터 셋을 대상으로 컬럼을 선택하는 기능
+
+```R
+select(.data, ...)
+select(데이터셋, 컬럼명...)
+```
+
+- 기본 사용
+
+  ```R
+  #영어 점수 컬럼값만 추출
+  e_jumsu <- exam %>% select(english)
+  
+  #수학 점수 제외하고 모든 칼럼 추출
+  all_column <- exam %>% select(-math)
+  
+  #class가 1이면서 영어점수 컬럼값만 1행에서~3행까지 출력
+  result <- exam %>% filter(class==1) %>% select(english) %>% head(3)
+    english
+  1      98
+  2      97
+  3      86
+  ```
+
+#### 3.1.2.3. arrange()
+
+> 데이터 셋의 특정 컬럼으로 정렬하는 기능
+
+```R
+arrange(.data, ...)
+arrange(정렬할컬럼, ...) #내림차순 시 desc()사용
+```
+
+- 기본 사용
+
+  ```R
+  #수학 점수를 기준으로 오름차순 정렬된 결과를 변수에 저장하고 출력
+  asc_math <- exam %>% arrange(math)
+  
+  #수학 점수를 기준으로 내림차순 정렬된 결과를 변수에 저장하고 출력
+  desc_math <- exam %>% arrange(desc(math))
+  
+  #1차 정렬은 class의 오름차순, 2차 정렬은 수학점수의 내림차순으로 정렬
+  order_math <- exam %>% arrange(class, desc(math))
+  
+  ```
+
+#### 3.1.2.4. mutate()
+
+> 기존 칼럼값을 활용하여 새로운 칼럼을 생성하고자 할 때 사용. 예를 들어, 단위를 전환하거나, 두 칼럼을 활용하여 비율을 계산하거나 할 때.
+
+```R
+mutate(.data, ...)
+mutate(데이터셋, 컬럼명=조건or계산expr)
+```
+
+- 기본 사용
+
+  ```R
+  #총점(수학+영어+과학) 열을 추가
+  new_exam <- exam %>% mutate(total = math+english+science)
+     id class math english science total
+  1   1     1   50      98      50   198
+  2   2     1   60      97      60   217
+  3   3     1   45      86      78   209
+  4   4     1   30      98      58   186
+  5   5     2   25      80      65   170
+  ...
+  
+  #평균 열 추가
+  avg_exam <- exam %>% mutate(
+      total = math+english+science
+      , mean = (math+english+science)/3
+  )
+  
+  #pass이름의 열을 추가(평균이 60점이상이면 "pass" 아니면 "fail")
+  res_exam <- avg_exam %>% mutate(
+      pass = ifelse(mean >= 60, "pass", "fail")
+  )
+     id class math english science total     mean pass
+  1   1     1   50      98      50   198 66.00000 pass
+  2   2     1   60      97      60   217 72.33333 pass
+  3   3     1   45      86      78   209 69.66667 pass
+  4   4     1   30      98      58   186 62.00000 pass
+  5   5     2   25      80      65   170 56.66667 fail
+  ...
+  
+  #추가된 평균 컬럼으로 내림차순 정렬
+  sort_exam <- res_exam %>% arrange(desc(mean))
+     id class math english science total     mean pass
+  1  18     5   80      78      90   248 82.66667 pass
+  2  19     5   89      68      87   244 81.33333 pass
+  3   6     2   50      89      98   237 79.00000 pass
+  4  17     5   65      68      98   231 77.00000 pass
+  ...
+  ```
+
+#### 3.1.2.4. tbl_df()
+
+>데이터셋에서 콘솔 창의 크기만큼 데이터 셋 추출. 데이터 프레임과 유사하고 자동으로 출력결과를 화면을 뒤덮지 않는 정도로 각 칼럼명 아래 자료형을 표현한다
+
+```R
+tbl_df(data)
+```
+
+- 기본 사용
+
+  ```R
+  install.packages("hflights")
+  library(hflights)
+  #2011년도 미국 휴스턴 출발 모든 비행기의 이착률 정보 기록
+  #대략 22만건, 21개의 변수(컬럼)로 구성된 데이터셋
+  str(hflights)
+  flights_df <- tbl_df(hflights) #현재 R콘솔 창크기에서 볼 수 있는 만큼 추출
+  # A tibble: 227,496 x 21
+      Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier
+     <int> <int>      <int>     <int>   <int>   <int> <chr>        
+   1  2011     1          1         6    1400    1500 AA           
+   2  2011     1          2         7    1401    1501 AA           
+   3  2011     1          3         1    1352    1502 AA           
+   4  2011     1          4         2    1403    1513 AA           
+   5  2011     1          5         3    1405    1507 AA           
+   6  2011     1          6         4    1359    1503 AA           
+   7  2011     1          7         5    1359    1509 AA           
+   8  2011     1          8         6    1355    1454 AA           
+   9  2011     1          9         7    1443    1554 AA           
+  10  2011     1         10         1    1443    1553 AA           
+  # ... with 227,486 more rows, and 14 more variables:
+  #   FlightNum <int>, TailNum <chr>, ActualElapsedTime <int>,
+  #   AirTime <int>, ArrDelay <int>, DepDelay <int>, Origin <chr>,
+  #   Dest <chr>, Distance <int>, TaxiIn <int>, TaxiOut <int>,
+  #   Cancelled <int>, CancellationCode <chr>, Diverted <int>
+  ```
+
+#### 3.1.2.5. summarize()
+
+>summarise() 데이터 셋의 특정 컬럼으로 요약집계 기능
+
+```R
+summarise(.data, ...)
+summarise(dataframe, 추가컬럼명=함수(컬럼명), ....)
+```
+
+- 기본 사용
+
+  ```R
+  summarize(exam,
+       mean_math=mean(math)
+      , sum_math=sum(math)
+      , median_math =median(math)
+      , sd_math=sd(math)
+      , min_math=min(math)
+      , max_math=max(math)
+      , n=n()
+  )
+    mean_math sum_math median_math  sd_math min_math max_math  n
+  1     57.45     1149          54 20.29901       20       90 20
+  ```
+
+#### 3.1.2.6. group_by()
+
+>`group_by()` 함수는 `summarize()` 함수와 함께 사용되는데 각 집단을 한줄로 요약해서 축약하게 된다. `group_by()` 함수는 인자로 **범주형** 변수가 포함된 칼럼명을 인자로 받아 요약 통계량을 계산하게 된다.
+
+```R
+group_by(.data, ..., add = FALSE, .drop = group_by_drop_default(.data)
+group_by(dataframe, 집단변수)
+```
+
+- 기본 사용
+
+  ```R
+  group_summary <- exam %>% group_by(class) %>% summarize(
+      mean_math=mean(math)
+      , sum_math=sum(math)
+      , median_math =median(math)
+      , sd_math=sd(math)
+      , min_math=min(math)
+      , max_math=max(math)
+      , n=n()
+  )
+  # A tibble: 5 x 8
+    class mean_math sum_math median_math sd_math min_math max_math
+    <int>     <dbl>    <int>       <dbl>   <dbl>    <int>    <int>
+  1     1      46.2      185        47.5   12.5        30       60
+  2     2      61.2      245        65     29.5        25       90
+  3     3      45        180        47.5   18.7        20       65
+  4     4      56.8      227        53     13.3        46       75
+  5     5      78        312        79      9.90       65       89
+  # ... with 1 more variable: n <int>
+  
+  ```
+
+#### 3.1.2.7. 실습
+
+- 1
+
+  ```R
+  # A tibble: 227,496 x 21
+      Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier
+     <int> <int>      <int>     <int>   <int>   <int> <chr>        
+   1  2011     1          1         6    1400    1500 AA           
+   2  2011     1          2         7    1401    1501 AA           
+   3  2011     1          3         1    1352    1502 AA           
+   4  2011     1          4         2    1403    1513 AA           
+   5  2011     1          5         3    1405    1507 AA           
+   6  2011     1          6         4    1359    1503 AA           
+   7  2011     1          7         5    1359    1509 AA           
+   8  2011     1          8         6    1355    1454 AA           
+   9  2011     1          9         7    1443    1554 AA           
+  10  2011     1         10         1    1443    1553 AA           
+  # ... with 227,486 more rows, and 14 more variables:
+  #   FlightNum <int>, TailNum <chr>, ActualElapsedTime <int>,
+  #   AirTime <int>, ArrDelay <int>, DepDelay <int>, Origin <chr>,
+  #   Dest <chr>, Distance <int>, TaxiIn <int>, TaxiOut <int>,
+  #   Cancelled <int>, CancellationCode <chr>, Diverted <int>
+  
+  #hflights데이터셋으로부터 1월의 2일 모든 비행기의 이착률 정보 추출
+  filter(hflights, Year==2011, Month==1, DayofMonth==2) 
+  
+  #hflights데이터셋을 년, 월, 일, 출발시간, 도착시간순으로 오름차순 정렬
+  arrange(hflights, Year, Month, DayofMonth, DepTime, ArrTime)
+  
+  #hflights데이터셋을 년(오름차순), 월(오름차순), 일(오름차순), 출발시간(내림차순), 도착시간(오름차순) 정렬
+  arrange(hflights, Year, Month, DayofMonth, desc(DepTime), ArrTime)
+  
+  #hflights데이터셋으로부터 년, 월, 출발시간, 도착시간 컬럼만 검색
+  select(hflights, Year, Month, DepTime, ArrTime)
+  
+  #hflights데이터셋으로부터 출발지연시간과 도착지연시간과의 차이를 계산한 컬럼 추가
+  mutate(hflights, dur=DepDelay-ArrDelay)
+  
+  select(mutate(hflights, gain=ArrDelay-DepDelay, gain_per_hour = gain/(AirTime/60)), Year, Month, ArrDelay, DepDelay, gain, gain_per_hour)
+  
+  #hflights데이터셋으로부터 도착 시간에 대한 평균, 표준편차 계산
+  c(
+  	mean = mean(hflights$AirTime, na.rm=T)
+      , sd = sd(hflights$AirTime, na.rm=T)
+  )
+  
+  summarise(hflights, cnt=n(), delay=mean(AirTime, na.rm=T))
+  summarise(hflights, arrTimeSd = sd(AirTime, na.rm=T),
+            arrTimeVar = var(AirTime, na.rm=T))
+  
+  
+  
+  
+  #
+  ```
+
+- 2
+
+  ```R
+  install.packages("ggplot2")
+  library(ggplot2)
+  #자동차 배기량에 따라 고속도록 연비 ...데이터 셋
+  mpg <- as.data.frame(ggplot2::mpg)
+  print(mpg)
+  str(mpg)
+  #displ 배기량
+  #manufaturer 제조사
+  #cty 도시연비
+  #hwy 고속도로 연비
+  #class차종
+  library(dplyr)
+  
+  # Quiz> 회사별로 분리, suv 추출, 통합 연비(도시연비+고속도로 연비) 변수 생성,통합 연비 평균 산출, 내림차순 정렬, 1~5위까지 출력
+  head(
+      mpg %>% group_by(manufacturer) %>% filter(class=="suv") %>% mutate(avg_cthwy=(cty+hwy)/2) %>% arrange(desc(avg_cthwy)) %>% select(manufacturer, model, displ, class, cty, hwy, avg_cthwy)
+      , 5
+  )
+  # A tibble: 5 x 7
+  # Groups:   manufacturer [1]
+    manufacturer model        displ class   cty   hwy avg_cthwy
+    <chr>        <chr>        <dbl> <chr> <int> <int>     <dbl>
+  1 subaru       forester awd   2.5 suv      20    27      23.5
+  2 subaru       forester awd   2.5 suv      20    26      23  
+  3 subaru       forester awd   2.5 suv      19    25      22  
+  4 subaru       forester awd   2.5 suv      18    25      21.5
+  5 subaru       forester awd   2.5 suv      18    24      21 
+  ######틀렸다. 문제 의도를 잘못 파악... 제조사 별로 SUV의 평균 연비 순위를 구하는 것.
+  ##########
+  
+  #선생님 답
+  mpg %>% group_by(manufacturer) %>% filter(class=="suv") %>% mutate(tot=(cty+hwy)/2) %>% summarise(mean_tot=mean(tot))%>% arrange(desc(mean_tot)) %>% head(5)
+  # A tibble: 5 x 2
+    manufacturer mean_tot
+    <chr>           <dbl>
+  1 subaru           21.9
+  2 toyota           16.3
+  3 nissan           15.9
+  4 mercury          15.6
+  5 jeep             15.6
+  
+  # Quiz> 어떤 회사에서 "compact"(경차) 차종을 가장 많이 생산하는지 알아보려고 합니다. 각 회사별로 "compact" 차종을 내림차순으로 정렬해 출력하세요
+  mpg %>% filter(class=="compact") %>% group_by(manufacturer) %>% summarize(cnt = n()) %>% arrange(desc(cnt))
+  
+  # A tibble: 5 x 2
+    manufacturer   cnt
+    <chr>        <int>
+  1 audi            15
+  2 volkswagen      14
+  3 toyota          12
+  4 subaru           4
+  5 nissan           2
+  ```
+
+# 4. R과 DB 연동(oracle)
+
+## 4.1. 데이터 가져오기
+
+OracleDB 로부터 R 실행환경(메모리)로 데이터 가져오기
+
+```R
+RJDBC::JDBC("driver이름", "driver가 존재하는 클래스경로", "DB에서 문")
+
+dbConnect(driver객체, DB_URL, user, password)
+dbGetQuery(connection객체, select sql문자)
+```
+
+- 기본 사용 법
+
+  ```R
+  install.packages("RJDBC")
+  library(RJDBC)
+  library(rJava)
+  
+  drv <- JDBC(
+      "oracle.jdbc.driver.OracleDriver"
+      ,"C:/Program Files/Java/jdk1.8.0_221/jre/lib/ext/ojdbc6.jar"
+      , 
+  )
+  con <- dbConnect(drv, "jdbc:oracle:thin:@localhost:1521:orcl", "hr", "oracle")
+  rs <- dbGetQuery(con, "select tname from tab")
+  View(rs)
+  ```
+
+  
 
 
 
 
-
-
-
-
-<br>
-
-<br>
 
 <br>
 
