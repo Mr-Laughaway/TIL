@@ -1,6 +1,5 @@
 <h1>R</h1>
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -4888,9 +4887,586 @@ reshape(
   #Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 평균, 최소값~최대값 범위를 계산
   ```
 
+### 3.1.6. reshape2
+
+>dfdsf
+
+``` R
+
+
+```
+
+#### 3.1.6.1. melt()
+
+>sdfsdf
+
+```R
+melt(데이터 세트, id.var="기준 열", measure.vars="변환 열")
+```
+
+- 기본 사용
+
+  ```R
+  names(airquality) <- tolower(names(airquality))
+  head(airquality)
+    ozone solar.r wind temp month day
+  1    41     190  7.4   67     5   1
+  2    36     118  8.0   72     5   2
+  3    12     149 12.6   74     5   3
+  4    18     313 11.5   62     5   4
+  5    NA      NA 14.3   56     5   5
+  6    28      NA 14.9   66     5   6
+  
+  library(reshape2)
+  melt_test <- melt(airquality)
+  head(melt_test)
+    variable value
+  1    ozone    41
+  2    ozone    36
+  3    ozone    12
+  4    ozone    18
+  5    ozone    NA
+  6    ozone    28
+  
+  ##월과 바람에 따른 오존 확인
+  melt_test2 <- melt(airquality, id.vars=c("month", "wind"), measure.vars="ozone")
+  head(melt_test2)
+    month wind variable value
+  1     5  7.4    ozone    41
+  2     5  8.0    ozone    36
+  3     5 12.6    ozone    12
+  4     5 11.5    ozone    18
+  5     5 14.3    ozone    NA
+  6     5 14.9    ozone    28
+  ```
+
+#### 3.1.6.2. cast()
+
+>dfdf
+
+```R
+cast(데이터 세트, 기준 열 ~ 변환 열) #acast(), dcast()
+```
+
+- dcast()
+
+  ```R
+  aq_melt <- melt(airquality, id=c("month", "day"), na.rm=T)
+  head(aq_melt)
+    month day variable value
+  1     5   1    ozone    41
+  2     5   2    ozone    36
+  3     5   3    ozone    12
+  4     5   4    ozone    18
+  6     5   6    ozone    28
+  7     5   7    ozone    23
+  
+  aq_dcast <- dcast(aq_melt, month + day ~ variable)
+  head(aq_dcast)
+    month day ozone solar.r wind temp
+  1     5   1    41     190  7.4   67
+  2     5   2    36     118  8.0   72
+  3     5   3    12     149 12.6   74
+  4     5   4    18     313 11.5   62
+  5     5   5    NA      NA 14.3   56
+  6     5   6    28      NA 14.9   66
+  ```
+
+- acast()
+
+  ```R
+  acast(데이터 세트, 기준 열 ~ 변환 열 ~ 분리 기준 열)
+  
+  acast(aq_melt, day ~ month ~variable)
+  , , ozone
+  
+       5  6   7   8  9
+  1   41 NA 135  39 96
+  2   36 NA  49   9 78
+  3   12 NA  32  16 73
+  ...
+  
+  , , solar.r
+  
+       5   6   7   8   9
+  1  190 286 269  83 167
+  2  118 287 248  24 197
+  3  149 242 236  77 183
+  ...
+  
+  , , wind
+  
+        5    6    7    8    9
+  1   7.4  8.6  4.1  6.9  6.9
+  2   8.0  9.7  9.2 13.8  5.1
+  3  12.6 16.1  9.2  7.4  2.8
+  
+  , , temp
+  
+      5  6  7  8  9
+  1  67 78 84 81 91
+  2  72 74 85 81 92
+  3  74 67 81 82 93
+  ```
+
+### 3.1.7. KoNLP
+
+> KoNLP 패키지는 Korean Natural Language Process의 약자로 패키지 내에 포함된 사전을 통해 문서에 포함된 단어의 품사를 분석해 준다. R 패키지 중에서 유일하게 한글을 처리하는 패키지.
+
+```R
+install.packages("KoNLP")
+```
+
+#### 3.1.7.1. 사용 준비
+
+```R
+library(KoNLP)
+useSystemDic() #사전 종류 중 1개
+useSejongDic() #사전 종류 중 1개
+useNIADic() #사전 종류 중 1개
+```
+
+#### 3.1.7.2.형태소 분석 실습
+
+```R
+library(KoNLP)
+useSejongDic()
+
+word_data <- readLines("./data/애국가(가사).txt")
+#형태소 추출 기본(라인별 리스트 형태로 나옴)
+word_data2 <- sapply(word_data, extractNoun, USE.NAMES=F)
+
+#딕셔너리에 추가할 단어를 add_words 변수에 할당
+add_words <- c("백두산", "남산", "철갑", "가을", "하늘", "달")
+buildDictionary(user_dic=data.frame(add_words, rep("ncn", length(add_words))), replace_usr_dic=T)
+629903 words dictionary was built.
+
+#형태소 추출 재시도(딕셔너리에 단어가 추가된 상태)
+word_data2 <- sapply(word_data, extractNoun, USE.NAMES=F)
+
+#벡터로 변경
+undata <- unlist(word_data2)
+[1] "1"        "절"       "동해"     "물"      
+  [5] "백두산"   "닳도"     "록"
+...
+
+#빈도수 확인
+word_table <- table(undata)
+
+#필터링하기
+undata2 <- Filter(function(x) { nchar(x) >= 2 }, undata)
+word_table2 <- table(undata2)
+
+#데이터 정렬하기
+word_table3 <- sort(word_table2, decreasing=T)
+undata2
+    대한     강산   무궁화     보전     사람     화려 
+       8        4        4        4        4        4 
+    길이     가슴     가을 공활한데   구름없     기상 
+       3        1        1        1        1        1 
+    나라     남산     닳도     동해 바람서리 밝은달은 
+       1        1        1        1        1        1 
+  백두산     보우     불변     사랑   소나무     우리 
+       1        1        1        1        1        1 
+  우리기 우리나라 일편단심     철갑     충성 하느님이 
+       1        1        1        1        1        1 
+    하늘     하사 
+       1        1
+
+#유용한 팁
+gsub(찾는 단어, 바꿀 단어, 찾을 소스 데이터)
+```
+
+### 3.1.8 wordcloud2
+
+>워드클라우드는 단어(Word) 모음이 구름(Cloud)과 유사하다고 해서 붙여진 이름이다. 
+
+```R
+install.packages("wordcloud2")
+
+wordcloud2([data, size, shape) 
+```
+
+- 사용 예
+
+  ```R
+  library(wordcloud2)
+  wordcloud2(word_table2)
+  
+  #색상 변경
+  wordcloud2(word_table3, color="random-light", backgroundColor="black")
+  
+  #폰트, 크기, 모양  변경
+  wordcloud2(word_table3, fontFamily="맑은 고딕", size=1.2, color="random-light", backgroundColor="black", shape="star")
+  
+  #책에 나온 팁 보기...
+  ```
+
+- 네이버 검색으로 해보기
+
+  ```R
+  http://developers.naver.com/main 접속 Open API 신청
+  [Products]-[서비스 API]-[검색]
+  오픈 API 이용 신청
+  로그인
+  애플리케이션 이름 설정, WEB 설정 , 임의의 URL 입력 , 애플리케이션 등록 하기
+  Client ID와 Client Secret 발급
+  
+  네이버 Open API의 WEB 방식 호출은 API URL 뒤에 요청변수들을 "&" 기호로 연결해 전송하는 GET방식을 사용
+  [블러그 검색을 위한 API URL과  요청 변수]
+  https://openapi.naver.com/v1/search/blog.xml
+  요청변수 query는 string타입으로 필수이며 검색을 원하는 문자열(UTF-8로 인코딩)
+  요청변수 display는 integer타입으로 기본값 10, 최대값 100으로  검색 결과 출력 건수
+  요청변수 start는 integer타입으로 기본값 1, 최대값 1000으로 검색 시작 위치
+  요청변수 sort는 string타입으로 기본값 sim, date로 정렬 옵션:sim(유사도순), date는 날짜순
+  
+  #기본 URL
+  urlStr <- "https://openapi.naver.com/v1/search/blog.xml?"
+  #검색어 설정 및 UTF-8 URL 인코딩
+  searchString <- "query=코타키나발루"
+  #UTF-8 인코딩
+  searchString <- iconv(searchString, to="UTF-8")
+  #URL 인코딩
+  searchString <- URLencode(searchString)
+  #나머지 요청 변수 : 조회 갯수100개, 시작페이지 1, 유사도순 정렬
+  etcString <- "&display=100&start=1&sort=sim"
+  
+  #URL 조합
+  reqUrl <- paste(urlStr, searchString, etcString, sep="")
+  
+  #get방식으로 URL을 호출하기 위해 httr 패키지의 GET함수 활용
+  library(httr)
+  clientID <- "클라이언트 ID"
+  clientSecret <- "클라이언트 Secret"
+  
+  #인증정보는 add_headers에 담아 함께 전송
+  apiResult <- GET(
+      reqUrl,
+      add_headers(
+          "X-Naver-Client-Id"=clientID
+          , "X-Naver-Client-Secret"=clientSecret
+      )
+  )
+  
+  apiResult #응답코드 status가 200 이면 정상
+  
+  # Open API의 결과 구조 확인 (UTF-8로 인코딩된 XML 형식)
+  str(apiResult) #XML 응답값은 "content"에 담겨 있습니다.
+  
+  apiResult$content
+  str(apiResult$content)
+  
+  #raw 형식이므로 rawToChar()를 활용해 문자로 변환
+  result <- rawToChar(apiResult$content)
+  Encoding(result) <- "UTF-8"
+  result
+  
+  #워드 클라우드에 표현할 단어를 추출하기 전에 문자열을 치환하는 gsub
+  불필요한 XML 관련 태그(tag)와 특수 문자 제거
+  
+  #gsub(pattern, replacement, x, ignore.case)
+  gsub("ABC", "***", "ABCabcABC")
+  gsub("ABC", "***", "ABCabcABC", ignore.case=T)
+  
+  x<-c("ABCabcABC", "abcABCabc")
+  gsub("ABC", "***", x) 
+  #gsub()는 고정된 문자열뿐 아니라 정규표현식을 통해 특정 패턴의 문자열들도 치환할 수 있습니다.
+  # 패턴문자  \\w 는 '_'를 포함한 문자와 숫자
+  # 패턴문자  \\W 는  \\w 의 반대의미 '_'와 문자와 숫자를 제외한 기호
+  # 패턴문자  \\d 는  숫자
+  # 패턴문자  \\D 는  숫자를 제외한 기호와 문자
+  # 패턴문자 []는 대괄호 안의 문자 중 한 개를 의미
+  # 패턴문자 [^]는 대괄호 안의 문자가 없는 패턴을 의미
+  gsub("b.n", "***", "i love banana")  
+  gsub("b.*n", "***", "i love banana") 
+  gsub("[bn]a", "***", "i love banana") 
+  gsub("010-[0-9]{4}-[0-9]{4}", "010-****-****", "내 폰번호는 010-1234-6789") 
+  gsub("010-\\d{4}-\\d{4}", "010-****-****", "내 폰번호는 010-1234-6789") 
+  
+  refinedStr <- result
+  #XML 태그를 공란으로 치환
+  refinedStr <- gsub("<\\/?)(\\w+)*([^<>|]*)>", " ", refinedStr)
+  refinedStr <- gsub("<\\/)(\\w+)*([^<>|]*)>", " ", refinedStr)
+  #단락을 표현하는 불필요한 문자를 공란으로 치환
+  refinedStr <- gsub("[[:punct:]]", " ", refinedStr)
+  #영어 소문자를 공란으로 치환
+  refinedStr <- gsub("[a-z]", " ", refinedStr)
+  #숫자를 공란으로 치환
+  refinedStr <- gsub("[0-9]", " ", refinedStr)
+  #여러 공란은 한 개의 공란으로 변경
+  refinedStr <- gsub(" +", " ", refinedStr)
+  
+  ################################################################
+  #한글 자연어 분석 패키지 KoNLP
+  #extractNoun()는 입력받은 문장에서 단어를 추출해 벡터로 반환
+  #extractNoun( "안녕하세요 오늘은 기분 좋은 하루 입니다.")
+  ##########################################################
+  library(KoNLP)
+  library(rJava)
+  
+  nouns<- extractNoun( refinedStr )
+  str(nouns)
+  nouns[1:40]
+  
+  #길이가 1인 문자를 제외
+  nouns <-nouns[nchar(nouns) > 1]
+  
+  #제외할 특정 단어를 정의
+  excluNouns <- c("코타키나발루", "얼마" , "오늘", "으로", "해서", "API", "저희", "정도")
+  
+  
+  nouns  <- nouns [!nouns  %in% excluNouns ]
+  nouns [1:40]
+  
+  #빈도수 기준으로 상위 50개 단어 추출
+  wordT <- sort(table(nouns), decreasing=T)[1:50]
+  wordT
+  
+  #wordcloud2 패키지 
+  #wordcloud2 (data, size, shape) 
+  #단어와 빈도수 정보가 포함된 데이터프레임 또는 테이블, 글자 크기, 워드 클라우드의 전체 모양(circle:기본값, cardioid, diamond, triangle, star등)
+  
+  install.packages("wordcloud2")
+  library(wordcloud2)
+  wordcloud2(wordT, size=3, shape="diamond")
+  ```
+
+- 영문서 형태소 분석 및 워드클라우드
+
+  ```R
+  # install
+  install.packages("tm") #텍스트 마이닝을 위한 패키지
+  install.packages("SnowballC") #어간추출을 위한 패키지
+  install.packages("wordcloud") #word-cloud generator
+  install.packages("RColorBrewer") #color palettes
+  
+  # load
+  library("tm")
+  library("SnowballC")
+  library("wordcloud")
+  library("RColorBrewer")
+  
+  filePath <- "http://www.sthda.com/sthda/RDoc/example-files/martin-luther-king-i-have-a-dream-speech.txt"
+  text <- readLines(filePath)
+  str(text)
+  
+  # VectorSource () 함수는 문자형 벡터을 만듭니다.
+  docs <- Corpus(VectorSource(text))
+  head(docs)
+  
+  # 텍스트의 특수 문자 등을 대체하기 위해 tm_map () 함수를 사용하여 변환이 수행됩니다.
+  # “/”,“@”및“|”을 공백으로 바꿉니다.
+  toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+  docs <- tm_map(docs, toSpace, "/")
+  docs <- tm_map(docs, toSpace, "@")
+  docs <- tm_map(docs, toSpace, "\\|")
+  head(docs)
+  
+  # 소문자로 변환
+  docs <- tm_map(docs, content_transformer(tolower))
+  # 수치 데이터 제거
+  docs <- tm_map(docs, removeNumbers)
+  # 영어 불용어 제거
+  docs <- tm_map(docs, removeWords, stopwords("english"))
+  
+  # 벡터 구조로 사용자가 직접 불용어  설정 , 제거
+  docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+  
+  # 문장 부호 punctuations
+  docs <- tm_map(docs, removePunctuation)
+  
+  # 공백 제거
+  docs <- tm_map(docs, stripWhitespace)
+  
+  # 텍스트 형태소 분석
+  docs <- tm_map(docs, stemDocument)
+  
+  
+  # 문서 매트릭스는 단어의 빈도를 포함하는 테이블입니다. 
+  # 열 이름은 단어이고 행 이름은 문서입니다. 
+  # text mining 패키지에서 문서 매트릭스를 생성하는 함수 사용
+  dtm <- TermDocumentMatrix(docs)
+  m <- as.matrix(dtm)
+  v <- sort(rowSums(m),decreasing=TRUE)
+  d <- data.frame(word = names(v),freq=v)
+  head(d, 10)
+  
+  
+  set.seed(1234)
+  wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+            max.words=200, random.order=FALSE, rot.per=0.35, 
+            colors=brewer.pal(8, "Dark2"))
+  ```
+
+### 3.1.9 ggplot2
+
+>ggplot2는 reshape2와 dplyr을 만든 해들리 위컴이 만든 패키지로 R 시각화의 1순위 패키지이다. 기본적으로 ggplot() 함수를 이용하여 틀을 만들고, 그 안에 다양한 이미지 객체 레이어를 포개는 방식으로 그래프를 표현한다.
+
+```R
+install.packages("ggplot2")
+
+#ggplot2문법은 레이어(layer) 구조로 되어 있다.
+# 1단계 : 배경 설정(축) 
+# ggplot(data, aes(x, y, ..)) : 사용할 데이터 지정
+# 데이터는 data.frame 타입으로 변환 후 입력
+
+# 2단계 : 그래프 추가(점, 막대, 선)
+geom_boxplot, geom_histogram, geom_col, geom_bar,  geom_line, geom_point
+
+# 3단계 : 설정 추가(축 범위, 색, 표식)
+xlim(), ylim(), labs(), theme()....
+```
+
+- 사용 예
+
+  ```R
+  library(ggplot2)
+  
+  ########
+  ggplot(airquality, aes(x=Day, y=Temp)) +
+  	geom_point(size=3, color="red")
+  
+  ########
+  ggplot(airquality, aes(x=Day, y=Temp)) +
+  	geom_line() +
+  	geom_point()
+  
+  # mtcars에서 cyl 종류별 확인
+  ggplot(mtcars, aes(x=cyl)) +
+  	geom_bar(width=0.5)
+  
+  #빈 범주를 제외하고 cyl 종류별 빈도수 확인
+  ggplot(mtcars, aes(x=factor(cyl))) +
+  	geom_bar(width=0.5)
+  
+  # cyl 종류변 gear 빈도 누적 막대그래프
+  ggplot(mtcars, aes(x=factor(cyl))) +
+  	geom_bar(aes(fill=factor(gear)))
+  
+  # 선 버스트 차트 그리기
+  ggplot(mtcars, aes(x=factor(cyl))) +
+  	geom_bar(aes(fill=factor(gear))) +
+  	coord_polar()
+  
+  # 원 그래프로 변환
+  ggplot(mtcars, aes(x=factor(cyl))) +
+  	geom_bar(aes(fill=factor(gear))) +
+  	coord_polar(theta="y")
+  
+  # airquality에서 Day열을 그룹지어, 날짜별 온도 boxplot을 그림
+  ggplot(airquality, aes(x=Day, y=Temp, group=Day)) +
+  	geom_boxplot()
+  
+  # airquality에서 Temp의 histogram
+  ggplot(airquality, aes(Temp)) +
+  	geom_histogram()
+  
+  # histogram 폭 조정
+  ggplot(airquality, aes(Temp)) +
+  	geom_histogram(binwidth=1)
+  
+  ## 꺾은선 그래프에 사선 그리기
+  ggplot(economics, aes(x=date, y=psavert)) +
+  	geom_line() +
+  	geom_abline(intercept = 12.18671, slope = -0.0005444)
+  
+  # 평행선 그리기
+  ggplot(economics, aes(x=date, y=psavert)) +
+  	geom_line() +
+  	geom_hline(yintercept = mean(economics$psavert))
+  
+  # 수직선 그리기
+  library(dplyr)
+  x_inter <- filter(economics, psavert == min(economics$psavert))$date
+  ggplot(economics, aes(x=date, y=psavert)) +
+  	geom_line() +
+  	geom_vline(xintercept=x_inter)
+  ```
+
   
 
+### 3.1.10 크롤링
 
+```R
+####################################################################################################
+ read_html() : url에서 html 파일을 읽어오고 저장한다.
+ html_table() :  테이블추출
+ html_node()는 매칭되는 한 요소만 반환하고, 
+ html_nodes()는 모든 요소를 반환한다.
+ id를 찾을 경우에는 html_node()를 사용하면 되고, tag, class로 같은 요소를 모두 추출하고자 할 경우에는 html_nodes()를 사용하면 된다
+ #html_names()는 attribute의 이름을 가져온다.    
+ ex) <img src="....">
+#html_chidren() 해당 요소의 하위 요소를 읽어온다.
+#html_tag() tag이름 추출한다.
+#html_attrs() attribute을 추출한다.
+#################################################################################################
+
+install.packages('rvest')
+ 
+library(rvest)
+
+#스크래핑할 웹 사이트 URL을 변수에 저장
+url <- 'http://www.imdb.com/search/title?count=100&release_date=2016,2016&title_type=feature'
+
+#웹 사이트로부터  HTML code 읽기
+webpage <- read_html(url)   
+webpage
+
+#스크래핑할 데이터 - rank, title, description, runtime
+
+#랭킹이 포함된 CSS selector 를 찾아서 R 코드로 가져오기
+rank_data_html <- html_nodes(webpage, '.text-primary')
+
+#랭킹 데이터를 텍스트로 가져오기
+rank_data <- html_text(rank_data_html)
+#랭킹 데이터를 수치형 데이터로 변환
+rank_data <- as.numeric(rank_data)
+
+#제목 데이터 가져오기
+title_data_html <- html_nodes(webpage, '.lister-item-header a')
+title_data <- html_text(title_data_html)
+length(title_data)
+
+#description 뽑기
+#desc_data_html <- html_nodes(webpage, '.lister-item-content > :nth-child(4)')
+description_data_html <- html_nodes(webpage, '.ratings-bar+ .text-muted')
+description_data <- html_text(description_data_html)
+
+#'\n' 제거 데이터 처리
+description_data <- gsub("\n", "", description_data)
+library(stringr)
+description_data <- str_trim(description_data)
+
+# 상영시간 가져오기
+runtime_data_html <- html_nodes(webpage, ".runtime")
+runtime_data <- html_text(runtime_data_html)
+runtime_data <- as.numeric(gsub("[ a-zA-Z]*", "", runtime_data))
+
+# 영화장르 영역 데이터 텍스트로 가져오기
+genre_data_html <- html_nodes(webpage, ".genre")
+genre_data <- html_text(genre_data_html)
+
+# \n 제거
+genre_data <- gsub("\n", "", genre_data)
+
+# 1개 이상의 공백을 제거
+genre_data <- str_trim(genre_data)
+genre_data <- gsub(" ", "", genre_data)
+
+# 첫 번째 장르 빼고 삭제
+genre_data <- gsub(",.*", "", genre_data) #첫 번째 장르만 가져오기
+
+# 문자열 데이터를 범주형 데이터로 변환 처리
+genre_data <- as.factor(genre_data)
+
+#IMDB rating 값 가져오기
+imdb_data_html <- html_nodes(webpage, ".ratings-imdb-rating > :nth-child(2)")
+imdb_data <- html_text(imdb_data_html)
+imdb_data <- as.numeric(imdb_data)
+
+
+
+```
 
 
 
@@ -4978,7 +5554,7 @@ dau.install <- merge(dau, install, by=c("user_id", "app_name"))
 # 2. 1차결합된 데이터에 DPU 데이터를 결합시키기 (merge함수)
 ### 내 답
 df2 <- join(df1, dpu, by=c("user_id", "app_name", "log_date"))
-colnames(df2)[5] <- "log_date_pay"
+#colnames(df2)[5] <- "log_date_pay"
 ### 선생님 답
 dau.install.payment <- merge(
     dau.install, dpu, 
@@ -5009,6 +5585,7 @@ dau.install.payment$install_month <- substr(dau.install.payment$install_date, 1,
 # 5. 추가된 월 항목으로 그룹핑후 과금액 집계 (ddply, aggregate, dplyr::group_by등 이용)
 ### 내 답
 df3.summary <- df3 %>% group_by(log_month) %>% summarize(sum(payment))
+df3.summary <- df3 %>% group_by(log_month) %>% summarize(sum())
 ### 선생님 답
 mau.payment <- ddply(
     dau.install.payment,
@@ -5039,7 +5616,13 @@ df4.summary <- df4 %>% group_by(log_month, new_user) %>% summarize(
 3 2013-07   n               1778860
 4 2013-07   y                291990
 #### 선생님 답
-#미정
+mau.payment.summary <- ddply(
+    mau.payment
+    , .(log_month, user.type) #그룹화
+    , summarize #집계 명령어
+    , total.payment = sum(payment) # payment 합계
+)
+
 
 # 8. 그래프 그리기
 ### 내 답
@@ -5053,8 +5636,16 @@ colnames(df4.plot) <- c("pay.2013_06", "pay.2013_07")
 df4.plot <- arrange(df4.plot, pay.2013_06) 
 barplot(as.matrix(df4.plot), col=c("cyan", "magenta"))
 ### 선생님 답
-#미정
-
+library("ggplot2")
+ggplot(
+    mau.payment.summary
+    , aes(
+        x = log_month, 
+        y = total.payment,
+        fill = user.type
+   	)
+) + 
+geom_bar(stat="identity")
 
 ```
 
