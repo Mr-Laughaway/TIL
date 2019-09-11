@@ -5315,6 +5315,13 @@ geom_boxplot, geom_histogram, geom_col, geom_bar,  geom_line, geom_point
 
 # 3단계 : 설정 추가(축 범위, 색, 표식)
 xlim(), ylim(), labs(), theme()....
+
+#여러개 그래프 그리기
+library(gridExtra)
+a <- ggplot(mtcars) + geom_point(aes(hp, mpg))
+b <- ggplot(mtcars) + geom_histogram(aes(hp))
+c <- ggplot(mtcars) + geom_histogram(aes(mpg))
+grid.arrange(a, b, c, nrow=2, ncol=2)
 ```
 
 - 사용 예
@@ -5442,6 +5449,7 @@ runtime_data_html <- html_nodes(webpage, ".runtime")
 runtime_data <- html_text(runtime_data_html)
 runtime_data <- as.numeric(gsub("[ a-zA-Z]*", "", runtime_data))
 
+
 # 영화장르 영역 데이터 텍스트로 가져오기
 genre_data_html <- html_nodes(webpage, ".genre")
 genre_data <- html_text(genre_data_html)
@@ -5463,6 +5471,120 @@ genre_data <- as.factor(genre_data)
 imdb_data_html <- html_nodes(webpage, ".ratings-imdb-rating > :nth-child(2)")
 imdb_data <- html_text(imdb_data_html)
 imdb_data <- as.numeric(imdb_data)
+
+#votes 데이터 가져오기
+votes_data_html <- html_nodes(webpage, ".sort-num_votes-visible > :nth-child(2)")
+votes_data <- html_text(votes_data_html)
+votes_data <- gsub(",", "", votes_data)
+votes_data <- as.numeric(votes_data)
+
+#감독 데이터 가져오기
+director_data_html <- html_nodes(webpage, '.lister-item-content > :nth-child(5) > :nth-child(1)')
+director_data <- html_text(director_data_html)
+director_data <- as.factor(director_data)
+
+#주연 배우 데이터 가져오기
+actors_data_html <- html_nodes(webpage, '.lister-item-content .ghost + a')
+actors_data <- html_text(actors_data_html)
+actors_data <- as.factor(actors_data)
+
+# metascore 가져오기
+for( elem in rat.bar) {
+    len <- length(html_nodes(elem, "div"))
+   	if(len == 5) {
+        
+    } else {
+        
+    }
+}
+#
+metascore_data_html <- html_nodes(webpage, '.ratings-metascore span')
+metascore_data <- html_text(metascore_data_html)
+metascore_data <- str_trim(metascore_data)
+metascore_data <- as.numeric(metascore_data)
+#누락된  데이터 NA처리하기 29, 58, 73, 96
+for (i in c(29,58, 73, 96)){
+    a<-metascore_data[1:(i-1)]    #리스트로 확인
+    b<-metascore_data[i:length(metascore_data)]
+    metascore_data<-append(a,list("NA"))
+    metascore_data<-append(metascore_data,b)
+}
+metascore_data <- unlist(metascore_data)
+metascore_data <- as.numeric(metascore_data)
+
+
+# 총 수입 가져오기
+gross_data_html <- html_nodes(webpage, ".sort-num_votes-visible > :nth-child(5)")
+gross_data <- html_text(gross_data_html)
+gross_data <- gsub("[$,M]", "", gross_data)
+gross_data <- as.numeric(gross_data)
+#누락 된 수입 NA 처리 29, 45, 57, 62, 73, 93, 98
+for (i in c(29, 45, 57, 62, 73, 93, 98)){
+    a<-gross_data[1:(i-1)]    #리스트로 확인
+    b<-gross_data[i:length(gross_data)]
+    gross_data<-append(a,list("NA"))
+    gross_data<-append(gross_data,b)
+}
+gross_data <- unlist(gross_data)
+gross_data <- as.numeric(gross_data)
+#gross revenue(총수익) 데이터 개수 확인
+length(gross_data)
+#gross revenue(총수익) 요약 통계 확인 
+summary(gross_data)
+
+
+
+#data.frame으로 변환
+movies_df<-data.frame(Rank = rank_data, Title = title_data,
+Description = description_data, Runtime = runtime_data,
+Genre = genre_data, Rating = imdb_data,
+Metascore = metascore_data, Votes = votes_data,   
+Director = director_data, Actor = actors_data, stringsAsFactor=F)
+
+#변환된 data.frame 구조 확인
+str(movies_df)
+ 
+library('ggplot2')
+#x축 상영시간, y축 장르별 필름 수 
+qplot(data = movies_df, Runtime, fill = Genre, bins = 30)
+
+#상영시간이 가장 긴 필름의 장르는?
+library(dplyr)
+####?????
+
+#상영 시간이 130~160 분인 장르 중 votes가 가장 높은 것은?
+#난 뭘 한 거지?
+qplot(
+    data= movies_df[movies_df$Runtime >= 130 & movies_df$Runtime <= 160,]
+   	, Votes, fill = Genre, bins =30
+)
+#답
+ggplot(movies_df,aes(x=Runtime,y=Rating))+
+geom_point(aes(size=Votes,col=Genre))
+###Test###
+
+##########
+
+
+
+
+
+##############################################
+가격 비교를 위한 스크래핑
+rvest 패키지 : 웹 페이지에서 필요한 정보를 추출하는데 유용한 패키지
+selectr패키지, xml2 패키지가 의존 패키지이므로 함께 설치
+read_html(url) : 지정된 url에서 html 컨텐츠를 가져옵니다.
+jsonline 패키지 : json 파서/생성기가 웹용으로 최적화되어 있는 패키지
+##############################################
+install.packages("jsonlite")
+library(jsonlite)
+library(xml2)
+library(rvest)
+library(stringr)
+
+url <- 'https://www.amazon.in/OnePlus-Mirror-Black-64GB-Memory/dp/B0756Z43QS?tag=googinhydr18418-21&tag=googinkenshoo-21&ascsubtag=aee9a916-6acd-4409-92ca-3bdbeb549f80'
+
+#추출할 정보 : 제목, 가격, 제품 설명, 등급, 크기, 색상
 
 
 
