@@ -1,6 +1,7 @@
 <h1>R</h1>
 
 
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -3022,11 +3023,12 @@ sink()
 
 - `cat()`
 
-  >Usage
-  >cat(... , file = "", sep = " ", fill = FALSE, labels = NULL,
-  >    append = FALSE)
-
   ```R
+  # Usage
+  cat(... , file = "", sep = " ", fill = FALSE, labels = NULL,
+  append = FALSE)
+  
+  # 사용 예
   cat(
       "My Sales", 
       file1, 
@@ -3050,46 +3052,44 @@ sink()
 #### 1.6.5.1. `save()`
 
 ```R
-str(fruits1)
-'data.frame':	4 obs. of  4 variables:
- $ no   : int  1 2 3 4
- $ name : Factor w/ 4 levels "apple","banana",..: 1 2 4 3
- $ price: int  500 200 200 50
- $ qty  : int  5 2 7 9
-
-save(fruits1, file="./output/fruits.RData")
-rm(fruits1)
+mycars <- mtcars
+save(mycars, file="./output/mycars.RData") 	#저장
 ```
 
-#### 1.6.5.2. `load()`
+#### 1.6.5.2. `load()`, `get()`
 
 ```R
-fruits1 = load("./output/fruits.RData")
+rm(mycars)	# load 함수가 작동하는지 보기 위해 기존 변수 삭제
+print(mycars)
+Error in print(mycars) : object 'mycars' not found
 
-print(fruits1)
-??????????????????????????
+objname.loaded <- load("./output/mycars.Rdata")	#로드
+[1] "mycars"	#로딩 된 오브젝트 네임 확인
 
-str(fruits1)
-?????????????????????????????/
-
-
+get(objname.loaded) # 문자열로 접근시 get을 사용!!!!!
+mycars # 로딩된 오브젝트명을 알고 있다면 바로 사용
+                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+...
 ```
-
-
 
 ## 1.7. 연산자
 
 ### 1.7.1. 산술연산자
 
-| **Operator** | **Description**             | 서술   |
-| ------------ | --------------------------- | ------ |
-| **+**        | addition                    | 더하기 |
-| **-**        | subtraction                 | 빼기   |
-| *****        | multiplication              | 곱하기 |
-| **/**        | division                    | 나누기 |
-| **^ or \**** | exponentiation              | 지수화 |
-| **x %% y**   | modulus (x mod y) 5%%2 is 1 | 나머지 |
-| **x %/% y**  | integer division 5%/%2 is 2 | 몫     |
+| **Operator** | **Description**             | 서술    |
+| ------------ | --------------------------- | ------- |
+| **+**        | addition                    | 더하기  |
+| **-**        | subtraction                 | 빼기    |
+| *****        | multiplication              | 곱하기  |
+| **/**        | division                    | 나누기  |
+| **^ or \**** | exponentiation              | 지수화  |
+| **x %% y**   | modulus (x mod y) 5%%2 is 1 | 나머지  |
+| **x %/% y**  | integer division 5%/%2 is 2 | 몫      |
+| **%*%**      |                             | 행렬 곱 |
 
 ### 1.7.2. 논리 연산자
 
@@ -3109,8 +3109,6 @@ str(fruits1)
 | **isTRUE(x)** | test if X is TRUE        | x 가 TRUE 인지                    |
 | **xor(x, y)** | exclusive OR             | 배타적 연산자                     |
 
-### 
-
 ## 1.8. 조건문
 
 ### 1.8.1. if
@@ -3121,7 +3119,7 @@ str(fruits1)
 if(조건식) {참인 경우 처리문} else {거짓인 경우 처리문}
 ```
 
-- 예1
+- 사용 예1
 
   ```R
   x <- 3
@@ -3135,7 +3133,7 @@ if(조건식) {참인 경우 처리문} else {거짓인 경우 처리문}
   x * y의 결과는 30 미만입니다.
   ```
 
-- 문1
+- 사용 예2
 
   ```R
   # 사용자로부터 표준입력으로 점수를 입력받아서 학점을 출력하시오
@@ -3158,14 +3156,15 @@ if(조건식) {참인 경우 처리문} else {거짓인 경우 처리문}
 
 #### 1.8.1.2. ifelse 
 
+> 삼항연산자와 비슷하다.  
+
 ```R 
 ifelse(조건식, 침인 경우 처리문, 거짓인 경우 처리문)
 
-#삼항연산자와 비슷하다..
-#실행문에 함수 등 을 쓰면 알 수 없는 에러 발생
+#실행문에 함수 등 을 쓰면 알 수 없는 에러 발생 하는데 왜지?
 ```
 
-- 문1
+- 사용 법
 
   ```R
   # 사용자로부터 표준입력으로 정수를 입력받아서 짝수 또는 홀수 평가
@@ -3186,7 +3185,7 @@ switch(비교문, 실행문1, 실행문2, 실행문3, ...)
 switch("name", id="hong", pwd="1234", age=25, name="홍길동")
 ```
 
-- 예1
+- 사용 법
 
   ```R
   #사원이름을 입력 받아서 해당 사원의 급여 출력
@@ -3194,7 +3193,7 @@ switch("name", id="hong", pwd="1234", age=25, name="홍길동")
   print(ename)
   [1] "무법도적"
   
-  switch(ename, hong=250, lee=300, park=350, "무법도적"= 700)
+  switch(ename, hong=250, lee=300, park=350, 무법도적= 700)
   [1] 700
   ```
 
@@ -3229,7 +3228,7 @@ exam[which(exam$이름=="유관순"), ]
 for( index in 벡터)
 ```
 
-- 예1
+- 사용 예1
 
   ```R
   n <- c(1:10)
@@ -3238,10 +3237,8 @@ for( index in 벡터)
           print(i)
       }
   }
-  
-  
   ```
-
+  
 - 예2 - `next` 활용
 
   ```R
@@ -3260,7 +3257,7 @@ for( index in 벡터)
 while(조건)
 ```
 
-- 예1
+- 사용 예1
 
   ```R
   n <- 1
@@ -3278,7 +3275,7 @@ while(조건)
 repeat { 반복 수행 문장들 } #탈출 조건이 있어야 한다.
 ```
 
-- 예1
+- 사용 예1
 
   ```R
   n <- 1
@@ -3289,7 +3286,6 @@ repeat { 반복 수행 문장들 } #탈출 조건이 있어야 한다.
   }
   ```
 
-  
 
 ## 1.10. 함수
 
@@ -3305,8 +3301,8 @@ repeat { 반복 수행 문장들 } #탈출 조건이 있어야 한다.
 f1 <- function() {
     cat("매개변수 없는 함수")
 }
-f1()
 
+f1()
 매개변수 없는 함수
 ```
 
@@ -3319,8 +3315,8 @@ f2 <- function(x) {
     else
         cat("홀수")
 }
-f2(23)
 
+f2(23)
 홀수
 ```
 
@@ -3336,7 +3332,7 @@ result <- f3(11, 4)
 print(result)
 ```
 
-- 문1
+- 사용 예1
 
   ```R
   #매겨변수의; 값이 0 이면 0 을, 아니면 2배의 값을 반환하는 함수를 작성하시오
@@ -3353,7 +3349,7 @@ print(result)
   
   ```
 
-- 문2
+- 사용 예2
 
   ```R
   #첫 번째 매개변수는 벡터, 두 번재 매개변수는 함수(mean, sum, median)을 문자열로 입력 받아서 각각에 알맞는 연산을 수행부 반환하는 함수를 작성하시오
@@ -3387,9 +3383,6 @@ print(result)
   [1] 5.5
   f5(nums, "median")
   [1] 5.5
-  f5(nums, "hello")
-  [1] "알맞은 함수가 없다."
-  
   ```
 
 ### 1.10.4. 함수 내부의 함수
@@ -3408,6 +3401,7 @@ outer <- function(x, y) {
 outer(3, 7)
 [1] 3
 [1] 14
+
 print(outer(3, 7))
 [1] 3
 [1] 14
@@ -3415,11 +3409,6 @@ print(outer(3, 7))
 
 inner(7)
 Error in inner(7) : could not find function "inner"
-
-str(outer)
-function (x, y)  
- - attr(*, "srcref")= 'srcref' int [1:8] 1 10 7 1 10 1 1 7
-  ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x00000000110ff018> 
 ```
 
 #### 1.10.4.2. caller 와 callee
@@ -3436,6 +3425,12 @@ caller <- function(v, call) {
 }
 
 print(caller(1:5, callee)) #함수의 매개변수로 함수 전달
+[1] 2
+[1] 4
+[1] 6
+[1] 8
+[1] 10
+NULL
 ```
 
 ### 1.10.5. 함수의 함수 반환
@@ -3508,7 +3503,9 @@ mean(data, na.rm=T)
 #### 1.11.2.1. 0 으로 대체
 
 ```R
-data1 = ifelse(!is.na(data), data, 0)
+data1 = ifelse(!is.na(data), data, 0) #방법1
+#data[is.na(data)] <- 0 #방법2 T or F로 구성된 벡터로 접근
+
 print(data1)
  [1] 10 20  5  4 40  7  0  6  3  0  2  0
 print(mean(data1))
@@ -3518,7 +3515,9 @@ print(mean(data1))
 #### 1.11.2.2. 평균 값으로 대체
 
 ```R
-data2 = ifelse(!(data), data, round(mean(data, na.rm=T), 2))
+data2 = ifelse(!(data), data, round(mean(data, na.rm=T), 2)) #방법1
+#data[is.na(data)] <- mean(data, na.rm=T) #방법2
+
 print(data2)
  [1] 10.00 20.00  5.00  4.00 40.00  7.00 10.78  6.00  3.00 10.78  2.00 10.78
 print(mean(data2))
@@ -3531,7 +3530,9 @@ print(mean(data2))
 
 - `max()`
 
-- `range()` - 대상 벡터 범위값 반환(최솟값~최댓값)
+- `range()` 
+
+  > 대상 벡터 범위값 반환(최솟값~최댓값)
 
   ```R
   vec <- c(1, 10, 3, 6, 2, 9, 5, 8, 7, 4)
@@ -3553,16 +3554,14 @@ print(mean(data2))
    [1]  1  2  3  4  5  6  7  8  9 10
   ```
 
+- `order()`
+
+  > 벡터의 정렬된 값의 색인(index)을 보여주는 함수
   
-
-- `order()` - 벡터의 정렬된 값의 색인(index)을 보여주는 함수
-
   ```R
   order(vec)
-   [1]  1  5  3 10  7  4  9  8  6  2
+ [1]  1  5  3 10  7  4  9  8  6  2
   ```
-
-  
 
 - `rank()` - 순위
 
@@ -3580,7 +3579,9 @@ print(mean(data2))
 
 - `summary()`
 
-- `table()` - 빈도수
+- `table()`
+
+  > 빈도수
 
   ```R
   table(vec)
@@ -3589,14 +3590,18 @@ print(mean(data2))
    1  1  1  1  1  1  1  1  1  1 
   ```
 
-- `sample()` - x 범위에서 y 만큼 sample 데이터를 생성하는 함수
+- `sample()`
+
+  > x 범위에서 y 만큼 sample 데이터를 생성하는 함수
 
   ```R
   sample(vec, 3)
   [1] 8 9 1
   ```
 
-- rnorm() - 정규분포(연속형)의 난수 생성
+- rnorm()
+
+  > 정규분포(연속형)의 난수 생성
 
   ```R
   rnorm(생성할 난수 갯수, mean, sd)
@@ -3615,7 +3620,9 @@ print(mean(data2))
 
   ![1568009497959](assets/1568009497959.png)
 
-- runif() - 균등분포(연속형)의 난수 생성
+- runif()
+
+  > 균등분포(연속형)의 난수 생성
 
   ```R
   n <- 1000
@@ -3631,8 +3638,10 @@ print(mean(data2))
 
   ![1568009531952](assets/1568009531952.png)
 
-- rbinom() - 이산변량(정수형)을 갖는 정규분포의 난수 생성
+- rbinom()
 
+  > 이산변량(정수형)을 갖는 정규분포의 난수 생성
+  
   ```R
   #0, 1의 이산변량을 0.5 확률로 20개 난수 생성
   rbinom(20, 1, prob=1/2)
@@ -3662,38 +3671,56 @@ print(mean(data2))
   set.seed(123)
   rnorm(5, mean=0, sd=1)
   [1] -0.56047565 -0.23017749  1.55870831  0.07050839  0.12928774 #같아
-  
-  ```
-
+```
   
 
 ## 1.13. 수학 관련 내장 함수
 
-- abs()
+- `abs()`
 
-- sqrt()
+- `sqrt()`
 
-- ceilling(), floor(), round()
+- `ceilling()`, `floor()`, `round()`
 
-- factorial()
+- `factorial()`
 
-- which.min(), which.max()
+- `which()`
+
+  > 참인 인덱스를 반환한다.
+
+  ```R
+  a <- c(100, NA, 100, NA, NA, 100)
+  which(is.na(a))
+  [1] 2 4 5
+  ```
+
+- `which.min()`, `which.max()`
 
   > 벡터 내 최솟값과 최댓값의 인덱스를 구한다
 
-- pmin()
+- `pmin()`
 
-- prod() : 벡터의 원소들의 곱을 구하는 함수
+- `prod()`
 
-- cumsum() / cumprod() : 벡터의 원소들의 누적합과 누적곱을 구하는 함수
+  >  주어진(한 개 ~ 여러 개) 벡터의 모든 원소들의 곱을 구하는 함수
 
-- cos(x), sin(x), tan(x)  : 삼각함수
+- `cumsum()`, `cumprod()`
 
-- log(x) : 자연로그
+  > 벡터의 원소들의 누적합과 누적곱을 구하는 함수
 
-- log10(x) : 10을 밑으로 하는 일반로그 함수
+- `cos()`, `sin()`, `tan()`
 
-- exp(x) : 지수함수
+- `log()`
+
+  > 자연로그
+
+- `log10()`
+
+  > 상용로그
+
+- `exp()`
+
+  > 지수함수
 
 ## 1.14. 행렬 관련 내장 함수
 
@@ -3709,8 +3736,6 @@ print(mean(data2))
 - eigen(x) : 정방행렬을 대상으로 고유값을 분해하는 함수
 - svd(x) : m x n 행렬을 대상으로 특이값을 분해하는 함수
 - x %*% y : 두 행렬의 곱을 구하는 수식
-
-
 
 # 2. R 기본 시각화
 
@@ -4180,20 +4205,24 @@ plot(cars, main = "abline")
 
 ## 3.1. 유용한 패키지
 
-`plyr`, `dplyr`, `reshape`, `reshape2`
+`plyr`, `dplyr`, `reshape`, `reshape2` 등
 
 ### 3.1.1. plyr
 
 > plyr 패키지는 두 개 이상의 데이터 프레임을 대상으로 key 값을 이용하여 merg, 함수적용, 요약 집계등의 기능을 제공
 
+```R
+install.packages("plyr")
+library(plyr)
+```
+
 #### 3.1.1.1. join()
 
-- 기본 사용
+- 기본 사용 
 
-  ```R
-  install.packages("plyr")
-  library(plyr)
+  >  기본적으로 left outer join 을 수행하는 듯
   
+  ```R
   x <- data.frame(
       id = c(1, 2, 3, 4, 5)
       , height = c(160, 171, 173, 162, 165)
@@ -4210,35 +4239,46 @@ plot(cars, main = "abline")
   3  3    173     60
   4  4    162     75
   5  5    165     55
+  ```
   
+- Inner Join
+
+  > 키가 존재하는 경우에만 조인
   
-  # left outer join (상동)
-  # 왼쪽 키를 기준으로 출력하고 join할 데이터가 없으면 NA로 출력
+  ```R
   x <- data.frame(
       id = c(1, 2, 3, 4, 6)
       , height = c(160, 171, 173, 162, 165)
   )
   
-  leftjoin <- join(x, y, by="id") 
-    id height weight
-  1  1    160     73
-  2  2    171     57
-  3  3    173     60
-  4  4    162     75
-  5  6    165     NA
-  
-  # innerjoin
-  # 키가 존재하는 경우에만 조인
   innerjoin <- join(x, y, by="id", type="inner")
     id height weight
   1  1    160     73
   2  2    171     57
   3  3    173     60
   4  4    162     75
+  ```
   
-  # full outer join
-  # 양쪽 키를 모두 출력하고 join 할 데이터가 없으면 NA로 출력
-  fulljoin <- join(x, y, by="id", type="full")
+- Left Outer Join
+
+  > 왼쪽 키를 기준으로 출력하고 join할 데이터가 없으면 NA로 출력
+  
+  ```R
+  join(x, y, by="id") 
+    id height weight
+  1  1    160     73
+  2  2    171     57
+  3  3    173     60
+  4  4    162     75
+  5  6    165     NA
+  ```
+  
+- Full Outer Join
+
+  > 양쪽 키를 모두 출력하고 join 할 데이터가 없으면 NA로 출력
+  
+  ```R
+  join(x, y, by="id", type="full")
     id height weight
   1  1    160     73
   2  2    171     57
@@ -4247,8 +4287,8 @@ plot(cars, main = "abline")
   5  6    165     NA
   6  5     NA     55
   ```
-
-- 두 개의 키 사용
+  
+- N 개의 join 조건 사용
 
   ``` R
   x <- data.frame(
@@ -5696,7 +5736,6 @@ dau.install.payment$payment[is.na(dau.install.payment$payment)] <- 0
     
 
 # 4. 월 항목 추가   (data.frame객체$새컬럼변수 <- 추가될 데이터, mutate, cbind 등 이용)
-
 ### 내 답
 df3 <- mutate(
     df2 
@@ -5740,7 +5779,7 @@ df4.summary <- df4 %>% group_by(log_month, user.type) %>% summarize(payment =
 2 2013-06   old       1778860
 3 2013-07   new        291990
 4 2013-07   old       1778860
-#### 선생님 답
+### 선생님 답
 mau.payment.summary <- ddply(
     mau.payment
     , .(log_month, user.type) #그룹화
