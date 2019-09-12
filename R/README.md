@@ -1,5 +1,6 @@
 <h1>R</h1>
 
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -5666,7 +5667,9 @@ head(install)
 
 # 1. DAU 데이터에 Install 데이터를 결합시키기 (merge함수)
 install.packages("plyr")
+install.packages("dplyr")
 library(plyr)
+library(dplyr)
 ### 내답
 df1 <- join(dau, install, by=c("user_id", "app_name"))
 ###선생님 답
@@ -5693,7 +5696,7 @@ dau.install.payment$payment[is.na(dau.install.payment$payment)] <- 0
     
 
 # 4. 월 항목 추가   (data.frame객체$새컬럼변수 <- 추가될 데이터, mutate, cbind 등 이용)
-library(dplyr)
+
 ### 내 답
 df3 <- mutate(
     df2 
@@ -5705,10 +5708,9 @@ dau.install.payment$install_month <- substr(dau.install.payment$install_date, 1,
    
 
 # 5. 추가된 월 항목으로 그룹핑후 과금액 집계 (ddply, aggregate, dplyr::group_by등 이용)
-### 내 답
-df3.summary <- df3 %>% group_by(log_month) %>% summarize(sum(payment))
-df3.summary <- df3 %>% group_by(log_month) %>% summarize(sum())
-### 선생님 답
+### 내 답(7번에서 일괄로 하므로 여기서 할 필요 없음. 생략 가능.)
+df3.summary <- df3 %>% group_by(log_month) %>% summarize(payment = sum(payment))
+### 선생님 답(여기서 하고 가야 해야 함)
 mau.payment <- ddply(
     dau.install.payment,
     .(log_month, user_id, install_month), # 그룹화
@@ -5716,11 +5718,12 @@ mau.payment <- ddply(
     payment = sum(payment) # payment 합계
 )           
 
+
 # 6. 신규 유저인지 기존 유저인지 구분하는 항목의 새 컬럼변수 추가
 ### 내 답
 df4 <- mutate(
     df3,
-    new_user = ifelse(as.Date(install_date) >= as.Date(paste(log_month, "-01", sep="")), "y", "n")
+    user.type = ifelse(as.Date(install_date) >= as.Date(paste(log_month, "-01", sep="")), "new", "old")
 )
 ### 선생님 답
 mau.payment$user.type <-  ifelse(mau.payment$install_month == mau.payment$log_month, "new", "old")
@@ -5728,15 +5731,15 @@ mau.payment$user.type <-  ifelse(mau.payment$install_month == mau.payment$log_mo
 
 # 7. 추가된 월 항목으로 그룹핑후 과금액 집계
 ### 내 답
-df4.summary <- df4 %>% group_by(log_month, new_user) %>% summarize(
+df4.summary <- df4 %>% group_by(log_month, user.type) %>% summarize(payment = 
     sum(payment)
 )
-  log_month new_user `sum(payment)`
-  <chr>     <chr>             <dbl>
-1 2013-06   n               1778860
-2 2013-06   y                498370
-3 2013-07   n               1778860
-4 2013-07   y                291990
+  log_month user.type payment
+  <chr>     <chr>       <dbl>
+1 2013-06   new        498370
+2 2013-06   old       1778860
+3 2013-07   new        291990
+4 2013-07   old       1778860
 #### 선생님 답
 mau.payment.summary <- ddply(
     mau.payment
@@ -5744,10 +5747,16 @@ mau.payment.summary <- ddply(
     , summarize #집계 명령어
     , total.payment = sum(payment) # payment 합계
 )
+  log_month user.type total.payment
+1   2013-06       new        498370
+2   2013-06       old       1778860
+3   2013-07       new        291990
+4   2013-07       old       1778860
 
 
 # 8. 그래프 그리기
-### 내 답
+library("ggplot2")
+### 내 답(1)
 df4.plot <- as.data.frame(
     cbind(
         df4.summary[df4.summary$log_month=="2013-06", 3]
@@ -5757,8 +5766,17 @@ df4.plot <- as.data.frame(
 colnames(df4.plot) <- c("pay.2013_06", "pay.2013_07")
 df4.plot <- arrange(df4.plot, pay.2013_06) 
 barplot(as.matrix(df4.plot), col=c("cyan", "magenta"))
+### 내 답 데이터로 선생님 plot방식 적용
+ggplot(
+    df4.summary
+    , aes(
+        x = log_month, 
+        y = payment,
+        fill = user.type
+   	)
+) + 
+geom_bar(stat="identity")
 ### 선생님 답
-library("ggplot2")
 ggplot(
     mau.payment.summary
     , aes(
@@ -5768,14 +5786,11 @@ ggplot(
    	)
 ) + 
 geom_bar(stat="identity")
-
 ```
 
+![1568257879521](assets/1568257879521.png)
 
-
-
-
-
+<br>
 
 # 몬테카를로 시뮬레이션
 
