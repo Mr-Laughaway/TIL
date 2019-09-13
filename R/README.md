@@ -1,7 +1,5 @@
 <h1>R</h1>
 
-
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -150,7 +148,7 @@ data()
 
 #### 1.2.2.2. R session 정보 확인
 
-사용자가 R 프로그램을 시작한 후 R콘솔 시작 ~종료 까지의 모든 정보를 담고있는 객체이다.
+> 사용자가 R 프로그램을 시작한 후 R콘솔 시작 ~종료 까지의 모든 정보를 담고있는 객체이다.
 
 ```R
 sessionInfo()
@@ -239,7 +237,7 @@ Error in print(l) : object 'l' not found
 
 ### 1.3.5. 변수의 scope
 
-함수 내부 -> 전역 메모리 -> 에러 발생
+> 함수 내부 -> 전역 메모리 -> 에러 발생
 
 ``` R
 g1 <- 1000
@@ -268,8 +266,6 @@ f7()
 print(g1)
 [1] 100
 ```
-
-
 
 ## 1.4. 자료형
 
@@ -311,7 +307,7 @@ c(TRUE, TRUE) && c(TRUE, FALSE)
 
 #### 1.4.1.3. NA 
 
-결측치, 즉 값이 빠져 있는 경우를 뜻한다.
+> 결측치, 즉 값이 빠져 있는 경우를 뜻한다.
 
 ```R
 age <- NA
@@ -335,7 +331,7 @@ sum(10, 20, 30)
 
 #### 1.4.1.4. NULL
 
-프로그래밍의 편의를 위해 미정(undefined) 값을 표현하는데 사용.
+> 프로그래밍의 편의를 위해 미정(undefined) 값을 표현하는데 사용.
 
 ```R
 age <- NULL
@@ -357,6 +353,10 @@ class(a)
 ```
 
 #### 1.4.1.6. 날짜와 시간
+
+```R
+as.Data()
+```
 
 - format
 
@@ -537,7 +537,7 @@ ordered("a", c("a", "b", "c"))
 
 #### 1.4.4.2. 명목형 - Norminal
 
-명목형 데이터로 `plot` 그려보기
+> 명목형 데이터로 `plot` 그려보기
 
 ```R
 # charater vector 는 plot 시 error 발생
@@ -576,7 +576,7 @@ plot(ngender)
 
 #### 1.4.4.3. 순서형 - Ordinal
 
-순서형 데이터로 `plot` 그려보기
+> 순서형 데이터로 `plot` 그려보기
 
 ```R
 #1.4.4.1. 이어서
@@ -640,7 +640,7 @@ dev.off()
 
 - 특정 요소만 제외
 
-  벡터의 첨자에 `-`를 지정하면 해당 위치의 원소는 제외
+  > 벡터의 첨자에 `-`를 지정하면 해당 위치의 원소는 제외
 
   ```R
   a[-c(2:18)]
@@ -670,7 +670,7 @@ dev.off()
 
 - 요소 반복
 
-  연산 대상 벡터 요소 갯수가 가장 긴쪽에 맞춰서 싸이클링 된다.
+  > 연산 대상 벡터 요소 갯수가 가장 긴쪽에 맞춰서 싸이클링 된다.
 
   ```R
   v1 <- c(3, 8, 4, 5, 0, 11)
@@ -710,9 +710,9 @@ dev.off()
 
 #### 1.4.5.2. 벡터 생성 함수
 
-- c()
+- `c()`
 
-  combines
+  > combines
 
   ```R
   c(1:20)
@@ -720,18 +720,18 @@ dev.off()
   c(1,1,2,3,3,3,4,5,5,5,5)
   ```
 
-- seq()
+- `seq()`
 
-  sequences
+  > sequences
 
   ```R
   seq(1, 20)
   seq(1, 20, 2) #순차적으로 값을 증감시켜서 벡터 자료 구조 생성
   ```
 
-- rep()
+- `rep()`
 
-  replicates
+  > replicates
   
   ```R
   rep(1:3, 3)
@@ -743,7 +743,7 @@ dev.off()
 
 #### 1.4.5.3. 벡터에 요소 추가
 
-- append()
+- `append()`
 
   ```R
   print(nums)
@@ -757,7 +757,7 @@ dev.off()
 
 #### 1.4.5.4. 벡터 집합 연산자
 
-- union()
+- `union()`
 
   ```R
   a <- c(1:5)
@@ -770,23 +770,23 @@ dev.off()
   [1] 1 2 3 4 5
   ```
 
-- setdiff()
+- `setdiff()`
 
   ```R
   setdiff(a, b)
   [1] 4 5
   ```
 
-- intersect()
+- `intersect()`
 
   ```R
   intersect(a, b)
   [1] 1 2 3
   ```
 
-- setequal
+- `setequal()`
 
-  순서는 일치 하지 않아도 요소들만 일치하면 TRUE 를 리턴
+  > 순서는 일치 하지 않아도 요소들만 일치하면 TRUE 를 리턴
   
   ```R
   vec1 <- c(1, 2, 3, 4, 5)
@@ -799,9 +799,9 @@ dev.off()
   [1] TRUE					#주의
   ```
   
-- identical
+- `identical()`
 
-  요소 뿐 아니라 순서도 일치해야 TRUE 를 리턴
+  > 요소 뿐 아니라 순서도 일치해야 TRUE 를 리턴
 
   ```R
   identical(vec1, vec2)
@@ -812,7 +812,7 @@ dev.off()
 
 #### 1.4.5.5. 자동 형 변환
 
-벡터는 같은 자료만 담을 수 있기때문에 큰 타입으로 자동 형변환 된다.
+> 벡터는 같은 자료만 담을 수 있기때문에 큰 타입으로 자동 형변환 된다.
 
 ```R
 f <- c(33, -5, "4", 5:9) 
@@ -913,7 +913,7 @@ matrix(
    int [1:4, 1:3] 3 6 9 12 4 7 10 13 5 8 ...
   ```
 
-- rbind() 를 이용하여 생성
+- `rbind()` 를 이용하여 생성
 
   ```R
   x1 <- c(5, 40, 50:52)
@@ -930,7 +930,7 @@ matrix(
     ..$ : NULL
   ```
 
-- cbind 를 이용하여 생성
+- `cbind()` 를 이용하여 생성
 
   ```R
   x1 <- c(1, 2, 3)
@@ -1023,7 +1023,9 @@ row4   12   13   14
 
 #### 1.4.5.4. 행과 열의 추가 및 삭제
 
-- cbind() - 열 추가
+- `cbind()` 
+
+  > 열 추가
 
   ```R
   P1 <- cbind(M5, c(13, 14, 15, 16)) #cbind()는 컬럼을 추가
@@ -1035,7 +1037,9 @@ row4   12   13   14
   row4   12   13   14 16
   ```
 
-- rbind() - 행 추가
+- `rbind()` 
+
+  > 행 추가
 
   ```R
   P2 <- rbind(M5, c(13, 14, 15)) #rbind()는 행을 추가
@@ -1050,7 +1054,7 @@ row4   12   13   14
 
 - 행과 열의 제거
 
-  실제 제거가 아니라 새로 추출하여 새로운 matrix를 생성하는 방식
+  > 실제 제거가 아니라 새로 추출하여 새로운 matrix를 생성하는 방식
 
   ```R
   print(m1)
@@ -1134,7 +1138,7 @@ P2[, -c(1, 3)]
   [2,]   19   14   16
   ```
 
-- apply 함수를 이용한 연산
+- `apply()` 함수를 이용한 연산
 
   ```R
   f <- function(x) {
@@ -1473,7 +1477,7 @@ print(rs1)
 
 #### 1.4.8.3. 요소 추가
 
-- append 이용
+- `append()` 이용
 
   ```R
   newValue <-append(emp1, 99, after=3) #3번 째 요소 뒤에 99가 추가된 리스트를 리턴함
@@ -2210,37 +2214,7 @@ cat(result)
 3 6 9
 ```
 
-### 1.5.3. 산술연산자
-
-| **Operator** | **Description**             | 서술   |
-| ------------ | --------------------------- | ------ |
-| **+**        | addition                    | 더하기 |
-| **-**        | subtraction                 | 빼기   |
-| *****        | multiplication              | 곱하기 |
-| **/**        | division                    | 나누기 |
-| **^ or \**** | exponentiation              | 지수화 |
-| **x %% y**   | modulus (x mod y) 5%%2 is 1 | 나머지 |
-| **x %/% y**  | integer division 5%/%2 is 2 | 몫     |
-
-### 1.5.4. 논리 연산자
-
-| **Operator**  | **Description**          | 서술                              |
-| ------------- | ------------------------ | --------------------------------- |
-| **<**         | less than                | 작은                              |
-| **<=**        | less than or equal to    | 작거나 같은                       |
-| **>**         | greater than             | 큰                                |
-| **>=**        | greater than or equal to | 크거나 같은                       |
-| **==**        | exactly equal to         | 같은                              |
-| **!=**        | not equal to             | 같지 않은                         |
-| **!x**        | Not x                    | 아닌                              |
-| **x \| y**    | x OR y                   | x 이거나 y 인                     |
-| **x \|\| y**  | x[1] OR y[1]             | x 와 y 의 첫 번째 요소에 대한 OR  |
-| **x & y**     | x AND y                  | x 이고 y 인                       |
-| **x && y**    | x[1] AND y[1]            | x 와 y 의 첫 번째 요소에 대한 AND |
-| **isTRUE(x)** | test if X is TRUE        | x 가 TRUE 인지                    |
-| **xor(x, y)** | exclusive OR             | 배타적 연산자                     |
-
-### 1.5.5. stringr 을 이용한 문자열 처리
+### 1.5.3. stringr 을 이용한 문자열 처리
 
 > stringr 패키지는 문자열을 가능한 한 쉽게 처리하도록 설계 함수 세트를 제공한다. 
 
@@ -2249,7 +2223,7 @@ install.packages("stringr")
 library("stringr")
 ```
 
-#### 1.5.5.1. 기본 함수들
+#### 1.5.3.1. 기본 함수들
 
 - `str_length`
 - `str_c` - str concatenate
@@ -2265,7 +2239,7 @@ library("stringr")
 - `str_to_lower`
 - ...
 
-#### 1.5.5.2. str_count
+#### 1.5.3.2. str_count
 
 > 패턴을 포함한 요소에서 패턴 출현 횟수 리턴
 
@@ -2276,7 +2250,7 @@ str_count(fruits, "a")
 [1] 1 3 1 0 0
 ```
 
-#### 1.5.5.3. paste
+#### 1.5.3.3. paste
 
 > 문자열을  결합하는 R 기본 함수. stringr 패키지의 함수는 아니다.
 
@@ -2290,7 +2264,7 @@ print(rs1)
 [1] "hello ~R"
 ```
 
-#### 1.5.5.4. str_c
+#### 1.5.3.4. str_c
 
 > 문자열을 결합하는 stringr 함수
 
@@ -2313,7 +2287,7 @@ str_c(fruits, collapse="-")
 [1] "apple-banana-pineapple-berry-APPLE"
 ```
 
-#### 1.5.5.5. str_detect
+#### 1.5.3.5. str_detect
 
 > 객체의 요소별로 정규표현식의 패턴 매칭 여부를 리턴. 
 
@@ -2335,7 +2309,7 @@ str_detect(fruits, '[^a]')  #[]안의 ^는 not을 의미하기 대문에 a가 �
 
 ```
 
-#### 1.5.5.6. str_sub
+#### 1.5.3.6. str_sub
 
 > 문자열 부분추출 
 
@@ -2350,7 +2324,7 @@ str_sub(fruits, start=-5)
 [1] "apple" "anana" "apple" "berry" "APPLE"
 ```
 
-#### 1.5.5.7. str_length
+#### 1.5.3.7. str_length
 
 > 객체 요소 문자열의 길이를 벡터로 리턴
 
@@ -2362,7 +2336,7 @@ str_length(fruits)
 [1] 5 6 9 5 5
 ```
 
-#### 1.5.5.8. str_trim
+#### 1.5.3.8. str_trim
 
 > 문자열의 앞뒤 공백 제거
 
@@ -2371,7 +2345,7 @@ str_trim("   apple   banana   ")
 [1] "apple   banana"
 ```
 
-#### 1.5.5.9. str_dup
+#### 1.5.3.9. str_dup
 
 > 문자열을 반복하여 붙여서 반환
 
@@ -2382,7 +2356,7 @@ str_dup(fruits, 3)
 [5] "APPLEAPPLEAPPLE
 ```
 
-#### 1.5.5.10 str_extract
+#### 1.5.3.10 str_extract
 
 > 정규표현식을 사용하여 매칭되는 첫 번째 문자열 추출
 
@@ -2400,7 +2374,7 @@ str_extract(str1, "[0-9]{6}-[1234]{1}[0-9]{6}")
 [1] "123456-1234567"
 ```
 
-#### 1.5.5.11. str_extract_all
+#### 1.5.3.11. str_extract_all
 
 > 정규표현식을 사용하여 매칭되는 **모든** 문자열 추출하여 리스트에 넣어 반환
 
@@ -3671,9 +3645,7 @@ print(mean(data2))
   set.seed(123)
   rnorm(5, mean=0, sd=1)
   [1] -0.56047565 -0.23017749  1.55870831  0.07050839  0.12928774 #같아
-```
-  
-
+  ```
 ## 1.13. 수학 관련 내장 함수
 
 - `abs()`
@@ -3724,41 +3696,82 @@ print(mean(data2))
 
 ## 1.14. 행렬 관련 내장 함수
 
-- ncol(x) : x의 열(컬럼) 수를 구하는 함수
-- nrow(x) : x의 행 수를 구하는 함수
-- t(x) : x 대상의 전치행렬을 구하는 함수
-- cbind(...) : 열을 추가할 때 이용되는 함수
-- rbind(...) : 행을 추가할 때 이용되는 함수
-- diag(x) : x의 대각행렬을 구하는 함수
-- det(x) : x의 행렬식을 구하는 함수
-- apply(x, m, fun) :  행 또는 열에 지정된 함수를 적용하는 함수
-- solve(x) : x의 역행렬을 구하는 함수
-- eigen(x) : 정방행렬을 대상으로 고유값을 분해하는 함수
-- svd(x) : m x n 행렬을 대상으로 특이값을 분해하는 함수
-- x %*% y : 두 행렬의 곱을 구하는 수식
+- `ncol()`
+
+  > 열(컬럼) 갯수를 구하는 함수
+
+- `nrow()`
+
+  > 행(로우) 갯수를 구하는 함수
+
+- `t()`
+
+  > 대상의 전치행렬을 구하는 함수
+
+- `cbind()`
+
+  > 열을 추가할 때 이용되는 함수
+
+- `rbind()`
+
+  > 행을 추가할 때 이용되는 함수
+
+- `diag()`
+
+  > 대각행렬을 구하는 함수
+
+- `det()`
+
+  > 행렬식을 구하는 함수
+
+- `apply()`
+
+  > 행 또는 열에 지정된 함수를 적용하는 함수
+
+  ```R
+  apply(X, MARGIN, FUN, ...)
+  ```
+
+- `solve()`
+
+  > 역행렬을 구하는 함수
+
+- `eigen()`
+
+  > 정방행렬을 대상으로 고유값을 분해하는 함수
+
+- `svd()`
+
+  > m x n 행렬을 대상으로 특이값을 분해하는 함수
+
+- `%*%`
+
+  > 두 행렬의 곱을 구하는 수식
 
 # 2. R 기본 시각화
 
 ## 2.1. 시각화 순서
 
-1. 데이터 분석의 도입부에서는 전체적인 데이터의 구조를 분석하거나 분석 방향을 제시
-2. 데이터 분석의 중반부에서는 잘못된 처리 결과를 확인
-3. 데이터 분석의 후반부에서는 분석결과를 도식화하여 의사결정에 반영하기 위해서 데이터를 시각화
+1. 데이터 분석의 도입부에서는 전체적인 *데이터의 구조를 분석*하거나 *분석 방향*을 제시
+2. 데이터 분석의 중반부에서는 *잘못된 처리 결과를 확인*
+3. 데이터 분석의 후반부에서는 *분석결과를 도식화*하여 의사결정에 반영하기 위해서 *데이터를 시각화*
 4. 이산변수로 구성된 데이터 셋을 이용하여 막대, 점, 원형 차트를 그릴 수 있다.
 5. 연속변수로 구성된 데이터프레임을 대상으로 히스토그램과 산점도를 그릴 수 있다.
 6. 데이터 분석의 도입부에서 전체적인 데이터의 구조를 살펴보기 위해서 시각화 도구를 사용한다.
 
 ## 2.2. 기본 시각화 도구
 
-- 숫자형 컬럼 1개 시각화 도구 - hist, plot, barplot
-- 범주형 컬럼 1개 시각화 도구 - pie, barplot
-- 숫자형 컬럼 2개 시각화 도구 - plot, abline, boxplot
-- 숫자형 컬럼 3개 시각화 도구 - scatterplot3d(3차원 산점도)
-- n개의 컬럼 시각화 도구 - pairs(산점도 매트릭스)
+- 숫자형 컬럼 1개 시각화 도구 - `hist()`, `plot()`, `barplot()`
+- 범주형 컬럼 1개 시각화 도구 - `pie()`, `barplot()`
+- 숫자형 컬럼 2개 시각화 도구 - `plot()`, `abline()`, `boxplot()`
+- 숫자형 컬럼 3개 시각화 도구 - `scatterplot3d()`: 삼차원 산점도
+- n개의 컬럼 시각화 도구 - `pairs()`: 산점도 매트릭스
 
 ## 2.3. 시각화 예제
 
 ### 2.3.1. barplot()
+
+> 막대형 그래프
 
 ```R
 barplot(height, width = 1, space = NULL,
@@ -3773,7 +3786,7 @@ barplot(height, width = 1, space = NULL,
         add = FALSE, ann = !add && par("ann"), args.legend = NULL, ...)
 ```
 
-- 예1
+- 기본 사용법
 
   ```R
   chart_data <- c(305, 450, 320, 400, 330, 480, 380, 520)
@@ -3796,7 +3809,9 @@ barplot(height, width = 1, space = NULL,
 
   ![1568011705290](assets/1568011705290.png)
 
-- 예2) 가로막대 차트 - horiz=TRUE
+- 가로막대 차트
+
+  `horiz=TRUE`
 
   ```R
   barplot(
@@ -3807,9 +3822,15 @@ barplot(height, width = 1, space = NULL,
   )
   ```
 
-- 막대의 굵기와 간격 지정 - space
+  ![1568357776514](assets/1568357776514.png)
 
-- 축 이름 크기 설정 - cex.names
+- 막대의 굵기와 간격 지정
+
+  ```space```
+
+- 축 이름 크기 설정
+
+  `cex.names`
 
   ```R
   barplot(
@@ -3820,6 +3841,8 @@ barplot(height, width = 1, space = NULL,
       	space=2, cex.names=0.8,
   )
   ```
+
+  ![1568357986447](assets/1568357986447.png)
 
 - 색상 index값 : 검은색(1), 빨간색(2), 초록색(3), 파란색(4), 하늘색(5)
 
@@ -3832,54 +3855,77 @@ barplot(height, width = 1, space = NULL,
       	space=6, cex.names=0.5,
   )
   ```
+  
+  ![1568358188321](assets/1568358188321.png)
+  
+- 미국 버지니아주 하위계층 사망비율
 
+  ```R
+  data(VADeaths)
+  str(VADeaths)	#5행 4열
+  class(VADeaths) #matrix
+  mode(VADeaths)	#numeric
+  head(VADeaths, 10)
+  
+  par(mfrow=c(1, 2))
+  barplot(
+      VADeaths, beside=T, col=rainbow(5),  #beside 없을 경우
+      main="미국 버지니아주의 하위계층 사망비율"
+  )
+  
+  #범례 출력
+  legend(
+      15, 71, 
+      c("50-54", "55-59", "60-64", "65-69", "70-74"), 
+      cex=0.8, 
+      fil=rainbow(5)
+  )
+  
+  #누적 막대 차트
+  barplot(VADeaths, beside=F, col=rainbow(5))
+  title(
+      main="미국 버지니아주의 하위계층 사망비율",
+      font.main=4
+  )
+  
+  #범례 출력
+  legend(
+      2.8, 200,
+      c("50-54", "55-59", "60-64", "65-69", "70-74"),
+      cex=0.8,
+      fil=rainbow(5)
+  )
+  
+  #beside=T/F : X축 값이 측면으로 배열, F이면 하나의 막대에 누적
+  #font.main : 제목 글꼴 지정
+  #legend() : 범례 위치, 이름, 글자 크기, 색상 지정
+  #title() : 차트 제목, 차트 글꼴 지정
+  ```
 
+  ![1568358512128](assets/1568358512128.png)
 
-- 예
+### 2.3.2. `dotchart()`
+
+> 점 그림표. 범주형 자료를 표현하는데 있어서 가장 뚜렷하게 데이터를 볼 수 있는 그래프.
 
 ```R
-data(VADeaths)
-str(VADeaths)	#5행 4열
-class(VADeaths) #matrix
-mode(VADeaths)	#numeric
-head(VADeaths, 10)
-
-par(mfrow=c(1, 2))
-barplot(
-    VADeaths, beside=T, col=rainbow(5),  #beside 누적?
-    main="미국 버지니아주의 하위계층 사망비율"
+dotchart(
+    chart_data
+    , color = c("blue", "red")
+    , pch=c(1, 2)
+    , xlab = "매출액"
+    , labels = names(chart_data)
+    , lcolor = "gray"
+    , main = "2014년도 VS 2015년도 분기별 매출현황 비교"
+    , cex = 1.2
 )
-
-#범례 출력
-legend(
-    15, 71, 
-    c("50-54", "55-59", "60-64", "65-69", "70-74"), 
-    cex=0.8, 
-    fil=rainbow(5)
-)
-
-#누적 막대 차트
-barplot(VADeaths, beside=F, col=rainbow(5))
-title(
-    main="미국 버지니아주의 하위계층 사망비율",
-    font.main=4
-)
-legend(
-    2.8, 200,
-    c("50-54", "55-59", "60-64", "65-69", "70-74"),
-    cex=0.8,
-    fil=rainbow(5)
-)
-
-#beside=T/F : X축 값이 측면으로 배열, F이면 하나의 막대에 누적
-#font.main : 제목 글꼴 지정
-#legend() : 범례 위치, 이름, 글자 크기, 색상 지정
-#title() : 차트 제목, 차트 글꼴 지정
 ```
 
-### 2.3.2. plot()
+![1568359089956](assets/1568359089956.png)
 
->점차트 - 점의 모양, 색상 설정 가능
+### 2.3.3. `plot()`
+
+>x 와 y 의 2개 축을 기준으로 좌표를 찍듯이 그리는 컨셉을 가진 함수 이다. 가장 대표적으로 산점도를 표현할 때 간단하게 구현이 가능한 함수로 소개되나, 범용적으로 사용이 가능한 제너릭 함수 (generic function) 이기 때문에 입력되는 데이터의 타입과 클레스에 따라 성격에 맞게 다양한 모습으로 데이터 시각화 결과물이 출력되게 된다.
 >
 >산점도(scatter plot) : 두 개 이상의 변수들 사이의 분포를 점으로 표시. 두 변수의 관계를 시각적으로 분석할 때 유용
 
@@ -3887,45 +3933,45 @@ legend(
 # lables : 점에 대한 설명문
 # cex : 점의 확대
 # pch : 점 모양. 원(1), 삼각형(2), ....
-# color : 점 색상
-# lcolor : 선 색상
+# col : 점 색상
+# lcolor : 선색상
+
+libarary(ggplot2) # plot 에서 여러 옵션 사용시 내부적으로 호출되는 qplot을 사용하기 위하여 ggplot2 로드
+data(cars) # cars 데이터 로드
+plot(
+    cars$speed, cars$dist
+    , pch=c(15:20)
+    , col=rainbow(7)
+    , cex=2
+)
 ```
 
-- 예1
+![1568360671203](assets/1568360671203.png)
 
-  ```R
-  par(mfrow=c(1, 1))
-  dotchart(
-      chart_data
-      , color = c("blue", "red")
-      , pch=c(1, 2)
-      , xlab = "매출액"
-      , labels = names(chart_data)
-      , lcolor = "gray"
-      , main = "2014년도 VS 2015년도 분기별 매출현황 비교"
-      , cex = 1.2
-  )
-  
-  ```
 
-- 예2
 
-  ```R
-  par(mfrow=c(1, 1))
-  pie(chart_data, col=rainbow(8),
-      pch=1:2, labels=names(chart_data), 
-      main = "2014년도 VS 2015년도 분기별 매출현황 비교"
-      , cex=1.2
-  )
-  ```
+### 2.3.4. pie()
 
-### 2.3.3. boxplot()
+> 파이그래프는 모든 데이터계열의 값의 합을 100으로 하여 각 데이터계열이 차지하는 비율을 백분율로 환산하여 이의 비중을 원형차트에서 표현한 것이다. 실제 데이터값이 아닌 백분율을 표시.
+
+```R
+par(mfrow=c(1, 1))
+pie(chart_data, col=rainbow(8),
+    pch=1:2, labels=names(chart_data), 
+    main = "2014년도 VS 2015년도 분기별 매출현황 비교"
+    , cex=1.2
+)
+```
+
+![1568360739553](assets/1568360739553.png)
+
+### 2.3.5. boxplot()
+
+> boxplot은 요약 정보를 시각화하는데 효과적이다. 데이터의 분포 정도와 이상치 발견을 목적으로 하는 경우 유용하게 사용된다.
 
 ```R
 #연속변수(Continuous quntitative data)는 시간, 길이 등과 같이 연속
 
-#boxplot은 요약 정보를 시각화하는데 효과적
-#데이터의 분포 정도와 이상치 발견을 목적으로 하는 경우 유용하게 사용되
 boxplot(VADeaths, range=0)
 #notch=T : 중위수(허리선) 비교
 boxplot(VADeaths, range=0, notch=T)
@@ -3933,35 +3979,18 @@ boxplot(VADeaths, range=0, notch=T)
 abline(h=37, lty=3, col="red")
 ```
 
-### 2.3.4. hist()
+### 2.3.6. hist()
+
+> 정값의 범위(구간)를 그래프의 x축으로 놓고, 범위에 속하는 측정값의 출현 빈도수를 y축으로 나타낸 그래프 형태. 히스토그램의 도수의 값을 선으로 연결하면 분포곡선을 얻을 수 있다.
 
 ```R
-# 히스토그램 - 측정값의 범위(구간)를 그래프의 x축으로 놓고, 범위에 속하는 측정값의 출현 빈도수를 y축으로 나타낸 그래프 형태
-# 히스토그램의 도수의 값을 선으로 연결하면 분포곡선을 얻을 수 있다
 data(iris)
-names(iris)
-str(iris)
-head(iris)
 levels(iris$Species)
 [1] "setosa"     "versicolor" "virginica" 
 
 #붓꽃 3종류의 관측 데이터 
 #Sepal(꽃받침)
 #Petal(꽃잎)
-
-#꽃받침 길이의 요약 통계
-summary(iris$Sepal.Length)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  4.300   5.100   5.800   5.843   6.400   7.900 
-
-
-hist(
-    iris$Sepal.Length
-    , xlab = "iris$Sepal.Length"
-    , col = "magenta"
-    , main = "꽃받침 길이 histogram"
-    #, xlim = c(4.3, 7.9)
-)
 
 par(mfrow=c(1, 2))
 #빈도수로 히스토그램 그리기
@@ -3982,6 +4011,8 @@ hist(
     , main = "꽃받침 넓이 histogram"
     #, xlim = c(2.0, 4.5)
 )
+
+#라인 그리기
 lines(density(iris$Sepal.Width), col="red")
 
 #정규분포 추정 곡선 추가
@@ -3997,9 +4028,11 @@ curve(
 )
 ```
 
-### 2.3.5. 고수준 및 저수준 시각화 함수의 조합
+![1568362892724](assets/1568362892724.png)
 
-#### 2.3.5.1. 산점도 예제
+### 2.3.7. 고수준 및 저수준 시각화 함수의 조합
+
+#### 2.3.7.1. 산점도 예제
 
 >산점도(scatter plot) : 두 개 이상의 변수들 사이의 분포를 점으로 표시. 두 변수의 관계를 시각적으로 분석할 때 유용
 
@@ -4011,16 +4044,18 @@ curve(
   plot(price, col="red")
   par(new=T) #차트 추가
   
-  line_chart = 1:100
   #x축은 생성된 난수의 순서, 
-  plot(				#대각선 추가
-      line_chart
+  line_chart = 1:100
+  plot(				
+      line_chart	#대각선 추가
       , type="l"
       , col="red"
       , axes=F
       , ann=F 
   )
   ```
+
+  ![1568363093200](assets/1568363093200.png)
 
 - 선을 연결하기
 
@@ -4031,6 +4066,8 @@ curve(
   plot(price, type="h")  #직선
   plot(price, type="s")  #꺽은선
   ```
+
+  ![1568363115449](assets/1568363115449.png)
 
 - 중복된 데이터의 수 만큼 plot 점 크기 확대 1
 
@@ -4054,10 +4091,12 @@ curve(
   
   plot(
       x, y
-      , pch="@", col="blue", cex=0.5*xy.df$Freq
+      , pch=16, col="blue", cex=2*xy.df$Freq
       , xlab="x벡터 원소", ylab="y벡터 원소"
   )
   ```
+
+  ![1568376404869](assets/1568376404869.png)
 
 - 중복된 데이터의 수 만큼 plot 점 크기 확대 2
 
@@ -4079,22 +4118,24 @@ curve(
       , xlab="parent"
       , ylab="child"
   )
-  
-  
   ```
+  
+  ![1568376499444](assets/1568376499444.png)
 
-#### 2.3.5.2. 변수간의 관계를 차트로 그려보기 - `pairs()`
+#### 2.3.7.2. 변수간의 관계를 차트로 그려보기 - `pairs()`
 
 ```R
 attributes(iris)
 
-pairs(iris[, 1:4])
-pairs(iris[iris$Species=="setosa", 1:4])
+pairs(iris[, 1:4]) #모든 종에 대해서 관계보기
+pairs(iris[iris$Species=="setosa", 1:4]) #setosa 종에 대해서만 보기
 ```
 
-#### 2.3.5.3. 3차원 산점도
+![1568376723863](assets/1568376723863.png)
 
->`scatterplot3d(밑변, 오른쪽변, 왼쪽변)`
+#### 2.3.7.3. 3차원 산점도 - scatterpolt3d()
+
+`scatterplot3d(밑변, 오른쪽변, 왼쪽변)`
 
 ```R
 install.packages("scatterplot3d")
@@ -4124,9 +4165,9 @@ d3$points3d(
 )
 ```
 
-### 2.3.6. 연습문제
+### 2.3.8. 연습문제
 
-#### 2.3.6.1. 연습문제 2.1
+#### 2.3.8.1. 연습문제 2.1
 
 ``` R
 x1 <- 1:5
@@ -4160,7 +4201,7 @@ par(op)
 # n: 출력하지 않음(no plotting)
 ```
 
-#### 2.3.6.2. 연습문제 2.2
+#### 2.3.8.2. 연습문제 2.2
 
 ```R
 x <- rep(1:5, rep(5, 5))
@@ -4178,7 +4219,7 @@ points(rep(7,5), 5:1, pch=pchs, cex=1.5)
 text(rep(7, 5)-0.4, y, labels=paste("'", pchs,"'", sep=""), cex=1.2)
 ```
 
-#### 2.3.6.3. 연습문제 2.3
+#### 2.3.8.3. 연습문제 2.3
 
 ```R
 cars[1:4, ]
