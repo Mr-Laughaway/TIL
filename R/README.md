@@ -4146,6 +4146,7 @@ iris_setosa = iris[iris$Species=='setosa', ]
 iris_versicolor = iris[iris$Species=='versicolor', ]
 iris_virginica = iris[iris$Species=='virginica',]
 
+#3차원 공간 생성
 d3 <- scatterplot3d(
     iris$Petal.Length, iris$Sepal.Length, iris$Sepal.Width
     , type='n' #type='n' 은 기본 산점도를 표시하지 않는 것
@@ -4165,6 +4166,8 @@ d3$points3d(
 )
 ```
 
+![1568379909383](assets/1568379909383.png)
+
 ### 2.3.8. 연습문제
 
 #### 2.3.8.1. 연습문제 2.1
@@ -4176,7 +4179,7 @@ z1 <- 5:1
 mat1 <- cbind(x1, y1, z1)
 
 # 그래픽 윈도우의 화면 분할 (2행 3열)
-op <- par(no.readonly = TURE)
+op <- par(no.readonly = TRUE)
 par(mfrow=c(2, 3))
 # 일변량 그래프
 plot(y1, main="using index")
@@ -4201,6 +4204,8 @@ par(op)
 # n: 출력하지 않음(no plotting)
 ```
 
+![1568380094726](assets/1568380094726.png)
+
 #### 2.3.8.2. 연습문제 2.2
 
 ```R
@@ -4218,6 +4223,8 @@ text(rep(6,5)-0.4, y, labels = as.character(65:69), cex = 1.2)
 points(rep(7,5), 5:1, pch=pchs, cex=1.5)
 text(rep(7, 5)-0.4, y, labels=paste("'", pchs,"'", sep=""), cex=1.2)
 ```
+
+![1568380159329](assets/1568380159329.png)
 
 #### 2.3.8.3. 연습문제 2.3
 
@@ -4238,6 +4245,8 @@ z$coef
 
 plot(cars, main = "abline")
 # horizontal
+
+#ToDo: 나중에 책 보고 다시 정리
 ```
 
 # 3. R 데이터 전처리
@@ -4363,7 +4372,6 @@ library(plyr)
 >   - lapply(vec, func) - 결과를 리스트로 반환
 >   - sapply(vec, func) - 결과를 벡터, 배열, 매트릭스로 반환
 >
->   
 
 ```R
 tapply(dataset, 집단변수(그룹핑할 변수), 함수)
@@ -4419,16 +4427,13 @@ ddply(데이터 셋, 집단변수(그룹핑할 변수), 요약집계, 컬럼명=
   3  virginica 0.6358796 7.9 4.9
   ```
 
-
-
 ### 3.1.2. dplyr
 
-> dplyr 패키지 -데이터 전처리( 조건 필터, 그룹핑,  함수적용, 변환, 집계연산, 정렬,.....)
-> filter() 조건에 맞는 데이터셋 추출, 행추출
-> select() 데이터 셋을 대상으로 컬럼을 선택하는 기능
-> mutate() 데이터 넷의 새로운 컬럼을 추가하는 기능
-> arrange() 데이터 셋의 특정 컬럼으로 정렬하는 기능
-> summarise() 데이터 셋의 특정 컬럼으로 요약집계 기능
+> dplyr 패키지는 Hadley Wickham가 작성한 데이터 처리에 특화된 R 패키지이다. 이 사람이 지금까지 작성한 유명한 R 패키지로는 `ggplot2`, `plyr`, `reshape2`등이 있다.
+> 
+> 데이터 처리에 특화된 유용한 패키지로 Hadley Wickham이 만든 `plyr`이라는 패키지가 있었으나 `plyr`은 편리하긴 하지만 모든 함수가 R로 작성되어서 처리 속도가 느리다는 단점이 있다. 이에 반해 `dplyr`은 C++로 작성되어 매우 빠른 처리 속도를 자랑합니다.
+> 
+> dplyr 패키지는 데이터 프레임을 처리하는 함수군으로 구성되어 있지만 그 밖에 data.table 이나 db 데이터 형식의 데이터에도도 사용할 수 있다.
 
 #### 3.1.2.1. filter()
 
@@ -4462,7 +4467,6 @@ filter(데이터셋, 조건, ...)
   # class가 1을 제외한 record(행) 추출
   other_class <- exam %>% filter(class != 1)
   # filter(exam, class != 1) 랑 같음
-  
      id class math english science
   1   5     2   25      80      65
   2   6     2   50      89      98
@@ -4470,17 +4474,7 @@ filter(데이터셋, 조건, ...)
   4   8     2   90      78      25
   5   9     3   20      98      15
   6  10     3   50      98      45
-  7  11     3   65      65      65
-  8  12     3   45      85      32
-  9  13     4   46      98      65
-  10 14     4   48      87      12
-  11 15     4   75      56      78
-  12 16     4   58      98      65
-  13 17     5   65      68      98
-  14 18     5   80      78      90
-  15 19     5   89      68      87
-  16 20     5   78      83      58
-  
+  ...
   ```
 
 #### 3.1.2.2. select()
@@ -4529,7 +4523,6 @@ arrange(정렬할컬럼, ...) #내림차순 시 desc()사용
   
   #1차 정렬은 class의 오름차순, 2차 정렬은 수학점수의 내림차순으로 정렬
   order_math <- exam %>% arrange(class, desc(math))
-  
   ```
 
 #### 3.1.2.4. mutate()
@@ -4724,21 +4717,21 @@ group_by(dataframe, 집단변수)
       , sd = sd(hflights$AirTime, na.rm=T)
   )
   
+  # 비행 갯수와, 평균 비행시간
   summarise(hflights, cnt=n(), delay=mean(AirTime, na.rm=T))
+  
+  # 비행시간의 표준편차와 변화량(?)
   summarise(hflights, arrTimeSd = sd(AirTime, na.rm=T),
             arrTimeVar = var(AirTime, na.rm=T))
-  
-  
-  
-  
-  #
   ```
-
+  
 - 2
 
   ```R
   install.packages("ggplot2")
   library(ggplot2)
+  library(dplyr)
+  
   #자동차 배기량에 따라 고속도록 연비 ...데이터 셋
   mpg <- as.data.frame(ggplot2::mpg)
   print(mpg)
@@ -4748,13 +4741,9 @@ group_by(dataframe, 집단변수)
   #cty 도시연비
   #hwy 고속도로 연비
   #class차종
-  library(dplyr)
   
   # Quiz> 회사별로 분리, suv 추출, 통합 연비(도시연비+고속도로 연비) 변수 생성,통합 연비 평균 산출, 내림차순 정렬, 1~5위까지 출력
-  head(
-      mpg %>% group_by(manufacturer) %>% filter(class=="suv") %>% mutate(avg_cthwy=(cty+hwy)/2) %>% arrange(desc(avg_cthwy)) %>% select(manufacturer, model, displ, class, cty, hwy, avg_cthwy)
-      , 5
-  )
+  mpg %>% group_by(manufacturer) %>% filter(class=="suv") %>% mutate(avg_cthwy=(cty+hwy)/2) %>% arrange(desc(avg_cthwy)) %>% select(manufacturer, model, displ, class, cty, hwy, avg_cthwy) %>% head(5)
   # A tibble: 5 x 7
   # Groups:   manufacturer [1]
     manufacturer model        displ class   cty   hwy avg_cthwy
@@ -4764,10 +4753,9 @@ group_by(dataframe, 집단변수)
   3 subaru       forester awd   2.5 suv      19    25      22  
   4 subaru       forester awd   2.5 suv      18    25      21.5
   5 subaru       forester awd   2.5 suv      18    24      21 
-  ######틀렸다. 문제 의도를 잘못 파악... 제조사 별로 SUV의 평균 연비 순위를 구하는 것.
-  ##########
+  # 틀렸다. 문제 잘못 파악. 제조사 별로 SUV의 평균 연비 순위를 구하는 것.
   
-  #선생님 답
+  # 선생님 답
   mpg %>% group_by(manufacturer) %>% filter(class=="suv") %>% mutate(tot=(cty+hwy)/2) %>% summarise(mean_tot=mean(tot))%>% arrange(desc(mean_tot)) %>% head(5)
   # A tibble: 5 x 2
     manufacturer mean_tot
@@ -4838,13 +4826,16 @@ g <- graph.data.frame(emp, direct=T)
 plot(g, layout=layout.fruchterman.reingold, vertex.size=8, edge.arrow.size=0.5)
 ```
 
+![1568382677226](assets/1568382677226.png)
+
 ### 3.1.5. reshape
 
 >데이터 셋의 구성이 구분변수(identifier variable)에 의해서 특정 변수가 분류된 경우 데이터 셋의 모양을 변경하는 패키지.
 
 ```R
+install.packages("reshape")
+library(reshape)
 #reshape(), melt() : 구분 변수를 기본으로 측정변수를 분류하여 새로운 컬럼을 생성
-
 reshape(
     data.frame
     , varying = "반복되는 측정 색인"
@@ -4856,131 +4847,157 @@ reshape(
 
 #wide는 기준변수와 관련 변수가 1:n 관계로 관측치가 구성되었을 때
 #long은 기준변수와 관련 변수가 1:1 관계로 관측치가 구성 되었을 때
-
 #구분변수(identifier variable) : 데이터 셋에 1개 이상으로 분류되는 집단변수
 #측정변수(measured variable): 구분변수에 의해서 구분되는 변수
 ```
 
-- 기본 사용법
+#### 3.1.5.1. reshape 기본 사용법
 
-  ```R
-  install.packages("reshape")
-  library(reshape)
-  
-  #데이터 파일을 가져오는 경우 컬럼명이 없으면 기본적으로 V1, V2, V3... 형식으로 기본 컬럼명이 적용되므로 데이터 셋의 컬럼명을 변경하려면 rename() 함수를 사용.
-  
-  result <- read.csv("./data/reshape.csv", header=F)
-  result <- rename(result, c(V1="total", V2="num1", V3="num2", V4="num3"))
-  
-  ################
-  data('Indometh') #항염증제에 대한 약물동태학에 관한 데이터 셋
-  str(Indometh) #생체내에서 약물의 흡수, 분포, 비축, 대사, 배설의 과정을 연구
-                #Subject(실험대상), time(약물 투여시간:hr), conc(농도:ml/mcg)
-  Indometh   #long형식
-    Subject time conc
-  1       1 0.25 1.50
-  2       1 0.50 0.94
-  3       1 0.75 0.78
-  4       1 1.00 0.48
-  5       1 1.25 0.37
-  6       1 2.00 0.19
-  
-  #기준변수: timervar="time", idvar="Subject"
-  #관측변수: v.names="conc"
-  #실험대상1을 기준으로 약물투여시간 0.25에서 8까지의 ... 농도를
-  wide <- reshape(Indometh,  idvar="Subject", v.names="conc", timevar="time", direction="wide")
-  wide
-     Subject conc.0.25 conc.0.5 conc.0.75 conc.1 conc.1.25 conc.2
-  1        1      1.50     0.94      0.78   0.48      0.37   0.19
-  12       2      2.03     1.63      0.71   0.70      0.64   0.36
-  23       3      2.72     1.49      1.16   0.80      0.80   0.39
-  34       4      1.85     1.39      1.02   0.89      0.59   0.40
-  45       5      2.05     1.04      0.81   0.39      0.30   0.23
-  56       6      2.31     1.44      1.03   0.84      0.64   0.42
-     conc.3 conc.4 conc.5 conc.6 conc.8
-  1    0.12   0.11   0.08   0.07   0.05
-  12   0.32   0.20   0.25   0.12   0.08
-  23   0.22   0.12   0.11   0.08   0.08
-  34   0.16   0.11   0.10   0.07   0.07
-  45   0.13   0.11   0.08   0.10   0.06
-  56   0.24   0.17   0.13   0.10   0.09
-  
-  reshape(wide, direction="long")
-  
-  #varying="반복되는 측정 색인" 사용
-  long <- reshape(wide, idvar="Subject", varying=2:12, v.names="conc", direction="long")
+```R
+#데이터 파일을 가져오는 경우 컬럼명이 없으면 기본적으로 V1, V2, V3... 형식으로 기본 컬럼명이 적용되므로 데이터 셋의 컬럼명을 변경하려면 rename() 함수를 사용.
+result <- read.csv("./data/reshape.csv", header=F)
+result <- rename(result, c(V1="total", V2="num1", V3="num2", V4="num3"))
+# result <- rename(result, "total"=V1, "num1"=V2, "num2"=V3, "num3"=V4)
+# reshape::rename 말고 다른 rename 인경우
+
+
+# 예1
+data('Indometh') #항염증제에 대한 약물동태학에 관한 데이터 셋
+str(Indometh) #생체내에서 약물의 흡수, 분포, 비축, 대사, 배설의 과정을 연구
+              #Subject(실험대상), time(약물 투여시간:hr), conc(농도:ml/mcg)
+Indometh   #long형식
+  Subject time conc
+1       1 0.25 1.50
+2       1 0.50 0.94
+3       1 0.75 0.78
+4       1 1.00 0.48
+5       1 1.25 0.37
+6       1 2.00 0.19
+
+# 기준변수: timervar="time", idvar="Subject"
+# 관측변수: v.names="conc"
+# 실험대상1을 기준으로 약물투여시간 0.25에서 8까지의 ... 농도를
+wide <- reshape(Indometh,  idvar="Subject", v.names="conc", timevar="time", direction="wide")
+wide
+   Subject conc.0.25 conc.0.5 conc.0.75 conc.1 conc.1.25 conc.2
+1        1      1.50     0.94      0.78   0.48      0.37   0.19
+12       2      2.03     1.63      0.71   0.70      0.64   0.36
+23       3      2.72     1.49      1.16   0.80      0.80   0.39
+34       4      1.85     1.39      1.02   0.89      0.59   0.40
+45       5      2.05     1.04      0.81   0.39      0.30   0.23
+56       6      2.31     1.44      1.03   0.84      0.64   0.42
+   conc.3 conc.4 conc.5 conc.6 conc.8
+1    0.12   0.11   0.08   0.07   0.05
+12   0.32   0.20   0.25   0.12   0.08
+23   0.22   0.12   0.11   0.08   0.08
+34   0.16   0.11   0.10   0.07   0.07
+45   0.13   0.11   0.08   0.10   0.06
+56   0.24   0.17   0.13   0.10   0.09
+
+# 아래로 풀기 (time 정보가 복원됨)
+reshape(wide, direction="long")
        Subject time conc
-  1.1        1    1 1.50
-  2.1        2    1 2.03
-  3.1        3    1 2.72
-  4.1        4    1 1.85
-  5.1        5    1 2.05
-  6.1        6    1 2.31
-  1.2        1    2 0.94
-  2.2        2    2 1.63
-  3.2        3    2 1.49
-  4.2        4    2 1.39
-  5.2        5    2 1.04
-  6.2        6    2 1.44
-  ...
-  
-  
-  ##########################
-  #melt(data, id="기준변수", measured="측정변수")
-  #melt는 구분변수를 기준으로 측정변수를 긴형식에서 넓은 형식으로 변경
-  
-  smiths
-       subject time age weight height
-  1 John Smith    1  33     90   1.87
-  2 Mary Smith    1  NA     NA   1.54
-  
-  #기준변수 ("subject", "time")를 이용하여 측정변수 분류
-  melt(smiths, id=c("subject", "time"))
-       subject time variable value
-  1 John Smith    1      age 33.00
-  2 Mary Smith    1      age    NA
-  3 John Smith    1   weight 90.00
-  4 Mary Smith    1   weight    NA
-  5 John Smith    1   height  1.87
-  6 Mary Smith    1   height  1.54
-  
-  melt(smiths, id=c("subject", "time"), measured=c("age"))
-  
-  melt(smiths, id=c("subject", "time"), measured=c("age", "weight", "height"))
-  
-  melt(smiths, id=c(1:2), na.rm=T)
-  
-  #######################
-  #cast(): 측정변수에 집합함수를 적용
-  #cast(data, 포뮬러 식, ~측정변수, 집합함수)
-  smithsm <- melt(smiths, id=c(1:2))
-  smithsm 
-   
-  cast(smithsm, subject= ~ variable) #subject와 time 변수를 이용하여 측정변수(age, weight, height)를 분류
-  
-  #########
-  #문)
-  #Indometh 데이터셋으로부터 subject와 time을 구분변수로 long 형식으로 변환
-  
-  
-  #Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 합계 통계량 계산
-  
-  
-  #Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 평균, 최소값~최대값 범위를 계산
-  ```
+1.0.25       1 0.25 1.50
+2.0.25       2 0.25 2.03
+3.0.25       3 0.25 2.72
+4.0.25       4 0.25 1.85
+5.0.25       5 0.25 2.05
+6.0.25       6 0.25 2.31
+
+# varying="반복되는 측정 색인" 사용하여 풀기 (time 정보가 날아감...)
+long <- reshape(wide, idvar="Subject", varying=2:12, v.names="conc", direction="long")
+     Subject time conc
+1.1        1    1 1.50
+2.1        2    1 2.03
+3.1        3    1 2.72
+4.1        4    1 1.85
+5.1        5    1 2.05
+6.1        6    1 2.31
+1.2        1    2 0.94
+2.2        2    2 1.63
+3.2        3    2 1.49
+4.2        4    2 1.39
+5.2        5    2 1.04
+6.2        6    2 1.44
+...
+```
+
+#### 3.1.5.2. `melt()`
+
+```R
+# melt 로 풀기
+# melt(data, id="기준변수", measure="측정변수")
+# melt는 구분변수를 기준으로 측정변수를 넓은 형식에서 긴 형식으로 변경
+smiths
+     subject time age weight height
+1 John Smith    1  33     90   1.87
+2 Mary Smith    1  NA     NA   1.54
+
+#기준변수 ("subject", "time")를 이용하여 측정변수 분류
+melt(smiths, id=c("subject", "time"))
+     subject time variable value
+1 John Smith    1      age 33.00
+2 Mary Smith    1      age    NA
+3 John Smith    1   weight 90.00
+4 Mary Smith    1   weight    NA
+5 John Smith    1   height  1.87
+6 Mary Smith    1   height  1.54
+
+melt(smiths, id=c("subject", "time"), measure=c("age"))
+     subject time variable value
+1 John Smith    1      age    33
+2 Mary Smith    1      age    NA
+
+melt(smiths, id=c("subject", "time"), measure=c("age", "height"))
+     subject time variable value
+1 John Smith    1      age 33.00
+2 Mary Smith    1      age    NA
+3 John Smith    1   height  1.87
+4 Mary Smith    1   height  1.54
+```
+
+#### 3.1.5.3. `cast()`
+
+```R
+# cast로 묶기
+# cast(): 측정변수에 집합함수를 적용
+# cast(data, 포뮬러 식, ~측정변수, 집합함수)
+smithsm <- melt(smiths, id=c(1:2))
+smithsm 
+
+# ToDo: 책 보고 다시 이해하여야 함
+cast(smithsm, subject= ~ variable) #subject와 time 변수를 이용하여 측정변수(age, weight, height)를 분류
+     subject time variable value
+1 John Smith    1      age 33.00
+2 Mary Smith    1      age    NA
+3 John Smith    1   weight 90.00
+4 Mary Smith    1   weight    NA
+5 John Smith    1   height  1.87
+6 Mary Smith    1   height  1.54
+```
+
+#### 3.1.5.4. 연습문제
+
+```R
+# 문) Indometh 데이터셋으로부터 subject와 time을 구분변수로 long 형식으로 변환
+
+# 문) Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 합계 통계량 계산
+
+# 문) Indometh 데이터셋으로부터 subject구분변수로 특정변수 농도의 평균, 최소값~최대값 범위를 계산
+```
 
 ### 3.1.6. reshape2
 
->dfdsf
+> 해당 페키지는 **Handley Wickham**에 의해서 2007년에 개발된 것이다. 이 패키지는 옆으로 컬럼이 많은 형태 ( Wide )를 세로로 긴 (Long) 형탤 변경해주고 반대로 세로로 긴 형태를 옆으로 넓게 바꿔주는 패키지이다.
 
 ``` R
-
-
+install.packages("reshape2")
+library(reshape2)
 ```
 
 #### 3.1.6.1. melt()
 
->sdfsdf
+>wide 형 데이터를 long 형으로 바꾸어 줌
 
 ```R
 melt(데이터 세트, id.var="기준 열", measure.vars="변환 열")
@@ -5024,7 +5041,7 @@ melt(데이터 세트, id.var="기준 열", measure.vars="변환 열")
 
 #### 3.1.6.2. cast()
 
->dfdf
+>long 형 데이터를 wide 형으로 바꾸어 줌
 
 ```R
 cast(데이터 세트, 기준 열 ~ 변환 열) #acast(), dcast()
