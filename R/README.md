@@ -1,5 +1,7 @@
 <h1>R</h1>
 
+
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -5456,13 +5458,6 @@ geom_boxplot, geom_histogram, geom_col, geom_bar,  geom_line, geom_point
 
 # 3단계 : 설정 추가(축 범위, 색, 표식)
 xlim(), ylim(), labs(), theme()....
-
-#여러개 그래프 그리기
-library(gridExtra)
-a <- ggplot(mtcars) + geom_point(aes(hp, mpg))
-b <- ggplot(mtcars) + geom_histogram(aes(hp))
-c <- ggplot(mtcars) + geom_histogram(aes(mpg))
-grid.arrange(a, b, c, nrow=2, ncol=2)
 ```
 
 #### 3.1.9.1 `geom_point()`
@@ -5486,294 +5481,128 @@ ggplot(airquality, aes(x=Day, y=Temp)) +
 
 #### 3.1.9.3. `geom_bar()`
 
-```R
-# mtcars에서 cyl 종류별 확인
-ggplot(mtcars, aes(x=cyl)) +
-	geom_bar(width=0.5)
-```
-
-![1568429766092](assets/1568429766092.png)
-
-```R
-#빈 범주를 제외하고 cyl 종류별 빈도수 확인
-ggplot(mtcars, aes(x=factor(cyl))) +
-	geom_bar(width=0.5)
-```
-
-![1568429864519](assets/1568429864519.png)
-
-
-
-
-
-
-
-- 사용 예
+- 사용 예1
 
   ```R
-  
-  
+  # mtcars에서 cyl 종류별 확인
+  ggplot(mtcars, aes(x=cyl)) +
+  	geom_bar(width=0.5)
+  ```
+
+  ![1568429766092](assets/1568429766092.png)
+
+- 사용 예2
+
+  ```R
   #빈 범주를 제외하고 cyl 종류별 빈도수 확인
   ggplot(mtcars, aes(x=factor(cyl))) +
   	geom_bar(width=0.5)
-  
+  ```
+
+  ![1568429864519](assets/1568429864519.png)
+
+- 사용 예3
+
+  ```R
   # cyl 종류변 gear 빈도 누적 막대그래프
   ggplot(mtcars, aes(x=factor(cyl))) +
   	geom_bar(aes(fill=factor(gear)))
-  
+  ```
+
+  ![1568430280549](assets/1568430280549.png)
+
+#### 3.1.9.4. `coord_polar()`
+
+> 선 버스트 차트 그리기
+
+- 기본 사용 법
+
+  ```R
   # 선 버스트 차트 그리기
   ggplot(mtcars, aes(x=factor(cyl))) +
   	geom_bar(aes(fill=factor(gear))) +
   	coord_polar()
-  
+  ```
+
+  ![1568430378879](assets/1568430378879.png)
+
+- 원 그래프로 변환
+
+  ```R
   # 원 그래프로 변환
   ggplot(mtcars, aes(x=factor(cyl))) +
   	geom_bar(aes(fill=factor(gear))) +
   	coord_polar(theta="y")
-  
-  # airquality에서 Day열을 그룹지어, 날짜별 온도 boxplot을 그림
-  ggplot(airquality, aes(x=Day, y=Temp, group=Day)) +
-  	geom_boxplot()
-  
+  ```
+
+  ![1568430411858](assets/1568430411858.png)
+
+#### 3.1.9.5. `geom_boxplot()`
+
+```R
+# airquality에서 Day열을 그룹지어, 날짜별 온도 boxplot을 그림
+ggplot(airquality, aes(x=Day, y=Temp, group=Day)) +
+	geom_boxplot()
+```
+
+![1568430502630](assets/1568430502630.png)
+
+#### 3.1.9.6. `geom_histogram()`
+
+- 기본 사용법
+
+  ```R
   # airquality에서 Temp의 histogram
   ggplot(airquality, aes(Temp)) +
   	geom_histogram()
-  
+  ```
+
+  ![1568430541020](assets/1568430541020.png)
+
+- 폭 조정
+
+  >단순히 모양의 폭을 조정하는 것이 아닌 범주로 묶을 범위를 조정하는 것
+
+  ```R
   # histogram 폭 조정
   ggplot(airquality, aes(Temp)) +
   	geom_histogram(binwidth=1)
-  
-  ## 꺾은선 그래프에 사선 그리기
-  ggplot(economics, aes(x=date, y=psavert)) +
-  	geom_line() +
-  	geom_abline(intercept = 12.18671, slope = -0.0005444)
-  
-  # 평행선 그리기
-  ggplot(economics, aes(x=date, y=psavert)) +
-  	geom_line() +
-  	geom_hline(yintercept = mean(economics$psavert))
-  
-  # 수직선 그리기
-  library(dplyr)
-  x_inter <- filter(economics, psavert == min(economics$psavert))$date
-  ggplot(economics, aes(x=date, y=psavert)) +
-  	geom_line() +
-  	geom_vline(xintercept=x_inter)
   ```
-  
-  
 
-### 3.1.10 크롤링
+  ![1568430614120](assets/1568430614120.png)
 
-```R
-####################################################################################################
- read_html() : url에서 html 파일을 읽어오고 저장한다.
- html_table() :  테이블추출
- html_node()는 매칭되는 한 요소만 반환하고, 
- html_nodes()는 모든 요소를 반환한다.
- id를 찾을 경우에는 html_node()를 사용하면 되고, tag, class로 같은 요소를 모두 추출하고자 할 경우에는 html_nodes()를 사용하면 된다
- #html_names()는 attribute의 이름을 가져온다.    
- ex) <img src="....">
-#html_chidren() 해당 요소의 하위 요소를 읽어온다.
-#html_tag() tag이름 추출한다.
-#html_attrs() attribute을 추출한다.
-#################################################################################################
+#### 3.1.9.7. `geom_line()`, `geom_abline()`, `geom_hline()`, `geon_vline()`
 
-install.packages('rvest')
- 
-library(rvest)
+```R 
+## 꺾은선 그래프에 사선 그리기
+a <- ggplot(economics, aes(x=date, y=psavert)) +
+	geom_line() +
+	geom_abline(intercept = 12.18671, slope = -0.0005444)
 
-#스크래핑할 웹 사이트 URL을 변수에 저장
-url <- 'http://www.imdb.com/search/title?count=100&release_date=2016,2016&title_type=feature'
+# 평행선 그리기
+b <- ggplot(economics, aes(x=date, y=psavert)) +
+	geom_line() +
+	geom_hline(yintercept = mean(economics$psavert))
 
-#웹 사이트로부터  HTML code 읽기
-webpage <- read_html(url)   
-webpage
-
-#스크래핑할 데이터 - rank, title, description, runtime
-
-#랭킹이 포함된 CSS selector 를 찾아서 R 코드로 가져오기
-rank_data_html <- html_nodes(webpage, '.text-primary')
-
-#랭킹 데이터를 텍스트로 가져오기
-rank_data <- html_text(rank_data_html)
-#랭킹 데이터를 수치형 데이터로 변환
-rank_data <- as.numeric(rank_data)
-
-#제목 데이터 가져오기
-title_data_html <- html_nodes(webpage, '.lister-item-header a')
-title_data <- html_text(title_data_html)
-length(title_data)
-
-#description 뽑기
-#desc_data_html <- html_nodes(webpage, '.lister-item-content > :nth-child(4)')
-description_data_html <- html_nodes(webpage, '.ratings-bar+ .text-muted')
-description_data <- html_text(description_data_html)
-
-#'\n' 제거 데이터 처리
-description_data <- gsub("\n", "", description_data)
-library(stringr)
-description_data <- str_trim(description_data)
-
-# 상영시간 가져오기
-runtime_data_html <- html_nodes(webpage, ".runtime")
-runtime_data <- html_text(runtime_data_html)
-runtime_data <- as.numeric(gsub("[ a-zA-Z]*", "", runtime_data))
-
-
-# 영화장르 영역 데이터 텍스트로 가져오기
-genre_data_html <- html_nodes(webpage, ".genre")
-genre_data <- html_text(genre_data_html)
-
-# \n 제거
-genre_data <- gsub("\n", "", genre_data)
-
-# 1개 이상의 공백을 제거
-genre_data <- str_trim(genre_data)
-genre_data <- gsub(" ", "", genre_data)
-
-# 첫 번째 장르 빼고 삭제
-genre_data <- gsub(",.*", "", genre_data) #첫 번째 장르만 가져오기
-
-# 문자열 데이터를 범주형 데이터로 변환 처리
-genre_data <- as.factor(genre_data)
-
-#IMDB rating 값 가져오기
-imdb_data_html <- html_nodes(webpage, ".ratings-imdb-rating > :nth-child(2)")
-imdb_data <- html_text(imdb_data_html)
-imdb_data <- as.numeric(imdb_data)
-
-#votes 데이터 가져오기
-votes_data_html <- html_nodes(webpage, ".sort-num_votes-visible > :nth-child(2)")
-votes_data <- html_text(votes_data_html)
-votes_data <- gsub(",", "", votes_data)
-votes_data <- as.numeric(votes_data)
-
-#감독 데이터 가져오기
-director_data_html <- html_nodes(webpage, '.lister-item-content > :nth-child(5) > :nth-child(1)')
-director_data <- html_text(director_data_html)
-director_data <- as.factor(director_data)
-
-#주연 배우 데이터 가져오기
-actors_data_html <- html_nodes(webpage, '.lister-item-content .ghost + a')
-actors_data <- html_text(actors_data_html)
-actors_data <- as.factor(actors_data)
-
-# metascore 가져오기
-for( elem in rat.bar) {
-    len <- length(html_nodes(elem, "div"))
-   	if(len == 5) {
-        
-    } else {
-        
-    }
-}
-#
-metascore_data_html <- html_nodes(webpage, '.ratings-metascore span')
-metascore_data <- html_text(metascore_data_html)
-metascore_data <- str_trim(metascore_data)
-metascore_data <- as.numeric(metascore_data)
-#누락된  데이터 NA처리하기 29, 58, 73, 96
-for (i in c(29,58, 73, 96)){
-    a<-metascore_data[1:(i-1)]    #리스트로 확인
-    b<-metascore_data[i:length(metascore_data)]
-    metascore_data<-append(a,list("NA"))
-    metascore_data<-append(metascore_data,b)
-}
-metascore_data <- unlist(metascore_data)
-metascore_data <- as.numeric(metascore_data)
-
-
-# 총 수입 가져오기
-gross_data_html <- html_nodes(webpage, ".sort-num_votes-visible > :nth-child(5)")
-gross_data <- html_text(gross_data_html)
-gross_data <- gsub("[$,M]", "", gross_data)
-gross_data <- as.numeric(gross_data)
-#누락 된 수입 NA 처리 29, 45, 57, 62, 73, 93, 98
-for (i in c(29, 45, 57, 62, 73, 93, 98)){
-    a<-gross_data[1:(i-1)]    #리스트로 확인
-    b<-gross_data[i:length(gross_data)]
-    gross_data<-append(a,list("NA"))
-    gross_data<-append(gross_data,b)
-}
-gross_data <- unlist(gross_data)
-gross_data <- as.numeric(gross_data)
-#gross revenue(총수익) 데이터 개수 확인
-length(gross_data)
-#gross revenue(총수익) 요약 통계 확인 
-summary(gross_data)
-
-
-
-#data.frame으로 변환
-movies_df<-data.frame(Rank = rank_data, Title = title_data,
-Description = description_data, Runtime = runtime_data,
-Genre = genre_data, Rating = imdb_data,
-Metascore = metascore_data, Votes = votes_data,   
-Director = director_data, Actor = actors_data, stringsAsFactor=F)
-
-#변환된 data.frame 구조 확인
-str(movies_df)
- 
-library('ggplot2')
-#x축 상영시간, y축 장르별 필름 수 
-qplot(data = movies_df, Runtime, fill = Genre, bins = 30)
-
-#상영시간이 가장 긴 필름의 장르는?
+# 수직선 그리기
 library(dplyr)
-####?????
-
-#상영 시간이 130~160 분인 장르 중 votes가 가장 높은 것은?
-#난 뭘 한 거지?
-qplot(
-    data= movies_df[movies_df$Runtime >= 130 & movies_df$Runtime <= 160,]
-   	, Votes, fill = Genre, bins =30
-)
-#답
-ggplot(movies_df,aes(x=Runtime,y=Rating))+
-geom_point(aes(size=Votes,col=Genre))
-###Test###
-
-##########
-
-
-
-
-
-##############################################
-가격 비교를 위한 스크래핑
-rvest 패키지 : 웹 페이지에서 필요한 정보를 추출하는데 유용한 패키지
-selectr패키지, xml2 패키지가 의존 패키지이므로 함께 설치
-read_html(url) : 지정된 url에서 html 컨텐츠를 가져옵니다.
-jsonline 패키지 : json 파서/생성기가 웹용으로 최적화되어 있는 패키지
-##############################################
-install.packages("jsonlite")
-library(jsonlite)
-library(xml2)
-library(rvest)
-library(stringr)
-
-url <- 'https://www.amazon.in/OnePlus-Mirror-Black-64GB-Memory/dp/B0756Z43QS?tag=googinhydr18418-21&tag=googinkenshoo-21&ascsubtag=aee9a916-6acd-4409-92ca-3bdbeb549f80'
-
-#추출할 정보 : 제목, 가격, 제품 설명, 등급, 크기, 색상
-
-
-
+x_inter <- filter(economics, psavert == min(economics$psavert))$date
+c <- ggplot(economics, aes(x=date, y=psavert)) +
+	geom_line() +
+	geom_vline(xintercept=x_inter)
 ```
 
+#### 3.1.9.8. `gridExtra` 패키지 및 `grid.arrange()`
 
+> `base` 패키지의 `par(mflow=c(2,2))`와 같이 그리드 형태로 여러개의 그래프를 그릴 때 유용.
 
+```R 
+#여러개 그래프 그리기
+library(gridExtra)
+grid.arrange(a, b, c, nrow=2, ncol=2) #3.1.9.7. 에서 만든 a, b, c 사용
+```
 
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
+![1568431099888](assets/1568431099888.png)
 
 <br>
 
@@ -5791,13 +5620,52 @@ url <- 'https://www.amazon.in/OnePlus-Mirror-Black-64GB-Memory/dp/B0756Z43QS?tag
 
 <br>
 
-<br>
+# 몬테카를로 시뮬레이션
+
+> 몬테카를로 시뮬레이션은 현실적으로 불가능한 문제의 해답을 얻기 위해서 난수의 확률 분포를 이용하여  모의시험으로 근사적 해를 구하는 기법
+>
+> - 동전 앞면과 뒷면의 난수 확률분포의 기대확률 모의시험 
+>
+> - 일정한 시행 횟수 이하이면 기대확률이 나타나지 않지만,  시행 횟수를 무수히 반복하면 동전 앞면과 뒷면의 기대확률은 0.5에 가까워진다.
+
+```R
+coin <- function(n) {
+    r <- runif(n, min=0, max=1)
+    result <- numeric()
+    for(i in 1:n) {
+        if(r[i] <= 0.5) {
+            result[i] <- 0 #앞면
+        } else {
+            result[i] <- 1 #뒷면
+        }
+    }
+    
+    return(result)
+}
+
+coin(10) #동전 던지기 시행 횟수 10번
+
+monteCoin <- function(n) {
+    cnt <- 0
+    for(i in 1:n) {
+        cnt <- cnt + coin(1)
+    }
+
+    # 동전 앞면과 뒷면의 누적 결과를 시행횟수(n)으로 나
+    result <- cnt / n
+    return(result)
+}
+
+monteCoin(10)
+monteCoin(30)
+monteCoin(100)
+monteCoin(1000)
+monteCoin(10000)
+```
 
 <br>
 
-
-
-# 워크샵-1 게임 매상 감소 원인 분석
+# 게임 매상 감소 원인 분석
 
 ```R
 # CSV 파일을 읽어들이기
@@ -5961,75 +5829,226 @@ geom_bar(stat="identity")
 
 <br>
 
-# 몬테카를로 시뮬레이션
+# 크롤링Crawling
 
->몬테카를로 시뮬레이션은 현실적으로 불가능한 문제의 해답을 얻기 위해서 난수의 확률 분포를 이용하여  모의시험으로 근사적 해를 구하는 기법
->* 동전 앞면과 뒷면의 난수 확률분포의 기대확률 모의시험 
->- 일정한 시행 횟수 이하이면 기대확률이 나타나지 않지만,  시행 횟수를 무수히 반복하면 동전 앞면과 뒷면의 기대확률은 0.5에 가까워진다.
+> 웹 에서 자료를 크롤링하여 원하는 자료형태로 변환하는 작업을 실습한다.
 
-```R
-coin <- function(n) {
-    r <- runif(n, min=0, max=1)
-    result <- numeric()
-    for(i in 1:n) {
-        if(r[i] <= 0.5) {
-            result[i] <- 0 #앞면
-        } else {
-            result[i] <- 1 #뒷면
-        }
-    }
+- 이용할 패키지 및 함수들
+
+  - `rvest` 패키지
+
+    > rvest는 R의 웹 스크래핑(Web Scraping)을 위한 패키지로 Tag Selection, CSS Selection 등 다양한 기능이 있다.
+
+  - ` read_html()` : url에서 html 파일을 읽어오고 저장한다.
+
+  - `html_table()` :  테이블 추출.
+
+  - `html_node()` : 매칭되는 한 요소만 반환.
+
+  - `html_nodes()` : 모든 요소를 반환한다.
+
+    > `id` 를 찾을 경우에는 `html_node()`를 사용하면 되고, `tag`, `class`로 같은 요소를 모두 추출하고자 할 경우에는 `html_nodes()` 를 사용하면 된다.
+
+  -  `html_names()` : `attribute`의 이름을 가져온다.    
+
+    ```R
+    <img src="....">
     
-    return(result)
-}
+    ```
 
-coin(10) #동전 던지기 시행 횟수 10번
+  - `html_chidren()` : 해당 요소의 하위 요소를 읽어온다.
+  - `html_tag()` : tag 이름 추출한다.
+  - `html_attrs()` : attribute 를 추출한다.
 
-monteCoin <- function(n) {
-    cnt <- 0
-    for(i in 1:n) {
-        cnt <- cnt + coin(1)
-    }
+- 크롤링 실습
 
-    # 동전 앞면과 뒷면의 누적 결과를 시행횟수(n)으로 나
-    result <- cnt / n
-    return(result)
-}
+  ```R
+  install.packages('rvest')
+  library(rvest)
+  
+  #스크래핑할 웹 사이트 URL을 변수에 저장
+  url <- 'http://www.imdb.com/search/title?count=100&release_date=2016,2016&title_type=feature'
+  
+  #웹 사이트로부터  HTML code 읽기
+  webpage <- read_html(url)   
+  
+  #스크래핑할 데이터 - rank, title, description, runtime
+  
+  #랭킹이 포함된 CSS selector 를 찾아서 R 코드로 가져오기
+  rank_data_html <- html_nodes(webpage, '.text-primary')
+  #랭킹 데이터를 텍스트로 가져오기
+  rank_data <- html_text(rank_data_html)
+  #랭킹 데이터를 수치형 데이터로 변환
+  rank_data <- as.numeric(rank_data)
+  
+  
+  #제목 데이터 가져오기
+  title_data_html <- html_nodes(webpage, '.lister-item-header a')
+  title_data <- html_text(title_data_html)
+  length(title_data)
+  
+  
+  #description 뽑기
+  #desc_data_html <- html_nodes(webpage, '.lister-item-content > :nth-child(4)')
+  description_data_html <- html_nodes(webpage, '.ratings-bar+ .text-muted')
+  description_data <- html_text(description_data_html)
+  #'\n' 제거 데이터 처리
+  description_data <- gsub("\n", "", description_data)
+  library(stringr)
+  description_data <- str_trim(description_data)
+  
+  
+  # 상영시간 가져오기
+  runtime_data_html <- html_nodes(webpage, ".runtime")
+  runtime_data <- html_text(runtime_data_html)
+  runtime_data <- as.numeric(gsub("[ a-zA-Z]*", "", runtime_data))
+  
+  
+  # 영화장르 영역 데이터 텍스트로 가져오기
+  genre_data_html <- html_nodes(webpage, ".genre")
+  genre_data <- html_text(genre_data_html)
+  # \n 제거
+  genre_data <- gsub("\n", "", genre_data)
+  # 1개 이상의 공백을 제거
+  genre_data <- str_trim(genre_data)
+  genre_data <- gsub(" ", "", genre_data)
+  # 첫 번째 장르 빼고 삭제
+  genre_data <- gsub(",.*", "", genre_data) #첫 번째 장르만 가져오기
+  # 문자열 데이터를 범주형 데이터로 변환 처리
+  genre_data <- as.factor(genre_data)
+  
+  
+  #IMDB rating 값 가져오기
+  imdb_data_html <- html_nodes(webpage, ".ratings-imdb-rating > :nth-child(2)")
+  imdb_data <- html_text(imdb_data_html)
+  imdb_data <- as.numeric(imdb_data)
+  
+  
+  #votes 데이터 가져오기
+  votes_data_html <- html_nodes(webpage, ".sort-num_votes-visible > :nth-child(2)")
+  votes_data <- html_text(votes_data_html)
+  votes_data <- gsub(",", "", votes_data)
+  votes_data <- as.numeric(votes_data)
+  
+  
+  #감독 데이터 가져오기
+  director_data_html <- html_nodes(webpage, '.lister-item-content > :nth-child(5) > :nth-child(1)')
+  director_data <- html_text(director_data_html)
+  director_data <- as.factor(director_data)
+  
+  
+  #주연 배우 데이터 가져오기
+  actors_data_html <- html_nodes(webpage, '.lister-item-content .ghost + a')
+  actors_data <- html_text(actors_data_html)
+  actors_data <- as.factor(actors_data)
+  
+  
+  # metascore 가져오기
+  # 빈 데이터가 있을 경우 로직으로 처리하는 코드를 만들 던 중 수업진행...
+  for( elem in rat.bar) {
+      len <- length(html_nodes(elem, "div"))
+     	if(len == 5) {
+          
+      } else {
+          
+      }
+  }
+  
+  
+  # metascore 가져오기
+  metascore_data_html <- html_nodes(webpage, '.ratings-metascore span')
+  metascore_data <- html_text(metascore_data_html)
+  metascore_data <- str_trim(metascore_data)
+  #누락된  데이터 NA처리하기 29, 58, 73, 96
+  for (i in c(29,58, 73, 96)){
+      a <- metascore_data[1:(i-1)]    #리스트로 확인
+      b <- metascore_data[i:length(metascore_data)]
+      metascore_data <- append(a,list("NA"))
+      metascore_data <- append(metascore_data,b)
+  }
+  metascore_data <- unlist(metascore_data)
+  metascore_data <- as.numeric(metascore_data)
+  
+  
+  # 총 수입 가져오기
+  gross_data_html <- html_nodes(webpage, ".sort-num_votes-visible > :nth-child(5)")
+  gross_data <- html_text(gross_data_html)
+  gross_data <- gsub("[$,M]", "", gross_data)
+  #누락 된 수입 NA 처리 29, 45, 57, 62, 73, 93, 98
+  for (i in c(29, 45, 57, 62, 73, 93, 98)){
+      a <- gross_data[1:(i-1)]    #리스트로 확인
+      b <- gross_data[i:length(gross_data)]
+      gross_data <- append(a,list("NA"))
+      gross_data <- append(gross_data, b)
+  }
+  gross_data <- unlist(gross_data)
+  gross_data <- as.numeric(gross_data)
+  
+  
+  #data.frame으로 변환
+  movies_df<-data.frame(Rank = rank_data, Title = title_data,
+  Description = description_data, Runtime = runtime_data,
+  Genre = genre_data, Rating = imdb_data,
+  Metascore = metascore_data, Votes = votes_data,   
+  Director = director_data, Actor = actors_data, stringsAsFactors=T)
+  
+  #변환된 data.frame 구조 확인
+  str(movies_df)
+  ```
 
-monteCoin(10)
-monteCoin(30)
-monteCoin(100)
-monteCoin(1000)
-monteCoin(10000)
+- 데이터의 시각화
 
-```
+  - x 축 상영시간, y 축 장르별 필름 수를 나타내는 그래프를 그려라
 
+    ```R
+    library('ggplot2')
+    
+    qplot(data = movies_df, Runtime, fill = Genre, bins = 30)
+    ```
 
+    ![1568432816858](assets/1568432816858.png)
 
+  - 깨알 문제
 
+    ```R
+    #상영시간이 가장 긴 필름의 장르는?
+    library(dplyr)
+    
+    movies_df[movies_df$Runtime == max(movies_df$Runtime), c("Runtime", "Genre")]
+       Runtime  Genre
+    47     161  Drama
+    58     161 Action
+    ```
 
+  - 상영 시간이 130~160 분인 장르 중 votes가 가장 높은 것을 파악하기 위한 그래프를 그려라
 
+    ```R
+    ggplot(movies_df , aes(x=Runtime, y=Rating)) +
+    	geom_point(aes(size=Votes, col=Genre))
+    ```
 
+    ![1568433329133](assets/1568433329133.png)
 
+- 크롤링 실습 다른 예제 - 시간날 때 해보자...
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  ```R
+  ##############################################
+  가격 비교를 위한 스크래핑
+  rvest 패키지 : 웹 페이지에서 필요한 정보를 추출하는데 유용한 패키지
+  selectr패키지, xml2 패키지가 의존 패키지이므로 함께 설치
+  read_html(url) : 지정된 url에서 html 컨텐츠를 가져옵니다.
+  jsonline 패키지 : json 파서/생성기가 웹용으로 최적화되어 있는 패키지
+  ##############################################
+  install.packages("jsonlite")
+  library(jsonlite)
+  library(xml2)
+  library(rvest)
+  library(stringr)
+  
+  url <- 'https://www.amazon.in/OnePlus-Mirror-Black-64GB-Memory/dp/B0756Z43QS?tag=googinhydr18418-21&tag=googinkenshoo-21&ascsubtag=aee9a916-6acd-4409-92ca-3bdbeb549f80'
+  
+  #추출할 정보 : 제목, 가격, 제품 설명, 등급, 크기, 색상
+  ```
 
 <br>
 
