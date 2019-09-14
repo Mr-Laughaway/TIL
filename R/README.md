@@ -2095,9 +2095,12 @@ df5 <- data.frame(
 data()
 ```
 
-- str(mtcars)
+- `str()`
+
+  > 인자로 넘겨받은 데이터의 구조 확인
 
   ```R
+  str(mtcars)
   'data.frame':	32 obs. of  11 variables:
    $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
    $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
@@ -2112,44 +2115,45 @@ data()
    $ carb: num  4 4 1 1 2 1 4 2 2 4 ...
   ```
 
-- head(mtcars) 
+- `head()`
 
-  > 처음 1~6개의  값만 보기
+  - 처음 1~6개의  값만 보기
+
+    ```R
+  head(mtcars)      
+    					mpg cyl disp  hp drat    wt  qsec vs am gear carb
+    Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+    Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+    Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+    Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+    Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+    Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+    ```
+    
+  - 처음 N 개의 값 보기
+
+    ```R
+    head(mtcars, 10)
+    					mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+    Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+    Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+    Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+    Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+    Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+    Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+    Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+    Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+    Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+    Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+    ```
+
+- `tail()`
+
+  >마지막-5 ~ 마지막 행까지 출력해 줌
 
   ```R
-                     mpg cyl disp  hp drat    wt  qsec vs am gear carb
-  Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-  Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-  Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-  Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-  Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-  Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
-  ```
-
-- head(mtcars, 10)
-
-  > 처음 N 개의 값 보기
-
-  ```R
-                       mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-  Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-  Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-  Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-  Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-  Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
-  Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-  Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-  Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-  Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-  Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-  ```
-
-- tail(mtcars) 
-
-  >마지막-5 ~ 마지막 행까지 출력해줌
-
-  ```R
-                  mpg cyl  disp  hp drat    wt qsec vs am gear carb
+  tail(mtcars) 
+  				mpg cyl  disp  hp drat    wt qsec vs am gear carb
   Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2
   Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2
   Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.5  0  1    5    4
@@ -2158,13 +2162,13 @@ data()
   Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.6  1  1    4    2
   ```
 
-- data(mtcars)
+- `data()`
 
-  > mtcars 라는 데이터를 load
+  > 인자로 넘겨 받은 이름을 가진 데이터를 load
 
-- view(mtcars)
+- `view()`
 
-  > mtcars 라는 데이터를 GUI 형태로 보기
+  > 인자로 넘겨 받은 이름의 데이터를 GUI 형태로 보기
 
 #### 1.4.9.7. Dtaframe 에 새로운 열 추가
 
@@ -2177,7 +2181,7 @@ str(df1)
 
 ### 1.5.1. 작업 디렉토리
 
-#### 1.5.1.1. getwd
+#### 1.5.1.1. `getwd()`
 
 > 작업 디렉토리 경로 가져오기
 
@@ -2186,7 +2190,7 @@ getwd()
 [1] "C:/workspace_R"
 ```
 
-#### 1.5.1.2. setwd
+#### 1.5.1.2. `setwd()`
 
 > 작업 디렉토리 설정
 
@@ -2196,7 +2200,7 @@ setwd("C:/workspace_R")
 
 ### 1.5.2. 출력
 
-#### 1.5.2.1. print
+#### 1.5.2.1. `print()`
 
 > 구조적으로 출력
 
@@ -2205,7 +2209,7 @@ print(result)
 [1] 3 6 9
 ```
 
-#### 1.5.2.2. cat
+#### 1.5.2.2. `cat()`
 
 > 연속된 형태로 출력
 
@@ -2214,7 +2218,7 @@ cat(result)
 3 6 9
 ```
 
-### 1.5.3. stringr 을 이용한 문자열 처리
+### 1.5.3. `stringr` 패키지를 이용한 문자열 처리
 
 > stringr 패키지는 문자열을 가능한 한 쉽게 처리하도록 설계 함수 세트를 제공한다. 
 
@@ -2225,21 +2229,21 @@ library("stringr")
 
 #### 1.5.3.1. 기본 함수들
 
-- `str_length`
-- `str_c` - str concatenate
-- `str_join`
-- `str_sub`
-- `str_split`
-- `str_replace`
-- `str_extract` - *정규표현식을 사용하여 문자열 추출*
-- `str_extract_all` - *정규표현식을 사용하여 문자열 모두 추출*
-- `str_locate` - *특정 문자열 패턴의 첫 번째 위치 찾기*
-- `str_locate_all` - *턱정 문자열 패턴의 모든 위치 찾기*
-- `str_to_upper`
-- `str_to_lower`
+- `str_length()`
+- `str_c()` - str concatenate
+- `str_join()`
+- `str_sub()`
+- `str_split()`
+- `str_replace()`
+- `str_extract()` - *정규표현식을 사용하여 문자열 추출*
+- `str_extract_all()` - *정규표현식을 사용하여 문자열 모두 추출*
+- `str_locate()` - *특정 문자열 패턴의 첫 번째 위치 찾기*
+- `str_locate_all()` - *턱정 문자열 패턴의 모든 위치 찾기*
+- `str_to_upper()`
+- `str_to_lower()`
 - ...
 
-#### 1.5.3.2. str_count
+#### 1.5.3.2. `str_count()`
 
 > 패턴을 포함한 요소에서 패턴 출현 횟수 리턴
 
@@ -2250,7 +2254,7 @@ str_count(fruits, "a")
 [1] 1 3 1 0 0
 ```
 
-#### 1.5.3.3. paste
+#### 1.5.3.3. `paste()`
 
 > 문자열을  결합하는 R 기본 함수. stringr 패키지의 함수는 아니다.
 
@@ -2264,7 +2268,7 @@ print(rs1)
 [1] "hello ~R"
 ```
 
-#### 1.5.3.4. str_c
+#### 1.5.3.4. `str_c()`
 
 > 문자열을 결합하는 stringr 함수
 
@@ -2287,7 +2291,7 @@ str_c(fruits, collapse="-")
 [1] "apple-banana-pineapple-berry-APPLE"
 ```
 
-#### 1.5.3.5. str_detect
+#### 1.5.3.5. `str_detect()`
 
 > 객체의 요소별로 정규표현식의 패턴 매칭 여부를 리턴. 
 
@@ -2309,7 +2313,7 @@ str_detect(fruits, '[^a]')  #[]안의 ^는 not을 의미하기 대문에 a가 �
 
 ```
 
-#### 1.5.3.6. str_sub
+#### 1.5.3.6.`str_sub()`
 
 > 문자열 부분추출 
 
@@ -2324,7 +2328,7 @@ str_sub(fruits, start=-5)
 [1] "apple" "anana" "apple" "berry" "APPLE"
 ```
 
-#### 1.5.3.7. str_length
+#### 1.5.3.7. `str_length()`
 
 > 객체 요소 문자열의 길이를 벡터로 리턴
 
@@ -2336,7 +2340,7 @@ str_length(fruits)
 [1] 5 6 9 5 5
 ```
 
-#### 1.5.3.8. str_trim
+#### 1.5.3.8. `str_trim()`
 
 > 문자열의 앞뒤 공백 제거
 
@@ -2345,7 +2349,7 @@ str_trim("   apple   banana   ")
 [1] "apple   banana"
 ```
 
-#### 1.5.3.9. str_dup
+#### 1.5.3.9. `str_dup()`
 
 > 문자열을 반복하여 붙여서 반환
 
@@ -2356,7 +2360,7 @@ str_dup(fruits, 3)
 [5] "APPLEAPPLEAPPLE
 ```
 
-#### 1.5.3.10 str_extract
+#### 1.5.3.10 `str_extract()`
 
 > 정규표현식을 사용하여 매칭되는 첫 번째 문자열 추출
 
@@ -2374,7 +2378,7 @@ str_extract(str1, "[0-9]{6}-[1234]{1}[0-9]{6}")
 [1] "123456-1234567"
 ```
 
-#### 1.5.3.11. str_extract_all
+#### 1.5.3.11. `str_extract_all()`
 
 > 정규표현식을 사용하여 매칭되는 **모든** 문자열 추출하여 리스트에 넣어 반환
 
@@ -2389,6 +2393,59 @@ str2 <- "홍길동1357,이순신,유관순1012"
 str_extract_all(str2, "\\w{7,}")
 [[1]]
 [1] "홍길동1357" "유관순1012"
+```
+
+### 1.5.4.` gsub()` 를 이용한 문자열 변환
+
+> `sub()`는 문자열에서 특정 패턴을 찾아내여 첫번째에 해당하는 것만 replacement 옵션에 지정된 값으로 바꾸는 함수이고 `gsub()`은 찾아낸 모든 pattern에 대하여 replacement모두 적용하는 함수이다.. 즉 `sub()`는 바꾸기, `gsub()`는 모두바꾸기이다.
+
+```R
+gsub(pattern, replacement, x, ignore.case = FALSE, perl = FALSE,
+     fixed = FALSE, useBytes = FALSE)
+
+gsub("변경전 글자","변경후 글자", 원본데이터)
+```
+
+#### 1.5.4.1 기본 사용법
+
+```R
+gsub("ABC", "***", "ABCabcABC")
+[1] "***abc***"
+
+gsub("ABC", "***", "ABCabcABC", ignore.case=T)
+[1] "*********"
+
+x<-c("ABCabcABC", "abcABCabc")
+gsub("ABC", "***", x)
+[1] "***abc***" "abc***abc"
+```
+
+#### 1.5.4.2. 정규표현식 사용
+
+> 고정된 문자열뿐 아니라 정규표현식을 통해 특정 패턴의 문자열들도 치환할 수 있다.
+
+```R
+# 패턴문자  \\w 는 '_'를 포함한 문자와 숫자
+# 패턴문자  \\W 는  \\w 의 반대의미 '_'와 문자와 숫자를 제외한 기호
+# 패턴문자  \\d 는  숫자
+# 패턴문자  \\D 는  숫자를 제외한 기호와 문자
+# 패턴문자 []는 대괄호 안의 문자 중 한 개를 의미
+# 패턴문자 [^]는 대괄호 안의 문자가 없는 패턴을 의미
+
+gsub("b.n", "***", "i love banana")  
+[1] "i love ***ana"
+
+gsub("b.*n", "***", "i love banana") 
+[1] "i love ***a"
+
+gsub("[bn]a", "***", "i love banana") 
+[1] "i love *********"
+
+gsub("010-[0-9]{4}-[0-9]{4}", "010-****-****", "내 폰번호는 010-1234-6789") 
+[1] "내 폰번호는 010-****-****"
+
+gsub("010-\\d{4}-\\d{4}", "010-****-****", "내 폰번호는 010-1234-6789")
+[1] "내 폰번호는 010-****-****"
 ```
 
 ## 1.6. 데이터 입출력
@@ -4988,7 +5045,7 @@ cast(smithsm, subject= ~ variable) #subject와 time 변수를 이용하여 측�
 
 ### 3.1.6. reshape2
 
-> 해당 페키지는 **Handley Wickham**에 의해서 2007년에 개발된 것이다. 이 패키지는 옆으로 컬럼이 많은 형태 ( Wide )를 세로로 긴 (Long) 형탤 변경해주고 반대로 세로로 긴 형태를 옆으로 넓게 바꿔주는 패키지이다.
+> **Handley Wickham**에 의해서 2007년에 개발. 이 패키지는 옆으로 컬럼이 많은 형태 ( Wide )를 세로로 긴 (Long) 형탤 변경해주고 반대로 세로로 긴 형태를 옆으로 넓게 바꿔주는 패키지이다.
 
 ``` R
 install.packages("reshape2")
@@ -5016,7 +5073,6 @@ melt(데이터 세트, id.var="기준 열", measure.vars="변환 열")
   5    NA      NA 14.3   56     5   5
   6    28      NA 14.9   66     5   6
   
-  library(reshape2)
   melt_test <- melt(airquality)
   head(melt_test)
     variable value
@@ -5027,16 +5083,20 @@ melt(데이터 세트, id.var="기준 열", measure.vars="변환 열")
   5    ozone    NA
   6    ozone    28
   
-  ##월과 바람에 따른 오존 확인
-  melt_test2 <- melt(airquality, id.vars=c("month", "wind"), measure.vars="ozone")
+  # 월과 일에 따른 오존 확인
+  melt_test2 <- melt(airquality, id.vars=c("month", "day"), measure.vars=c("wind","ozone" ))
   head(melt_test2)
-    month wind variable value
-  1     5  7.4    ozone    41
-  2     5  8.0    ozone    36
-  3     5 12.6    ozone    12
-  4     5 11.5    ozone    18
-  5     5 14.3    ozone    NA
-  6     5 14.9    ozone    28
+      Month Day variable value
+  1       5   1     Wind   7.4
+  2       5   2     Wind   8.0
+  3       5   3     Wind  12.6
+  4       5   4     Wind  11.5
+  ...
+  154     5   1    Ozone  41.0
+  155     5   2    Ozone  36.0
+  156     5   3    Ozone  12.0
+  157     5   4    Ozone  18.0
+  ...
   ```
 
 #### 3.1.6.2. cast()
@@ -5076,7 +5136,7 @@ cast(데이터 세트, 기준 열 ~ 변환 열) #acast(), dcast()
   ```R
   acast(데이터 세트, 기준 열 ~ 변환 열 ~ 분리 기준 열)
   
-  acast(aq_melt, day ~ month ~variable)
+  acast(aq_melt, day ~ month ~ variable)
   , , ozone
   
        5  6   7   8  9
@@ -5114,18 +5174,18 @@ cast(데이터 세트, 기준 열 ~ 변환 열) #acast(), dcast()
 
 ```R
 install.packages("KoNLP")
+library(KoNLP)
 ```
 
 #### 3.1.7.1. 사용 준비
 
 ```R
-library(KoNLP)
 useSystemDic() #사전 종류 중 1개
 useSejongDic() #사전 종류 중 1개
 useNIADic() #사전 종류 중 1개
 ```
 
-#### 3.1.7.2.형태소 분석 실습
+#### 3.1.7.2. 형태소 분석 실습
 
 ```R
 library(KoNLP)
@@ -5186,223 +5246,205 @@ install.packages("wordcloud2")
 wordcloud2([data, size, shape) 
 ```
 
-- 사용 예
+#### 3.1.8.1. 기본 사용법
 
-  ```R
-  library(wordcloud2)
-  wordcloud2(word_table2)
-  
-  #색상 변경
-  wordcloud2(word_table3, color="random-light", backgroundColor="black")
-  
-  #폰트, 크기, 모양  변경
-  wordcloud2(word_table3, fontFamily="맑은 고딕", size=1.2, color="random-light", backgroundColor="black", shape="star")
-  
-  #책에 나온 팁 보기...
-  ```
+```R
+library(wordcloud2)
+wordcloud2(word_table3)
 
-- 네이버 검색으로 해보기
+#색상 변경
+wordcloud2(word_table3, color="random-light", backgroundColor="black")
 
-  ```R
-  http://developers.naver.com/main 접속 Open API 신청
-  [Products]-[서비스 API]-[검색]
-  오픈 API 이용 신청
-  로그인
-  애플리케이션 이름 설정, WEB 설정 , 임의의 URL 입력 , 애플리케이션 등록 하기
-  Client ID와 Client Secret 발급
-  
-  네이버 Open API의 WEB 방식 호출은 API URL 뒤에 요청변수들을 "&" 기호로 연결해 전송하는 GET방식을 사용
-  [블러그 검색을 위한 API URL과  요청 변수]
-  https://openapi.naver.com/v1/search/blog.xml
-  요청변수 query는 string타입으로 필수이며 검색을 원하는 문자열(UTF-8로 인코딩)
-  요청변수 display는 integer타입으로 기본값 10, 최대값 100으로  검색 결과 출력 건수
-  요청변수 start는 integer타입으로 기본값 1, 최대값 1000으로 검색 시작 위치
-  요청변수 sort는 string타입으로 기본값 sim, date로 정렬 옵션:sim(유사도순), date는 날짜순
-  
-  #기본 URL
-  urlStr <- "https://openapi.naver.com/v1/search/blog.xml?"
-  #검색어 설정 및 UTF-8 URL 인코딩
-  searchString <- "query=코타키나발루"
-  #UTF-8 인코딩
-  searchString <- iconv(searchString, to="UTF-8")
-  #URL 인코딩
-  searchString <- URLencode(searchString)
-  #나머지 요청 변수 : 조회 갯수100개, 시작페이지 1, 유사도순 정렬
-  etcString <- "&display=100&start=1&sort=sim"
-  
-  #URL 조합
-  reqUrl <- paste(urlStr, searchString, etcString, sep="")
-  
-  #get방식으로 URL을 호출하기 위해 httr 패키지의 GET함수 활용
-  library(httr)
-  clientID <- "클라이언트 ID"
-  clientSecret <- "클라이언트 Secret"
-  
-  #인증정보는 add_headers에 담아 함께 전송
-  apiResult <- GET(
-      reqUrl,
-      add_headers(
-          "X-Naver-Client-Id"=clientID
-          , "X-Naver-Client-Secret"=clientSecret
-      )
-  )
-  
-  apiResult #응답코드 status가 200 이면 정상
-  
-  # Open API의 결과 구조 확인 (UTF-8로 인코딩된 XML 형식)
-  str(apiResult) #XML 응답값은 "content"에 담겨 있습니다.
-  
-  apiResult$content
-  str(apiResult$content)
-  
-  #raw 형식이므로 rawToChar()를 활용해 문자로 변환
-  result <- rawToChar(apiResult$content)
-  Encoding(result) <- "UTF-8"
-  result
-  
-  #워드 클라우드에 표현할 단어를 추출하기 전에 문자열을 치환하는 gsub
-  불필요한 XML 관련 태그(tag)와 특수 문자 제거
-  
-  #gsub(pattern, replacement, x, ignore.case)
-  gsub("ABC", "***", "ABCabcABC")
-  gsub("ABC", "***", "ABCabcABC", ignore.case=T)
-  
-  x<-c("ABCabcABC", "abcABCabc")
-  gsub("ABC", "***", x) 
-  #gsub()는 고정된 문자열뿐 아니라 정규표현식을 통해 특정 패턴의 문자열들도 치환할 수 있습니다.
-  # 패턴문자  \\w 는 '_'를 포함한 문자와 숫자
-  # 패턴문자  \\W 는  \\w 의 반대의미 '_'와 문자와 숫자를 제외한 기호
-  # 패턴문자  \\d 는  숫자
-  # 패턴문자  \\D 는  숫자를 제외한 기호와 문자
-  # 패턴문자 []는 대괄호 안의 문자 중 한 개를 의미
-  # 패턴문자 [^]는 대괄호 안의 문자가 없는 패턴을 의미
-  gsub("b.n", "***", "i love banana")  
-  gsub("b.*n", "***", "i love banana") 
-  gsub("[bn]a", "***", "i love banana") 
-  gsub("010-[0-9]{4}-[0-9]{4}", "010-****-****", "내 폰번호는 010-1234-6789") 
-  gsub("010-\\d{4}-\\d{4}", "010-****-****", "내 폰번호는 010-1234-6789") 
-  
-  refinedStr <- result
-  #XML 태그를 공란으로 치환
-  refinedStr <- gsub("<\\/?)(\\w+)*([^<>|]*)>", " ", refinedStr)
-  refinedStr <- gsub("<\\/)(\\w+)*([^<>|]*)>", " ", refinedStr)
-  #단락을 표현하는 불필요한 문자를 공란으로 치환
-  refinedStr <- gsub("[[:punct:]]", " ", refinedStr)
-  #영어 소문자를 공란으로 치환
-  refinedStr <- gsub("[a-z]", " ", refinedStr)
-  #숫자를 공란으로 치환
-  refinedStr <- gsub("[0-9]", " ", refinedStr)
-  #여러 공란은 한 개의 공란으로 변경
-  refinedStr <- gsub(" +", " ", refinedStr)
-  
-  ################################################################
-  #한글 자연어 분석 패키지 KoNLP
-  #extractNoun()는 입력받은 문장에서 단어를 추출해 벡터로 반환
-  #extractNoun( "안녕하세요 오늘은 기분 좋은 하루 입니다.")
-  ##########################################################
-  library(KoNLP)
-  library(rJava)
-  
-  nouns<- extractNoun( refinedStr )
-  str(nouns)
-  nouns[1:40]
-  
-  #길이가 1인 문자를 제외
-  nouns <-nouns[nchar(nouns) > 1]
-  
-  #제외할 특정 단어를 정의
-  excluNouns <- c("코타키나발루", "얼마" , "오늘", "으로", "해서", "API", "저희", "정도")
-  
-  
-  nouns  <- nouns [!nouns  %in% excluNouns ]
-  nouns [1:40]
-  
-  #빈도수 기준으로 상위 50개 단어 추출
-  wordT <- sort(table(nouns), decreasing=T)[1:50]
-  wordT
-  
-  #wordcloud2 패키지 
-  #wordcloud2 (data, size, shape) 
-  #단어와 빈도수 정보가 포함된 데이터프레임 또는 테이블, 글자 크기, 워드 클라우드의 전체 모양(circle:기본값, cardioid, diamond, triangle, star등)
-  
-  install.packages("wordcloud2")
-  library(wordcloud2)
-  wordcloud2(wordT, size=3, shape="diamond")
-  ```
+#폰트, 크기, 모양  변경
+wordcloud2(word_table3, fontFamily="맑은 고딕", size=1.2, color="random-light", backgroundColor="black", shape="star")
 
-- 영문서 형태소 분석 및 워드클라우드
+#책에 나온 팁 보기...
+```
 
-  ```R
-  # install
-  install.packages("tm") #텍스트 마이닝을 위한 패키지
-  install.packages("SnowballC") #어간추출을 위한 패키지
-  install.packages("wordcloud") #word-cloud generator
-  install.packages("RColorBrewer") #color palettes
-  
-  # load
-  library("tm")
-  library("SnowballC")
-  library("wordcloud")
-  library("RColorBrewer")
-  
-  filePath <- "http://www.sthda.com/sthda/RDoc/example-files/martin-luther-king-i-have-a-dream-speech.txt"
-  text <- readLines(filePath)
-  str(text)
-  
-  # VectorSource () 함수는 문자형 벡터을 만듭니다.
-  docs <- Corpus(VectorSource(text))
-  head(docs)
-  
-  # 텍스트의 특수 문자 등을 대체하기 위해 tm_map () 함수를 사용하여 변환이 수행됩니다.
-  # “/”,“@”및“|”을 공백으로 바꿉니다.
-  toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
-  docs <- tm_map(docs, toSpace, "/")
-  docs <- tm_map(docs, toSpace, "@")
-  docs <- tm_map(docs, toSpace, "\\|")
-  head(docs)
-  
-  # 소문자로 변환
-  docs <- tm_map(docs, content_transformer(tolower))
-  # 수치 데이터 제거
-  docs <- tm_map(docs, removeNumbers)
-  # 영어 불용어 제거
-  docs <- tm_map(docs, removeWords, stopwords("english"))
-  
-  # 벡터 구조로 사용자가 직접 불용어  설정 , 제거
-  docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
-  
-  # 문장 부호 punctuations
-  docs <- tm_map(docs, removePunctuation)
-  
-  # 공백 제거
-  docs <- tm_map(docs, stripWhitespace)
-  
-  # 텍스트 형태소 분석
-  docs <- tm_map(docs, stemDocument)
-  
-  
-  # 문서 매트릭스는 단어의 빈도를 포함하는 테이블입니다. 
-  # 열 이름은 단어이고 행 이름은 문서입니다. 
-  # text mining 패키지에서 문서 매트릭스를 생성하는 함수 사용
-  dtm <- TermDocumentMatrix(docs)
-  m <- as.matrix(dtm)
-  v <- sort(rowSums(m),decreasing=TRUE)
-  d <- data.frame(word = names(v),freq=v)
-  head(d, 10)
-  
-  
-  set.seed(1234)
-  wordcloud(words = d$word, freq = d$freq, min.freq = 1,
-            max.words=200, random.order=FALSE, rot.per=0.35, 
-            colors=brewer.pal(8, "Dark2"))
-  ```
+![1568424218597](assets/1568424218597.png)
+
+#### 3.1.8.2. 네이버 검색으로 해보기
+
+> 1. :point_right:http://developers.naver.com/main 접속 Open API 신청
+>
+> 2. [Products]-[서비스 API]-[검색]
+>
+> 3. 오픈 API 이용 신청
+>
+> 4. 로그인
+>
+> 5. 애플리케이션 이름 설정, WEB 설정 , 임의의 URL 입력 , 애플리케이션 등록 하기
+>    Client ID와 Client Secret 발급
+>
+> 네이버 Open API의 WEB 방식 호출은 API URL 뒤에 요청변수들을 "&" 기호로 연결해 전송하는 GET방식을 사용. :link:[참고 페이지](https://openapi.naver.com/v1/search/blog.xml)
+>
+> - 요청변수 query는 string타입으로 필수이며 검색을 원하는 문자열(UTF-8로 인코딩)
+> - 요청변수 display는 integer타입으로 기본값 10, 최대값 100으로  검색 결과 출력 건수
+> - 요청변수 start는 integer타입으로 기본값 1, 최대값 1000으로 검색 시작 위치
+> - 요청변수 sort는 string타입으로 기본값 sim, date로 정렬 옵션:sim(유사도순), date는 날짜순.
+
+```R
+#기본 URL
+urlStr <- "https://openapi.naver.com/v1/search/blog.xml?"
+#검색어 설정 및 UTF-8 URL 인코딩
+searchString <- "query=인터스텔라"
+#UTF-8 인코딩
+searchString <- iconv(searchString, to="UTF-8")
+#URL 인코딩
+searchString <- URLencode(searchString)
+#나머지 요청 변수 : 조회 갯수100개, 시작페이지 1, 유사도순 정렬
+etcString <- "&display=100&start=1&sort=sim"
+
+#URL 조합
+reqUrl <- paste(urlStr, searchString, etcString, sep="")
+
+#get방식으로 URL을 호출하기 위해 httr 패키지의 GET함수 활용
+library(httr)
+clientID <- "클라이언트 ID"
+clientSecret <- "클라이언트 Secret"
+
+#인증정보는 add_headers에 담아 함께 전송
+apiResult <- GET(
+    reqUrl,
+    add_headers(
+        "X-Naver-Client-Id"=clientID
+        , "X-Naver-Client-Secret"=clientSecret
+    )
+)
+
+apiResult #응답코드 status가 200 이면 정상
+
+# Open API의 결과 구조 확인 (UTF-8로 인코딩된 XML 형식)
+str(apiResult) #XML 응답값은 "content"에 담겨 있다.
+apiResult$content
+str(apiResult$content)
+raw [1:64179] 3c 3f 78 6d ...
+
+# raw 형식이므로 rawToChar()를 활용해 문자로 변환
+result <- rawToChar(apiResult$content)
+# 변환된 Char를 UTF-8 형식으로 해석
+Encoding(result) <- "UTF-8"
+
+# 불필요한 XML 관련 태그(tag)와 특수 문자 제거
+refinedStr <- result
+#XML 태그를 공란으로 치환
+refinedStr <- gsub("<\\/?)(\\w+)*([^<>|]*)>", " ", refinedStr)
+#단락을 표현하는 불필요한 문자를 공란으로 치환
+refinedStr <- gsub("[[:punct:]]", " ", refinedStr)
+#영어 소문자를 공란으로 치환
+refinedStr <- gsub("[a-z]", " ", refinedStr)
+#숫자를 공란으로 치환
+refinedStr <- gsub("[0-9]", " ", refinedStr)
+#여러 공란은 한 개의 공란으로 변경
+refinedStr <- gsub(" +", " ", refinedStr)
+
+################################################################
+#한글 자연어 분석 패키지 KoNLP
+#extractNoun()는 입력받은 문장에서 단어를 추출해 벡터로 반환
+#extractNoun( "안녕하세요 오늘은 기분 좋은 하루 입니다.")
+##########################################################
+library(KoNLP)
+library(rJava)
+
+# 명사 추출
+nouns<- extractNoun( refinedStr )
+
+#길이가 1인 문자를 제외
+nouns <-nouns[nchar(nouns) > 1]
+
+#제외할 특정 단어를 정의
+excluNouns <- c("인터스텔라", "인터", "스텔라", "감독", "으로", "웨이", "개봉", "영화")
+nouns  <- nouns [!nouns  %in% excluNouns ]
+
+#빈도수 기준으로 상위 50개 단어 추출
+wordT <- sort(table(nouns), decreasing=T)[1:50]
+
+#wordcloud2 패키지 
+#wordcloud2 (data, size, shape) 
+#단어와 빈도수 정보가 포함된 데이터프레임 또는 테이블, 글자 크기, 워드 클라우드의 전체 모양(circle:기본값, cardioid, diamond, triangle, star등)
+
+install.packages("wordcloud2")
+library(wordcloud2)
+wordcloud2(wordT, size=0.6, shape="diamond")
+```
+
+![1568428127005](assets/1568428127005.png)
+
+#### 3.1.8.3. 영문서로 해 보기
+
+```R
+# install
+install.packages("tm") #텍스트 마이닝을 위한 패키지
+install.packages("SnowballC") #어간추출을 위한 패키지
+install.packages("wordcloud") #word-cloud generator
+install.packages("RColorBrewer") #color palettes
+
+# load
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+
+filePath <- "http://www.sthda.com/sthda/RDoc/example-files/martin-luther-king-i-have-a-dream-speech.txt"
+text <- readLines(filePath)
+str(text)
+
+# VectorSource() 함수는 문자형 벡터을 만든다.
+docs <- Corpus(VectorSource(text))
+head(docs)
+
+# 텍스트의 특수 문자 등을 대체하기 위해 tm_map () 함수를 사용하여 변환이 수행됩니다.
+# “/”,“@”및“|”을 공백으로 바꿉니다.
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+head(docs)
+
+# 소문자로 변환
+docs <- tm_map(docs, content_transformer(tolower))
+# 수치 데이터 제거
+docs <- tm_map(docs, removeNumbers)
+# 영어 불용어 제거
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# 벡터 구조로 사용자가 직접 불용어  설정 , 제거
+docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+
+# 문장 부호 punctuations
+docs <- tm_map(docs, removePunctuation)
+
+# 공백 제거
+docs <- tm_map(docs, stripWhitespace)
+
+# 텍스트 형태소 분석
+docs <- tm_map(docs, stemDocument)
+
+# 문서 매트릭스는 단어의 빈도를 포함하는 테이블이다.
+# 열 이름은 단어이고 행 이름은 문서이다
+# text mining 패키지에서 문서 매트릭스를 생성하는 함수 사용
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+
+
+set.seed(1234) #항상 같은 결과를 반환하는지 깨알 테스트
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.45, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+![1568429001460](assets/1568429001460.png)
 
 ### 3.1.9 ggplot2
 
->ggplot2는 reshape2와 dplyr을 만든 해들리 위컴이 만든 패키지로 R 시각화의 1순위 패키지이다. 기본적으로 ggplot() 함수를 이용하여 틀을 만들고, 그 안에 다양한 이미지 객체 레이어를 포개는 방식으로 그래프를 표현한다.
+>`ggplot2`는 `reshape2`와 `dplyr`을 만든 해들리 위컴이 만든 패키지로 R 시각화의 1순위 패키지이다. 기본적으로 `ggplot()` 함수를 이용하여 틀을 만들고, 그 안에 다양한 이미지 객체 레이어를 포개는 방식으로 그래프를 표현한다.
 
 ```R
 install.packages("ggplot2")
+library(ggplot2)
 
 #ggplot2문법은 레이어(layer) 구조로 되어 있다.
 # 1단계 : 배경 설정(축) 
@@ -5423,23 +5465,53 @@ c <- ggplot(mtcars) + geom_histogram(aes(mpg))
 grid.arrange(a, b, c, nrow=2, ncol=2)
 ```
 
+#### 3.1.9.1 `geom_point()`
+
+```R
+ggplot(airquality, aes(x=Day, y=Temp)) +
+	geom_point(size=3, color="red")
+```
+
+![1568429645634](assets/1568429645634.png)
+
+#### 3.1.9.2. `geom_line()`
+
+```R
+ggplot(airquality, aes(x=Day, y=Temp)) +
+	geom_line() +
+	geom_point()
+```
+
+![1568429698915](assets/1568429698915.png)
+
+#### 3.1.9.3. `geom_bar()`
+
+```R
+# mtcars에서 cyl 종류별 확인
+ggplot(mtcars, aes(x=cyl)) +
+	geom_bar(width=0.5)
+```
+
+![1568429766092](assets/1568429766092.png)
+
+```R
+#빈 범주를 제외하고 cyl 종류별 빈도수 확인
+ggplot(mtcars, aes(x=factor(cyl))) +
+	geom_bar(width=0.5)
+```
+
+![1568429864519](assets/1568429864519.png)
+
+
+
+
+
+
+
 - 사용 예
 
   ```R
-  library(ggplot2)
   
-  ########
-  ggplot(airquality, aes(x=Day, y=Temp)) +
-  	geom_point(size=3, color="red")
-  
-  ########
-  ggplot(airquality, aes(x=Day, y=Temp)) +
-  	geom_line() +
-  	geom_point()
-  
-  # mtcars에서 cyl 종류별 확인
-  ggplot(mtcars, aes(x=cyl)) +
-  	geom_bar(width=0.5)
   
   #빈 범주를 제외하고 cyl 종류별 빈도수 확인
   ggplot(mtcars, aes(x=factor(cyl))) +
@@ -5488,7 +5560,7 @@ grid.arrange(a, b, c, nrow=2, ncol=2)
   	geom_line() +
   	geom_vline(xintercept=x_inter)
   ```
-
+  
   
 
 ### 3.1.10 크롤링
