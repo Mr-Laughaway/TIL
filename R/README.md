@@ -6122,6 +6122,91 @@ geom_bar(stat="identity")
 
 <br>
 
+# 치킨 집이 가장 많은 지역 찾기
+
+> 웹사이트에서 데이터를 받아 분포를 확인해보기.
+
+- 데이터 다운 받기
+
+  :link:[LOCALDATA](http://www.localdata.kr/) 에 접속하여 `데이터 받기 > 지역 다운로드 > 서울특별시`를 클릭한 후 다운로드를 받는다.
+
+- 데이터 전처리
+
+  - 엑셀로 일반음식점 파일  열기
+  - 사업장명/업태 등에 `filter` 를 걸어 치킨 관련 사업장만 남기기
+  - 소재지 주소에 `filter`를 걸어 서대문구만 남기기
+  - 남은 데이터를 카피하여 새로운 파일(`chiken_seodaemoon.xlsx`)로 저장하기
+
+- 소재지 전체 주소 가공
+
+  ```R
+  install.packages("readxl")
+  library(readxl)
+  
+  chicken.raw <- read_excel("./data/chicken_seodaemoon.xlsx")
+  head(chicken.raw)
+  # A tibble: 6 x 2
+    소재지전체주소                                 사업장명          
+    <chr>                                          <chr>             
+  1 서울특별시 서대문구 연희동 89-9번지            다트스트림        
+  2 서울특별시 서대문구 창천동 57-51번지 (지상2층) 북경양꼬치        
+  3 서울특별시 서대문구 홍제동 174-13번지 2층      행복포차(홍제역점)
+  4 서울특별시 서대문구 창천동 53-83번지 (지상1층) 고향              
+  5 서울특별시 서대문구 창천동 52-75번지 2층       컴인              
+  6 서울특별시 서대문구 창천동 288번지             시장에 간 남자
+  gsub("서울특별시 서대문구 ", "", chicken.raw$소재지전체주소)
+  addr
+  
+  # 동 만 남기고 제거
+  addr <- gsub("서울특별시 서대문구 ", "", chicken.raw$소재지전체주소)
+  addr <- substr(addr, 1, regexpr(" ", addr) - 1)
+  head(addr)
+  [1] "연희동" "창천동" "홍제동" "창천동" "창천동" "창천동"
+  ```
+
+- 동별 업소 개수 확인하기
+
+  ```R
+  library(dplyr)
+  
+  addr_count <- addr %>% table() %>% data.frame()
+  head(addr_count)
+           . Freq
+  1 남가좌동  133
+  2   냉천동   20
+  3   대신동    1
+  4   대현동   36
+  5   미근동    6
+  6 북가좌동   70
+  
+  
+  ```
+
+- 트리 맵(`treemap()`) 으로 표현하기
+
+  - `treemap()`
+
+    > Treemap(트리맵; 나무지도)은 1990년대 초반 Ben Shneiderman 이 하드디스크에 저장된 디렉토리의 전체 구조를 제한된 화면 안에 압축적으로 표현하기 위해 처음 사용하였다. 계층적 구조를 갖는 데이터를 서로 다른 크기와 색상을 갖는 타일 형식으로 중첩적(nested)으로 표현하는 시각화 방법이다.
+    >
+    > `treemap` 패키지에 포함된 패키지.  
+
+    ```R
+    install.packages("treemap")
+    library(treemap)
+    
+    treemap(데이터 세트, index = 구분 열, vSize = 분포 열, vColor= 색상, title = 제목)
+    ```
+
+  - 동별 치킨집 개수 표현
+
+    ```R
+    treemap(addr_count,index = ".", vSize = "Freq", title = "서대문구 동별 치킨집 개수")
+    ```
+
+    ![1568529089451](assets/1568529089451.png)
+
+
+
 <br>
 
 <br>
