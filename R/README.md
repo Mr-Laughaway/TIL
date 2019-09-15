@@ -2,6 +2,7 @@
 
 
 
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -17,9 +18,9 @@
 
 # 1. R
 
-## 1.1  설치
+## 1.1.  설치
 
-### 1.1.1 R 설치
+### 1.1.1. R 설치
 
 :link:[다운로드](https://www.r-project.org)
 
@@ -30,7 +31,7 @@
   - demo()
   - q()
 
-### 1.1.2 R Studio 설치
+### 1.1.2. R Studio 설치
 
 :link:[다운로드](https://www.rstudio.com/products/rstudio/download/)
 
@@ -5603,6 +5604,75 @@ grid.arrange(a, b, c, nrow=2, ncol=2) #3.1.9.7. 에서 만든 a, b, c 사용
 ```
 
 ![1568431099888](assets/1568431099888.png)
+
+#### 3.1.9.9. `geom_text()`
+
+> 그래프에 텍스트를 입력할 때사용. 범례나 제목과 달리 그래프 위에 직접 표현된다. 그래프에서 각 항목의 이름이나 값 등을 표시할 때사주로 사용한다.
+
+```R
+geom_text(aes(label = Temp, vjust = 0, hjust = 0))
+```
+
+- 사용법
+
+  ```R
+  ggplot(airquality, aes(x = Day, y = Temp)) + 
+  	geom_point() + 
+  	geom_text(aes(label = Temp, vjust = 0, hjust = 0))
+  ```
+
+  ![1568515006905](assets/1568515006905.png)
+
+#### 3.1.9.10. `annotate()`
+
+> 그래프 위에 사각형이나 화살표 등으로 특정 영역을 강조할 때 사용.
+
+```R
+annotate("모양", xmin = x 축 시작, xmax = x 축 끝, ymin = y 축 시작, ymax = y 축 끝)
+```
+
+- 박스 그리기
+
+  ```R
+  ggplot(mtcars, aes(x = wt, y = mpg)) +
+  	geom_point() +
+  	annotate("rect", xmin = 3, xmax = 4, ymin = 12, ymax = 21, alpha = 0.5, fill = "skyblue")
+  ```
+
+  ![1568515272638](assets/1568515272638.png)
+
+- 화살표 그리기, 레이블 추가하기
+
+  ```R
+  ggplot(mtcars, aes(x = wt, y = mpg)) +
+  	geom_point() +
+  	annotate("rect", xmin = 3, xmax = 4, ymin = 12, ymax = 21, alpha = 0.5, fill = "skyblue") +
+  	annotate("segment", x = 2.5, xend = 3.7, y = 10, yend = 17, color = "red", arrow = arrow()) +
+  	annotate("text", x = 2.5, y = 10, label = "point")
+  ```
+
+  ![1568515449511](assets/1568515449511.png)
+
+#### 3.1.9.11. `labs()`, `theme()`
+
+> 그래프의 특성을 쉽게 파악할 수 있도록 그래프 제목과 각 축의 이름을 구하가하고 배경색 등을 설정하여 심미성을 높일 때 사용.
+
+```R
+labs(x = "x 축 이름", y = "y축 이름", title = "그래프 제목")
+```
+
+- 막대그래프에 제목 추가하기
+
+  ```R
+  ggplot(mtcars, aes(x = gear)) + geom_bar() +
+  	labs(x = "기어수", y = "자동차수", title = "변속기 기어별 자동차수") +
+  	theme_bw()
+  
+  # 테마 종류
+  # theme_gray(), theme_bw(), theme_linedraw(), theme_light(), theme_dark(), them_minimal(), theme_classic(), theme_void()
+  ```
+
+  ![1568515837244](assets/1568515837244.png)
 
 <br>
 
