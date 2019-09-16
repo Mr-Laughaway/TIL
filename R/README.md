@@ -2,7 +2,6 @@
 
 
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -6118,9 +6117,61 @@ geom_bar(stat="identity")
   url <- 'https://www.amazon.in/OnePlus-Mirror-Black-64GB-Memory/dp/B0756Z43QS?tag=googinhydr18418-21&tag=googinkenshoo-21&ascsubtag=aee9a916-6acd-4409-92ca-3bdbeb549f80'
   
   #추출할 정보 : 제목, 가격, 제품 설명, 등급, 크기, 색상
+  
+  #웹 사이트로부터 HTML code 읽기
+  webpage <- read_html(url)
+  
+  # title 정보 추출하기
+  title_html <- html_nodes(webpage, 'h1#title')
+  title <- html_text(title_html)
+  # 불필요한 문자열 삭제
+  title <- gsub("\n", "", title) %>% str_trim()
+  
+  
+  
   ```
 
 <br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
 
 # 치킨 집이 가장 많은 지역 찾기
 
