@@ -6423,105 +6423,290 @@ geom_bar(stat="identity")
 
 # 지역별 미세먼지 농도 비교하기
 
-## 전처리
+- 전처리
+  - 서울시 일별 미세먼지 데이터 다운로드
+    - :link: [서울시 대기환경정보 웹 사이트](http://cleanair.seoul.go.kr) 접속
+    - 기간별 선택후 2018년 전체 데이터 엑셀로 다운로드
+  - 엑셀에서 필요한 데이터만 남기기
+    - 불필요한 헤더(제목, 단위 등) 삭제
+    - 날짜 행을 text로 바꾸기
+    - 날짜, 측정소명, 미세먼지 만 남기고 모든 열 삭제
+    - 열 이름을 각각  yyyymmdd, area, dust 로 교체
+    - dustdata.xlsx 로 저장
 
-- 서울시 일별 미세먼지 데이터 다운로드
-  - :link: [서울시 대기환경정보 웹 사이트](http://cleanair.seoul.go.kr) 접속
-  - 기간별 선택후 2018년 전체 데이터 엑셀로 다운로드
-- 엑셀에서 필요한 데이터만 남기기
-  - 불필요한 헤더(제목, 단위 등) 삭제
-  - 날짜 행을 text로 바꾸기
-  - 날짜, 측정소명, 미세먼지 만 남기고 모든 열 삭제
-  - 열 이름을 각각  yyyymmdd, area, dust 로 교체
-  - dustdata.xlsx 로 저장
+- 상자 그림으로 시각화 및 t 검정
+  - 원시 데이터 가져오기
 
-## 상자 그림으로 시각화 및 t 검정
+    ```R
+    install.packages("readxl")
+    install.packages("dplyr")
+    
+    library(readxl)
+    library(dplyr)
+    
+    dustdata <- read_excel("./data/dustdata.xlsx")
+    ```
 
-- 원시 데이터 가져오기
+  - 비교할 지역 데이터만 추출하기
 
-  ```R
-  install.packages("readxl")
-  install.packages("dplyr")
-  
-  library(readxl)
-  library(dplyr)
-  
-  dustdata <- read_excel("./data/dustdata.xlsx")
-  ```
+    ```R
+    # 강남구와 은평구 데이터만 추출 및 확인
+    dustdata_anal <- dustdata %>% filter(area %in% c("강남구", "은평구"))
+    ```
 
-- 비교할 지역 데이터만 추출하기
+  - 데이터 현황 파악하기
 
-  ```R
-  # 강남구와 은평구 데이터만 추출 및 확인
-  dustdata_anal <- dustdata %>% filter(area %in% c("강남구", "은평구"))
-  ```
+    ```R
+    # dustdata_anal 데이터 세트에 yyyymmdd 따른 데이터 수 파악
+    count(dustdata_anal, yyyymmdd) %>% arrange(desc(n))
+    
+    # dustdata_anal 데이터 세트에 area에 따른 데이터 수 파악
+    count(dustdata_anal, area) %>% arrange(desc(n))
+    
+    ## 강남구와 은평구의 데이터를 각각 분리하기
+    dust_anal_area_kn <- subset(dustdata_anal, area == "강남구")
+    dust_anal_area_ep <- subset(dustdata_anal, area == "은평구")
+    
+    # 분리한 각 구의 데이터를 이용해 가초 통계량을 도출
+    # 최솟값, 변수 개수, 표준편차
+    install.packages("psych")
+    library(psych)
+    
+    # 가가 구의 미세먼지량에 대한 기초 통계량 도출
+    describe(dust_anal_area_kn$finedust)
+    describe(dust_anal_area_ep$finedust)
+    ```
 
-- 데이터 현황 파악하기
+  - 분포 확인 및 가설 검정
 
-  ```R
-  # dustdata_anal 데이터 세트에 yyyymmdd 따른 데이터 수 파악
-  count(dustdata_anal, yyyymmdd) %>% arrange(desc(n))
-  
-  # dustdata_anal 데이터 세트에 area에 따른 데이터 수 파악
-  count(dustdata_anal, area) %>% arrange(desc(n))
-  
-  ## 강남구와 은평구의 데이터를 각각 분리하기
-  dust_anal_area_kn <- subset(dustdata_anal, area == "강남구")
-  dust_anal_area_ep <- subset(dustdata_anal, area == "은평구")
-  
-  # 분리한 각 구의 데이터를 이용해 가초 통계량을 도출
-  # 최솟값, 변수 개수, 표준편차
-  install.packages("psych")
-  library(psych)
-  
-  # 가가 구의 미세먼지량에 대한 기초 통계량 도출
-  describe(dust_anal_area_kn$finedust)
-  describe(dust_anal_area_ep$finedust)
-  ```
+    > t 검정으로 지역에 따라 미세먼지 농도 평균이 차이나는지 확인
 
-- 분포 확인 및 가설 검정
+    ```R
+    # 성북구와 중구의 미세먼지 농도에 대해  boxplot 을 통한 분포 차이 확인
+    boxplot(
+        dust_anal_area_kn$finedust, dust_anal_area_ep$finedust
+        , main = "finedust_compare", xlab = "AREA", las=2, labels = c("강남구, 은평구")
+        , ylab = "FINEDUST_PM", col = c("blue", "green")
+    )
+    
+    # 이게 더 좋은 듯
+    boxplot(data = dustdata_anal, finedust ~ area
+    	, main = "finedust_compare", xlab = "AREA"
+        , ylab = "FINEDUST_PM", col = c("blue", "green")
+    )
+    
+    # t 검정
+    t.test(data = dustdata_anal, finedust ~ area, var.equal = T)
+    
+    	Two Sample t-test
+    
+    data:  finedust by area
+    t = -3.4661, df = 728, p-value = 0.000559
+    alternative hypothesis: true difference in means is not equal to 0
+    95 percent confidence interval:
+     -9.149500 -2.532691
+    sample estimates:
+    mean in group 강남구 mean in group 은평구 
+                34.94795             40.78904 
+    ```
 
-  > t 검정으로 지역에 따라 미세먼지 농도 평균이 차이나는지 확인
+- 결과 분석
 
-  ```R
-  # 성북구와 중구의 미세먼지 농도에 대해  boxplot 을 통한 분포 차이 확인
-  boxplot(
-      dust_anal_area_kn$finedust, dust_anal_area_ep$finedust
-      , main = "finedust_compare", xlab = "AREA", las=2, labels = c("강남구, 은평구")
-      , ylab = "FINEDUST_PM", col = c("blue", "green")
-  )
-  
-  # 이게 더 좋은 듯
-  boxplot(data = dustdata_anal, finedust ~ area
-  	, main = "finedust_compare", xlab = "AREA"
-      , ylab = "FINEDUST_PM", col = c("blue", "green")
-  )
-  
-  # t 검정
-  t.test(data = dustdata_anal, finedust ~ area, var.equal = T)
-  
-  	Two Sample t-test
-  
-  data:  finedust by area
-  t = -3.4661, df = 728, p-value = 0.000559
-  alternative hypothesis: true difference in means is not equal to 0
-  95 percent confidence interval:
-   -9.149500 -2.532691
-  sample estimates:
-  mean in group 강남구 mean in group 은평구 
-              34.94795             40.78904 
-  ```
-
-  > 상자 그림을 통해 평균의 분포가 다른 것을 한 눈에 확인할 수 있다. 더욱 세부적인 분석을 위해 t 검정 결과를 보면 p-value가 0.000559로 0.05보다 작다. 그러무로 ***귀무가설(강남구와 은평구의 미세먼지 평균은 차이가 나지 않는다)***을 기각한다. 즉, 강남구와 은평구의 2018년 1년 간 미세먼지 평균은 차이가 나는 것을 확인할 수 있다.
+  상자 그림을 통해 평균의 분포가 다른 것을 한 눈에 확인할 수 있다. 더욱 세부적인 분석을 위해 t 검정 결과를 보면 p-value가 0.000559로 0.05보다 작다. 그러무로 ***귀무가설(강남구와 은평구의 미세먼지 평균은 차이가 나지 않는다)***을 기각한다. 즉, 강남구와 은평구의 2018년 1년 간 미세먼지 평균은 차이가 나는 것을 확인할 수 있다.
 
   ![1568608230567](assets/1568608230567.png)
 
-- ㄴ이라ㅓ
-- ㄴ이ㅏ러
-- ㄴ이;라ㅓ
-- 일;ㅏㅓ
-- 이;라ㅓ
-- 이ㅏ러
+# 트위터 키워드 크롤링으로 워드클라우드 그리기
+
+- 트위터 APP 생성하기
+
+  트위터 API 사용 권한을 얻기 위해 :link: [Application Manageent 웹 사이트](https://apps.twitter.com)에 접속한 후 로그인 한다.
+
+  ```R
+  @gX44udxDltAyjYg -> mr_laughaway
+  
+  # Developer 계정 인증 기다리는 중
+  ```
+
+<br>
+
+# 지하철역 주변 아파트 가격 알아보기
+
+- 지하철역 정보 다운로드 및 전처리
+
+  - :link: [서울열린데이터광장](http://data.seoul.go.kr/)에 접속하고, *'서울 지하철 주소'* 를 검색하여 `[서율교통공사 지하철역 주소 및 전화번호 정보]를 클릭한다.
+  - *[File] > 역별 주소 및 전화번호.xlsx >  [DOWN]* 
+  - 작업폴더로 옮긴 후 엑셀을 이용해 처리
+  - 2호선 정보의 *역명*, *구주소* 만 남겨서 *'역별_주소_및_전화번호.csv'* 로 저장
+
+- 아파트 실거래가
+
+  > 다음으로 아파트 실거래가 정보를 구한 후 엑셀에서 전처리 과정을 진행한다.
+
+  - :link: [국토교통부 실거래가 공개시스템](http://rt.molit.go.kr)에 접속한 후 오른쪽 위 *[실거래가 자료 제공]* 클릭
+  - 조검별 검색에서 2018년 1월부터 2018년 4월 30일 까지의 마포구 아파트 실거래가 정보 다운로드.
+  - *단지명, 전용면적, 거래금액* 열만 남기고 삭제. 헤드에 붙은 괄호 및 단위 삭제.
+
+- 구글 지도 정보
+
+  :link: [구글 클라우드 플랫폼](http://developers.google.com/maps/terms)에 접속하여 API 사용 등록. 패키지 로드.
+
+  ```R
+  install.packages("dplyr")
+  isntall.packages("devtools")
+  library(devtools)
+  install_github("dkahle/ggmap")
+  library(ggmap)
+  library(dplyr)
+  ```
+
+- 원시 데이터 가져오기
+
+  지하철역 정보 불러오기
+
+  ```R
+  #csv 파일을 가져와서 station_data 변수에 할당
+  station_data <- read.csv("data/역별_주소_및_전화번호.csv")
+  str(station_data)
+  ```
+
+- 지하철역 좌표 정보 구하기
+
+  > 주소를 지도에 표현하려면 위도와 경도 좌표 정보가 필요하다. 여기에는 ggmap 패키지의 `geocode()` 함수를 이용한다.
+
+  ```R
+  # Goolge API Key 등록
+  googleAPIkey <- "###################################"
+  register_google(googleAPIkey)
+  
+  # as.character() 함수를 이용하여 문자형으로 변환한 후 station_code 에 할당
+  station_code <- as.character(station_data$"구주소")
+  
+  # geocode() 함수로 station_code 값을 위도와 경도로 변환
+  station_code <- geocode(station_code)
+  
+  # 인코딩 문제로 실행되지 않는다면 다음 코드를 사용한다.
+  station_code <- as.character(station_data$"구주소") %>% enc2utf8() %>% geocode()
+  # 하지만 ggmap이 업그레이드 되었는지 전 단계에서 이미 매우 상당히 꽤 잘 됨
+  
+  # 기존 station_data 에 지하철 역의 위/경도 정보 추가
+  station_code_final <- cbind(station_data, station_code)
+  ```
+
+- 전용면적별 거래 가격
+
+  ```R
+  # csv 파일을 가져와서 apart_data 변수에 할당
+  install.packages("readxl")
+  apart_data <- read_excel("data/마포구실거래가.xlsx")
+  
+  # 전용면적의 값을 반올림하여 정수로 표현
+  apart_data$전용면적 <- round(as.numeric(apart_data$전용면적))
+  
+  # 전용면적을 기준으로 빈도를 구한 후 빈도에 따라 내림차순 정렬
+  count(apart_data, 전용면적) %>% arrange(desc(n))
+  # A tibble: 106 x 2
+     전용면적     n
+        <dbl> <int>
+   1       85   436
+   2       60   224
+   3      115    90
+   4       59    79
+   5       84    43
+  ...
+  
+  # 전용면적이 85인 데이터만 추추랗여 apart_data_85에 할당
+  apart_data_85 <- subset(apart_data, 전용면적 == 85)
+  ```
+
+- 아파트 단지별 평균 거래 금액
+
+  ```R
+  # 쉼표를 공백("")으로 대체하여 제거
+  apart_data_85$거래금액 <- gsub(",", "", apart_data_85$거래금액)
+  
+  # 거래금액을 정수형으로 변환하여 단지명별 평균을 구한 후 apart_data_85_cost 변수에 할당
+  apart_data_85_cost <- aggregate(as.integer(거래금액) ~ 단지명,  apart_data_85, mean)
+  
+  # "as.integer(거래금액)" 을 "거래금액" 으로 변경하여 저장
+  apart_data_85_cost <- rename(apart_data_85_cost, "거래금액" = "as.integer(거래금액)")
+  
+  # 단지명이 중복된 행을 제거하고 aprt_data_85 에 저장
+  apart_data_85 <- apart_data_85[!duplicated(apart_data_85$단지명), ]
+  
+  # 딘지명을 기준으로 aprt_data_85 와 apart_data_85_cost 합치기
+  apart_data_85 <- left_join(apart_data_85, apart_data_85_cost, by="단지명")
+  
+  # 단지명, 시군구, 번지, 전용면적, 거래금액.y 만 추출하고 저장
+  apart_data_85 <- apart_data_85 %>% select("단지명", "시군구", "번지", "전용면적", "거래금액.y")
+  
+  # 거래금액.y 를 거래금액으로 변경한 후 저장
+  apart_data_85 <- rename(apart_data_85, "거래금액" = "거래금액.y")
+  ```
+
+- 시군구와 번지를 하나로 합치기
+
+  ```R
+  # 시군구와 번지 열을 합친 후 aprt_address 에 저장
+  apart_address <- paste(apart_data_85$시군구, apart_data_85$번지)
+  
+  # 데이터 프레임으로 다시 만들기
+  apart_address <- paste(apart_data_85$시군구, apart_data_85$번지) %>% data.frame()
+  
+  # . 을 주소로 변경하여 저장
+  apart_address <- rename(apart_address, "주소" = ".")
+  
+  ```
+
+- 좌표 정보 추가 후 최종 데이터 만들기
+
+  ```R
+  # 아파트 주소를 위/경도로 변환하여 apart_address_code에 저장
+  apart_address_code <- as.character(apart_address$주소) %>% geocode()
+  
+  # 만약 인코딩 때문에 안 된다면 아래 코드드를 사용...그러나 위에서 벌써 잘 됨
+  apart_address_code <- as.character(apart_address$주소) %>% enc2utf8() %>% geocode()
+  
+  # 데이터 세트를 합친 후 일부 열만 apart_code_final에 저장
+  apart_code_final <- cbind(apart_data_85, apart_address, apart_address_code) %>% select("단지명", "전용면적", "거래금액", "주소", lon, lat)
+  ```
+
+- 마포구 지도 가져오기
+
+  ```R
+  mapo_map <- get_googlemap("mapogu", maptype ="roadmap", zoom = 12)
+  ```
+
+- 지하철역 위치 표시하기
+
+  ```R
+  install.packages("ggplot2")
+  library(ggplot2)
+  
+  # 산점도로 지도에 지하철역 위치를 표현하기 위해 ggmap() 함수 뒤에 + gemo_point() 함수를 추가. 이어서 geom_text()를 추가하여 역명도 추가.
+  ggmap(mapo_map) +
+  	geom_point(data = station_code_final, aes(x = lon, y = lat), colour = "red", size = 3) +
+  	geom_text(data = station_code_final, aes(label = 역명, vjust= -1))
+  ```
+
+  ![1568621856557](assets/1568621856557.png)
+
+- 아파트 가격 정보 표시하기
+
+  ```R
+  # 홍대입구역 지도 정보를 가져와 hongdae_map 변수에 저장
+  hongdae_map <- get_googlemap("hongdae station", maptype = "roadmap", zoom = 15)
+  
+  # 홍대입구역 지도에 지하철 정보 및 아파트 정보 일괄 표시
+  ggmap(hongdae_map) +
+  	geom_point(data = station_code_final, aes(x=lon, y=lat), color="red", size=3) +
+  	geom_text(data = station_code_final, aes(label=역명, vjust=-1)) +
+  	geom_point(data = apart_code_final, aes(x=lon, y=lat)) +
+  	geom_text(data = apart_code_final, aes(label=단지명, vjust=-1)) +
+  	geom_text(data = apart_code_final, aes(label=거래금액, vjust=1))
+  ```
+
+  ![1568622351013](assets/1568622351013.png)
 
 <br>
 
