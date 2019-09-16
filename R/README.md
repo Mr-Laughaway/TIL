@@ -6419,9 +6419,109 @@ geom_bar(stat="identity")
 
     ![1568529089451](assets/1568529089451.png)
 
-
-
 <br>
+
+# 지역별 미세먼지 농도 비교하기
+
+## 전처리
+
+- 서울시 일별 미세먼지 데이터 다운로드
+  - :link: [서울시 대기환경정보 웹 사이트](http://cleanair.seoul.go.kr) 접속
+  - 기간별 선택후 2018년 전체 데이터 엑셀로 다운로드
+- 엑셀에서 필요한 데이터만 남기기
+  - 불필요한 헤더(제목, 단위 등) 삭제
+  - 날짜 행을 text로 바꾸기
+  - 날짜, 측정소명, 미세먼지 만 남기고 모든 열 삭제
+  - 열 이름을 각각  yyyymmdd, area, dust 로 교체
+  - dustdata.xlsx 로 저장
+
+## 상자 그림으로 시각화 및 t 검정
+
+- 원시 데이터 가져오기
+
+  ```R
+  install.packages("readxl")
+  install.packages("dplyr")
+  
+  library(readxl)
+  library(dplyr)
+  
+  dustdata <- read_excel("./data/dustdata.xlsx")
+  ```
+
+- 비교할 지역 데이터만 추출하기
+
+  ```R
+  # 강남구와 은평구 데이터만 추출 및 확인
+  dustdata_anal <- dustdata %>% filter(area %in% c("강남구", "은평구"))
+  ```
+
+- 데이터 현황 파악하기
+
+  ```R
+  # dustdata_anal 데이터 세트에 yyyymmdd 따른 데이터 수 파악
+  count(dustdata_anal, yyyymmdd) %>% arrange(desc(n))
+  
+  # dustdata_anal 데이터 세트에 area에 따른 데이터 수 파악
+  count(dustdata_anal, area) %>% arrange(desc(n))
+  
+  ## 강남구와 은평구의 데이터를 각각 분리하기
+  dust_anal_area_kn <- subset(dustdata_anal, area == "강남구")
+  dust_anal_area_ep <- subset(dustdata_anal, area == "은평구")
+  
+  # 분리한 각 구의 데이터를 이용해 가초 통계량을 도출
+  # 최솟값, 변수 개수, 표준편차
+  install.packages("psych")
+  library(psych)
+  
+  # 가가 구의 미세먼지량에 대한 기초 통계량 도출
+  describe(dust_anal_area_kn$finedust)
+  describe(dust_anal_area_ep$finedust)
+  ```
+
+- 분포 확인 및 가설 검정
+
+  > t 검정으로 지역에 따라 미세먼지 농도 평균이 차이나는지 확인
+
+  ```R
+  # 성북구와 중구의 미세먼지 농도에 대해  boxplot 을 통한 분포 차이 확인
+  boxplot(
+      dust_anal_area_kn$finedust, dust_anal_area_ep$finedust
+      , main = "finedust_compare", xlab = "AREA", las=2, labels = c("강남구, 은평구")
+      , ylab = "FINEDUST_PM", col = c("blue", "green")
+  )
+  
+  # 이게 더 좋은 듯
+  boxplot(data = dustdata_anal, finedust ~ area
+  	, main = "finedust_compare", xlab = "AREA"
+      , ylab = "FINEDUST_PM", col = c("blue", "green")
+  )
+  
+  # t 검정
+  t.test(data = dustdata_anal, finedust ~ area, var.equal = T)
+  
+  	Two Sample t-test
+  
+  data:  finedust by area
+  t = -3.4661, df = 728, p-value = 0.000559
+  alternative hypothesis: true difference in means is not equal to 0
+  95 percent confidence interval:
+   -9.149500 -2.532691
+  sample estimates:
+  mean in group 강남구 mean in group 은평구 
+              34.94795             40.78904 
+  ```
+
+  > 상자 그림을 통해 평균의 분포가 다른 것을 한 눈에 확인할 수 있다. 더욱 세부적인 분석을 위해 t 검정 결과를 보면 p-value가 0.000559로 0.05보다 작다. 그러무로 ***귀무가설(강남구와 은평구의 미세먼지 평균은 차이가 나지 않는다)***을 기각한다. 즉, 강남구와 은평구의 2018년 1년 간 미세먼지 평균은 차이가 나는 것을 확인할 수 있다.
+
+  ![1568608230567](assets/1568608230567.png)
+
+- ㄴ이라ㅓ
+- ㄴ이ㅏ러
+- ㄴ이;라ㅓ
+- 일;ㅏㅓ
+- 이;라ㅓ
+- 이ㅏ러
 
 <br>
 
