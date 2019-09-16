@@ -2,6 +2,7 @@
 
 
 
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -4729,7 +4730,45 @@ group_by(dataframe, 집단변수)
   
   ```
 
-#### 3.1.2.7. 실습
+#### 3.1.2.8. `sample_n()`, `sample_frac()`
+
+> 데이터에서 샘플 데이터를 추출할 때 사용한다.
+
+- `sample_n()`
+
+  > 개수를 기준으로 추출
+
+  ```R
+  sample_n(mtcars, 10)
+      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+  1  30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+  2  17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+  3  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+  4  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+  5  19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+  6  15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+  7  21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+  8  15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+  9  14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+  10 15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+  ```
+
+- `smaple_frac()`
+
+  > 비율을 기준으로 추출
+
+  ```R
+  sample_frac(mtcars, 0.2)
+     mpg cyl  disp  hp drat   wt  qsec vs am gear carb
+  1 15.2   8 275.8 180 3.07 3.78 18.00  0  0    3    3
+  2 15.0   8 301.0 335 3.54 3.57 14.60  0  1    5    8
+  3 32.4   4  78.7  66 4.08 2.20 19.47  1  1    4    1
+  4 15.5   8 318.0 150 2.76 3.52 16.87  0  0    3    2
+  5 24.4   4 146.7  62 3.69 3.19 20.00  1  0    4    2
+  6 17.3   8 275.8 180 3.07 3.73 17.60  0  0   3    3
+  ```
+
+#### 3.1.2.8. 실습
 
 - 1
 
@@ -5673,6 +5712,89 @@ labs(x = "x 축 이름", y = "y축 이름", title = "그래프 제목")
 
   ![1568515837244](assets/1568515837244.png)
 
+### 3.1.10 googleVis
+
+> 구글이 제공하는 차트를 R 에서도 사용할 수 있도록 지원한다. 웹 브라우저를 통해 플래시 기반의 움직이는 그래프를 볼 수 있다는 점이 가장 큰 특징이다.
+>
+> :link: ​[참고](https://cran.r-project.org/web/packages/googleVis/vignetters/googleVis_examples.html)
+
+```R
+install.packages("googleVis")
+library(goolgeVis)
+
+gvisMotionChart(데이터 세트, idvar = "기준 데이터", timevar = "날짜 데이터")
+gvisGauge(데이터 세트, labelvar = "측정 데이터", numbar = "값", options = list(그래프 옵션))
+```
+
+- 기본 사용법
+
+  ```R
+  library(googleVis)
+  library(ggplot2)
+  
+  motion <- gvisMotionChart(economics, idvar = "psavert", timevar = "date")
+  plot(motion)
+  ```
+
+  ![1568596942434](assets/1568596942434.png)
+
+- 게이지 차트 그리기
+
+  ```R
+  #게이지의 측정 데이터(labelvar)는 도시명, 값(numvar)은 인구수, 눈금은 0~1000으로 옵션 지정
+  gauge <- gvisGauge(CityPopularity, labelvar = "City", numvar = "Popularity", options = list(min = 0, max = 1000))
+  plot(gauge)
+  ```
+
+  ![1568597479257](assets/1568597479257.png)
+
+### 3.1.11. ggmap
+
+> 구글 지도 서비스를 활용할 수 있는 패키지
+>
+> :link: [구글 클라우드 플랫폼](http://developers.google.com/maps/terms)에 접속하여 API 사용 등록을 해야한다.
+
+```R
+install.packages("devtools")
+library(devtools)
+install_github("dkahle/ggmap")
+library(ggmap)
+
+register_google("키정보")
+```
+
+- 특정 지역 지도 불러오기
+
+  ```R
+  googleAPIkey = "##############################"
+  register_google(googleAPIkey)
+  
+  # 서울 지도 불러오기
+  gg_seoul <- get_googlemap("seoul", maptype = "roadmap")
+  ggmap(gg_seoul)
+  ```
+
+  ![1568599539438](assets/1568599539438.png)
+
+- 좌표를 이용하여 지도에 점 찍기
+
+  ```R
+  # 구글 지도 위에 산점도 그리기
+  library(dplyr)
+  library(ggplot2)
+  
+  # 한글 검색을 위해 utf8로 변환한 후 위도와 경도 데이터를 geo_code 변수에 할당
+  geo_code <- enc2utf8("대전역") %>% geocode()
+  geo_data <- as.numeric(geo_code)
+  
+  # 대전역의 위치 정보를 가져온 후 구글 지도 호출
+  get_googlemap(center = geo_data, maptype = "roadmap", zoom = 13) %>% ggmap() +
+  	#geo_code에 있는 경도(lon)와 위도(lat) 값으로 산점도 그리기
+  	geom_point(data = geo_code, aes(x = geo_code$lon, y = geo_code$lat))
+  ```
+
+  ![1568599562112](assets/1568599562112.png)
+
 <br>
 
 <br>
@@ -6127,8 +6249,49 @@ geom_bar(stat="identity")
   # 불필요한 문자열 삭제
   title <- gsub("\n", "", title) %>% str_trim()
   
+  # 가격 정보 추출하기
+  price_html <- html_nodes(webpage, "#priceblock_ourprice")
+  price <- html_text(price_html)
+  #불필요한 문자열 삭제
+  price <- str_replace_all(price, "[\r\n]", "")
+  # price <- substr(price, regexpr(" ", price), length(price))
   
+  # 제품 설명 추출하기
+  desc_html <- html_nodes(webpage, 'div#productDescription')
+  desc <- html_text(desc_html)
+  #모든 공백과 줄 바꿈 제거
+  desc <- str_replace_all(desc, "[\r\n\t]", "") %>% str_trim()
   
+  # 등급 추출하기
+  rate_html <- html_nodes(webpage, "span #acrPopover")
+  rate <- html_text(rate_html)
+  rating_html <- html_nodes(webpage, '#acrPopover .a-icon-alt')
+  rating <- html_text(rating_html)
+  # 등급만 추출
+  rating <- substr(rating, 1, regexpr(" ", rating) - 1)
+  
+  # 크기 추출하기
+  size_html <- html_nodes(webpage, "#variation_size_name .selection")
+  size <- html_text(size_html)
+  
+  # 색상 추출하기
+  color_html <- html_nodes(webpage, "#variation_color_name .selection")
+  color <- html_text(color_html)
+  
+  # 데이터 프레임으로 만들기
+  product_data <- data.frame(
+      Title = title
+      , Price = price
+      , Description = desc
+      , Rate = rating
+      , Size = size
+      , Color = color
+  )
+  
+  # JSON 형식으로 데이터 저장
+  library(jsonlite)
+  json_data <- toJSON(product_data)
+  cat(json_data)
   ```
 
 <br>
