@@ -2,7 +2,6 @@
 
 
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -6625,7 +6624,72 @@ geom_bar(stat="identity")
   @gX44udxDltAyjYg -> mr_laughaway
   
   # Developer 계정 인증 기다리는 중
+  # approved 됐고, key 생성함.
   ```
+
+- twitterR 패키지 설치 및 OAuth 인증하기
+
+  ```R
+  install.packages("twitteR")
+  library(twitteR)
+  
+  # 4개의 키를 각각 변수에 할당
+  consumerKey = "####################"
+  consumerSecret = "####################"
+  accessToken = "####################"
+  accessTokenSecret = "####################"
+  
+  # 키 값으로 OAuth
+  setup_twitter_oauth(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+  [1] "Using direct authentication"
+  Use a local file ('.httr-oauth'), to cache OAuth access credentials between R sessions?
+  
+  1: Yes
+  2: No
+  > 2 # 이전에 캐싱된 OAuth 인증 을 사용하냐는 질문에 안전하게 2 입력
+  ```
+
+- 키워드 검색 및 결과 값 가져오기
+
+  ```R
+  # 데이터 형 변환 후 keyword 변수에 할당
+  keyword <- enc2utf8("후쿠시마") 
+  
+  # keyword 변수에 있는 키워드로 결과 값을 100개 검색
+  bigdata <- searchTwitter(keyword, n = 100, lang = "ko")
+  
+  # 크롤링 데이터를 데이터 프레임으로 변환하고 bigdata_df 에 할당 
+  bigdata_df <- twListToDF(bigdata)
+  bigdata_text <- bigdata_df$text
+  ```
+
+- 텍스트에서 명사만 추출하기
+
+  ```R
+  library(KoNLP)
+  useSejongDic()
+  
+  # 명사만 추출
+  bigdata_noun <- sapply(bigdata_text, extractNoun, USE.NAMES = F)
+  bigdata_noun <- unlist(bigdata_noun) # 벡터로 변환
+  
+  # 워드 클라우드 표현을 위해 2글자 이상 단어만 추출
+  bigdata_noun <- Filter(function(x) { nchar(x) >= 2 }, bigdata_noun)
+  # 영어, 숫자 제거
+  bigdata_noun <- gsub("[A-Za-z0-9]", "", bigdata_noun)
+  bigdata_noun <- gsub("[~!@#$%^&*()-_=+?:]", "", bigdata_noun)
+  bigdata_noun <- gsub("[ㄱ-ㅎ]", "", bigdata_noun)
+  bigdata_noun <- gsub("(ㅜ|ㅠ)+", "", bigdata_noun)
+  
+  # 워드클라우드로 표현하기 위해 table()함수를 이용하여 데이터 세트 형태로 변환
+  word_table <- table(bigdata_noun)
+  
+  # 패키지 로드후 시각화
+  library(wordcloud2)
+  wordcloud2(word_table, fontFamily = "맑은 고딕", size = 5, color = "random-light", backgroundColor = "black")
+  ```
+
+  ![1568718391325](assets/1568718391325.png)
 
 <br>
 
