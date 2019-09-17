@@ -2,7 +2,6 @@
 
 
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -5795,7 +5794,89 @@ register_google("키정보")
 
   ![1568599562112](assets/1568599562112.png)
 
+### 3.1.12. sqldf
+
+> ㅇ라ㅓ니아러
+
+```R
+install.packages("sqldf")
+library(sqldf)
+```
+
+- 사용예
+
+```R
+# Fruits 데이터셋의 모든 데이터 리턴
+sqldf('select * from Fruits')
+
+# Apple 데이터 행만 추출
+sqldf('select * from Fruits where Fruit = "Apples"')
+
+# 처음부터 3개의 행만 추출
+sqldf('select * from Fruits limit 3')
+
+# Sales 컬럼변수값으로 내림차순 정렬
+sqldf('select * from Fruits order by Sales desc')
+
+# Sales 컬럼의 누적합, 최솟값, 최댓값, 평균
+sqldf('select sum(Sales), min(Sales), max(Sales), avg(Sales) from Fruits')
+
+# Fruits 과일 종류별 Sales 컬럼의 누적합, 최솟값, 최댓값, 평균, 행개수
+sqldf('select Fruit, sum(Sales), min(Sales), max(Sales), avg(Sales) from Fruits group by Fruit')
+
+```
+
+- Quiz
+
+  ```R
+  #자동차 배기량에 따라 고속도록 연비 ...데이터 셋
+  mpg <- as.data.frame(ggplot2::mpg)
+  print(mpg)
+  str(mpg)
+  #displ 배기량
+  #manufaturer 제조사
+  #cty 도시연비
+  #hwy 고속도로 연비
+  #class차종
+  
+  # Quiz> 회사별로 분리, suv 추출, 통합 연비(도시연비+고속도로 연비) 변수 생성,통합 연비 평균 산출, 내림차순 정렬, 1~5위까지 출력
+  sqldf("
+  	select manufacturer
+  	from (
+  		select manufacturer, (cty + hwy) as tot
+  		from mpg
+  		where class = 'suv'
+  	)
+  ")
+  
+  result <- sqldf("
+  	select class, tot, mean_tot
+  	from (
+  		select class, (cty+hwy)/2 as tot, avg((cty+hwy)/2) mean_tot from mpg
+  		where class = 'suv'
+  		group by manufacturer
+  		order by 3 desc
+  	)
+  ")
+  head(result, 5)
+  
+  # Quiz> 어떤 회사에서 "compact" (경차) 차종을 가장 많이 생상하는지 알아내어 각 회사별로 "compact" 차종을 내림차순으로 정렬해 출력하세요.
+  sqldf("
+  	select manufacturer, class, count(*) 
+  	from mpg
+  	where class = 'compact'
+  	group by manufacturer
+  	order by 3 desc
+  ")
+  
+  
+  ```
+
 <br>
+
+# 4. 데이터 분석 프로세스
+
+
 
 <br>
 
