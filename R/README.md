@@ -2,6 +2,7 @@
 
 
 
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -5876,7 +5877,24 @@ sqldf('select Fruit, sum(Sales), min(Sales), max(Sales), avg(Sales) from Fruits 
 
 # 4. 데이터 분석 프로세스
 
+- alksdfjsakldjf;l
 
+```R
+# 표본오차 구하기
+20세 이상 유권자 1,500명 대상으로 A 후보 대선 출마에 대한 찬성과 반대를 조사하는 설문조사를 시행하였다. 설문조사 결과 95% 신뢰수준에서 찬성이 55%, 반대가 45%가 나왔다. 이때 표본오차는?
+
+Z = 1.96
+N = 1500
+찬성률 p = 55% = 0.55
+반대율 1-p = 45% = 0.45
+
+0.025176656
+0.025176656
+
+```
+
+- aslkdfjals;kdjf
+- 
 
 <br>
 
