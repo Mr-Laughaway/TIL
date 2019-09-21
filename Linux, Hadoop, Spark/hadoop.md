@@ -1901,6 +1901,53 @@ export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HIVE_HOME/bin:
 [root@master ~]# netstat -anp | grep mysql
 
 [root@master ~]# mysql
+
+#JsgUokwg7=;
+!Hadoop23!
+
+# mysql-community 5.7+ < 를 깔았을 경우 패스워드 문제로 접속이 안 됨.
+# 아래 명령어로 임시 패스워드를 알아낸 뒤
+[root@master ~]# sudo grep 'temporary password' /var/log/mysqld.log
+# 아래 명령어로 접속
+[root@master ~]# mysql -u root -p
+Enter password: 알아낸 패스워드 입력
+# 특문/대문자/소문자/숫자 포함된 암호로 최소 한번 alter user 를 실행해 줘야 모든 접근 제한들이 풀림
+mysql> alter user 'root'@'localhost' identified by '@Hadoop00@'
+# 이제 비로소 각종 설정등이 가능하므로 패스워드 설정을 간단하게 바꾼다
+mysql> SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+--------+
+| Variable_name                        | Value  |
++--------------------------------------+--------+
+| validate_password_check_user_name    | OFF    |
+| validate_password_dictionary_file    |        |
+| validate_password_length             | 8      |
+| validate_password_mixed_case_count   | 1      |
+| validate_password_number_count       | 1      |
+| validate_password_policy             | MEDIUM |
+| validate_password_special_char_count | 1      |
++--------------------------------------+--------+
+# validate_password_policy 를 0 (LOW) 으로 바꿈
+mysql> SET GLOBAL validate_password_policy = 0;
+# validate_password_length 를 6 으로 바꿈
+mysql> set GLOBAL validate_password_length = 6;
+# validate_password_number_count 를 0 으로 바꿈
+mysql> set GLOBAL validate_password_number_count = 0;
+# 확인
+mysql> SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+-------+
+| Variable_name                        | Value |
++--------------------------------------+-------+
+| validate_password_check_user_name    | OFF   |
+| validate_password_dictionary_file    |       |
+| validate_password_length             | 6     |
+| validate_password_mixed_case_count   | 1     |
+| validate_password_number_count       | 0     |
+| validate_password_policy             | LOW   |
+| validate_password_special_char_count | 1     |
++--------------------------------------+-------+
+# root 패스워드를 쉽게 변경
+mysql> ALTER USER 'root'@'localhost' identified by 'hadoop'
+
 ```
 
 
