@@ -15,24 +15,24 @@
 
 ## 시각화
 
-- 시각화 순서
-- 기본 시각화 도구
-- 시각화 예제
+- [시각화 순서](./R.md#21-시각화-순서)
+- [기본 시각화 도구](./R.md#22-기본-시각화-도구)
+- [시각화 예제](./R.md#23-시각화-예제)
 
 ## 데이터 전처리 및 유용한 패키지
 
-- plyr
-- dplyr
-- RJDBC
-- igraph
-- reshape
-- reshape2
-- KoNLP
-- wordcolud2
-- ggplot2
-- googleVis
-- ggmap
-- sqldf
+- [plyr](./R.md#311-plyr)
+- [dplyr](./R.md#312-dplyr)
+- [RJDBC](./R.md#313-RJDBC)
+- [igraph](./R.md#314-igraph)
+- [reshape](./R.md#315-reshape)
+- [reshape2](./R.md#316-reshape2)
+- [KoNLP](./R.md#317-KoNLP)
+- [wordcolud2](./R.md#318-wordcloud2)
+- [ggplot2](./R.md#319-ggplot2)
+- [googleVis](./R.md#3110-googleVis)
+- [ggmap](./R.md#3111-ggmap)
+- [sqldf](./R.md#3112-sqldf)
 
 ## 응용 예제
 
