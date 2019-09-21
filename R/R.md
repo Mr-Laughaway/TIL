@@ -2,7 +2,6 @@
 
 
 
-
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -6660,46 +6659,6 @@ geom_bar(stat="identity")
   ```
 
 <br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-
-
-
 
 # 치킨 집이 가장 많은 지역 찾기
 
