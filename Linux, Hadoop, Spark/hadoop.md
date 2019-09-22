@@ -1,4 +1,6 @@
 <h1>Hadoop Ecosystem</h1>
+
+
 ![img](hadoop.assets/hadoop.jpg)
 
 > **아파치 하둡**(Apache Hadoop, High-Availability Distributed Object-Oriented Platform)은 대량의 자료를 처리할 수 있는 큰 컴퓨터 클러스터에서 동작하는 분산 응용 프로그램을 지원하는 [프리웨어](https://ko.wikipedia.org/wiki/프리웨어) [자바](https://ko.wikipedia.org/wiki/자바_(프로그래밍_언어))[소프트웨어 프레임워크](https://ko.wikipedia.org/wiki/소프트웨어_프레임워크)이다. 원래 [너치](https://ko.wikipedia.org/wiki/너치)의 [분산 처리](https://ko.wikipedia.org/wiki/분산_파일_시스템)를 지원하기 위해 개발된 것으로, [아파치](https://ko.wikipedia.org/wiki/아파치_웹_서버) [루씬](https://ko.wikipedia.org/wiki/루씬)의 하부 프로젝트이다[[2\]](https://ko.wikipedia.org/wiki/아파치_하둡#cite_note-2). 분산처리 시스템인 [구글 파일 시스템](https://ko.wikipedia.org/wiki/구글_파일_시스템)을 대체할 수 있는 하둡 분산 파일 시스템(HDFS: Hadoop Distributed File System)과 [맵리듀스](https://ko.wikipedia.org/wiki/맵리듀스)를 구현한 것이다.
@@ -1928,7 +1930,7 @@ mysql> SHOW VARIABLES LIKE 'validate_password%';
 +--------------------------------------+--------+
 # validate_password_policy 를 0 (LOW) 으로 바꿈
 mysql> SET GLOBAL validate_password_policy = 0;
-# validate_password_length 를 6 으로 바꿈
+# validate_password_length 를 4 로 바꿈
 mysql> set GLOBAL validate_password_length = 6;
 # validate_password_number_count 를 0 으로 바꿈
 mysql> set GLOBAL validate_password_number_count = 0;
@@ -1939,7 +1941,7 @@ mysql> SHOW VARIABLES LIKE 'validate_password%';
 +--------------------------------------+-------+
 | validate_password_check_user_name    | OFF   |
 | validate_password_dictionary_file    |       |
-| validate_password_length             | 6     |
+| validate_password_length             | 4     |
 | validate_password_mixed_case_count   | 1     |
 | validate_password_number_count       | 0     |
 | validate_password_policy             | LOW   |
@@ -2254,11 +2256,9 @@ mysql> select OWNER_NAME, OWNER_TYPE, NAME from DBS;
 
 ```
 
+## 3.2. hive 실습
 
-
-### hive 실습
-
-##### 월별 지연 횟수 카운트
+### 3.2.1. 월별 지연 횟수 카운트
 
 ```mysql
 hive> create database airline_db;
@@ -2325,9 +2325,7 @@ explain SELECT Year,Month, count(DepDelay)
 
 ```
 
-
-
-##### 로컬 파일로 table 만들기
+### 3.2.2. 로컬 파일로 table 만들기
 
 ```mysql
 # dept 테이블에 넣을 로컬 파일 만들기
@@ -2367,9 +2365,7 @@ drwxr-xr-x   - hadoop supergroup          0 2019-08-21 10:57 /user/hive/warehous
 -rwxr-xr-x   2 hadoop supergroup         96 2019-08-21 10:57 /user/hive/warehouse/airline_db.db/dept/dept.txt
 ```
 
-
-
-##### Join을 해보자( carriers.csv 이용)
+### 3.2.3. Join을 해보자( carriers.csv 이용)
 
 ```mysql
 1. carriers.csv파일을 carriers테이블을 생성하고, 데이터 로딩하고
@@ -2438,13 +2434,9 @@ hive> select count(*) from airline ;
 >
 > https://wikidocs.net/book/2203
 
+### 3.2.4. hive 에서 R 사용하기
 
-
-
-
-### hive 에서 R 사용하기
-
-##### 설치
+#### 3.2.4.1. 설치
 
 ```bash
 [root@master ~]# yum install epel-release
@@ -2468,9 +2460,7 @@ export HADOOP_STREAMING=/usr/local/hadoop-2.7.7/share/hadoop/tools/lib/hadoop-st
 
 ```
 
-
-
-##### Hello, R!
+#### 3.2.4.2. Hello, R!
 
 ```R
 > install.packages(c("rJava", "Rcpp", "RJSONIO", "bitops", "digest", "functional", "stringr", "plyr", "reshape2", "caTools"))
@@ -2510,9 +2500,9 @@ ERROR: dependencies ‘dplyr’, ‘R.methodsS3’, ‘Hmisc’, ‘memoise’, 
 
 ```
 
+<br>
 
-
-##### swap 늘리기
+# swap 늘리기
 
 ```bash
 #Swap 메모리 늘리기
