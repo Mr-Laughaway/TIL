@@ -3919,8 +3919,8 @@ library(TTR)
 install.packages("forecast")
 library(forecast)
 
-fn <-auto.arima()
-model <- fn()
+auto.arima()
+arima()
 
 tsdiag(model) #자기 상관 함수에 의한 모형 진단
 Box.test() #잔차항 모형 진단, 모형의 잔차를 이용하여 카이제곱검정 방법으로 시계열 모형이 통계적으로 적절한지를 검정하는 방법으로 p-value가 0.05이상이면 모형이 통계적으로 적절하다고 볼 수 있다 
@@ -4036,11 +4036,204 @@ forecast::forecast() #시계열의 예측치를 제공하는 함수
   plot(diff) #차분 시각화
   
   #단계3: 모형 식별과 추정
+  ts_model2 <- auto.arima(diff)
+  
+  # ARIMA(2,1,0) - 자기 회귀 모형 차수 2, 차분 차수 1
+  # 1번 차분한 결과가 정상성 시계열 ARMA(2, 0) 모형으로 나타남
+  # ARIMA 두번째 파라미터 (1, 0, 0)는 계절성을 갖는 자기회귀(AR) 모형 차수가 1로 나타남 =>계절성을 갖는 시계열이라는 의미
+  # [12]는 계절의 차수가 12개월임을 의미함
+  # 계수(Coefficients)는 자기회귀 모형의 차수 2(ar1, ar2)와 계절성 자기회귀 차수(sar1)에 대한 계수값임을 나타냄
+  
+  #단계4: 모형 생성
+  model <- arima(tsdata, c(2, 1, 0))
+  model #모형의 계수값과 표준 오차를 확인
+  
+  # 단계5 : 모형 진단(모형 타당성 검정)
+  # (1) 자기상관함수에 의한 모형 진단
+  tsdiag(model)
+  #잔차의 ACF에서 자기 상관이 발견되지 않고, p value값이 0 이상으로 분포되어 있으므로 ARIMA 모형은 매우 양호한 시계열 모형이라고 진단할 수 있다
+  
+  
+  # (2)Box-Ljung에 의한 잔차항 모형 진단
+  Box.test(model$residuals, lag=1, type = "Ljung")  #0.593
+  
+  	Box-Ljung test
+  
+  data:  model$residuals
+  X-squared = 0.0034142, df = 1, p-value = 0.9534
+  #  p-value가 0.05이상이면 모형이 통계적으로 적절하다고 볼 수 있다 
+  
+  
+  # 단계6 : 미래 예측
+  par(mfrow=c(1,2))
+  fore <- forecast(model, h=24) # 2년 예측 
+  plot(fore)
+  fore2 <- forecast(model, h=6) # 6개월 예측 
+  plot(fore2)
   
   
   ```
 
+#### 4.10.5.3. 시계열 분석 연습문제
+
+- 연습문제 1
+
+  ```R
+  ##########시계열 분석 연습문제 1 #####################
+  시계열 자료를 대상으로 다음 단계별로 시계열 모형을 생성하고, 미래를 예측하시오.
+  <데이터 셋 준비>
+  data(EuStockMarkets)
+  head(EuStockMarkets)
+  EuStock<- data.frame(EuStockMarkets)
+  head(EuStock)
+  Second <- c(1:500) # 초단 단위로 벡터 생성
+  DAX <- EuStock$DAX[1001:1500] # DAX 칼럼으로 백터 생성
+  EuStock.df <- data.frame(Second, DAX) # 데이터프레임 생성
   
+  #단계1 : 시계열자료 생성 : EuStock.df$DAX 칼럼을 대상으로 2001년1월 단위
+  eus <- as.vector(EuStock.df$DAX)
+  eus.ts <- ts(eus, start=c(2001, 1), frequency=12)
+  #단계2 : 시계열 자료 분해
+  #(1) stl() 함수 이용 분해 시각화
+  plot(stl(eus.ts, s.window="periodic"))
+  #(2) decompose() 함수 이용 분해 시각화, 불규칙요인만 시각화
+  eus.decomp <- decompose(eus.ts)
+  attributes(eus.decomp)
+  plot(eus.decomp)
+  plot(tsdata - eus.decomp$trend - eus.decomp$seasonal)
+  #(3) 계절요인추세요인 제거 그래프-불규칙요인만 출력
+  plot(tsdata - eus.decomp$seasonal)
+  #단계3 : ARIMA 시계열 모형 생성
+  eus.diff <- diff(eus.ts)
+  model.auto <- auto.arima(eus.diff)
+  
+  Series: eus.diff 
+  ARIMA(2,0,2)(1,0,2)[12] with non-zero mean 
+  
+  Coefficients:
+            ar1      ar2     ma1     ma2     sar1    sma1
+        -1.2998  -0.9743  1.2667  0.9729  -0.5776  0.6155
+  s.e.   0.0209   0.0243  0.0222  0.0299   0.1407  0.1410
+           sma2    mean
+        -0.1153  2.7550
+  s.e.   0.0542  0.8165
+  
+  sigma^2 estimated as 379.7:  log likelihood=-2186.91
+  AIC=4391.82   AICc=4392.19   BIC=4429.73
+  
+  model <- arima(eus.ts, c(2,1,2))
+  
+  Call:
+  arima(x = eus.ts, order = c(2, 1, 2))
+  
+  Coefficients:
+           ar1      ar2      ma1     ma2
+        1.3944  -0.9293  -1.4361  1.0000
+  s.e.  0.0199   0.0179   0.0083  0.0093
+  
+  sigma^2 estimated as 384.8:  log likelihood = -2195.59,  aic = 4401.18
+  
+  tsdiag(model)
+  Box.test(model$residuals, lag=1, type = "Ljung")  #0.5148
+  
+  #단계4 : 향후 3년의 미래를 90%와 95% 신뢰수준으로 각각 예측 및 시각화
+  eus.fore <- forecast(model, h=36) 
+  plot(eus.fore)
+  
+  
+  # 모범답안
+  시계열 자료를 대상으로 다음 단계별로 시계열 모형을 생성하고, 미래를 예측하시오.
+  <데이터 셋 준비>
+  data(EuStockMarkets)
+  head(EuStockMarkets)
+  EuStock<- data.frame(EuStockMarkets)
+  head(EuStock)
+  Second <- c(1:500) # 초단 단위로 벡터 생성
+  DAX <- EuStock$DAX[1001:1500] # DAX 칼럼으로 백터 생성
+  EuStock.df <- data.frame(Second, DAX) # 데이터프레임 생성
+  
+  #단계1 : 시계열자료 생성 : EuStock.df$DAX 칼럼을 대상으로 2001년1월 단위
+  tsdata <- ts(EuStock.df$DAX, start=c(2001, 1), frequency=12)
+  
+  #단계2 : 시계열 자료 분해
+  #(1) stl() 함수 이용 분해 시각화
+  #(2) decompose() 함수 이용 분해 시각화, 불규칙요인만 시각화
+  plot(stl(tsdata, "periodic")) # 주기적인
+  m <- decompose(tsdata)
+  # 추세요인, 계절요인, 불규칙요인이 포함된 그래프
+  plot(m)
+  #(3) 계절요인추세요인 제거 그래프-불규칙요인만 출력
+  plot(tsdata - m$seasonal - m$trend)
+  
+  #단계3 : ARIMA 시계열 모형 생성
+  library(forecast)
+  auto.arima(tsdata) # 자동으로 최적의 ARIMA모형 제공
+  model<- auto.arima(tsdata)
+  
+  단계4 : 향후 3년의 미래를 90%와 95% 신뢰수준으로 각각 예측 및 시각화
+  fore <- forecast(model, level=c(90, 95), h=36) # 향후 36개월(3년) 예측
+  plot(fore) # 시각화
+  ```
+
+  ![1569395798994](assets/1569395798994.png)
+
+- 연습문제 2
+
+  ``` R
+  ##########시계열 분석 연습문제 2 #####################
+  #Sales.csv 파일을 대상으로 시계열 자료를 생성하고, 각 단계별로 시계열 모형을 생성하여예측하시오.
+   
+  goods <- read.csv("./data/Sales.csv", header = TRUE)
+  
+  #단계1 : 시계열 자료 생성 : goods$Goods 칼럼으로 2015년 1월 기준 12개월 단위
+  goods.ts <- ts(goods$Goods, c(2015,1), frequency=12 )
+  plot(goods.ts)
+  plot(diff(goods.ts))
+  #단계2 : 시계열모형 추정과 모형 생성
+  goods.auto <- auto.arima(diff(goods.ts))
+  model <- arima(goods.ts, c(0, 1, 0))
+  
+  Call:
+  arima(x = goods.ts, order = c(0, 1, 0))
+  sigma^2 estimated as 2494162:  log likelihood = -351.35,  aic = 704.69
+  #단계3 : 시계열모형 진단 : Box-Ljung 검정 이용
+  Box.test(model$residuals, lag=1, type = "Ljung") 
+  
+  	Box-Ljung test
+  
+  data:  model$residuals
+  X-squared = 16.9, df = 1, p-value = 3.94e-05
+  #단계4 : 향후 7개월 예측
+  goods.fore <- forecast(model, h=7) 
+  # 80% 신뢰구간(Lo 80~Hi80), 95% 신뢰구간(Lo 95 ~ Hi 95)
+  #단계5 : 향후 7개월 예측결과 시각화
+  
+  #모범 답안
+  #Sales.csv 파일을 대상으로 시계열 자료를 생성하고, 각 단계별로 시계열 모형을 생성하여 예측하시오.
+   
+  goods <- read.csv("./data/Sales.csv", header = TRUE)
+  
+  tsGoods <- ts(goods$Goods, start=c(2015, 1), frequency=12)
+  tsGoods # 2015.01 ~ 2018.05
+  
+  #단계2 : 시계열모형 추정과 모형 생성
+  model <- auto.arima(tsGoods) # 시계열 예측모형 추정
+  model
+  
+  #단계3 : 시계열모형 진단 : Box-Ljung 검정 이용
+  Box.test(model$residuals, lag=1, type = "Ljung")
+  
+  #단계4 : 향후 7개월 예측
+  fore <- forecast(model, level=c(80, 95), h=7)
+  
+  # 80% 신뢰구간(Lo 80~Hi80), 95% 신뢰구간(Lo 95 ~ Hi 95)
+  단계5 : 향후 7개월 예측결과 시각화
+  plot(fore)
+  ```
+  
+  ![1569395745620](assets/1569395745620.png)
+
+
 
 <br>
 
@@ -4051,6 +4244,103 @@ forecast::forecast() #시계열의 예측치를 제공하는 함수
 <br>
 
 <br>
+
+<br>
+
+# 5. R Shiny
+
+쉽고, 빠르게 상호작용이 가능한 반응형 웹 애플리케이션을 개발할 수 있도록 프레임워크 형태로 지원. R의 분석 결과를 반응형 웹으로 개발할 수 있도록 Rstudio에서 지원.
+
+## 기본 예제
+
+```R
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Hello, R Shiny."),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            selectInput(
+                inputId="xAxis", 
+                "Choose X axis",
+                choices = c("mpg", "disp", "hp", "drat", "wt")
+            ),
+            selectInput(
+                inputId="yAxis", 
+                "Choose Y axis",
+                choices = c("wt", "drat", "hp", "disp", "mpg")
+            ),
+            selectInput(
+                inputId="pch", 
+                "Choose shape",
+                choices = c("circle-1"=1, "circle-2"=16, "square"=22)
+            ),
+            sliderInput(
+                inputId="cex",
+                "point size",
+                min=0.1, max=3, value=1
+            )
+            
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput(outputId="mtcarsPlot")
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+    
+    output$mtcarsPlot <- renderPlot({
+        title <- paste(input$xAxis, " VS ", input$yAxis)
+        plot(
+            mtcars[, c(input$xAxis, input$yAxis)],
+            main=title,
+            pch=as.numeric(input$pch),
+            cex=input$cex
+        )
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## 배포하기
+
+:link:[shinyapps.io](https://www.shinyapps.io/)  접속하여 계정 생성후 절차 따르기.
+
+```R
+install.packages("rsconnect")
+library(rsconnect)
+
+#수동 배포
+setAccountInfo(name='laughaway',
++                token='<TOKEN>',
++                secret='<SECRET>')
+
+rsconnect::deployApp('c:/workspace_R/shiny-01')
+
+#하거나 source edit 창에서 눈 모양을 버튼을 눌러서 배포도 가능하다
+```
+
+![1569392552909](assets/1569392552909.png)
 
 <br>
 
