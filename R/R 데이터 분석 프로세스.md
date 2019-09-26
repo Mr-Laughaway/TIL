@@ -4344,6 +4344,215 @@ rsconnect::deployApp('c:/workspace_R/shiny-01')
 
 <br>
 
+
+
+
+
+# 게임 매상 감소 원인 분석 - II
+
+```R
+#단계1: 실행환경으로 데이터 로딩
+#단계2: DAU데이터에 user.info 데이터 결합하기
+#단계3: 세그먼트 분석(성별로 집계, 연령대별 집계, 성별+연령대별 집계)
+#단계4: 가장 빈도수 차이가 큰 세그먼트 분석 결과를 시각화
+
+library(dplyr)
+
+#1
+dau <- read.csv("./data/ws3-dau.csv", header = T, stringsAsFactors = F)
+user_info <- read.csv("./data/ws3-user_info.csv", header = T, stringsAsFactors = F)
+
+#2
+df <- merge(dau, user_info, by=c("user_id"))
+
+#3
+df <- mutate(
+    df 
+    ,log_month = as.character(as.Date(log_date), format="%Y-%m")
+)
+#성별
+df.t.gender <- table(df$log_month, df$gender)
+         
+              F     M
+  2013-08 47343 46842
+  2013-09 38027 38148
+
+#연령대
+df.t.generation <- table(df$log_month, df$generation)
+
+             10    20    30    40    50
+  2013-08 18785 33671 28072  8828  4829
+  2013-09 15391 27229 22226  7494  3835
+
+#성별 연령 두개 조건은 어떻게??
+
+
+#단말기
+table(df$log_month, df$device_type)
+         
+          Android   iOS
+  2013-08   46974 47211
+  2013-09   29647 46528
+
+
+#일별
+df.t.d <- table(df$log_date, df$device_type)
+library(ggplot2)
+
+result <- as.data.frame(df.t.d)
+result$Var1 <- as.Date(result$Var1)
+#plot(df.t.d[, 2], type="l")
+#plot(df.t.d[, 1], type="l")
+rggplot(result, aes(x=Var1, y=Freq, col=Var2, lty=Var2, shape=Var2)) + 
+	geom_line(lwd=1)
+
+
+
+#모범 답안 
+# 단계1 : 실행환경으로 데이터 로딩
+dau <- read.csv("./data/ws3-dau.csv", header = T, stringsAsFactors = F)
+head(dau)
+user.info <- read.csv("./data/ws3-user_info.csv", header = T, stringsAsFactors = F)
+head(user.info)
+
+# 단계2 : DAU데이터에 user.info 데이터 결합하기
+dau.user.info <- merge(dau, user.info, by = c("user_id", "app_name"))
+head(dau.user.info)
+
+# 단계3 : 세그먼트 분석 (성별로 집계, 연령대별 집계, 성별+연령대별 집계, device별 집계)
+# 월 항목을 추가
+dau.user.info$log_month <- substr(dau.user.info$log_date, 1, 7)
+# 세그먼트 분석（성별로 집계）
+table(dau.user.info[, c("log_month", "gender")])
+
+# 세그먼트 분석(연령대별로 집계）
+table(dau.user.info[, c("log_month", "generation")])
+
+# 세그먼트 분석（성별과 연령대를 조합해 집계）
+library(reshape2)
+dcast(dau.user.info, log_month ~ gender + generation, value.var = "user_id",
+length)
+
+# 세그먼트 분석（단말기별로 집계）
+table(dau.user.info[,c("log_month","device_type")])
+
+
+
+# 단계4 : 가장 빈도수 차이가 큰 세그먼트 분석 결과를 시각화
+
+# 날짜별로 단말기별 유저수를 산출하기
+dau.user.info.device.summary <- ddply(dau.user.info, .(log_date, device_type), summarize, dau = length(user_id))
+# 날짜별 데이터 형식으로 변환하기
+dau.user.info.device.summary$log_date <- as.Date(dau.user.info.device.summary$log_date)
+# 시계열의 트렌드 그래프 그리기
+library(ggplot2)
+library(scales)
+limits <- c(0, max(dau.user.info.device.summary$dau))
+ggplot(dau.user.info.device.summary, aes(x=log_date, y=dau, col=device_type, lty=device_type, shape=device_type)) +
+geom_line(lwd=1) +
+geom_point(size=4) +
+scale_y_continuous(label=comma, limits=limits)
+
+table(unique(dau.user.info[, c("log_month", "gender", "user_id")]))
+```
+
+# 배너 광고 반응 비교 검증
+
+```R
+ab.test.imp <-  read.csv("./data/ab_test_imp.csv", header = T, stringsAsFactors = F)
+ab.test.goal <-  read.csv("./data/ab_test_goal.csv", header = T, stringsAsFactors = F)
+
+df <- join(ab.test.imp, ab.test.goal, by=c("user_id", "transaction_id"))
+
+ab.test.imp <- merge(ab.test.imp, ab.test.goal, by="transaction_id", all.x=T, suffixes=c("",".g"))
+head(ab.test.imp)
+
+#1. 배너광고의 표시횟수 정보데이터와 클릭횟수정보 데이터를 결합 (merge함수)
+ab.test.imp <- merge(ab.test.imp, ab.test.goal, by="transaction_id", all.x=T, suffixes=c("",".g"))
+head(ab.test.imp)
+#2. 클릭했는지 하지 않았는지 나타내는 플래그 작성 (ifesle 함수)
+#배너광고 클릭회수 정보의 userid값이 NA인 경우 0, 이외의 경우
+#1로 기입
+ab.test.imp$click <- ifelse(!is.na(ab.test.imp$user_id.g), 1, 0)
+
+#3. 클릭률 집계(plyr 패키지의 ddply 함수)
+#test_case 항목별로 집계
+#클릭한 사람의 합계 / 배너광고가 표시된 유저수
+
+result <- ab.test.imp %>% group_by(test_case) %>% dplyr::summarise(hit=sum(click), n=n())
+
+# A tibble: 2 x 3
+  test_case   hit     n
+  <fct>     <dbl> <int>
+1 A          3542 44134
+2 B          5056 43790
+result$prob <- result$hit / result$n
+
+#4.  검정 실행하기 (ℎ .  )
+#2개의 배너광고와 ‘클릭했음/하지 않았음’에 대한 관계를 가설 검정
+#값이 0에 가까우면 가까울수록 차이가 있다는 것을 나타내고,
+#일반적으로 0.05보다 작은 값이면 ‘통계적으로 차이가 있다’고 할
+#수 있다
+chisq.test(ab.test.imp$test_case, ab.test.imp$click)
+
+
+#5. 날짜별, 테스트 케이스별로 클릭률 산출
+
+#6. 테스트 케이스별로 클릭률 산출
+
+#7. 테스트 케이스별 클릭률의 시계열 추이 그래프로 시각화
+
+
+
+#모범 답안
+# 클릭 플래그를 추가
+ab.test.imp$is.goal <- ifelse(is.na(ab.test.imp$user_id.g),0,1)
+head(ab.test.imp)
+
+ 
+# 클릭율을 계산하기
+library(plyr)
+ddply(ab.test.imp, .(test_case), summarize,
+cvr=sum(is.goal)/length(user_id))
+
+# χ2 검정을 실행하기
+chisq.test(ab.test.imp$test_case, ab.test.imp$is.goal)
+
+ 
+# 날짜별, 테스트 케이스별로 클릭율을 산출하기
+ab.test.imp.summary <-
+ddply(ab.test.imp, .(log_date, test_case), summarise,
+imp=length(user_id), cv=sum(is.goal), cvr=sum(is.goal)/length(user_id))
+
+# 테스트 케이스별로 클릭율을 산출하기
+ab.test.imp.summary <-
+ddply(ab.test.imp.summary, .(test_case), transform,
+cvr.avg=sum(cv)/sum(imp))
+head(ab.test.imp.summary)
+
+# 테스트 케이스별 클릭율의 시계열추이 그래프
+library(ggplot2)
+library(scales)
+
+ab.test.imp.summary$log_date <- as.Date(ab.test.imp.summary$log_date)
+limits <- c(0, max(ab.test.imp.summary$cvr))
+ggplot(ab.test.imp.summary,aes(x=log_date,y=cvr, col=test_case,lty=test_case, shape=test_case)) +
+geom_line(lwd=1) +
+geom_point(size=4) +
+geom_line(aes(y=cvr.avg,col=test_case)) +
+scale_y_continuous(label=percent, limits=limits)
+```
+
+<br>
+
+# 매스미디어 광고 실시의 최적화 문제
+
+
+
+
+
+
+
 # 복습
 
 - 표본 추출해서 비율의 차이 비교 - 단일 집단 비율검점
