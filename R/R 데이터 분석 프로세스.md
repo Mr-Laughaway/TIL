@@ -4640,17 +4640,17 @@ TV광고 : 42000(만원) , 잡지 광고 : 75000(만원)
 ######################################################
 게임 단말기  피처폰에서 스마트폰으로  이용 분석
 ######################################################
-단계 1: CSV 파일 읽기
+#단계 1: CSV 파일 읽기
 
-단계 2: 유저별로 ID 이전을 한 유저인지 아닌지 나타내는 데이터 정리
+#단계 2: 유저별로 ID 이전을 한 유저인지 아닌지 나타내는 데이터 정리
 
-단계 3: 날짜별 게임 이용 상황 데이터 정리
+#단계 3: 날짜별 게임 이용 상황 데이터 정리
 
-단계 4: 로지스틱 회귀분석을 통한 모델 작성
+#단계 4: 로지스틱 회귀분석을 통한 모델 작성
 
-단계 5: 작성된 모델을 이용해서 예측하기
+#단계 5: 작성된 모델을 이용해서 예측하기
 
-단계 6: 예측결과로부터 유저 군 추측하기
+#단계 6: 예측결과로부터 유저 군 추측하기
 
 # 모범 답안
 #단계 1: CSV 파일 읽기
@@ -4689,8 +4689,7 @@ head(fp.mau1)
 
 # 1월에는 피쳐폰으로 이용하다가 2월에는 스마트폰으로 이용했는가
 sp.mau2$is_sp <- 1
-fp.mau1 <- merge(fp.mau1, sp.mau2[, c("user_id", "is_sp")],
-by = "user_id", all.x = T)
+fp.mau1 <- merge(fp.mau1, sp.mau2[, c("user_id", "is_sp")], by = "user_id", all.x = T)
 fp.mau1$is_sp[is.na(fp.mau1$is_sp)] <- 0
 head(fp.mau1)
 
@@ -4700,28 +4699,22 @@ fp.mau1 <- fp.mau1[fp.mau1$is_access == 0 | fp.mau1$is_sp == 1, ]
 head(fp.mau1)
 
 
-
 #단계 3: 날짜별 게임 이용 상황 데이터 정리
 library(reshape2)
 fp.dau1 <- dau[dau$device == "FP" & dau$region_month == "2013-01", ]
 fp.dau1$is_access <- 1
-fp.dau1.cast <- dcast(fp.dau1, user_id ~ region_day, value.var =
-"is_access", function(x) as.character(length(x)))
+fp.dau1.cast <- dcast(fp.dau1, user_id ~ region_day, value.var = "is_access", function(x){ as.character(length(x))} )
 names(fp.dau1.cast)[-1] <- paste0("X", 1:31, "day")
 head(fp.dau1.cast)
 
 # 2월에 스마트폰으로 이용한 유저 데이터를 결합하기
-fp.dau1.cast <- merge(fp.dau1.cast, fp.mau1[, c("user_id", "is_sp")],
-by = "user_id")
+fp.dau1.cast <- merge(fp.dau1.cast, fp.mau1[, c("user_id", "is_sp")], by = "user_id")
 head(fp.dau1.cast)
 table(fp.dau1.cast$is_sp)
 
 #단계 4: 로지스틱 회귀분석을 통한 모델 작성
-fit.logit <- step(glm(is_sp ~ ., data = fp.dau1.cast[, -1],
-family = binomial))
+fit.logit <- step(glm(is_sp ~ ., data = fp.dau1.cast[, -1], family = binomial))
 summary(fit.logit)
-
-
 
 #단계 5: 작성된 모델을 이용해서 예측하기
 # SP(스마트폰) 이전 확률
@@ -4729,8 +4722,6 @@ fp.dau1.cast$prob <- round(fitted(fit.logit), 2)
 # SP(스마트폰)으로 이전할 지 예측
 fp.dau1.cast$pred <- ifelse(fp.dau1.cast$prob > 0.5, 1, 0)
 head(fp.dau1.cast)
-
-
 
 #단계 6: 예측결과로부터 유저 군 추측하기
 # 예측과 실제
@@ -4748,6 +4739,7 @@ head(fp.dau1.cast2[order(fp.dau1.cast2$prob, decreasing = T), ])
 fp.dau1.cast3 <- fp.dau1.cast[fp.dau1.cast$is_sp == 0 & fp.dau1.cast$pred
 == 0, ]
 head(fp.dau1.cast3[order(fp.dau1.cast3$prob), ])
+                     
 
 #해석:                
 #자연탈퇴가 많다.
