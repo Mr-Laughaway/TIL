@@ -2,6 +2,7 @@
 
 
 
+
 ![Statistics](assets/title.png)
 
 > - 객체지향 프로그래밍 언어
@@ -415,9 +416,8 @@ as.Data()
   ```R
   as.Date("2017-07-31") - as.Date("2017-07-04")
   Time difference of 27 days
-  
   ```
-
+  
 - POSIX
 
   - POSIXt 날짜를 년, 월,일로 표시하는 리스트형 클래스
@@ -428,9 +428,8 @@ as.Data()
   Time difference of 0 days
   as.POSIXct("2017-07-04 20:00:00") - as.POSIXct("2017-07-04 18:30")
   Time difference of 1.5 hours
-  
   ```
-
+  
 - lubridate 패키지로 날짜와 시간 제어하기
 
   ```R
@@ -442,7 +441,6 @@ as.Data()
   month(date,label=T) #월을 영문으로 출력
   month(date,label=F) #월을 숫자로 출력
   day(date)
-  
   ```
 
 ### 1.4.2. 자료형 확인
@@ -451,14 +449,12 @@ as.Data()
 
 ```R
 class(변수)
-
 ```
 
 #### 1.4.2.2. 자료의 Type 확인
 
 ```R
 mode(변수)
-
 ```
 
 #### 1.4.2.3. is
@@ -472,7 +468,6 @@ is.list(변수)
 is.data.frame(변수)
 is.array(변수)
 is.matrix(변수)
-
 ```
 
 ### 1.4.3. 자료형 형변환
@@ -493,9 +488,8 @@ is.matrix(변수)
   as.complex(변수) #복소수
   as.factor(객체)
   as.Date(객체)
-  
   ```
-
+  
 - 사용 예1)
 
   ```R
@@ -510,9 +504,8 @@ is.matrix(변수)
   result <- as.integer(x) * 3
   print(result)
   [1] 3 6 9
-  
   ```
-
+  
 - 사용 예2)
 
   ```R
@@ -524,7 +517,6 @@ is.matrix(변수)
   [1] 5.3
   Im(z)	#허수부만 반환
   [1] -3
-  
   ```
 
 ### 1.4.4. Factor
@@ -6373,6 +6365,8 @@ geom_bar(stat="identity")
 ```
 
 ![1568257879521](assets/1568257879521.png)
+
+
 
 <br>
 

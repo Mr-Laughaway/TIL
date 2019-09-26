@@ -4547,6 +4547,212 @@ scale_y_continuous(label=percent, limits=limits)
 
 # 매스미디어 광고 실시의 최적화 문제
 
+```R
+#단계1: CSV 파일 읽기
+ad.result <-  read.csv("./data/ad_result.csv", header = T, stringsAsFactors=F)
+
+#단계2,3: TV, 잡지 광고비와 신규 유저수의 산점도로 상관(데이터 간의 관계 크기)을 확인
+par(mfrow=c(1, 2))
+> plot(ad.result$tvcm, ad.result$install)
+> plot(ad.result$magazine, ad.result$install)
+
+#회귀분석 실행 (lm 함수)
+model <- lm(install ~ tvcm + magazine, data=ad.result)
+lm(formula = install ~ tvcm + magazine, data = ad.result)
+
+Coefficients:
+(Intercept)         tvcm     magazine  
+    188.174        1.361        7.250  
+
+#회귀분석 해석
+summary(model)
+
+Call:
+lm(formula = install ~ tvcm + magazine, data = ad.result)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1406.87  -984.49   -12.11   432.82  1985.84 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept)  188.1743  7719.1308   0.024  0.98123   
+tvcm           1.3609     0.5174   2.630  0.03390 * 
+magazine       7.2498     1.6926   4.283  0.00364 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1387 on 7 degrees of freedom
+Multiple R-squared:  0.9379,	Adjusted R-squared:  0.9202 
+F-statistic: 52.86 on 2 and 7 DF,  p-value: 5.967e-05
+#magazine 은 유의기준 0.05보다 훨씬 낮으므로 install에 대한 영향력이 큰 유의미한 독립변수로 볼 수 있다. t값 또안 4.283 이상으로 좋게 나온다.
+#tvcm 은 유의확률 0.3 정도로 유의기준보다 조금 낮으므로 유의미한 독립 변수로 볼 수 있다. t 값의 경우는 2.63 정도로 magaize 보다는 영향력이 낮은것으로 파악된다.
+->tvcm 비중을 줄이고 magazine의 광고를 많이 늘린다!
+
+#회귀모델의 상세검토 
+#     잔차분포     중회귀모델의 계수
+#     결정계수와 자유도 조정 결정계수
+Residual standard error: 1387 on 7 degrees of freedom
+Multiple R-squared:  0.9379,	Adjusted R-squared:  0.9202 
+F-statistic: 52.86 on 2 and 7 DF,  p-value: 5.967e-05
+
+
+#모범 답안
+#단계 1: CSV 파일 읽기
+ad.data <- read.csv("./data/ad_result.csv", header = T, stringsAsFactors = F)
+ad.data
+#단계 2: TV 광고의 광고비용과 신규 유저수의 산점도 그리기
+library(ggplot2)
+library(scales)
+
+ggplot(ad.data, aes(x = tvcm, y = install)) + geom_point() + 
+xlab("TV 광고비") + ylab("신규 유저수") + 
+scale_x_continuous(label = comma) +
+scale_y_continuous(label = comma)
+
+#단계 3: 잡지 광고의 광고비용과 신규 유저수의 산점도 그리기
+ggplot(ad.data, aes(x = magazine, y = install)) + geom_point() + 
+xlab("잡지 광고비") + ylab("신규 유저수") + 
+scale_x_continuous(label = comma) + 
+scale_y_continuous(label = comma)
+
+#단계 4: 회귀분석 실행
+fit <- lm(install ~ ., data = ad.data[, c("install", "tvcm", "magazine")])
+fit
+
+#단계 5: 회귀분석 해석
+# 회귀분석 결과를 해석하기
+summary(fit) 
+
+#TV광고보다 잡지 광고가 광고 효과가 높다는 것을 알 수 있습니다.
+신규 유저수 = 0.136 * TV광고비 + 0.725*잡지 광고비 + 188.174
+
+#3개월에 한번 광고 발주를 할때 
+TV광고 : 42000(만원) , 잡지 광고 : 75000(만원)
+이면 대략 신규 유저수 55000명 획득 예측
+```
+
+<br>
+
+# 게임 단말기  이용 분석
+
+```R
+######################################################
+게임 단말기  피처폰에서 스마트폰으로  이용 분석
+######################################################
+단계 1: CSV 파일 읽기
+
+단계 2: 유저별로 ID 이전을 한 유저인지 아닌지 나타내는 데이터 정리
+
+단계 3: 날짜별 게임 이용 상황 데이터 정리
+
+단계 4: 로지스틱 회귀분석을 통한 모델 작성
+
+단계 5: 작성된 모델을 이용해서 예측하기
+
+단계 6: 예측결과로부터 유저 군 추측하기
+
+# 모범 답안
+#단계 1: CSV 파일 읽기
+dau <- read.csv("./data/ws6-dau.csv", header = T, stringsAsFactors = F)
+head(dau)
+
+
+
+#단계 2: 유저별로 ID 이전을 한 유저인지 아닌지 나타내는 데이터 정리
+mau <- unique (dau[, c("region_month", "device", "user_id")])
+fp.mau <- unique (dau[dau$device=="FP", c("region_month", "device",
+"user_id")])
+sp.mau <- unique (dau[dau$device=="SP", c("region_month", "device",
+"user_id")])
+
+# 1월과 2월 데이터를 나누기
+fp.mau1 <- fp.mau[fp.mau$region_month == "2013-01", ]
+fp.mau2 <- fp.mau[fp.mau$region_month == "2013-02", ]
+sp.mau1 <- sp.mau[sp.mau$region_month == "2013-01", ]
+sp.mau2 <- sp.mau[sp.mau$region_month == "2013-02", ]
+# 1월에 피쳐폰으로 이용했던 유저가 2월에도 이용했는가
+mau$is_access <- 1
+fp.mau1 <- merge(fp.mau1, mau[mau$region_month == "2013-02",
+c("user_id", "is_access")], by = "user_id", all.x = T)
+fp.mau1$is_access[is.na(fp.mau1$is_access)] <- 0
+head(fp.mau1)
+
+
+# 1월에 피쳐폰으로 이용했고 2월에도 피쳐폰으로 이용했는가
+fp.mau2$is_fp <- 1
+fp.mau1 <- merge(fp.mau1, fp.mau2[, c("user_id", "is_fp")],
+by = "user_id", all.x = T)
+fp.mau1$is_fp[is.na(fp.mau1$is_fp)] <- 0
+head(fp.mau1)
+
+
+# 1월에는 피쳐폰으로 이용하다가 2월에는 스마트폰으로 이용했는가
+sp.mau2$is_sp <- 1
+fp.mau1 <- merge(fp.mau1, sp.mau2[, c("user_id", "is_sp")],
+by = "user_id", all.x = T)
+fp.mau1$is_sp[is.na(fp.mau1$is_sp)] <- 0
+head(fp.mau1)
+
+
+# 1월에는 피쳐폰으로 이용했는데 2월에는 이용하지 않았거나 혹은 스마트폰으로 이용한 유저
+fp.mau1 <- fp.mau1[fp.mau1$is_access == 0 | fp.mau1$is_sp == 1, ]
+head(fp.mau1)
+
+
+
+#단계 3: 날짜별 게임 이용 상황 데이터 정리
+library(reshape2)
+fp.dau1 <- dau[dau$device == "FP" & dau$region_month == "2013-01", ]
+fp.dau1$is_access <- 1
+fp.dau1.cast <- dcast(fp.dau1, user_id ~ region_day, value.var =
+"is_access", function(x) as.character(length(x)))
+names(fp.dau1.cast)[-1] <- paste0("X", 1:31, "day")
+head(fp.dau1.cast)
+
+# 2월에 스마트폰으로 이용한 유저 데이터를 결합하기
+fp.dau1.cast <- merge(fp.dau1.cast, fp.mau1[, c("user_id", "is_sp")],
+by = "user_id")
+head(fp.dau1.cast)
+table(fp.dau1.cast$is_sp)
+
+#단계 4: 로지스틱 회귀분석을 통한 모델 작성
+fit.logit <- step(glm(is_sp ~ ., data = fp.dau1.cast[, -1],
+family = binomial))
+summary(fit.logit)
+
+
+
+#단계 5: 작성된 모델을 이용해서 예측하기
+# SP(스마트폰) 이전 확률
+fp.dau1.cast$prob <- round(fitted(fit.logit), 2)
+# SP(스마트폰)으로 이전할 지 예측
+fp.dau1.cast$pred <- ifelse(fp.dau1.cast$prob > 0.5, 1, 0)
+head(fp.dau1.cast)
+
+
+
+#단계 6: 예측결과로부터 유저 군 추측하기
+# 예측과 실제
+table(fp.dau1.cast[, c("is_sp", "pred")])
+
+# 예측결과로부터 유저군을 추측하기
+fp.dau1.cast1 <- fp.dau1.cast[fp.dau1.cast$is_sp == 1 & fp.dau1.cast$pred
+== 1, ]
+head(fp.dau1.cast1[order(fp.dau1.cast1$prob, decreasing = T), ])
+
+fp.dau1.cast2 <- fp.dau1.cast[fp.dau1.cast$is_sp == 0 & fp.dau1.cast$pred
+== 1, ]
+head(fp.dau1.cast2[order(fp.dau1.cast2$prob, decreasing = T), ])
+
+fp.dau1.cast3 <- fp.dau1.cast[fp.dau1.cast$is_sp == 0 & fp.dau1.cast$pred
+== 0, ]
+head(fp.dau1.cast3[order(fp.dau1.cast3$prob), ])
+
+#해석:                
+#자연탈퇴가 많다.
+```
+
 
 
 
