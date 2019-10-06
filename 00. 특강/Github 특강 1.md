@@ -1,8 +1,6 @@
-<h1>Github 특강 - 1</h1>
+# Github 특강 - 1
 
-<br>
-
-# 목차
+## 목차
 
 - [Github 특강](#github-특강)
   - [마크다운 기초](#i-마크다운-기초)
@@ -10,17 +8,9 @@
   - [코드 블락](#iii-코드-블락)
   - [Github First!!!](#iv-github-first)
 
-<br>
+## Github 특강
 
-<br>
-
-# Github 특강
-
-Github로 취업하기
-
-<br>
-
-## I. 마크다운 기초
+### I. 마크다운 기초
 
 가족마크다운 문법
 
@@ -32,7 +22,7 @@ Github로 취업하기
 
 <br>
 
-## II. 마크다운 문법
+### II. 마크다운 문법
 
  `*`,  `**`,  `***`
 
@@ -42,9 +32,7 @@ Github로 취업하기
 
 > 와 이거는 이용문을 쓸 때 쓰면 되겠네 :
 
-<br>
-
-## III. 코드 블락
+ ### III. 코드 블락
 
 코드블락을 쓸 때는 ```을 활용한다.
 
@@ -63,11 +51,7 @@ class Person:
         self.name = name
 ```
 
-살짝 수정 테스트
-
-<br>
-
-## IV. Github First!!!
+ ### IV. Github First!!!
 
 Github에 가입하고 설치하고 이 파일을 올려보자!
 

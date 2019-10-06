@@ -1,5 +1,4 @@
-<h1>Github 특강 - 2</h1>
-<br>
+# Github 특강 - 2
 
 # 목차
 
@@ -33,10 +32,6 @@
   - [텔레그램 봇 만들기](#22-텔레그램-봇-만들기)
   - [HEROKU에 배포](#23-heroku에-배포)
 
-<br>
-
-<br>
-
 # 1. Git
 
 ![github log](.assets/what-is-github-1-1.png)
@@ -48,8 +43,6 @@
 - 참고 문서
   - [Git scm](https://git-scm.com/book/ko/v2)
   - [Git 입문](https://backlog.com/git-tutorial/kr/)
-
-<br>
 
 ## 1.1 기본 사용법
 
@@ -69,8 +62,6 @@ $ git config --global --list
 user.email=mr.laughaway@gmail.com
 user.name=Mr-Laughaway
 ```
-
-<br>
 
 ### 1.1.2. git 활용 기초
 
@@ -132,8 +123,6 @@ user.name=Mr-Laughaway
    ```bash
    $ git status
    ```
-
-<br>
 
 ###  1.1.3. 원격저장소(remote) 활용하기
 
@@ -220,8 +209,6 @@ user.name=Mr-Laughaway
      >>>>>>>> aslkdfjasdaslkkdfks11283lsfskdf
      ```
 
-<br>
-
 ### 1.1.4. 되돌리기
 
 1. staging area 에서 `unstage`
@@ -267,18 +254,11 @@ user.name=Mr-Laughaway
    $ git commit -a -m '한번에 한다'
    ```
 
-
-<br>
-
-<br>
-
 ## 1.2. Github Pages
 
 ### 1.2.1. Github에 page repository 생성
 
 > github에서 new repository를 통하여 `{github id}.github.io` 라는 이름의 레포지토리를 생성한다.
-
-<br>
 
 ### 1.2.2. Bootstrap start templet의 RESUME 
 
@@ -303,11 +283,6 @@ user.name=Mr-Laughaway
 
   [지킬](https://jekyllrb-ko.github.io/), [갯츠비](https://www.gatsbyjs.org/)
 
-
-<br>
-
-<br>
-
 ## 1.3. Branch
 
 ### 1.3.1. Branch 기본
@@ -326,8 +301,6 @@ $ git checkout -b {브랜치명} #브랜치 생성 및 이동
 $ git merge {브랜치명} #브랜치명을 지금 브랜치로 병합
 (master) $ git merge feature/index #feathre/index 브랜치를 master로 병합
 ```
-
-<br>
 
 ### 1.3.2. fast-forward strategy
 
@@ -350,8 +323,6 @@ Fast-forward
 (master) $ git branch -d feature/test #브랜치 삭제
 Deleted branch feature/test (was 7a7cb08).
 ```
-
-<br>
 
 ### 1.3.3. recursive strategy
 
@@ -402,8 +373,6 @@ Merge made by the 'recursive' strategy.
 * 15e9860 Complete Index page
 * 08fe688 Init index.html
 ```
-
-<br>
 
 ### 1.3.4. 충돌 및 직접해결
 
@@ -465,8 +434,6 @@ Automatic merge failed; fix conflicts and then commit the result.
 * 0784fa4 clean
 ```
 
-<br>
-
 ### 1.3.5. stash - 임시 공간
 
 > 작업 중에 작업이 완료되지 않아서 커밋을 하기 애매한 상황일 경우 임시적으로 현재의 변경사항을 저장할 수 있는 공간이 있다.
@@ -495,10 +462,6 @@ Automatic merge failed; fix conflicts and then commit the result.
    $ git stash drop #삭제하기
    ```
 
-<br>
-
-<br>
-
 ## 1.4. Reset vs Revert
 
 ### 1.4.1. Reset
@@ -517,8 +480,6 @@ Automatic merge failed; fix conflicts and then commit the result.
    $ git reset --hard {커밋해시코드}
    ```
 
-<br>
-
 ### 1.4.2. Revert
 
 > 특정 시점의 이력으로 돌아갔다는 커밋과 함께 되돌릴 수 있다.
@@ -527,15 +488,9 @@ Automatic merge failed; fix conflicts and then commit the result.
 $ git revert {커밋해시코드}
 ```
 
-<br>
-
 ### 1.4.3. reflog
 
 > `git rebase` 또는 `git reset` 등으로 커밋이 삭제될 수 있다. 하지만, git 이력은 보관되고 있는데 이러한 이력을 볼 수 있는 명령어가 `git reflog` 이다. `reflog` 이력을 통해 확인한 hashcode 들로 여러 복구 작업을 할 수 있다.
-
-<br>
-
-<br>
 
 ## 1.5. Github Flow
 
@@ -547,10 +502,6 @@ $ git revert {커밋해시코드}
 >
 >`hotfix`와 가장 작은 기능을 구분하지 않는다. 어차피 둘 다 개발자가 수정해야 되는 일중에 하나이다. 단지 우선순위가 어디가 높냐라는 단계이다.
 
-<br>
-
-<br>
-
 ## 1.6. 유용한 github 관련 페이지 
 
 | Github 정보      |                                                              |
@@ -559,12 +510,6 @@ $ git revert {커밋해시코드}
 | 채용 관련 가이드 | https://github.com/jojoldu/junior-recruit-scheduler          |
 | 치트시트!        | http://ndpsoftware.com/git-cheatsheet.html                   |
 | .gitignore 헬퍼  | http://gitignore.io/                                         |
-
-<br>
-
-<br>
-
-<br>
 
 # 2. Python 입문
 
@@ -644,8 +589,6 @@ $ git revert {커밋해시코드}
    
    ```
 
-<br>
-
 ## 2.2. 텔레그램 봇 만들기
 
 1. @botfather 에게 말해서 챗봇 만들기.
@@ -673,8 +616,6 @@ $ git revert {커밋해시코드}
    ```
    https://api.telegram.org/bot********************************************/sendMessage?chat_id=936561044&text=안녕
    ```
-
-<br>
 
 ## 2.3. HEROKU에 배포
 
