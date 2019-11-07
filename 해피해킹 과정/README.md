@@ -128,10 +128,15 @@
   >  독립적인 파이썬 가상환경 관리에 용이한 패키지
 
   ```bash
-  pip install virtualenv
+  > pip install virtualenv
   
-  virtualenv venv
-  source venv/Scripts/activate
+  > virtualenv venv
+  
+  # 가상환경으로 들어가기
+  > source venv/Scripts/activate
+  
+  # 빠져나가기
+  > deactivate
   ```
 
 - flask 설치
