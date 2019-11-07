@@ -2,6 +2,12 @@
 # Created by https://www.gitignore.io/api/windows,eclipse,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=windows,eclipse,visualstudiocode
 
+# Custom
+venv/
+
+# Python
+*.pyc
+
 ### Eclipse ###
 .metadata
 bin/
