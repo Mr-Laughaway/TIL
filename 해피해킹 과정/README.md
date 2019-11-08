@@ -624,16 +624,45 @@ elif "/인디안" in text:
             msg = f"{name} : {pre} {mid}{suf}"
 ```
 
-
-
 ### Papago 번역 붙여보기
 
 #### 사전준비
 
 - NAVER 개발자 센터 App에  NMT 번역 API 설정
 - `localhost` 등록
+- .env에 키 설정 및 app.py에 headers 등록
 
-#### App.py 내용 추가
+#### 단독으로 붙여보기
+
+```python
+# -----------------------------------------------------------------------------
+# 파파고 NMT 번역
+# -----------------------------------------------------------------------------
+@app.route('/papago')
+def papago():
+    C_ID = config('C_ID')
+    C_SC = config('C_SC')
+    url = "	https://openapi.naver.com/v1/papago/n2mt"
+
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Naver-Client-Id': C_ID,
+        'X-Naver-Client-Secret': C_SC
+    }
+
+    data = {
+        'source': 'ko',
+        'target': 'en',
+        'text': "안녕하세요"
+    }
+
+    req = requests.post(url, headers=headers, data=data).json()
+    pprint(req['message']['result']['translatedText'])
+
+    return "Finish"
+```
+
+#### 텔레그램과 붙여보기 내용 추가
 
 ```python
 elif "/번역" in text:
@@ -648,7 +677,31 @@ elif "/번역" in text:
             msg = "번역 결과: " + res['message']['result']['translatedText']
 ```
 
+### Python Anywhere 설정
 
+#### 사전 준비
 
+WEB > Add New Webapp > Files > my site > flask_app.py > 코드 복사 붙여넣기 > .env 업로드 > open bash > `pip3 install --user python-decouple`
 
+#### 텔레그램 봇 webHook 재설정
+
+> 텔레그램의 webHook 주소를 Python Anywhere로 설정하면 이제부터 계속 사용 가능하다.
+
+**set_webhook.py**
+
+```python
+from decouple import config
+import requests
+from pprint import pprint
+
+token = config('TOKEN')
+base_url = f"https://api.telegram.org/bot{token}"
+# url = "85bacf34.ngrok.io"
+url = "CodeOrChord.pythonanywhere.com"
+setweb_url = f"/setWebhook?url={url}"
+
+req = requests.get(base_url + setweb_url).json()
+
+pprint(req)
+```
 
