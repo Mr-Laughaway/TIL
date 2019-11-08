@@ -4,6 +4,8 @@
 
 # Custom
 venv/
+.env
+ngrok.exe
 
 # Python
 *.pyc
