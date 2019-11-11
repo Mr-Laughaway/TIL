@@ -23,5 +23,10 @@ urlpatterns = [
     path('', views.index),
     path('<int:age>/', views.age),
     path('square/<int:num>/', views.square),
-    path('<str:calc>/<int:a>/<int:b>/', views.calc)
+    path('<str:calc>/<int:a>/<int:b>/', views.calc),
+    path('profile/<str:name>/<int:age>/', views.profile),
+    path('b4life/<str:name>/', views.b4life),
+    path('image/', views.image),
+    path('dtl/', views.dtl),
+    path('isityourbirth', views.isityourbirth),
 ]

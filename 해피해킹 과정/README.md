@@ -851,6 +851,224 @@ INSTALLED_APPS = [
   <h1>{{age}}</h1>
   ```
 
+#### 동적 주소 실습
+
+- urls.py
+
+  ```python
+  path('square/<int:num>/', views.square),
+  path('<str:calc>/<int:a>/<int:b>/', views.calc)
+  ```
+
+- views.py
+
+  ```python
+  def square(req, num):
+      return render(req, 'square.html', {
+          'num' : num,
+          'sol' : num**2
+      })
+  
+  def calc(req, calc, a, b):
+      if calc == 'plus':
+          sol = a + b
+          calc = "+"
+      elif calc == 'minus':
+          sol = a - b
+          calc = "-"
+      elif calc == 'multi':
+          sol = a * b
+          calc = "*"
+      else:
+          sol = a / b
+          calc = "/"
+  
+      return render(req, 'calc.html', {
+          'calc' : calc,
+          'a' : a,
+          'b' : b,
+          'sol' : sol
+      })
+  ```
+
+### joke2k/faker 사용해보기
+
+> :point_right: https://github.com/joke2k/faker 
+
+#### faker 설치
+
+```bash
+$ pip install faker
+```
+
+#### faker 사용
+
+```python
+from faker import Faker
+...
+ fake = Faker("ko_KR")
+ b4job = fake.job()
+... 
+```
+
+### Lorem Picsum 이용해보기
+
+> :point_right: https://picsum.photos/ 
+>
+> Lorem Ipsum 도 있다.
+
+```python
+def image(req):
+    num = random.choice(range(1, 1000))
+    url = f"https://picsum.photos/id/{num}/320/320"
+    return render(req, 'image.html', {
+        'url' : url
+    })
+```
+
+### Django Template Language(DTL)
+
+> JSP의 EL과 JSTL을 합친 것과 같은(그보다 강력한) 템플릿 언어
+>
+> :point_right: [Django DTL]( https://docs.djangoproject.com/en/2.2/ref/templates/builtins/ ) 
+
+```django
+<h3>1. 반복문</h3>
+{% for f in foods %}
+    <p>{{ f }}</p>
+{% endfor %}
+<hr>
+{% for f in foods %}
+    <p>{{ forloop.counter }}. {{ f }}</p>
+{% endfor %}
+<hr>
+{% for user in empty_list %}
+    <p>{{ user }} 입니다.</p>
+{% empty %}
+    <p>현재 가입한 유저가 없습니다.</p>
+{% endfor %}
+<hr>
+
+<h3>2. 조건문</h3>
+{% if '짜장면' in foods %}
+    <p>짜장면엔 단무지 최고!</p>
+{% endif %}
+<hr>
+{% for f in foods %}
+    {{ forloop.counter }}번째 
+    {% if forloop.first %}
+        <p>짜장면 + 고추가루</p>
+    {% else %}
+        <p>{{ f }}</p>
+    {% endif %}
+{% endfor %}
+<hr>
+
+<h3>3. lorem ipsum</h3>
+{% lorem %}
+<hr>
+{% lorem 3 w %}
+<hr>
+{% lorem 4 w random %}
+<hr>
+{% lorem 2 p %}
+<hr>
+
+<h3>4. length filter 활용</h3>
+{% for message in messages %}
+    {% if message|length > 5 %}
+        <p>글씨가 너무 길어요.</p>
+    {% else %}
+        <p>{{ message }}, {{ message|length}}</p>
+    {% endif %}
+{% endfor %}
+<hr>
+
+<h3>5. 글자수 제한(truncate)</h3>
+<p>{{ my_sentence }}</p>
+<p>{{ my_sentence|truncatewords:3 }} 단어 단위로 문장 제한</p>
+<p>{{ my_sentence|truncatechars:5 }} 글자 단위로 문장 제한</p>
+<p>{{ my_sentence|truncatechars:15 }} 글자 단위로 문장 제한</p>
+<hr>
+
+<h3>6. 글자 관련 필터</h3>
+<p>{{  'abc'|length }}</p>
+<p>{{ 'ABC'|lower }}</p>
+<p>{{ my_sentence|title }}</p>
+<P>{{ foods|random }}</P>
+
+<!-- https://github.com/dbrgn/django-mathfilters -->
+<h3>7. 연산</h3>
+<p> {{ 4|add:6 }}</p>
+<hr>
+
+<h3>8. 날짜 표현</h3>
+{{ timenow }}<br>
+{% now "DATETIME_FORMAT" %}<br>
+{% now "SHORT_DATETIME_FORMAT" %}<br>
+{% now "DATE_FORMAT" %}<br>
+{% now "SHORT_DATE_FORMAT" %}<br>
+<hr>
+{% now "Y년 m월 d일 (D) h:i" %}<br>
+<hr>
+{% now "Y" as current_year %}
+Copyright {{ current_year }}<br>
+<hr>
+{{ timenow|date:"SHORT_DATE_FORMAT" }}
+<hr>
+
+<h3>9. 하이퍼링크</h3>
+{{ 'google.com'|urlize }}
+```
+
+- datetime 
+
+  >  날짜 등을 다루어보고 생일 확인기를 만들어 본다
+
+  html 을 이용하는 방법
+
+  ```html
+  {% now "md" as today %}
+  {% if today == "0322" %}
+  <p>네!</p>
+  {% else %}
+  <p>아니오...</p>
+  {% endif %}
+  
+  <!-- 이 부분은 views.py 에서 계산 해온다 -->
+  {{ d_day }}일 남았습니다.
+  ```
+
+  views.py 이용하는 방법
+
+  ```python
+  def isityourbirth(req):
+      today = datetime.now()
+      print(today)
+      if today.month == 3 and today.date == 22:
+          res = True
+      else:
+          res = False
+  
+      birth = datetime(2020, 3, 22)
+      d_day = (birth - today).days
+  
+      return render(req, 'isityourbirth.html', {
+          'res' : res,
+          'd_day' : d_day
+      })
+  ```
+
+- 주석
+
+  ```html
+  <!-- DTL 주석과 HTML 주석을 따로 적용 시켜줘야함. -->
+  <!-- DTL 주석은 '{#' -->
+  <!-- <p>{#{ 'abc'|length }}</p> -->
+  ```
+
+  
+
 
 
 
