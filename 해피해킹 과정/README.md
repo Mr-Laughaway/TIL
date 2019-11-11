@@ -705,3 +705,187 @@ req = requests.get(base_url + setweb_url).json()
 pprint(req)
 ```
 
+## Django
+
+> 웹 개발 프레임워크.  http://hotframeworks.com/, https://octoverse.github.com/ 에서 좋은트렌드를 유지하고 있는 `python`과 `django`에 대해서 공부해본다.
+
+- MTV(model, template, view)
+
+  - M(model): MVC `M`과 같음
+
+  - T(template): MVC `V`와 같음
+
+    `요청` -> `urls` -> `View` -> `Template` 의 **순서**로 진행된다.
+
+  - V(view): MVC `C`와 같음
+
+### 설치 및 프로젝트 생성
+
+```bash
+$ pip install django
+
+# 폴더명 중복으로 잘 쓰지 않는 방법
+django-admin startproject mysite
+
+# 권장 방법
+$ mkdir django_ex
+$ cd django_ex
+$ django-admin startproject config .
+
+# 서버 실행
+$ python manage.py runserver {<port num>} # 없으면 8000이 기본
+```
+
+### setting.py 설정
+
+```python
+# SECRET_KEY를 decouple을 이용하여 .env 로 옮기는 등의 보안 처리를 한다.
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config('SECRET_KEY')
+
+# localization 설정
+# Internationalization
+# https://docs.djangoproject.com/en/2.2/topics/i18n/
+LANGUAGE_CODE = 'ko-kr'
+
+TIME_ZONE = 'Asia/Seoul'
+```
+
+### app 만들기
+
+```bash
+$ python manage.py startapp pages
+```
+
+#### source 구조
+
+- admin.py
+
+  > database 설정 등 여러가지를 편리하게 설정할 수 있다.
+
+- app.py
+
+  > app의 추가 설정을 하는 곳
+
+- models.py
+
+  - model(M)을 담당하는 소스
+  - class로 만든다
+
+- tests.py
+
+  > 테스트 코드를 작성하는 곳
+
+- views.py
+
+  > controller(C)를 담당하는 소스
+
+#### app 설정
+
+> settings.py 의 INSTALLED_APPS 에 생성한 앱을 설정한다. 새로 생성한 app을 상단에 붙여넣는 방식을 권장한다.
+
+```python
+INSTALLED_APPS = [
+    'pages', # 방금 생성한 app를 등록한다.
+    'django.contrib.admin',
+    'django.contrib.auth',
+    ...
+]
+```
+
+#### index page 만들기
+
+- urls.py 설정
+
+  ```python
+  from pages import views
+  
+  urlpatterns = [
+      path('admin/', admin.site.urls),
+      path('', views.index), #추가
+  ]
+  ```
+
+- views.py에 index 함수 정의
+
+  ```python
+  from django.http import HttpResponse
+  
+  # Create your views here.
+  def index(req):
+      #return HttpResponse("Hello Django")
+      return render(req, 'index.html')
+  ```
+
+- templates 디렉토리 생성 및 `index.html` 작성
+
+  ```html
+  <h1>Index Page</h1>
+  <p>Hello Django!</p>
+  ```
+
+#### 동적 주소 설정하기
+
+- type
+  - `int`: 0 또는 양의 정수와 매치
+  - `str`: /를 제외한 모든 문자열과 매치, 디폴트 값
+  - `slug`: slug 형식(ASCII, 숫자, 하이픈, 밑줄)과 매치
+  - `uuid`: uuid 형식의 문자열과 매치
+
+- urls.py 설정
+
+  ```python
+  path('<int:age>/', views.age),
+  ```
+
+- views.py 설정
+
+  ```python
+  def age(req, age):
+      return render(req, 'age.html', {'age' : age})
+  ```
+
+- age.html 작성
+
+  ```html
+  <h1>{{age}}</h1>
+  ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
