@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+Subway
+{% endblock%}
+{% block body %}
+<ul>
+    <li>이름: {{ name }}</li>
+    <li>주문일자: {{ date }}</li>
+    <li>샌드위치: {{ sandwich }}</li>
+    <li>빵 종류: {{ bread }}</li>
+    <li>사이즈: {{ size }}</li>
+    <li>추가요청: {{ etc }}</li>
+</ul>
+{% endblock %}

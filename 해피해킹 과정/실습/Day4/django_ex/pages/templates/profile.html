@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Age page</title>
+</head>
+<body>
+    <br>
+    <h3>안녕! 난 {{intro}} [{{name}}]!</h3>
+    <h3>겂 없는 [{{age}}]살이지.</h3>
+
+    {% load staticfiles %}
+    <img src="{% static 'img/poketmon.jpg' %}">
+    <br/>
+
+    <h4>내 인디언 스승인 &lt;{{indian}}&gt;님이 이번 주 로또를 점지해 줄거야!!</h4>
+    <h4>이번 주 로또는 {{lotto}}!!</h4>
+    <h5>행운이 있길 바래~ 찡끗</h5>
+    
+</body>
+</html>

@@ -705,3 +705,658 @@ req = requests.get(base_url + setweb_url).json()
 pprint(req)
 ```
 
+## Django
+
+> 웹 개발 프레임워크.  http://hotframeworks.com/, https://octoverse.github.com/ 에서 좋은트렌드를 유지하고 있는 `python`과 `django`에 대해서 공부해본다.
+
+- MTV(model, template, view)
+
+  - M(model): MVC `M`과 같음
+
+  - T(template): MVC `V`와 같음
+
+    `요청` -> `urls` -> `View` -> `Template` 의 **순서**로 진행된다.
+
+  - V(view): MVC `C`와 같음
+
+### 설치 및 프로젝트 생성
+
+```bash
+$ pip install django
+
+# 폴더명 중복으로 잘 쓰지 않는 방법
+django-admin startproject mysite
+
+# 권장 방법
+$ mkdir django_ex
+$ cd django_ex
+$ django-admin startproject config .
+
+# 서버 실행
+$ python manage.py runserver {<port num>} # 없으면 8000이 기본
+```
+
+### setting.py 설정
+
+```python
+# SECRET_KEY를 decouple을 이용하여 .env 로 옮기는 등의 보안 처리를 한다.
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config('SECRET_KEY')
+
+# localization 설정
+# Internationalization
+# https://docs.djangoproject.com/en/2.2/topics/i18n/
+LANGUAGE_CODE = 'ko-kr'
+
+TIME_ZONE = 'Asia/Seoul'
+```
+
+### app 만들기
+
+```bash
+$ python manage.py startapp pages
+```
+
+#### source 구조
+
+- admin.py
+
+  > database 설정 등 여러가지를 편리하게 설정할 수 있다.
+
+- app.py
+
+  > app의 추가 설정을 하는 곳
+
+- models.py
+
+  - model(M)을 담당하는 소스
+  - class로 만든다
+
+- tests.py
+
+  > 테스트 코드를 작성하는 곳
+
+- views.py
+
+  > controller(C)를 담당하는 소스
+
+#### app 설정
+
+> settings.py 의 INSTALLED_APPS 에 생성한 앱을 설정한다. 새로 생성한 app을 상단에 붙여넣는 방식을 권장한다.
+
+```python
+INSTALLED_APPS = [
+    'pages', # 방금 생성한 app를 등록한다.
+    'django.contrib.admin',
+    'django.contrib.auth',
+    ...
+]
+```
+
+#### index page 만들기
+
+- urls.py 설정
+
+  ```python
+  from pages import views
+  
+  urlpatterns = [
+      path('admin/', admin.site.urls),
+      path('', views.index), #추가
+  ]
+  ```
+
+- views.py에 index 함수 정의
+
+  ```python
+  from django.http import HttpResponse
+  
+  # Create your views here.
+  def index(req):
+      #return HttpResponse("Hello Django")
+      return render(req, 'index.html')
+  ```
+
+- templates 디렉토리 생성 및 `index.html` 작성
+
+  ```html
+  <h1>Index Page</h1>
+  <p>Hello Django!</p>
+  ```
+
+#### 동적 주소 설정하기
+
+- type
+  - `int`: 0 또는 양의 정수와 매치
+  - `str`: /를 제외한 모든 문자열과 매치, 디폴트 값
+  - `slug`: slug 형식(ASCII, 숫자, 하이픈, 밑줄)과 매치
+  - `uuid`: uuid 형식의 문자열과 매치
+
+- urls.py 설정
+
+  ```python
+  path('<int:age>/', views.age),
+  ```
+
+- views.py 설정
+
+  ```python
+  def age(req, age):
+      return render(req, 'age.html', {'age' : age})
+  ```
+
+- age.html 작성
+
+  ```html
+  <h1>{{age}}</h1>
+  ```
+
+#### 동적 주소 실습
+
+- urls.py
+
+  ```python
+  path('square/<int:num>/', views.square),
+  path('<str:calc>/<int:a>/<int:b>/', views.calc)
+  ```
+
+- views.py
+
+  ```python
+  def square(req, num):
+      return render(req, 'square.html', {
+          'num' : num,
+          'sol' : num**2
+      })
+  
+  def calc(req, calc, a, b):
+      if calc == 'plus':
+          sol = a + b
+          calc = "+"
+      elif calc == 'minus':
+          sol = a - b
+          calc = "-"
+      elif calc == 'multi':
+          sol = a * b
+          calc = "*"
+      else:
+          sol = a / b
+          calc = "/"
+  
+      return render(req, 'calc.html', {
+          'calc' : calc,
+          'a' : a,
+          'b' : b,
+          'sol' : sol
+      })
+  ```
+
+### joke2k/faker 사용해보기
+
+> :point_right: https://github.com/joke2k/faker 
+
+#### faker 설치
+
+```bash
+$ pip install faker
+```
+
+#### faker 사용
+
+```python
+from faker import Faker
+...
+ fake = Faker("ko_KR")
+ b4job = fake.job()
+... 
+```
+
+### Lorem Picsum 이용해보기
+
+> :point_right: https://picsum.photos/ 
+>
+> Lorem Ipsum 도 있다.
+
+```python
+def image(req):
+    num = random.choice(range(1, 1000))
+    url = f"https://picsum.photos/id/{num}/320/320"
+    return render(req, 'image.html', {
+        'url' : url
+    })
+```
+
+### Django Template Language(DTL)
+
+> JSP의 EL과 JSTL을 합친 것과 같은(그보다 강력한) 템플릿 언어
+>
+> :point_right: [Django DTL]( https://docs.djangoproject.com/en/2.2/ref/templates/builtins/ ) 
+
+```django
+<h3>1. 반복문</h3>
+{% for f in foods %}
+    <p>{{ f }}</p>
+{% endfor %}
+<hr>
+{% for f in foods %}
+    <p>{{ forloop.counter }}. {{ f }}</p>
+{% endfor %}
+<hr>
+{% for user in empty_list %}
+    <p>{{ user }} 입니다.</p>
+{% empty %}
+    <p>현재 가입한 유저가 없습니다.</p>
+{% endfor %}
+<hr>
+
+<h3>2. 조건문</h3>
+{% if '짜장면' in foods %}
+    <p>짜장면엔 단무지 최고!</p>
+{% endif %}
+<hr>
+{% for f in foods %}
+    {{ forloop.counter }}번째 
+    {% if forloop.first %}
+        <p>짜장면 + 고추가루</p>
+    {% else %}
+        <p>{{ f }}</p>
+    {% endif %}
+{% endfor %}
+<hr>
+
+<h3>3. lorem ipsum</h3>
+{% lorem %}
+<hr>
+{% lorem 3 w %}
+<hr>
+{% lorem 4 w random %}
+<hr>
+{% lorem 2 p %}
+<hr>
+
+<h3>4. length filter 활용</h3>
+{% for message in messages %}
+    {% if message|length > 5 %}
+        <p>글씨가 너무 길어요.</p>
+    {% else %}
+        <p>{{ message }}, {{ message|length}}</p>
+    {% endif %}
+{% endfor %}
+<hr>
+
+<h3>5. 글자수 제한(truncate)</h3>
+<p>{{ my_sentence }}</p>
+<p>{{ my_sentence|truncatewords:3 }} 단어 단위로 문장 제한</p>
+<p>{{ my_sentence|truncatechars:5 }} 글자 단위로 문장 제한</p>
+<p>{{ my_sentence|truncatechars:15 }} 글자 단위로 문장 제한</p>
+<hr>
+
+<h3>6. 글자 관련 필터</h3>
+<p>{{  'abc'|length }}</p>
+<p>{{ 'ABC'|lower }}</p>
+<p>{{ my_sentence|title }}</p>
+<P>{{ foods|random }}</P>
+
+<!-- https://github.com/dbrgn/django-mathfilters -->
+<h3>7. 연산</h3>
+<p> {{ 4|add:6 }}</p>
+<hr>
+
+<h3>8. 날짜 표현</h3>
+{{ timenow }}<br>
+{% now "DATETIME_FORMAT" %}<br>
+{% now "SHORT_DATETIME_FORMAT" %}<br>
+{% now "DATE_FORMAT" %}<br>
+{% now "SHORT_DATE_FORMAT" %}<br>
+<hr>
+{% now "Y년 m월 d일 (D) h:i" %}<br>
+<hr>
+{% now "Y" as current_year %}
+Copyright {{ current_year }}<br>
+<hr>
+{{ timenow|date:"SHORT_DATE_FORMAT" }}
+<hr>
+
+<h3>9. 하이퍼링크</h3>
+{{ 'google.com'|urlize }}
+```
+
+- datetime 
+
+  >  날짜 등을 다루어보고 생일 확인기를 만들어 본다
+
+  html 을 이용하는 방법
+
+  ```html
+  {% now "md" as today %}
+  {% if today == "0322" %}
+  <p>네!</p>
+  {% else %}
+  <p>아니오...</p>
+  {% endif %}
+  
+  <!-- 이 부분은 views.py 에서 계산 해온다 -->
+  {{ d_day }}일 남았습니다.
+  ```
+
+  views.py 이용하는 방법
+
+  ```python
+  def isityourbirth(req):
+      today = datetime.now()
+      print(today)
+      if today.month == 3 and today.date == 22:
+          res = True
+      else:
+          res = False
+  
+      birth = datetime(2020, 3, 22)
+      d_day = (birth - today).days
+  
+      return render(req, 'isityourbirth.html', {
+          'res' : res,
+          'd_day' : d_day
+      })
+  ```
+
+- 주석
+
+  ```html
+  <!-- DTL 주석과 HTML 주석을 따로 적용 시켜줘야함. -->
+  <!-- DTL 주석은 '{#' -->
+  <!-- <p>{#{ 'abc'|length }}</p> -->
+  ```
+
+### Virtual Env 팁
+
+```bash
+$ pip freeze > requirements.txt
+$ pip install -r requirements.txt
+```
+
+### GET method 통신
+
+- views.py
+
+  ```python
+  def throw(request):
+      return render(request, 'throw.html')
+  
+  def catch(request):
+      # print(request)
+      # print(request.path)
+      # print(request.method)
+      # print(request.META)
+      print(request.GET)
+  
+      message = request.GET.get('message')
+      message2 = request.GET.get('message2')
+      context = {
+          'msg': message,
+          'msg2': message2
+      }
+  
+      return render(request, 'catch.html', context)
+  ```
+
+- template
+
+  ```html
+  <h1>받을 내용 : {{ msg }} / {{ msg2 }}</h1>
+  
+  <form action="/catch/" method="GET">
+      <label for="msg">메세지</label>
+      <input type="text" name="message" id="msg"/><br/>
+      <label for="msg2">메세지2</label>
+      <input type="text" name="message2" id="msg2"/><br/>
+      <input type="submit">
+  </form>
+  ```
+
+### Artii API 사용해보기
+
+- views.py
+
+  ```python
+  def artii(request):
+      return render(request, 'artii.html')
+  
+  def artii_result(request):
+      sent = request.GET.get('sent')
+      sent = urllib.parse.quote(sent)
+  
+      font_url = "http://artii.herokuapp.com/fonts_list"
+      font_list = requests.get(font_url).text.split("\n")
+      font = random.choice(font_list)
+  
+      url = "http://artii.herokuapp.com/make?text=" + sent \
+          + "&font=" + font
+      res_text = requests.get(url).text
+  
+      return render(request, 'artii_result.html', {
+          'result': res_text 
+      })
+  ```
+
+- template
+
+  ```html
+  <!-- artii.html -->
+  <form action="/artii_result/" method="GET">
+      <label for="sent">요청 문장</label>
+      <input type="text" name="sent" id="sent"/>
+      <input type="submit"/>
+  </form>
+  
+  <!-- artii_result.html -->
+  {{ result }}
+  ```
+
+### POST method 통신
+
+> 디비를 생성/변경할 때 주로 사용하고 html body 정보를 담아 전송
+>
+> 원칙적으로 POST 요청은 html 파일로 응답하면 안 됨.
+>
+> - POST 요청이 오면 GET 요청 받는 페이지로 redirec (RESTful)
+>
+> Django는 POST data를 그냥 보내지 않는다.
+>
+> - **csrf_token**(Cross Site Request Forgery Token)을 사용하여 보안성을 확보한다.
+> - 이 토큰을 보내지 않으면 **`403 forbidden error`** 가 발생된다.
+
+- views.py
+
+  ```python
+  def user_new(request):
+      return render(request, 'user_new.html')
+  
+  def user_create(request):
+      username = request.POST.get('name')
+      pw = request.POST.get('pw')
+      
+      context = {
+          'username': username,
+          'pw': pw
+      }
+  
+      return render(request, 'user_create.html', context)
+  ```
+
+- template (중요)
+
+  ```html
+  <form action="/user_create/" method="POST">
+      {% csrf_token %} <!-- 매우 중요!!!!! -->
+      <label for="name">이름</label>
+      <input type="text" name="name" id="name"><br/>
+      <lable for="pw">패스워드</lable>
+      <input type="password" name="pw" id="pw"><br/>
+      <input type="submit">
+  </form>
+  ```
+
+- list 받기
+
+  > 리스트로 넘어온 값은 `request.POST.get`으로 받으면 단일 값만 넘어오므로 `getlist`로 받아야 한다
+
+  ```python
+  data.getlist('etc')
+  ```
+
+### Static File
+
+> HTML 최상단에 `{% load static %}`을 선언하면 기본적으로 static 파일을 사용할 수 있다.
+
+- template
+
+  ```html
+  {% load static %}
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Document</title>
+      <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+      <h1>Static 파일 실습</h1>
+      <img src="{% static 'images/poketmon.jpg' %}"/>
+  </body>
+  </html>
+  ```
+
+- `<app name>/static/<something> ` 구조로 static 파일을 넣어두면 위와 같은 방법으로 사용 가능하다.
+
+### urls.py (중요)
+
+- main urls.py 변경
+
+  ```python
+  from django.contrib import admin
+  from django.urls import path, include
+  
+  urlpatterns = [
+      path('pages/', include('pages.urls')),
+      path('admin/', admin.site.urls),
+  ]
+  ```
+
+- app의 urls.py 작성
+
+  ```
+  from django.urls import path
+  from . import views
+  
+  urlpatterns = [
+      path('throw/', views.throw),
+      path('catch/', views.catch),
+      path('lotto/', views.lotto),
+      path('lotto_result/', views.lotto_result),
+      path('artii/', views.artii),
+      path('artii_result/', views.artii_result),
+      path('user_new/', views.user_new),
+      path('user_create/', views.user_create),
+      path('subway_form/', views.subway_form),
+      path('subway_result/', views.subway_result),
+      path('static_example/', views.static_example),
+  ]
+  ```
+
+- template 폴더에 app 명으로 서브 디렉토리를 만들고 그 안에 모든 template 넣기
+
+  >Django는 template을 찾을 때 첫 번째 app의 template 폴더 밑에 해당 이름의 html파일을 찾기 때문에 디렉토리 분리를 위와 같이 해줘야 한다.
+
+### 템플릿 상속
+
+#### setting.py 설정
+
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'config', 'templates')
+        ],
+        'APP_DIRS': True, #App에 있는 templates를 불러 올 것인지
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+```
+
+#### base template 만들기
+
+> `<app-root>/config/templates/`에  base.html 을 만든다.
+
+***base.html***
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    {% block local_resources %}
+    {% endblock %}
+</head>
+<body>
+    <h1>여기는 BASE입니다.</h1>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
+```
+
+#### 상속받을 html 수정하기
+
+***pages/tempates/pages/index.html***
+
+```html
+{% extends 'base.html' %}
+{% block title %}
+INDEX PAGE
+{% endblock %}
+{% block body %}
+    <h1>여기는 PAGES의 INDEX입니다.</h1>
+{% endblock %}
+```
+
+***pages/template/pages/static_example.html***
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Static Test{% endblock %}
+{% block local_resources %}
+    <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">
+{% endblock %}
+{% block body %}
+    <h1>Static 파일 실습</h1>
+    <img src="{% static 'pages/images/poketmon.jpg' %}" alt="포켓몬"/>
+{% endblock %}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
