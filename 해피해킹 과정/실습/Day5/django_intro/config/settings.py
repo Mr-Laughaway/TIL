@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'utilities',
     'pages',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,8 +56,10 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'config', 'templates')
+        ],
+        'APP_DIRS': True, #App에 있는 templates를 불러 올 것인지
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

@@ -1162,8 +1162,8 @@ $ pip install -r requirements.txt
 >
 > Django는 POST data를 그냥 보내지 않는다.
 >
-> - csrf_token(Cross Site Request Forgery Token)을 사용하여 보안성을 확보한다.
-> - 이 토큰을 보내지 않으면 `403 forbidden error` 가 발생된다.
+> - **csrf_token**(Cross Site Request Forgery Token)을 사용하여 보안성을 확보한다.
+> - 이 토큰을 보내지 않으면 **`403 forbidden error`** 가 발생된다.
 
 - views.py
 
@@ -1203,6 +1203,172 @@ $ pip install -r requirements.txt
   ```python
   data.getlist('etc')
   ```
+
+### Static File
+
+> HTML 최상단에 `{% load static %}`을 선언하면 기본적으로 static 파일을 사용할 수 있다.
+
+- template
+
+  ```html
+  {% load static %}
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Document</title>
+      <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+      <h1>Static 파일 실습</h1>
+      <img src="{% static 'images/poketmon.jpg' %}"/>
+  </body>
+  </html>
+  ```
+
+- `<app name>/static/<something> ` 구조로 static 파일을 넣어두면 위와 같은 방법으로 사용 가능하다.
+
+### urls.py (중요)
+
+- main urls.py 변경
+
+  ```python
+  from django.contrib import admin
+  from django.urls import path, include
+  
+  urlpatterns = [
+      path('pages/', include('pages.urls')),
+      path('admin/', admin.site.urls),
+  ]
+  ```
+
+- app의 urls.py 작성
+
+  ```
+  from django.urls import path
+  from . import views
+  
+  urlpatterns = [
+      path('throw/', views.throw),
+      path('catch/', views.catch),
+      path('lotto/', views.lotto),
+      path('lotto_result/', views.lotto_result),
+      path('artii/', views.artii),
+      path('artii_result/', views.artii_result),
+      path('user_new/', views.user_new),
+      path('user_create/', views.user_create),
+      path('subway_form/', views.subway_form),
+      path('subway_result/', views.subway_result),
+      path('static_example/', views.static_example),
+  ]
+  ```
+
+- template 폴더에 app 명으로 서브 디렉토리를 만들고 그 안에 모든 template 넣기
+
+  >Django는 template을 찾을 때 첫 번째 app의 template 폴더 밑에 해당 이름의 html파일을 찾기 때문에 디렉토리 분리를 위와 같이 해줘야 한다.
+
+### 템플릿 상속
+
+#### setting.py 설정
+
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'config', 'templates')
+        ],
+        'APP_DIRS': True, #App에 있는 templates를 불러 올 것인지
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+```
+
+#### base template 만들기
+
+> `<app-root>/config/templates/`에  base.html 을 만든다.
+
+***base.html***
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    {% block local_resources %}
+    {% endblock %}
+</head>
+<body>
+    <h1>여기는 BASE입니다.</h1>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
+```
+
+#### 상속받을 html 수정하기
+
+***pages/tempates/pages/index.html***
+
+```html
+{% extends 'base.html' %}
+{% block title %}
+INDEX PAGE
+{% endblock %}
+{% block body %}
+    <h1>여기는 PAGES의 INDEX입니다.</h1>
+{% endblock %}
+```
+
+***pages/template/pages/static_example.html***
+
+```html
+{% extends 'base.html' %}
+{% block title %}Static Test{% endblock %}
+{% block local_resources %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">
+{% endblock %}
+{% block body %}
+    <h1>Static 파일 실습</h1>
+    <img src="{% static 'pages/images/poketmon.jpg' %}" alt="포켓몬"/>
+{% endblock %}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

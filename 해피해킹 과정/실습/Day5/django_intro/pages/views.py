@@ -10,7 +10,7 @@ import urllib
 # GET Method 데이터 주고 받기 1
 # -----------------------------------------------------------------------------
 def throw(request):
-    return render(request, 'throw.html')
+    return render(request, 'pages/throw.html')
 
 def catch(request):
     # print(request)
@@ -26,14 +26,14 @@ def catch(request):
         'msg2': message2
     }
 
-    return render(request, 'catch.html', context)
+    return render(request, 'pages/catch.html', context)
 
 
 # -----------------------------------------------------------------------------
 # GET Method 데이터 주고 받기 2
 # -----------------------------------------------------------------------------
 def lotto(request):
-    return render(request, 'lotto.html')
+    return render(request, 'pages/lotto.html')
 
 def lotto_result(request):
     count = int(request.GET.get('count'))
@@ -46,14 +46,14 @@ def lotto_result(request):
         'lotto_num': lotto_num
     }
 
-    return render(request, 'lotto_result.html', context)
+    return render(request, 'pages/lotto_result.html', context)
 
 
 # -----------------------------------------------------------------------------
 # Artii API 이용해보기 
 # -----------------------------------------------------------------------------
 def artii(request):
-    return render(request, 'artii.html')
+    return render(request, 'pages/artii.html')
 
 def artii_result(request):
     sent = request.GET.get('sent')
@@ -67,7 +67,7 @@ def artii_result(request):
         + "&font=" + font
     res_text = requests.get(url).text
 
-    return render(request, 'artii_result.html', {
+    return render(request, 'pages/artii_result.html', {
         'result': res_text 
     })
 
@@ -75,7 +75,7 @@ def artii_result(request):
 # POST Method 데이터 주고 받기 1
 # -----------------------------------------------------------------------------
 def user_new(request):
-    return render(request, 'user_new.html')
+    return render(request, 'pages/user_new.html')
 
 def user_create(request):
     username = request.POST.get('name')
@@ -86,14 +86,14 @@ def user_create(request):
         'pw': pw
     }
 
-    return render(request, 'user_create.html', context)
+    return render(request, 'pages/user_create.html', context)
 
 
 # -----------------------------------------------------------------------------
 # POST Method 데이터 주고 받기 2 (SUBWAY)
 # -----------------------------------------------------------------------------
 def subway_form(request):
-    return render(request, 'subway_form.html')
+    return render(request, 'pages/subway_form.html')
 
 def subway_result(request):
     data = request.POST
@@ -106,7 +106,19 @@ def subway_result(request):
         'sandwich': data['sandwich'],
         'bread': data['bread'],
         'size': data['size'],
-        'etc': str(data.getlist('etc')),
+        'etc': ", ".join(data.getlist('etc'))
     }
 
-    return render(request, 'subway_result.html', context)
+    return render(request, 'pages/subway_result.html', context)
+
+\
+# -----------------------------------------------------------------------------
+# Static File
+# -----------------------------------------------------------------------------
+def static_example(request):
+    return render(request, 'pages/static_example.html')
+
+
+
+def index(request):
+    return render(request, 'pages/index.html')
