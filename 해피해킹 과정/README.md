@@ -1336,9 +1336,9 @@ INDEX PAGE
 
 ```html
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Static Test{% endblock %}
 {% block local_resources %}
-    {% load static %}
     <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">
 {% endblock %}
 {% block body %}
@@ -1347,46 +1347,6 @@ INDEX PAGE
 {% endblock %}
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
