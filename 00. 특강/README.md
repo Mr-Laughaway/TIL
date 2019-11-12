@@ -1,13 +1,11 @@
-# [Github 특강 1](./Github%20특강%201.md) - ```markdown```, ```Git``` 입문
+### [Github 특강 1](./Github%20특강%201.md)
 
 - 마크다운 기초
 - 마크다운 문법
 - 코드 블락
 - Github First!!!
 
-<br>
-
-# [Github 특강 2](./Github%20특강%202.md) - ```Git``` 활용 ,```Python``` 입문
+### [Github 특강 2](./Github%20특강%202.md)
 
 - Git
   - GIt 기본 사용법
@@ -20,13 +18,11 @@
   - 텔레그램 봇 만들기
   - HEROKU 배포
 
-<br>
+### Insight 특강 1
 
-# Insight 특강 1 - 자료 분실
+- 자료 분실
 
-<br>
-
-# [Insight 특강 2](./Insight%20특강%202.md) - 프로젝트 관리
+### [Insight 특강 2](./Insight%20특강%202.md)
 
 - 프로젝트 관리
   - 프로젝트
