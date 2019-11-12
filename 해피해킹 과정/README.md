@@ -1067,15 +1067,142 @@ Copyright {{ current_year }}<br>
   <!-- <p>{#{ 'abc'|length }}</p> -->
   ```
 
+### Virtual Env 팁
+
+```bash
+$ pip freeze > requirements.txt
+$ pip install -r requirements.txt
+```
+
+### GET method 통신
+
+- views.py
+
+  ```python
+  def throw(request):
+      return render(request, 'throw.html')
   
+  def catch(request):
+      # print(request)
+      # print(request.path)
+      # print(request.method)
+      # print(request.META)
+      print(request.GET)
+  
+      message = request.GET.get('message')
+      message2 = request.GET.get('message2')
+      context = {
+          'msg': message,
+          'msg2': message2
+      }
+  
+      return render(request, 'catch.html', context)
+  ```
 
+- template
 
+  ```html
+  <h1>받을 내용 : {{ msg }} / {{ msg2 }}</h1>
+  
+  <form action="/catch/" method="GET">
+      <label for="msg">메세지</label>
+      <input type="text" name="message" id="msg"/><br/>
+      <label for="msg2">메세지2</label>
+      <input type="text" name="message2" id="msg2"/><br/>
+      <input type="submit">
+  </form>
+  ```
 
+### Artii API 사용해보기
 
+- views.py
 
+  ```python
+  def artii(request):
+      return render(request, 'artii.html')
+  
+  def artii_result(request):
+      sent = request.GET.get('sent')
+      sent = urllib.parse.quote(sent)
+  
+      font_url = "http://artii.herokuapp.com/fonts_list"
+      font_list = requests.get(font_url).text.split("\n")
+      font = random.choice(font_list)
+  
+      url = "http://artii.herokuapp.com/make?text=" + sent \
+          + "&font=" + font
+      res_text = requests.get(url).text
+  
+      return render(request, 'artii_result.html', {
+          'result': res_text 
+      })
+  ```
 
+- template
 
+  ```html
+  <!-- artii.html -->
+  <form action="/artii_result/" method="GET">
+      <label for="sent">요청 문장</label>
+      <input type="text" name="sent" id="sent"/>
+      <input type="submit"/>
+  </form>
+  
+  <!-- artii_result.html -->
+  {{ result }}
+  ```
 
+### POST method 통신
+
+> 디비를 생성/변경할 때 주로 사용하고 html body 정보를 담아 전송
+>
+> 원칙적으로 POST 요청은 html 파일로 응답하면 안 됨.
+>
+> - POST 요청이 오면 GET 요청 받는 페이지로 redirec (RESTful)
+>
+> Django는 POST data를 그냥 보내지 않는다.
+>
+> - csrf_token(Cross Site Request Forgery Token)을 사용하여 보안성을 확보한다.
+> - 이 토큰을 보내지 않으면 `403 forbidden error` 가 발생된다.
+
+- views.py
+
+  ```python
+  def user_new(request):
+      return render(request, 'user_new.html')
+  
+  def user_create(request):
+      username = request.POST.get('name')
+      pw = request.POST.get('pw')
+      
+      context = {
+          'username': username,
+          'pw': pw
+      }
+  
+      return render(request, 'user_create.html', context)
+  ```
+
+- template (중요)
+
+  ```html
+  <form action="/user_create/" method="POST">
+      {% csrf_token %} <!-- 매우 중요!!!!! -->
+      <label for="name">이름</label>
+      <input type="text" name="name" id="name"><br/>
+      <lable for="pw">패스워드</lable>
+      <input type="password" name="pw" id="pw"><br/>
+      <input type="submit">
+  </form>
+  ```
+
+- list 받기
+
+  > 리스트로 넘어온 값은 `request.POST.get`으로 받으면 단일 값만 넘어오므로 `getlist`로 받아야 한다
+
+  ```python
+  data.getlist('etc')
+  ```
 
 
 
