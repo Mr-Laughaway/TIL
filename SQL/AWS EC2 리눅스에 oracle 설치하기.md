@@ -107,5 +107,32 @@ $ ./oracle_env.sh
 $ sqlplus / as sysdba
 ```
 
+### sysdba 접속이 안 될 때
+
+```bash
+$ sudo su oracle
+$ export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+$ export ORACLE_SID=XE
+$ PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ORACLE_HOME/bin
+$ export PATH
+$ sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.2.0 Production on Wed Nov 13 02:37:10 2019
+
+Copyright (c) 1982, 2011, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL>
+```
+
+
+
+
+
+
+
 **-끝-**
 
