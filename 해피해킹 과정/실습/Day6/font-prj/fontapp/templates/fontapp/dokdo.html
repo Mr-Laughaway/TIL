@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dokdo font test{% endblock %}
+{% block local_resources %}
+    <link href="https://fonts.googleapis.com/css?family=Dokdo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'fontapp/css/dokdo.css' %}">
+{% endblock %}
+{% block body %}
+    <h1>독도(Dokdo) 폰트 테스트</h1>
+    <p>독도 폰트 테스트</p>
+{% endblock %}
