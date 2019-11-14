@@ -1579,7 +1579,7 @@ Running migrations:
 
 - sqlite-tools 압축 해제후 원하는 위치에 놓고
 
-- dll 폴더를 
+- dll 폴더의 파일들을 위 폴더에 넣기
 
 ```bash
 $ vim ~/.bashrc
@@ -1968,7 +1968,7 @@ django.core.exceptions.ValidationError: {'title': ['이 값이 최대 10 개의 
   admin.site.register(Board, BoardAdmin) # BoardAdmin 추가
   ```
 
-  
+source tree test
 
 
 
