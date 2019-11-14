@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Board{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'boards/css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'boards/css/index.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block body %}
+    <h1>Index page</h1>
+{% endblock %}
