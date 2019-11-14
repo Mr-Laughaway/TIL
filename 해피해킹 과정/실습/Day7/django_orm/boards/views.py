@@ -44,20 +44,10 @@ def order_list(request):
     return render(request, "boards/order_list.html", context)
 
 def order_id(request, id):
-    print(id)
+    context = {'id': id}
 
     subway = Subway.objects.filter(id=id)
-    hit = True if len(subway) > 0 else False
-
-    if hit:
-        context = { 
-            'id': id,
-            'result': subway[0] 
-        }
-    else:
-        context = { 
-            'id': id,
-            'result': {'id': "해당 ID 정보가 없습니다."}
-        }
+    context['result'] = subway[0] if len(subway) > 0 else {
+        'id': "해당 ID 정보가 없습니다."}
 
     return render(request, "boards/order_id.html", context)
