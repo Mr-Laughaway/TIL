@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Order{% endblock %}
+{% block local_resources %}
+<link href="{% static 'boards/css/style.css' %}" rel="stylesheet"/>
+<link href="{% static 'boards/css/order.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block body %}
+<div class="contents">
+    <h1>Order List</h1>
+    <table>
+        <tr>
+            <th>아이디</th>
+            <th>주문자</th>
+            <th>주문일자</th>
+            <th>샌드위치</th>
+            <th>사이즈</th>
+            <th>빵 종류</th>
+        </tr>
+    {% for elem in subways %}
+        <tr>
+            <td>{{ elem.id }}</td>
+            <td>{{ elem.name }}</td>
+            <td>{{ elem.date }}</td>
+            <td>{{ elem.sandwich }}</td>
+            <td>{{ elem.size }}</td>
+            <td>{{ elem.bread }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

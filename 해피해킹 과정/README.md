@@ -1638,7 +1638,7 @@ CREATE TABLE IF NOT EXISTS "boards_board" ("id" integer NOT NULL PRIMARY KEY AUT
   <QuerySet [<Board: Board object (1)>, <Board: Board object (2)>, <Board: Board object (3)>]>
   ```
 
-- 모델에 함수 추가 - toString()과 같은 역할
+- 모델에 함수 추가 - ***toString()***과 같은 역할
 
   ```python
   def __str__(self):
@@ -1684,6 +1684,301 @@ CREATE TABLE IF NOT EXISTS "boards_board" ("id" integer NOT NULL PRIMARY KEY AUT
    ```bash
    >>> board = Board.objects.create(title="값", content="값")
    ```
+
+##### Validation 체크
+
+```bash
+board2 = Board()
+>>> board2.title = "12345678901"
+>>> board2.full_clean() # <--------------- 정합성 체크
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\GIT@JA~1\MULTIC~1\해피해~1\실습\venv\lib\site-packages\django\db\models\base.py", line 1203, in full_clean
+    raise ValidationError(errors)
+django.core.exceptions.ValidationError: {'title': ['이 값이 최대 10 개의 글자인지 확인하세
+요(입력값 11 자).'], 'content': ['이 필드는 빈 칸으로 둘 수 없습니다.']}
+```
+
+##### 기본 사용 법
+
+- indexing
+
+  ```bash
+  # indexing
+  >>> b = Board.objects.all()
+  >>> b
+  >>> b[0]
+  <Board: 1 : first>
+  >>> b[0].title
+  'first'
+  ```
+
+- get
+
+  > 단일 레코드를 선택할 때 사용 한다.
+  >
+  > 조건에 해당하는 객체가 많을 경우에는 에러 발생
+
+  ```bash
+  # select one by condition (get)
+  >>> b = Board.objects.get(pk=3)
+  >>> b                 
+  <Board: 3 : third>
+  >>> b = Board.objects.get(title='second')
+  >>> b
+  <Board: 2 : second
+  ```
+
+- filter
+
+  >조건에 맞는 여러 레코드를 선택할 때 사용한다.
+
+  ```bash
+  # select many by condition (filter)
+  >>> Board.objects.create(title='second', content="두 번째")
+  >>> b = Board.objects.filter(title="second") 
+  >>> b
+  <QuerySet [<Board: 2 : second>, <Board: 5 : second>]>
+  ```
+
+- slicing
+
+  > 파이썬 문법과 같게 슬라이싱을 사용할 수 있다.
+
+  ```bash
+  >>> b = Board.objects.all()
+  >>> b[1:3]
+  <QuerySet [<Board: 2 : second>, <Board: 3 : third>]>
+  
+  # 타입 확인
+  >>> type(b)
+  <class 'django.db.models.query.QuerySet'>
+  >>> type(b[0])
+  <class 'boards.models.Board'>
+  ```
+
+- like
+
+  ***__contains***, ***__startswitdh***, ***__endswith***
+
+  ```bash
+  # __contains
+  >>> b = Board.objects.filter(title__contains="sec") 
+  >>> b
+  <QuerySet [<Board: 2 : second>, <Board: 5 : second>]>
+  
+  
+  # __startswith
+  >>> b = Board.objects.filter(title__startswith="fi")
+  >>> b
+  <QuerySet [<Board: 1 : first>]>
+  
+  # __endswith
+  >> b = Board.objects.filter(title__endswith="d")
+  >>> b
+  <QuerySet [<Board: 2 : second>, <Board: 3 : third>, <Board: 5 : second>]>
+  ```
+
+- update
+
+  ***save()***
+
+  ```bash
+  >>> b.title = "hello orm"
+  >>> b
+  <Board: 1 : hello orm>
+  >>> b.save()
+  
+  # 확인
+  >>> b = Board.objects.get(pk=1)
+  >>> b
+  <Board: 1 : hello orm>
+  ```
+
+- delete
+
+  ***delete()***
+
+  ```bash
+  >>> b = Board.objects.get(pk=3)
+  >>> b
+  <Board: 3 : third>
+  >>> b.delete()
+  (1, {'boards.Board': 1})
+  
+  #확인
+  >>> Board.objects.all()
+  <QuerySet [<Board: 1 : hello orm>, <Board: 2 : second>, <Board: 4 : forth>, <Board: 5 : second>]>
+  ```
+
+#### Subway 주문 실습
+
+> Board와 같이 동일하게 설정하고 특이사항은 아래와 같다.
+
+- admin.py
+
+  ```python
+  from django.contrib import admin
+  from .models import Board, Subway
+  
+  # Customizing
+  class BoardAdmin(admin.ModelAdmin):
+      fields = ['content', 'title']
+      list_display = ['id', 'title', 'updated_at', 'created_at']
+      list_filter = ['updated_at']
+      search_fields = ['title', 'content']
+      
+  
+  # Register your models here.
+  admin.site.register(Board, BoardAdmin)
+  admin.site.register(Subway)
+  ```
+
+- models.py
+
+  ```python
+  class Subway(models.Model):
+      name = models.CharField(max_length=10)
+      date = models.DateTimeField()
+      sandwich =  models.CharField(max_length=20)
+      size = models.IntegerField()
+      bread = models.CharField(max_length=20)
+      source = models.TextField()
+  
+      def __str__(self):
+          return f"{self.name}, {self.date}, {self.sandwich}," +\
+              f"{self.size}, {self.bread}"
+  
+  ```
+
+- urls.py
+
+  ```python
+  urlpatterns = [
+      path('', views.index),
+      path('order/', views.order),
+      path('order_result/', views.order_result),
+      path('order_list/', views.order_list),
+      path('order/<int:id>/', views.order_id),
+  ]
+  ```
+
+- views.py
+
+  ```python
+  def order(request):
+      return render(request, "boards/order.html")
+  
+  def order_result(request):
+      data = request.POST
+  
+      subway = Subway()
+      subway.name = data['name']
+      subway.date = data['date']
+      subway.sandwich = data['sandwich']
+      subway.bread = data['bread']
+      subway.size = data['size']
+      subway.source = ", ".join(data.getlist('source'))
+      subway.save()
+  
+      subways = Subway.objects.all()
+      context = {
+          'subways': subways
+      }
+  
+      return render(request, "boards/order_result.html", context)
+  
+  def order_list(request):
+      subways = Subway.objects.all()
+      context = {
+          'subways': subways
+      }
+  
+      return render(request, "boards/order_list.html", context)
+  
+  def order_id(request, id):
+      print(id)
+  
+      subway = Subway.objects.filter(id=id)
+      hit = True if len(subway) > 0 else False
+  
+      if hit:
+          context = { 
+              'id': id,
+              'result': subway[0] 
+          }
+      else:
+          context = { 
+              'id': id,
+              'result': {'id': "해당 ID 정보가 없습니다."}
+          }
+  
+      return render(request, "boards/order_id.html", context)
+  
+  ```
+
+  
+
+#### 관리자(admin) 계정 만들기
+
+> 장고의 강력한 admin  기능을 사용해본다.
+>
+> - 사용자 관리
+> - ORM model  관리
+
+:point_right: https://tutorial.djangogirls.org/ko/django_admin/ 
+
+- 계정 생성
+
+  ```bash
+  python manage.py createsuperuser
+  사용자 이름 (leave blank to use 'student'): admin
+  이메일 주소:
+  Password:12341234
+  Password (again):12341234
+  비밀번호가 너무 일상적인 단어입니다.
+  비밀번호가 전부 숫자로 되어 있습니다.
+  Bypass password validation and create user anyway? [y/N]: y
+  Superuser created successfully.
+  ```
+
+- admin.py
+
+  ```python
+  from django.contrib import admin
+  from .models import Board
+  
+  # Register your models here.
+  admin.site.register(Board)
+  ```
+
+- 접속 및 Board(Model) 등록 상황  확인
+
+  ```loacalhost:8000/admin```
+
+  ![image-20191114144437312](assets/image-20191114144437312.png)
+
+- 필트 순서 등 커스터마이징 하기
+
+  ***admin.py***
+
+  ```python
+  # Customizing
+  class BoardAdmin(admin.ModelAdmin):
+      # 자세히 보기 컬럼 순서 변경
+      fields = ['content', 'title'] 
+      # 리스트 컬럼 순서 변경
+      list_display = ['id', 'title', 'updated_at', 'created_at']
+      # 해당 필드 필터 기능 추가
+      list_filter = ['updated_at']
+      # 검색 기능 추가
+      search_fields = ['title', 'content']
+  
+  # Register your models here.
+  admin.site.register(Board, BoardAdmin) # BoardAdmin 추가
+  ```
+
+  
 
 
 

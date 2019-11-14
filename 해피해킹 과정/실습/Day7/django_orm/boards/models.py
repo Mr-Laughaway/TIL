@@ -9,3 +9,17 @@ class Board(models.Model):
     
     def __str__(self):
         return f"{self.id} : {self.title}"
+
+
+class Subway(models.Model):
+    name = models.CharField(max_length=10)
+    date = models.DateTimeField()
+    sandwich =  models.CharField(max_length=20)
+    size = models.IntegerField()
+    bread = models.CharField(max_length=20)
+    source = models.TextField()
+
+    def __str__(self):
+        return f"{self.name}, {self.date}, {self.sandwich}," +\
+            f"{self.size}, {self.bread}"
+

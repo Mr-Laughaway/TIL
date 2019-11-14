@@ -1,0 +1,11 @@
+.contents {
+    margin-left: 50px;
+}
+
+table, td, th {
+    border: 1px solid lightgray;
+}
+
+th {
+    text-align: center;
+}
