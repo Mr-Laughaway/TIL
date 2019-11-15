@@ -25,12 +25,8 @@ def order_result(request):
     subway.source = ", ".join(data.getlist('source'))
     subway.save()
 
-    subways = Subway.objects.all()
-
-    print(subways)
-
     context = {
-        'subways': subways
+        'res': subway
     }
 
     return render(request, "boards/order_result.html", context)

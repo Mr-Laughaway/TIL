@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>글 내용 보기</h3>
+    <hr>
+    <form action='#'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>제목</label>
+            <input type='text' class='form-control' id='title' name='title' 
+                value='{{ article.title }}' disabled>
+        </div>
+        <div class='form-group'>
+            <label for='content'>글 내용</label>
+            <textarea class='form-control' id='content' name='content' rows='5'
+                disabled>{{ article.content }}</textarea>
+        </div>
+    </form>
+    <a class="btn btn-warning" href="/crud/{{ article.id }}/update/" role="button">수정하기</a>
+    <a class="btn btn-danger" href="/crud/{{ article.id }}/delete/" role="button">삭제하기</a>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

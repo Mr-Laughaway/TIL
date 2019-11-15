@@ -1421,7 +1421,7 @@ class Board(models.Model):
     
 ```
 
-##### Model 생성 - migrations
+##### Model 생성 - ```makemigrations```
 
 > bash 명령어로 모델을 생성한다
 >
@@ -1482,7 +1482,7 @@ NULL, "content" text NOT NULL, "created_at" datetime NOT NULL);
 COMMIT;
 ```
 
-##### Database Model 적용 확인
+##### Database Model 적용 확인 - ```showmigrations```
 
 > Model이 database에 적용되었는지 확인
 >
@@ -1515,7 +1515,7 @@ sessions
  [ ] 0001_initial
 ```
 
-##### Database에  Model 적용
+##### Database에  Model 적용 - ```migrate```
 
 > `migrate` 명령으로 model을 database에 적용한다.
 >
@@ -1907,7 +1907,38 @@ django.core.exceptions.ValidationError: {'title': ['이 값이 최대 10 개의 
   
   ```
 
-  
+#### ORM 정리
+
+- SQL을 몰라도 DB를 활용할 수 있다.
+
+- model
+
+  - class명이 table명
+  - 클래스 변수가 column명
+  - `__str__`를 오버라이딩 함으로써 toString() 과 같은 역할을 수행할 수 있다.
+
+- model 적용
+
+  - `python manage.py makemigrations`
+    - 장고에서 변경된 부분을 migrations 폴더안에 0001과 같이 명세서를 작성
+    - 장고에서 변경점을 못 찾을 때는 새롭게 생성된 migration을 삭제한 후 다시 시도하면 적용 된다
+  - ```python manage.py migrate```
+    - migration 파일을 바탕으로 db에 테이블을 적용.
+
+- admin.py
+
+  - 거의 DB 관리용 페이지라고 봐도 무방하다.
+  - 일반 사용자에게 보여지는 페이지는 아님.
+
+  - fields 수정할 때 나타나는 수정박스를 나타나게할 수 있다.
+
+    fields list, tuple 형식으로 수정할 항목이나 순서를 설정할 수 있다.
+
+    ※ auto_now=True 일 경우 editable=False가 되므로 이러한 field는 설정할 수 없다.
+
+  - list_filter
+
+    - `bool`, `char`, `date`, `datetime`, `integer` 속성만 설정할 수 있다.
 
 #### 관리자(admin) 계정 만들기
 
@@ -1969,6 +2000,298 @@ django.core.exceptions.ValidationError: {'title': ['이 값이 최대 10 개의 
   ```
 
 source tree test
+
+### CRUD
+
+> Create / Read / Update / Delete
+
+#### Model 정의
+
+**models.py**
+
+```python
+from django.db import models
+
+# Create your models here.
+class Article(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} {self.title}"
+```
+
+※`__save__` 정의시 auto_now_add 등의 기능등을 직접 구현할 수 있다
+
+#### migration
+
+```bash
+$ python manage.py makemigrations
+Migrations for 'crud':
+  crud\migrations\0001_initial.py
+    - Create model Article
+
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, crud, sessions
+...
+Applying crud.0001_initial... OK
+Applying sessions.0001_initial... OK
+  
+```
+
+#### form 작성
+
+***new.html***
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}New{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/new.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>새 글 쓰기</h3>
+    <hr>
+    <form action='/crud/create/' method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>Title</label>
+            <input type='text' class='form-control' name='title' id='title'>
+        </div>
+        <div class='form-group'>
+            <label for='content'>Content</label>
+            <textarea class="form-control"  cols='30' rows='5' name='content' id='content'></textarea>
+        </div>
+        <button type='submit' class='btn btn-primary'>작성하기</button>
+    </form> 
+</div>
+{% endblock %}
+
+```
+
+***views.py***
+
+```python
+def new(reuqest):
+    return render(reuqest, 'crud/new.html', )
+```
+
+#### Create
+
+***new.html***
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}New{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/new.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>새 글 쓰기</h3>
+    <hr>
+    <form action='/crud/create/' method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>Title</label>
+            <input type='text' class='form-control' name='title' id='title'>
+        </div>
+        <div class='form-group'>
+            <label for='content'>Content</label>
+            <textarea class="form-control"  cols='30' rows='5' name='content' id='content'></textarea>
+        </div>
+        <button type='submit' class='btn btn-primary'>작성하기</button>
+    </form> 
+</div>
+{% endblock %}
+
+```
+
+***views.py***
+
+```python
+def create(request):
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+
+    # DB에 저장
+    article = Article()
+    article.title = title
+    article.content = content
+    article.save()
+
+    return render(request, 'crud/created.html')
+```
+
+#### Read
+
+***index.html***
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/index.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>Article List</h3>
+    <hr>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>title</th>
+        </tr>
+        {% for art in articles %}
+        <tr>
+            <td><a href="/crud/{{ art.pk }}/article/">{{ art.id }}</a></td>
+            <td><a href="/crud/{{ art.pk }}/article/">{{ art.title }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+```
+
+***detail.html***
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/detail.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>글 자세히 보기</h3>
+    <hr>
+    <form action='#' method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>Title</label>
+            <input type='text' class='form-control' name='title' id='title'
+                value="{{article.title}}" disabled>
+        </div>
+        <div class='form-group'>
+            <label for='content'>Content</label>
+            <textarea class="form-control"  cols='30' rows='5' name='content' id='content' disabled>{{ article.content }}</textarea>
+        </div>
+    </form> 
+    <a class="btn btn-warning" href="/crud/{{ article.id }}/update/" role="button">수정하기</a>
+    <a class="btn btn-danger" href="/crud/{{ article.id }}/delete/" role="button">삭제하기</a>
+</div>
+
+</div>
+{% endblock %}
+```
+
+***views.py***
+
+> ※ 팁: index의 역순 정렬 기능 등을 확인
+
+```python
+def index(request):
+    # python 에서 역순 정렬
+    # articles = Article.objects.all()[::-1]
+    
+    # ORM 으로 정렬
+    articles = Article.objects.order_by('-id')
+    context = {
+        'articles': articles
+    }
+    return render(request, 'crud/index.html', context)
+
+def detail(request, pk):
+    #(pk=pk) 가(id__exact=pk)
+    article = Article.objects.get(pk=pk)
+    context = {
+        'article': article
+    }
+
+    return render(request, 'crud/detail.html', context)
+
+```
+
+#### Update
+
+***update.html***
+
+```html
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Update{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/detail.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>글 수정하기</h3>
+    <hr>
+    <form action='/crud/{{ article.id }}/revise/' method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>Title</label>
+            <input type='text' class='form-control' name='title' id='title'
+                value="{{ article.title }}">
+        </div>
+        <div class='form-group'>
+            <label for='content'>Content</label>
+            <textarea class="form-control"  cols='30' rows='5' name='content' id='content'>{{ article.content }}</textarea>
+        </div>
+        <button type='submit' class='btn btn-primary'>수정하기</button>
+    </form> 
+</div>
+{% endblock %}
+```
+
+***sadfdf.html***
+
+***views.py***
+
+```python
+def update(request, pk):
+    #(pk=pk) 가(id__exact=pk)
+    article = Article.objects.get(pk=pk)
+    context = {
+        'article': article
+    }
+
+    return render(request, 'crud/update.html', context)
+
+## redirect 사용!!!
+def revise(request, pk):
+    article = Article.objects.get(pk=pk)
+
+    article.title = request.POST.get('title')
+    article.content = request.POST.get('content')
+    article.save()
+
+    context = {
+        'article': article
+    }
+
+    return redirect(f"/crud/{article.id}/article/")
+```
+
+#### Delete
+
+***views.py***
+
+```python
+def delete(request, pk):
+    article = Article.objects.get(pk=pk)
+    article.delete()
+
+    return redirect("/crud/")
+```
 
 
 

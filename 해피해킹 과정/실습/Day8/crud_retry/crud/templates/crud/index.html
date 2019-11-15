@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>글 목록</h3>
+    <hr>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Last Updated</th>
+        </tr>
+        {% for art in articles %}
+        <tr>
+            <td><a href="/crud/{{ art.id }}/detail/">{{ art.id }}</a></td>
+            <td><a href="/crud/{{ art.id }}/detail/">{{ art.title }}</a></td>
+            <td>{{ art.updated_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

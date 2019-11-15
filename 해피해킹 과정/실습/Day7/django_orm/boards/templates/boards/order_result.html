@@ -18,17 +18,17 @@
             <th>샌드위치</th>
             <th>사이즈</th>
             <th>빵 종류</th>
+            <th>소스</th>
         </tr>
-    {% for elem in subways %}
         <tr>
-            <td>{{ elem.id }}</td>
-            <td>{{ elem.name }}</td>
-            <td>{{ elem.date }}</td>
-            <td>{{ elem.sandwich }}</td>
-            <td>{{ elem.size }}</td>
-            <td>{{ elem.bread }}</td>
+            <td>{{ res.id }}</td>
+            <td>{{ res.name }}</td>
+            <td>{{ res.date }}</td>
+            <td>{{ res.sandwich }}</td>
+            <td>{{ res.size }}</td>
+            <td>{{ res.bread }}</td>
+            <td>{{ res.source }}</td>
         </tr>
-    {% endfor %}
     </table>
 </div>
 {% endblock %}
