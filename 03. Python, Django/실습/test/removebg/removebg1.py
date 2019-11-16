@@ -7,7 +7,7 @@ CANNY_THRESH_1 = 10
 CANNY_THRESH_2 = 200
 MASK_DILATE_ITER = 10
 MASK_ERODE_ITER = 15
-MASK_COLOR = (0.0,0.0,0.0) # In BGR format
+MASK_COLOR = (0.0,0.0,1) # In BGR format
 
 # BLUR = 19
 # CANNY_THRESH_1 = 25
@@ -20,7 +20,7 @@ MASK_COLOR = (0.0,0.0,0.0) # In BGR format
 #== Processing =======================================================================
 
 #-- Read image -----------------------------------------------------------------------
-img = cv2.imread('d:/temp/jumper.jpg')
+img = cv2.imread('d:/temp/sample03.jpg')
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
 #-- Edge detection -------------------------------------------------------------------

@@ -15,9 +15,17 @@ MASK_DILATE_ITER = 5
 MASK_ERODE_ITER = 13
 MASK_COLOR = (0.0,0.0,1.0)
 
+
+# BLUR = 21
+# CANNY_THRESH_1 = 10
+# CANNY_THRESH_2 = 200
+# MASK_DILATE_ITER = 10
+# MASK_ERODE_ITER = 15
+# MASK_COLOR = (0.0,0.0,1) # In BGR format
+
 #-- Read image -----------------------------------------------------------------------
 # img = cv2.imread(args.file_in)
-img = cv2.imread('d:/temp/jumper.jpg')
+img = cv2.imread('d:/temp/sample03.jpg')
 gray = cv2.GaussianBlur(img, (5, 5), 1)
 gray = cv2.cvtColor(gray,cv2.COLOR_BGR2RGB)
 gray = cv2.cvtColor(gray,cv2.COLOR_BGR2GRAY)
@@ -46,10 +54,15 @@ max_contour = contour_info[0]
 mask = np.zeros(edges.shape)
 cv2.fillConvexPoly(mask, max_contour[0], (255))
 
+
 #-- Smooth mask, then blur it --------------------------------------------------------
-#mask = cv2.dilate(mask, None, iterations=MASK_DILATE_ITER)
+# mask = cv2.dilate(mask, None, iterations=MASK_DILATE_ITER)
+# mask = cv2.erode(mask, None, iterations=MASK_ERODE_ITER)
 mask = cv2.GaussianBlur(mask, (BLUR, BLUR), 0)
-#mask = cv2.erode(mask, None, iterations=MASK_ERODE_ITER)
+
+#test
+mask_stack = np.dstack([mask]*3) 
+mask_stack  = mask_stack.astype('float32') / 255.0
 
 #-- Blend masked img into MASK_COLOR background --------------------------------------
 img         = img.astype('float32') / 255.0                 #  for easy blending
@@ -58,8 +71,12 @@ img         = img.astype('float32') / 255.0                 #  for easy blending
 c_red, c_green, c_blue = cv2.split(img)
 img_a = cv2.merge((c_red, c_green, c_blue, mask.astype('float32') / 255.0))
 
-# cv2.imshow('img', mask)                                   # Display
-# cv2.waitKey()
+#test
+masked = (mask_stack * img) + ((1-mask_stack) * MASK_COLOR) # Blend
+masked = (masked * 255).astype('uint8')                     # Convert back to 8-bit 
+
+cv2.imshow('img', masked)                                   # Display
+cv2.waitKey()
 
 # cv2.imwrite(args.file_out, img_a*255)
-cv2.imwrite("d:/temp/result.jpg", img)
+cv2.imwrite("d:/temp/result.jpg", masked)
