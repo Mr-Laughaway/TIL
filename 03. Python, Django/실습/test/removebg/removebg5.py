@@ -43,9 +43,12 @@ def remove_background(filename):
 
     img = pg.Image(filename)
     transmask = trans_mask_sobel(img)
-    img = alphacomposite(transmask, img)
+    img = alpha_composite(transmask, img)
     img.trim()
     img.write('out.png')
+    #test
+    transmask.trim()
+    transmask.write('out_m.png')
 
 
 remove_background("d:/temp/sample01.jpg")
