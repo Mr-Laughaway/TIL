@@ -365,7 +365,7 @@ def indian_r():
 
 - 실행결과
 
-![image-20191107153707227](.assets/image-20191107153707227.png)
+![image-20191107153707227](assets/image-20191107153707227.png)
 
 #### requests 로또 번호 가져와서 맞춰보기
 
@@ -2251,8 +2251,6 @@ def detail(request, pk):
 </div>
 {% endblock %}
 ```
-
-***sadfdf.html***
 
 ***views.py***
 
