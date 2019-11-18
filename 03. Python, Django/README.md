@@ -2027,13 +2027,15 @@ class Article(models.Model):
 
 #### migration
 
+> 명세서 작성 및 실적용
+
 ```bash
-$ python manage.py makemigrations
+$ python manage.py makemigrations # 1단계 명세서 작성
 Migrations for 'crud':
   crud\migrations\0001_initial.py
     - Create model Article
 
-$ python manage.py migrate
+$ python manage.py migrate # 2단계 적용
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, crud, sessions
 ...
@@ -2291,9 +2293,249 @@ def delete(request, pk):
     return redirect("/crud/")
 ```
 
+### CRUD Subway(CRUD 복습)
+
+> 반복이 중요... (동의)
+
+- Subway
+
+  - name
+  - address
+  - phone
+  - menu
+  - bread
+  - vegetable
+  - sauce
+  - drink
+  - created_at
+  - updated_at
+
+- nav bar
+
+  홈으로 버턴 / 새로 주문하기
+
+- index page
+
+  - 주문자명, 메뉴명, 주문일자가 list로 보여짐
+  - 클릭하면 detail 정보로 넘어가게 됨
+
+- detail page
+
+  - 주문 정보에 대한 내용 전부 출력
+  - 하단에 수정하기/삭제 버튼
+
+- 수정하기 page
+
+  주문 내용을 수정하면 됨
+
+- 삭제하기 page
+
+  주문 내용을 삭제하면 됨
+
+:point_right:꿀팁 ***URL 편하게 관리하기***
+
+> urls.py 에서 name을 지정한 후 html 파일에서 사용하면 된다.
+
+***urls.py***
+
+```python
+app_name = "subway"
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('order/', views.order, name='order'),
+    path('order_do/', views.order_do, name='order_do'),
+    path('detail/<int:pk>/', views.detail, name='detail'),
+    path('edit/<int:pk>/', views.edit, name='edit'),
+    path('update/<int:pk>/', views.update, name='update'),
+    path('delete/<int:pk>/', views.delete, name='delete'),
+]
+```
+
+***html***
+
+```html
+<!-- 기본 사용법 -->
+<a class="nav-link" href="{% url 'subway:index' %}">Home</a>
+
+<!-- 파라미터가 들어가야 하는 경우 -->
+<a href="{% url 'detail' sub.id %}"
+```
+
+***views.py***
+
+> python code 내에서 사용시 아래와 같이 사용한다.
+
+```python
+return redirect('subway:detail', pk)
+```
+
+### RESTful
+
+> Represtational State Transfer.  Roy Fielding이 논문으로 아키텍쳐 발표.
+>
+> - http 설계의 우수성에 비해 활용을 제대로 하고 있지 못한 관계로 고안.
+
+#### HTTP
+
+- Request/Response로 서버와 클라이언트간 HTTP 통신
+
+- 웹서버는 웹 리소스(static files)를 관리하고 제공을 함
+
+- 미디어 타입: 수천가지 데이터 타입이 존재
+
+  MIME(Multipurpose Intenrnet Mail Extendsions)
+
+  - html: text/html
+  - jpeg: image/jpeg
+  - ASCII: text/plain
+
+- URI(URL + URN)
+
+  - URL: 리소스의 위치. ```스킴://서버위치/경로```, 스킴: 리소스에 접근하기위한 프로토콜
+  - URN:  위치에 독립적임.
+
+#### REST의 구성
+
+- 자원: URI
+- 행위: HTTP Method(GET / POST / PUT / DELETE / PATCH)
+- 표현
+
+#### REST 디자인 가이드
+
+- '/'는 계층 관계를 나타내는데 사용
+- '_' 대선 '-'를 활용
+- 정보의 자원을 표현해야 함.
+
+```bash
+# REST 하지 않은 예 (GET)
+GET /boards/show/1
+# REST 한 예
+GET /boards/1
+
+# REST 하지 않은 예 (POST)
+GET /boards/create
+# REST 한 예
+POST /boards
+
+# REST 하지 않은 예 (PUT)
+GET /boards/update
+# REST 한 예
+PUT /boards/1
+
+# REST 하지 않은 예 (DELETE)
+GET /boards/1/delete
+# REST 한 예
+DELETE /boards/1
+```
+
+> :point_right: ***Django 에서는 HTTP method 를 GET/POST 만 지원한다.*** 따라서 GET을 제외한 모든 행위를 POST로 보내고 행위를 선언하는 식으로 해결한다.
+
+#### CURD를 semi-RESTful 로 바꿔보기
+
+- new : 데이터를 생성하기 위한 폼을 불러오는 것이기 때문에 GET
+
+  ```GET /boards/new```
+
+- create: 데이터를 생성하기때문에 POST
+
+  ```POST /boards/new```
+
+:smile:***잘 바꿨다고 전해진다.***
+
+### 1:N 관계
+
+> 1개의 
+
+***models.py***
+
+```python
+from django.db import models
+
+# Create your models here.
+class Article(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id} {self.title}"
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=200)
+    # ForeignKey(어떤 테이블을 참조할지, 테이블이 삭제될 때 어떻게 할지)
+    # models.CASCADE: 부모테이블이 삭제시 같이 삭제하는 옵션
+    # models.PROTECT: 부모테이블이 삭제 될 때 오류 발생
+    # models.SET_NULL: 삭제 되었을 때 부모 참고 값을 NULL 값으로 채움. 단 NOT NULL일 경우 에러
+    # models.SET(): 특정 함수를 호출
+    # models.DO_NOTHING: 아무것도 안 함.
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+
+***적용***
+
+```bash
+$ python manage.py makemigrations
+...
+$ python manage.py migrate
+...OK
+```
+
+***shell_plus*** 사용법 / shell로 댓글 넣어보기
+
+>  shell_plus는 모든 필요한 사항을 자동으로 import 해 준다.
+>
+> 편해졌으니까 shell 명령어로 DB에서 1:N 관계를 다루어 본다.
+
+```bash
+$ pip install django-extensions
+$ python manage.py shell_plus
+
+>>> Article.objects.all()
+<QuerySet [<Article: 1 첫 번째 글>, <Article: 3 세 번째 글>, <Article: 5 다섯 번째 글>, <Article: 
+6 여섯 번째 글>]>
+
+#첫 번째 댓글을 1번 글에 달아보기
+>>> com = Comment()
+>>> com.comment = "1빠"
+>>> com.article = Article.objects.get(id=1)
+>>> com.save()
+>>> com.article_id
+1
+>>> com.comment
+'1빠'
+>>> com.article
+<Article: 1 첫 번째 글>
+>>> com.article.title
+'첫 번째 글'
+
+# 두 번째 댓글을 3번 글에 달아보기
+>>> art2 = Article.objects.get(id=3)
+>>> art2
+<Article: 3 세 번째 글>
+>>> com2 = Comment(article=art2, comment="2번 1빠")
+>>> com2.save()
+>>> com2.article_id
+3
+>>> com2.article.id   
+3
+>>> com2.article.title
+'세 번째 글'
+
+# 부모 데이터러부터 comment를 뽑아 낼 수 있다. '_set'!!!!
+>>> art2.comment_set.all()
+<QuerySet [<Comment: Comment object (2)>]>
 
 
-### TBD
+# dir(테이블명)을 하면 쓸 수 있는 함수/변수 들이 리스팅 된다.
+>>> dir(Commnet)
+['DoesNotExist', 'MultipleObjectsReturned', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setstate__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_check_column_name_clashes', '_check_constraints', '_check_field_name_clashes', '_check_fields', '_check_id_field', '_check_index_together', '_check_indexes', '_check_local_fields', '_check_long_column_names', '_check_m2m_through_same_relationship', '_check_managers', '_check_model', '_check_model_name_db_lookup_clashes', '_check_ordering', '_check_property_name_related_field_accessor_clashes', '_check_single_primary_key', '_check_swappable', '_check_unique_together', '_do_insert', '_do_update', '_get_FIELD_display', '_get_next_or_previous_by_FIELD', '_get_next_or_previous_in_order', '_get_pk_val', '_get_unique_checks', '_meta', '_perform_date_checks', '_perform_unique_checks', '_save_parents', '_save_table', '_set_pk_val', 'article', 'article_id', 'check', 'clean', 'clean_fields', 'comment', 'created_at', 'date_error_message', 'delete', 'from_db', 'full_clean', 'get_deferred_fields', 'get_next_by_created_at', 'get_next_by_updated_at', 'get_previous_by_created_at', 'get_previous_by_updated_at', 'id', 'objects', 'pk', 'prepare_database_save', 'refresh_from_db', 'save', 'save_base', 'serializable_value', 'unique_error_message', 'updated_at', 'validate_unique']
+
+```
+
+
 
 ## 협업 툴 소개
 

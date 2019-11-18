@@ -1,0 +1,52 @@
+{% extends 'base_crud.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/detail.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>글 자세히 보기</h3>
+    <hr>
+    <form action='#' method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>Title</label>
+            <input type='text' class='form-control' name='title' id='title'
+                value="{{article.title}}" disabled>
+        </div>
+        <div class='form-group'>
+            <label for='content'>Content</label>
+            <textarea class="form-control"  cols='30' rows='5' name='content' id='content' disabled>{{ article.content }}</textarea>
+        </div>
+    </form> 
+    <a class="btn btn-warning" href="{% url 'crud:update' article.id %}" role="button">수정하기</a>
+    <form action="{% url 'crud:delete' article.id %}" method='POST' style="display:inline-block;">
+        {% csrf_token %}
+        <button type='submit' class='btn btn-danger'>삭제하기</button>
+    </form>
+    <br><br>
+    <form action='#'>
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="댓글을 입력하세요">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="button">댓글작성</button>
+            </div>
+        </div>
+    </form>
+
+    <h5>댓글</h5>
+    <form action='#'>
+        {% for comment in comments %}
+            <div class="form-group">
+                <input type='text' class='form-control'
+                    value="{{comment.comment}}" disabled/>
+            </div>
+        {% endfor %}
+    </form>
+</div>
+
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base_crud.html' %}
+{% load static %}
+{% block title %}New{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/new.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="alert alert-info" role="alert">
+        글쓰기가 완료되었습니다.
+    </div>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+    <script src="{% static 'crud/js/new.js' %}"></script>
+{% endblock %}

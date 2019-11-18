@@ -1,0 +1,26 @@
+{% extends 'base_crud.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/index.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>글 목록</h3>
+    <hr>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>title</th>
+        </tr>
+        {% for art in articles %}
+        <tr>
+            <td><a href="{% url 'crud:detail' art.pk %}">{{ art.id }}</a></td>
+            <td><a href="{% url 'crud:detail' art.pk %}">{{ art.title }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

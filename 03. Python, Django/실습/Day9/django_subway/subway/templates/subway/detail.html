@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'subway/css/index.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>주문하기</h3>
+    <form  class="form-group" action="{% url 'subway:order' %}" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" name="name" id="name" value="{{subway.name}}"
+                class="form-control form-control-sm" disabled />
+        </div>
+        <div class="form-group">
+            <label for="phone">전화번호</label>
+            <input type="text" name="phone" id="phone" value="{{subway.phone}}"
+                class="form-control form-control-sm" disabled />
+        </div>
+        <div class="form-group">
+            <label for="address">주소</label>
+            <input type="text" name="address" id="address" value="{{subway.address}}"
+                class="form-control form-control-sm" disabled />
+        </div>
+        
+        <div>
+            메뉴 : {{ subway.menu }}<br>
+            주문사항:<br>
+            {{subway.bread}} / {{subway.sauce}}<br>
+            {{subway.vegetable}} / {{subway.drink}}<br>
+        </div>
+    </form>
+    <a class="btn btn-warning" href="{% url 'subway:update' subway.id %}" role="button">수정하기</a>
+    <form action="{% url 'subway:delete' subway.id %}" method='POST' style="display:inline-block;">
+        {% csrf_token %}
+        <button type='submit' class='btn btn-danger'>삭제하기</button>
+    </form>
+    
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

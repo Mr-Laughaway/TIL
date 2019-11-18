@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_resources %}
+    <tdnk href="{% static 'subway/css/index.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>주문 목록</h3>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>주문자명</th>
+            <th>메뉴명</th>
+            <th>주문 일자</th>
+        </tr>
+        {% for sub in subways %}
+        <tr>
+            <td><a href="{% url 'subway:detail' sub.id %}">{{ sub.id }}</a></td>
+            <td><a href="{% url 'subway:detail' sub.id %}">{{ sub.name }}</a></td>
+            <td>{{ sub.menu }}</td>
+            <td>{{ sub.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base_crud.html' %}
+{% load static %}
+{% block title %}New{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/new.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>새 글 쓰기</h3>
+    <hr>
+    <form action="{% url 'crud:new' %}" method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <label for='title'>Title</label>
+            <input type='text' class='form-control' name='title' id='title'
+                placeholder="제목을 입력하세요.">
+        </div>
+        <div class='form-group'>
+            <label for='content'>Content</label>
+            <textarea class="form-control"  cols='30' rows='5' 
+                name='content' id='content' placeholder="글 내용을 입력하세요."></textarea>
+        </div>
+        <button type='submit' class='btn btn-primary'>작성하기</button>
+    </form>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}
