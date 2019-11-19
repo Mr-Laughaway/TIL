@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>질문 LIST</h3>
+    <div style="margin-bottom:30px;"></div>
+    <ul>
+    {% for q in questions %}
+        <li><a href="{% url 'survey:detail' q.id %}">{{ q.question }}</a></li>
+    {%  endfor %}
+    </ul>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

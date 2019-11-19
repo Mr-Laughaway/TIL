@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div style="margin-top:30px;"></div>
+    <form action="{% url 'survey:delete' question.id %}" method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <h3>{{ question.question }}</h3>
+        </div>
+        <a href="{% url 'survey:update' question.id %}" class="btn btn-warning btn-sm">수정하기</a>
+        <button type='submit' class='btn btn-danger btn-sm'>삭제하기</button>
+    </form>
+
+    <div style="margin-top:30px;"></div>
+    <ol>
+    {% for c in question.choice_set.all %}
+        <li>{{ c.survey }}[{{ c.votes }}]&nbsp;&nbsp;
+            <form action="{% url 'survey:votes_c' question.id c.id %}" method="POST" style="display:inline-block">
+                {% csrf_token %}
+                <button type='submit' class='btn btn-info btn-sm' style="border:0; background-color:transparent; color:#007bff; padding-left:1px;padding-top:1px;"
+                    >투표하기</button>
+            </form>
+            <form action="{% url 'survey:votes_c' question.id c.id %}" method="POST" style="display:inline-block">
+                {% csrf_token %}
+                <a href="#" onclick="this.parentNode.submit()">투표하기 </a>
+            </form>
+            <a href="{% url 'survey:update_c' question.id c.id %}" style="font-size:14px;">수정하기</a>
+            <form action="{% url 'survey:delete_c' question.id c.id %}" method="POST" style="display:inline-block">
+                {% csrf_token %}
+                <button type='submit' class='btn btn-secondary btn-sm' style="border:0; background-color:transparent; color:#ff007b; padding-left:1px;padding-top:1px;"
+                    >삭제하기</button>
+            </form>
+        </li>
+    {% empty %}
+        <p>선택 항목이 없습니다.</p>
+    {% endfor %}
+    </ol>
+
+    <div style="margin-top:30px;"></div>
+    <form action="{% url 'survey:new_c' question.id %}" method='POST'>
+        {% csrf_token %}
+        <div class='form-group' style="display:inline-block">
+            <input type='text' class='form-control' name='survey' id='survey'
+               style="width:150px; height:50px; display:inline-block;" >
+        </div>
+        <button type='submit' class='btn btn-secondary btn-sm'
+            style="display:inline-block; margin-left:20px;">항목 추가</button>
+    </form>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

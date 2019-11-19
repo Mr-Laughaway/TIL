@@ -2550,6 +2550,23 @@ $ python manage.py shell_plus
 
 ```
 
+#### 질문/선택 게시판 만들어보기
+
+> :smile:Day10 소스에 모든 것이 있다. 
+>
+> 아래는 기타 꿀팁.
+
+- a(앵커) 태그를 POST로 동작하게 만들기
+
+  form으로 감싸고 onclick에 아래와 같이 설정한다.
+
+  ```html
+  <form action="{% url 'survey:votes_c' question.id c.id %}" method="POST" style="display:inline-block">
+      {% csrf_token %}
+      <a href="#" onclick="this.parentNode.submit()">투표하기 </a>
+  </form>
+  ```
+
 ### M:N 관계
 
 > 다대다 관계

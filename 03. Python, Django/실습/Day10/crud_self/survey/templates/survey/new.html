@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}New{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div style="margin-top:30px;"></div>
+    <form action="{% url 'survey:new' %}" method='POST'>
+        {% csrf_token %}
+        <div class='form-group'>
+            <input type='text' class='form-control' name='question' id='question'
+                placeholder="질문을 입력하세요">
+        </div>
+        <button type='submit' class='btn btn-secondary btn-sm'>질문 등록</button>
+    </form>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}
