@@ -6,9 +6,14 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('new/', views.new, name="new"),
     # path('create/', views.create, name="create"),
-    path('<int:pk>/', views.detail, name="detail"),
-    path('<int:pk>/update/', views.update, name="update"),
+    path('<int:art_id>/', views.detail, name="detail"),
+    path('<int:art_id>/update/', views.update, name="update"),
     # path('<int:pk>/revise/', views.revise, name="revise"),
-    path('<int:pk>/delete/', views.delete, name="delete"),
+    path('<int:art_id>/delete/', views.delete, name="delete"),
+    path('<int:art_id>/comment/', views.comment, name="comment"),
+    path('<int:art_id>/comment/<int:com_id>/edit/', views.comment_edit,
+        name="comment_edit"),
+    path('<int:art_id>/comment/<int:com_id>/del/', views.comment_del,
+        name="comment_del"),
 ]
 

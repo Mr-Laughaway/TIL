@@ -6,7 +6,10 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h3>글 자세히 보기</h3>
+    <h3>글 자세히 보기({{ com_count }})</h3>
+    <p>댓글 갯수: {{ comments|length }} <!--  / {#{ article.comment_set.all|length }}
+        / {#{ comments.count }} 마지막 카운트는 메서드 호출로 퀄리 한 번 더 탄다-->
+    </p>
     <hr>
     <form action='#' method='POST'>
         {% csrf_token %}
@@ -26,25 +29,43 @@
         <button type='submit' class='btn btn-danger'>삭제하기</button>
     </form>
     <br><br>
-    <form action='#'>
+    <form action="{% url 'crud:comment' article.id %}" method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="댓글을 입력하세요">
+            <input type="text" class="form-control" placeholder="댓글을 입력하세요" name="comment">
             <div class="input-group-append">
-                <button class="btn btn-outline-primary" type="button">댓글작성</button>
+                <button class="btn btn-outline-primary" type="submit">댓글작성</button>
             </div>
         </div>
     </form>
 
     <h5>댓글</h5>
-    <form action='#'>
-        {% for comment in comments %}
+    {% for comment in comments %}
+    <div class="form-group">
+        <input type='text' class='form-control'
+            value="{{comment.comment}}" disabled/>
+        <a href="{% url 'crud:comment_edit' article.id comment.id %}" style="margin-top:5px;">수정하기</a>
+        <form action="{% url 'crud:comment_del' article.id comment.id %}" method="POST"
+            style="display:inline-block;">
+            {% csrf_token %}
+            <button class="btn btn-outline-primary" type="submit" 
+                style="border:0;padding-top: 2px;">댓글삭제</button>
+        </form>
+    </div>
+    {% empty %}
+    <p>등록된 댓글이 없습니다.</p>
+    {% endfor %}
+
+    <!-- 이렇게도 가능하지만 비추천
+    <form action='#' >
+        {% for comment in article.comment_set.all %}
             <div class="form-group">
                 <input type='text' class='form-control'
                     value="{{comment.comment}}" disabled/>
             </div>
         {% endfor %}
     </form>
+    -->
 </div>
 
 {% endblock %}

@@ -16,7 +16,7 @@
         {% for art in articles %}
         <tr>
             <td><a href="{% url 'crud:detail' art.pk %}">{{ art.id }}</a></td>
-            <td><a href="{% url 'crud:detail' art.pk %}">{{ art.title }}</a></td>
+            <td><a href="{% url 'crud:detail' art.pk %}">{{ art.title }} ({{art.com_count}})</a></td>
         </tr>
         {% endfor %}
     </table>

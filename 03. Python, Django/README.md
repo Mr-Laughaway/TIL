@@ -2444,7 +2444,7 @@ DELETE /boards/1
 
 ### 1:N 관계
 
-> 1개의 
+> 1개의 데이터와 다른 테이블의 여러 데이터가 관계가 있는 경우
 
 ***models.py***
 
@@ -2467,6 +2467,7 @@ class Comment(models.Model):
     # models.CASCADE: 부모테이블이 삭제시 같이 삭제하는 옵션
     # models.PROTECT: 부모테이블이 삭제 될 때 오류 발생
     # models.SET_NULL: 삭제 되었을 때 부모 참고 값을 NULL 값으로 채움. 단 NOT NULL일 경우 에러
+    # models.SET_DEFAULT: 삭제되었을 때 설정된 default 값으로 설정. default 값을 설정해 주어야 한다.
     # models.SET(): 특정 함수를 호출
     # models.DO_NOTHING: 아무것도 안 함.
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
@@ -2483,9 +2484,11 @@ $ python manage.py migrate
 ...OK
 ```
 
-***shell_plus*** 사용법 / shell로 댓글 넣어보기
+#### shell_plus 사용법
 
->  shell_plus는 모든 필요한 사항을 자동으로 import 해 준다.
+shell로 댓글 넣어보기
+
+>  shell_plus는 모든 필요한 사항을 자동으로 import 해 준다. pip으로 설치하고 setting.py INSTALLED_APP 부분에 추가해준다
 >
 > 편해졌으니까 shell 명령어로 DB에서 1:N 관계를 다루어 본다.
 
@@ -2535,7 +2538,30 @@ $ python manage.py shell_plus
 
 ```
 
+#### 댓글 구현으로 1:N 적용해보기
 
+> Day9 실습 코드에 모든 것이 들어 있다.
+>
+> 특별한 것은 아래 DTL 정도
+
+```html
+<p>댓글 갯수: {{ comments|length }} / {{ article.comment_set.all|length }} / {#{ comments.count }}</p>
+<!-- DTL로 처리하는 것은 일반적으로 비추이며 특히 2, 3번째 방식은 쿼리를 한 번 더 타기 때문에 댓글이 많았을 경우 매우느려진다. -->
+
+```
+
+### M:N 관계
+
+> 다대다 관계
+
+```python
+# 따옴표 사용은 선언되기 전의 클래스 등을 사용할 때 유용하다.
+article = models.ManyToManyField(Article, through="ArticleComment")
+
+class ArticleCommnet(models.Model):
+    article = models.ForeignKey(Article)
+    comment = models.ForeignKey(Comment)
+```
 
 ## 협업 툴 소개
 

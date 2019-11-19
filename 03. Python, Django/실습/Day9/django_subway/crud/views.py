@@ -12,6 +12,8 @@ def index(request):
 
     # ORM 으로 정렬
     articles = Article.objects.order_by('-id')
+    for art in articles:
+        art.com_count = len(art.comment_set.all())
     context = {
         'articles': articles
     }
@@ -58,12 +60,13 @@ def create(request):
 # -----------------------------------------------------------------------------
 # detail
 # -----------------------------------------------------------------------------
-def detail(request, pk):
-    article = Article.objects.get(pk=pk)
+def detail(request, art_id):
+    article = Article.objects.get(id=art_id)
     comments = Comment.objects.filter(article_id=article.id)
     context = {
         'article': article,
-        'comments': comments
+        'comments': comments,
+        'com_count': len(comments)
     }
 
     return render(request, 'crud/detail.html', context)
@@ -72,8 +75,8 @@ def detail(request, pk):
 # -----------------------------------------------------------------------------
 # update
 # -----------------------------------------------------------------------------
-def update(request, pk):
-    article = Article.objects.get(pk=pk)
+def update(request, art_id):
+    article = Article.objects.get(id=art_id)
 
     if request.method == 'POST':
         article.title = request.POST.get('title')
@@ -116,8 +119,8 @@ def revise(request, pk):
 # -----------------------------------------------------------------------------
 # delete
 # -----------------------------------------------------------------------------
-def delete(request, pk):
-    article = Article.objects.get(pk=pk)
+def delete(request, art_id):
+    article = Article.objects.get(id=art_id)
 
     if request.method == 'POST':
         article.delete()
@@ -127,3 +130,47 @@ def delete(request, pk):
         return redirect('crud:detail', article.id)
 
     
+
+# -----------------------------------------------------------------------------
+# comment
+# -----------------------------------------------------------------------------
+def comment(request, art_id):
+    if request.method == 'POST':
+        comment = request.POST.get('comment')
+
+        com = Comment()
+        com.comment = comment
+        com.article = Article.objects.get(id=art_id)
+        com.save()
+
+    return redirect('crud:detail', art_id)
+    # return redirect('crud:detal', com.article_id) #도 같음
+ 
+
+# -----------------------------------------------------------------------------
+# comment_edit
+# -----------------------------------------------------------------------------
+def comment_edit(request, art_id, com_id):
+    com = Comment.objects.get(id=com_id)
+
+    if request.method == 'GET':
+        context = {
+            'comment': com
+        }
+
+        return render(request, 'crud/comment_edit.html', context)
+
+    else:
+        text = request.POST.get('comment')
+        com.comment = text
+        com.save()
+
+        return redirect('crud:detail', art_id)
+
+
+def comment_del(request, art_id, com_id):
+    if request.method == 'POST':
+        com = Comment.objects.get(id=com_id)
+        com.delete()
+    
+    return redirect('crud:detail', art_id)

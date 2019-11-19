@@ -1,0 +1,22 @@
+{% extends 'base_crud.html' %}
+{% load static %}
+{% block title %}Comment Edit{% endblock %}
+{% block local_resources %}
+    <link href="{% static 'crud/css/index.css' %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>댓글 수정</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="comment" value="{{comment.comment}}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit">댓글수정</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

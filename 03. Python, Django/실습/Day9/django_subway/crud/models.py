@@ -17,6 +17,7 @@ class Comment(models.Model):
     # models.CASCADE: 부모테이블이 삭제시 같이 삭제하는 옵션
     # models.PROTECT: 부모테이블이 삭제 될 때 오류 발생
     # models.SET_NULL: 삭제 되었을 때 부모 참고 값을 NULL 값으로 채움. 단 NOT NULL일 경우 에러
+    # models.SET_DEFAULT: 삭제되었을 때 설정된 default 값으로 설정. default 값을 설정해 주어야 한다.
     # models.SET(): 특정 함수를 호출
     # models.DO_NOTHING: 아무것도 안 함.
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
