@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>영화 목록</h3>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Score</th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+            <td><a href="{% url 'movie:detail' movie.id %}">{{ movie.title }}</a></td>
+            <td>{{ movie.score }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">등록된 영화가 없습니다.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

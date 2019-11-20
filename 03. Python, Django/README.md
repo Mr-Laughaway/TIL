@@ -2430,7 +2430,7 @@ DELETE /boards/1
 
 > :point_right: ***Django 에서는 HTTP method 를 GET/POST 만 지원한다.*** 따라서 GET을 제외한 모든 행위를 POST로 보내고 행위를 선언하는 식으로 해결한다.
 
-#### CURD를 semi-RESTful 로 바꿔보기
+#### CRUD를 semi-RESTful 로 바꿔보기
 
 - new : 데이터를 생성하기 위한 폼을 불러오는 것이기 때문에 GET
 
@@ -2441,6 +2441,18 @@ DELETE /boards/1
   ```POST /boards/new```
 
 :smile:***잘 바꿨다고 전해진다.***
+
+#### 영화관리 페이지 만들어보기
+
+>Day11 소스 참조
+
+- 특이사항
+
+  DateTime 형식으로된 데이터를 ```<input type="date">``` 에 넣으려면 형식을 지정해 줘야한다.
+
+  ```html
+  value="{{ movie.open_date|date:'Y-m-d' }}
+  ```
 
 ### 1:N 관계
 

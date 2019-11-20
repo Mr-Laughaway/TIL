@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}New{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h3>영화 정보</h3>
+    <table class="table">
+        <tr>
+            <th>항목</th>
+            <th>내용</th>
+        </tr>
+        <tr>
+            <th>영화 제목(국문)</th>
+            <td>{{ movie.title }}</td>
+        </tr>
+        <tr>
+            <th>영화 제목(영문)</th>
+            <td>{{ movie.title_en }}</td>
+        </tr>
+        <tr>
+            <th>관람객 수</th>
+            <td>{{ movie.audience }}</td>
+        </tr>
+        <tr>
+            <th>개봉일</th>
+            <td>{{ movie.open_date|date:'Y년 m월 d일' }}</td>
+        </tr>
+        <tr>
+            <th>장르</th>
+            <td>{{ movie.genre }}</td>
+        </tr>
+        <tr>
+            <th>평점</th>
+            <td>{{ movie.score }}</td>
+        </tr>
+        <tr>
+            <th>포스터 URL</th>
+            <td><a href="{{movie.poster_url }}" target="_blank">{{ movie.poster_url }}</a><br>
+                <img src="{{movie.poster_url }}" height="200"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ movie.description }}</td>
+        </tr>
+    </table>
+    <div>
+        <form action="{% url 'movie:delete' movie.id %}" method="POST">
+            {% csrf_token %}
+            <a class="btn btn-info" href="{% url 'movie:index' %}" >목록</a>
+            <a class="btn btn-warning" href="{% url 'movie:edit' movie.id %}" >수정</a>
+            <button type="submit" class="btn btn-danger">삭제</button>
+        </form>
+        
+    </div>
+
+</div>
+
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}
