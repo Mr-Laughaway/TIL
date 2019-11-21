@@ -1,0 +1,21 @@
+{% load static %}
+
+<div class="container">
+    TITLE : {{ board.title }} <br>
+    CONTENTS: {{ board.content }} <br>
+    IMAGE: <br>
+    {% if board.image %}
+        <img src="{{ board.image.url }}">
+        <img src="{{ board.image_thumb.url }}"><br>
+    {% else %}
+        <img src="{% static 'boards/img/noimage.png' %}"><br>
+    {% endif %}
+    <hr>
+    <a href="{% url 'boards:index' %}">목록</a><br>
+    <a href="{% url 'boards:edit' board.id %}">수정하기</a>
+    <form action="{% url 'boards:delete' board.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
+</div>
+

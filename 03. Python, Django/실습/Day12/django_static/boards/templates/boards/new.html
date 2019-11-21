@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="container">
+    <h1>새로 올리기</h1>
+
+    <form action="{% url 'boards:new' %}" enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        TITLE: <input type ="text" name="title" required><br>
+        CONTENT: <input type="text" name="content" required><br>
+        IMAGE: <input type="file" name="image" accept='image/*'><br>
+        <button type="submit">올리기</button>
+    </form>
+    
+
+</div>
+

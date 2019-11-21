@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block local_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Index Page</h1>
+
+    <ul>
+        {% for board in boards %}
+            <li><a href="{% url 'boards:detail' board.id%}">{{ board.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'boards:new' %}">새로 만들기</a>
+</div>
+    
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}
+

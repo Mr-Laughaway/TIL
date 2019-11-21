@@ -1,0 +1,17 @@
+{% load static %}
+
+<div class="container">
+    <h1>수정하기</h1>
+    <hr>
+    <form action="{% url 'boards:edit' board.id %}" enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        TITLE: <input type ="text" name="title" value="{{ board.title }}" required><br>
+        CONTENT: <input type="text" name="content" value="{{ board.content }}" required><br>
+        IMAGE: <input type="file" name="image" accept='image/*' ><br>
+        <a href="{% url 'boards:index' %}">취소</a>
+        <button type="submit">수정하기</button>
+    </form>
+    
+
+</div>
+

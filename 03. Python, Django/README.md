@@ -2446,13 +2446,24 @@ DELETE /boards/1
 
 >Day11 소스 참조
 
-- 특이사항
+- 특이사항 - date formatting
 
   DateTime 형식으로된 데이터를 ```<input type="date">``` 에 넣으려면 형식을 지정해 줘야한다.
 
   ```html
   value="{{ movie.open_date|date:'Y-m-d' }}
   ```
+
+- 특이사항 - resolve
+
+  url 요청 정보가 필요한 경우 사용한다.
+
+  ```python
+  import xxx
+  sorttype = resolve(request.path_info).url_name
+  ```
+
+  
 
 ### 1:N 관계
 
@@ -2589,6 +2600,309 @@ article = models.ManyToManyField(Article, through="ArticleComment")
 class ArticleCommnet(models.Model):
     article = models.ForeignKey(Article)
     comment = models.ForeignKey(Comment)
+```
+
+### STATIC (이미지 업로드)
+
+- resource static과 다른 점
+
+  > static vs media-file
+
+  둘 다 static 파일이긴 하지만  resource 는 위치가 고정이지고,  사용자한테서 업로드 받는 이미지는 위치가 바뀐다.
+
+  - 웹 서비스에서 사용하려고 미리 준비한 파일
+
+  - 위치 변경 없이 서비스시 제공하는 파일
+
+  - `{% static %}` 으로 불러와서 사용
+
+  - 상단에 `{% load static %}`을 기재해 줘야 사용 가능하다.
+
+    ```html
+    app_name/static/app_name
+    boards/static/boards/images/a.jpeg
+    
+    {% load static %}
+    <img src="{% statice 'boards/images/a.jpeg' %}">
+    ```
+
+- settings.py 에서 static 추가 경로를 설정할 수 있다.
+
+  - `STATIC_URL`
+
+    웹에서 사용할 정적 파일의 최상위 URL(실제 파일이 위치한 디렉토리가 아님)
+
+  - `STATICFILES_DIRS`
+
+    실제 파일이 위치하는 디렉토리. 튜플이나 리스트 형식으로 지정. ***보통 프로젝트 전체에서 사용할 리소스를 관리할 때 사용한다.***
+
+    ```python
+    STATICFILES_DIRS = [
+    	# "/assets/image/*"
+        os.path.join(BASE_DIR, 'assets', 'image'),
+    ]
+    ```
+
+  - `STATIC_ROOT`
+
+    `debug=True` 일 때는 동작하지 않음. **배포용!**.
+
+    ```python manage.py collectstatic```: 프로젝트 안의 모든 static file을 모아줌.
+
+    해당 경로에 위치한 모든 파일을 웹 서버가 직접 제공하기 위해 존재.
+
+- media file
+
+  - `MEDIA_ROOT`
+
+    - 업로드가 될 때 저장시킬 경로. 
+
+    - staticfiles_dirs 비슷한 설정.
+
+    - config/urls.py 수정 필요
+
+      ```python
+      urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+      ```
+
+      
+
+  - `MEDIA_URL`
+
+    - 파일의 주소를 만들어주는 역할
+    - static_url 과 비슷한 설정
+    - 실제 파일이 위치한 디렉토리가 아님
+    - `/`가 필수이고 문자열로 설정 필요.
+
+    - config/urls.py 수정 필요
+
+#### 기본 적용
+
+**setting.py 에 디렉토리 추가**
+
+```python
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'assets', 'img'),
+]
+```
+
+**html** 적용
+
+```html
+{% load static %}
+
+<div class="container">
+    <h1>Index Page</h1>
+    <img src="{% static 'boards/img/img.jpg' %}" alt="img.jpg">
+    <img src="{% static 'peng2.jpg' %}" alt="peng2.jpg">
+</div>
+```
+
+#### enctype
+
+- `application/x-www-form-urlencoded`
+  - 공백 -> +
+  - 특문 -> ascii hex
+- `multipart/form-data`
+  - 파일 업로드
+  - POST로 요청해야 한다.
+- `text/plain`
+  - 공백 -> +
+  - 특문 -> 변환하지 않음
+
+#### 실제 적용
+
+***setting.py***
+
+```python
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'assets', 'img'),
+]
+
+#python manage.py collectstatic 했을 경우 모이는 장소 지정
+STATIC_ROOT = os.path.join(BASE_DIR, 'sf')
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+```
+
+***urls.py***
+
+```python
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+***html***
+
+```html
+<img src="{{ board.image.url }}"><br>
+```
+
+### Image Resizing
+
+- Pillow: PIL 프로젝트에서 fork 된 라이브러리
+  - 이미지 파일형식 지원
+  - 다양한 이미지를 처리
+  - ImageField 생성할 때 필수!
+- pilkit: pillow를 쉽게 쓸 수 있도록 도와주는 패키지, 다양한 프로세서를 지원
+  - Thumbnail
+  - Resize
+  - Crop
+- django-imagekit: 이미지 썸네일 django app
+  - 실제로 처리할 때는 pilkit을 사용한다.
+  - 이미지 썸네일 헬퍼 장고앱
+  - 
+
+**:point_right:참고 싸이트** https://github.com/matthewwithanm/django-imagekit
+
+#### 설치 및 설정
+
+***설치***
+
+```bash
+$ pip install pillow
+$ pip install pilkit
+$ pip install django-imagekit
+```
+
+***settings.py***
+
+````python
+INSTALLED_APPS = [
+    'boards',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django_extensions',
+    'imagekit',
+]
+````
+
+:arrow_right:**PNG와 JPEG 차이점**
+
+- PNG: 스크린샷, 단순한 그림, 아이콘 8bit 등 직접만들거나 색상이 적은 이미지에 쓰임
+- JPEG: 인물, 경치, 사진 등등 자연적이고 색상이 많은 이미지 저장에 쓰임. 퀄리티는 70~90 정도가 적당. 퀄리티가 저하되면 다시 되돌릴 수 없다.
+
+#### processor
+
+- ResizeToFill
+
+  지정한 사이즈를 맞추고 넘치는 부분을 잘라냄
+
+- ResizeToFil
+
+  지정한 사이즈를 맞추고 남는 부분은 빈공간으로 둠
+
+#### model 설정
+
+***models.py***
+
+```python
+from django.db import models
+from imagekit.models import ProcessedImageField, ImageSpecField
+from imagekit.processors import ResizeToFill, ResizeToFit, Thumbnail
+
+# Create your models here.
+def board_img_path(instance, filename):
+    return f"boards/{instance.pk}번글/{filename}"
+
+
+class Board(models.Model):
+    title = models.CharField(max_length=20)
+    content = models.TextField()
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    # # Resize To Fill Ver.1
+    # image = ProcessedImageField(
+    #     upload_to = 'boards/img',
+    #     processors = [
+    #         ResizeToFill(300, 300)
+    #     ],
+    #     format = "JPEG",
+    #     options = {
+    #         'quality': 90
+    #     }
+    # )
+
+    # # Resize To Fit Ver.1
+    # image = ProcessedImageField(
+    #     upload_to = 'boards/img',
+    #     processors = [
+    #         ResizeToFit(300, 300)
+    #     ],
+    #     format = "JPEG",
+    #     options = {
+    #         'quality': 90
+    #     }
+    # )
+
+    # # Thumbnail Ver.1
+    # image = ProcessedImageField(
+    #     upload_to = 'boards/img',
+    #     processors = [
+    #         Thumbnail(100, 100)
+    #     ],
+    #     format = "JPEG",
+    #     options = {
+    #         'quality': 90
+    #     }
+    # )
+    
+    # # thumbnail 원본 저장하고 썸네일은 캐쉬형태로 Ver.2
+    # image = models.ImageField(blank=True)
+    # image_thumb = ImageSpecField(
+    #     source = 'image',
+    #     processors = [
+    #         Thumbnail(100, 100)
+    #     ],
+    #     format = "JPEG",
+    #     options = {
+    #         'quality': 90
+    #     }
+    # )
+
+    image = models.ImageField(
+        blank = True,
+        # upload_to = "boards/%Y/%m/%d"
+        upload_to = board_img_path
+    )
+    image_thumb = ImageSpecField(
+        source = 'image',
+        processors = [Thumbnail(100, 100)],
+        format = "JPEG",
+        options = {
+            'quality': 90
+        }
+    )
+```
+
+#### Favicon
+
+> link로 적용한다.
+>
+> link: 다른 문서 또는 외부 소스와의 링크를 표시 
+
+- `type`: 연결 문서의 MIME 유형
+- `rel`:  현재 문서와 링크된 문서와의 관계(relationship)를 지정한다. 속성값은 *alternate, author, help, icon, license, next, pingback, prefetch, search, stylesheet*를 가질 수 있다. rel은 href 속성을 위한 추가 정보이므로 href 속성이 있을 때에만 정의되어야 한다.
+  - stylesheet
+  - alternate
+  - author
+  - help
+  - search
+
+```html
+<link rel="shortcut icon" href="{% static 'boards/favicon/favicon.ico' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'boards/favicon/favicon.ico' %}" type="image/x-icon">
 ```
 
 ## 협업 툴 소개
