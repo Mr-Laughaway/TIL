@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block local_headresources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+
+        TITLE: <br>
+        {{ article.title}}<br><br>
+        CONTENT: <br>
+        {{ article.content }}<br>
+        <br>
+        <a href="{% url 'article:edit' article.id %}">수정하기</a>
+    <form action="{% url 'article:delete' article.id %}" method='POST'>
+        {% csrf_token %}
+        <a href="#" onclick="this.parentNode.submit()">삭제하기</a>
+    </form>
+</div>
+
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

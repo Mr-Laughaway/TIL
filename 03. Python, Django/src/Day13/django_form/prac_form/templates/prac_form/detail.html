@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block local_head_resources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>새로 등록 </h1>
+    NAME:<br>
+    {{ book.name }}<br>
+    <br>
+    PREFACE:<br>
+    {{ book.preface }}<br>
+    <hr>
+    <a href="{% url 'prac:edit' book.id %}">수정하기</a>
+    <form action="{% url 'prac:delete' book.id %}" method="POST">
+        {% csrf_token %}
+        <a href="#" onclick="this.parentNode.submit()">삭제</a>
+    </form>
+</div>
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}

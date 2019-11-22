@@ -2905,6 +2905,311 @@ class Board(models.Model):
 <link rel="icon" href="{% static 'boards/favicon/favicon.ico' %}" type="image/x-icon">
 ```
 
+### Form class
+
+Model class와 유사
+
+- 일반 Form
+
+  항목을 일일이 지정함
+
+- Model Form
+
+  모델을 기반으로 항목이 정혀져있음
+
+#### 기본 선언 방법
+
+```python
+class <모델명>(forms.Form)
+```
+
+```python
+# 일반 폼
+class BoardForm(Forms.Form):
+	title = forms.CharField()
+	content = forms.CharField()
+    
+# 모델 폼
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        field = ['title', 'content']
+```
+
+#### 주요 역할
+
+- 입력 폼 html을 알아서 생성해줌
+- 입력 폼의 값을 검증
+- 검증에 통과된 값을 `Dictionary` 타입으로 제공
+
+***views.py***
+
+```python
+from IPython import embed
+
+def index(request):
+    embed() #이 페이지를 새로고침하면 터미널에 배시창이 생긴다
+    return render(request, 'article/index.html')
+```
+
+#### Python 설치 (debuggin 할 때 매우 좋음!!)
+
+- 
+
+```bash
+$ pip install ipython
+```
+
+#### form class 생성
+
+- form.as_p: `p` 태그로 내용을 감싸줌
+- form.as_table: `tr`, `td` 태그로 내용을 감싸줌. `table` 태그로 감싸 주어야 함
+- form.as_ul: `li` 태그로 내용을 감싸 줌. `ul` 태그로 감싸 주어야 함
+
+***forms.py***
+
+```python
+from django import forms
+
+class ArticleForm(forms.Form):
+    title = forms.CharField()
+    content = forms.CharField()
+```
+
+#### 적용
+
+***views.py***
+
+```python
+def new(request):
+    if request.method == 'POST':
+        # title = request.POST.get('title')
+        # content = request.POST.get('content')
+        # article = Article()
+        # article.title = title
+        # article.content = content
+        # article.save()
+        
+        # 바인딩
+        form = ArticleForm(request.POST)
+        # embed()
+        # 유효성 체크
+        if form.is_valid():
+            # form.cleaned_data
+            # form 에서 불필요한 내용을 제거하고 dictionary로 만들어준다
+            title = form.cleaned_data.get('title')
+            content = form.cleaned_data.get('content')
+            article = Article.objects.create(title=title, content=content)
+
+            return redirect('article:detail', article.id)
+
+    else:
+        form = ArticleForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'article/new.html', context)
+
+```
+
+***new.html***
+
+```html
+<form action='' method='POST'>
+    {% csrf_token %}
+    <!--
+    TITLE: <br>
+    <input type="text" name="title"><br>
+    CONTENT: <br>
+    <textarea name="content" cols="50"  rows="5"></textarea><br>
+    -->
+    <ul>
+        {{ form.as_ul }}
+    </ul>
+
+    <input type="submit">
+</form>
+```
+
+#### Model Absolute url 설정
+
+> Model 의 페이지를 자동으로 지정할 수 있다
+
+***models.py***
+
+`get_absolute_url` 오버라이드
+
+```python
+from django.db import models
+# reverse 사용 등록
+from django.urls import reverse
+
+# Create your models here.
+class Article(models.Model):
+    title = models.CharField(max_length=30)
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    # detail page 지정
+    def get_absolute_url(self):
+        return reverse('article:detail', args=[self.id])
+        # return reverse('article:detail', kargs={'a_id': self.id})
+```
+
+***views.py***
+
+```python
+article = Article.objects.get(id=a_id)
+
+return redirect(article)
+```
+
+####  Form 쉬운 저장 save() 구현
+
+***forms.py***
+
+```python
+from .models import Book
+     
+class BookForm(forms.Form):
+    name = forms.CharField(max_length=20)
+    preface = forms.CharField(max_length=200)
+
+    # 일반 Form 에서도 form.save() 동작이 가능하게
+    def save(self, commit=True):
+        self.instance = Book(**self.cleaned_data)
+        if commit:
+            self.instance.save()
+        return self.instance
+```
+
+***views.py***
+
+```python
+ if req.method == 'POST':
+    form = BookForm(req.POST)
+    if form.is_valid():
+        #name = form.cleaned_data.get('name')
+        #prefix = form.cleaned_data.get('prefix')
+        #book = Book()
+        #book.name = name
+        #book.prefix = prefix
+        #book.save()
+        
+        # ModelForm이 아닌경우에도 위와 같이 설정하면 바로 save를 할 수 있다.
+        book = form.save() 
+        return redirect(book)
+```
+
+
+
+
+
+#### 잘못 된 요청 404 에러로 돌리기
+
+***views.py***
+
+```python
+
+```
+
+#### django FORM FIELD
+
+:point_right: https://docs.djangoproject.com/en/2.2/ref/forms/fields/ 
+
+#### django WIDGET
+
+:point_right: https://docs.djangoproject.com/en/2.2/ref/forms/widgets/ 
+
+***forms.py***
+
+```python
+from django import forms
+
+check_box = [
+    ('one', "하나"),
+    ('two', "둘"),
+    ('three', "셋")
+]
+
+MONTH_EN = {
+    1:('JAN'), 2:('FEB'), 3:('MAR'), 4:('APR'),
+    5:('MAY'), 6:('JUN'), 7:('JUL'), 8:('AUG'),
+    9:('SEP'), 10:('OCT'), 11:('NOV'), 12:('DEC')
+}
+
+class ArticleForm(forms.Form):
+    title = forms.CharField()
+    content = forms.CharField()
+
+    # # 체크 박스
+    # content = forms.MultipleChoiceField(
+    #     widget=forms.CheckboxSelectMultiple,
+    #     choices=check_box
+    # )
+
+    # # 라이오 버튼
+    # content = forms.ChoiceField(
+    #     widget=forms.RadioSelect,
+    #     choices=check_box
+    # )
+
+    # # 드랍 다운
+    # content = forms.ChoiceField(
+    #     widget=forms.Select,
+    #     choices=check_box
+    # )
+
+    # # 날짜
+    # content = forms.DateField(
+    #     widget=forms.SelectDateWidget(
+    #         years=range(1990, 2020),
+    #         months=MONTH_EN
+    #     )
+    # )
+```
+
+#### Model Form
+
+***models.py***
+
+```python
+from .models import Author
+
+class AuthorForm(forms.ModelForm):
+    class Meta:
+        model = Author
+        fields = ['name', 'company']
+```
+
+### VSCODE Extension 팁
+
+:point_right: https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django 
+
+```File>Preference>Settings>Django 검색>Edit in settings.py```
+
+```python
+"files.associations": {
+    "**/templates/*.html": "django-html",
+    "**/templates/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+},
+"emmet.includeLanguages": {
+    "django-html": "html"
+},
+```
+
+
+
+
+
+
+
 ## 협업 툴 소개
 
 ### slack

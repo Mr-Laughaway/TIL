@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Index{% endblock %}
+{% block local_headresources %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    <form action='' method='POST'>
+        {% csrf_token %}
+        <!--
+        TITLE: <br>
+        <input type="text" name="title"><br>
+        CONTENT: <br>
+        <textarea name="content" cols="50"  rows="5"></textarea><br>
+        -->
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        <input type="submit">
+    </form>
+</div>
+
+{% endblock %}
+{% block local_body_resources %}
+{% endblock %}
