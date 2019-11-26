@@ -3106,15 +3106,16 @@ class BookForm(forms.Form):
         return redirect(book)
 ```
 
-
-
-
-
 #### 잘못 된 요청 404 에러로 돌리기
 
 ***views.py***
 
 ```python
+from django.shortcuts import get_object_or_404
+
+...
+board = get_object_or_404(Board, id=b_id)
+...
 
 ```
 
@@ -3187,6 +3188,160 @@ class AuthorForm(forms.ModelForm):
         fields = ['name', 'company']
 ```
 
+#### django-crispy-forms 설치
+
+> 장고 Form을 bootstrap으로 감싸주는 역할
+
+:point_right:  https://django-crispy-forms.readthedocs.io/en/latest/ 
+
+```bash
+$ pip install django-crispy-forms
+```
+
+***setting.py***
+
+```python
+INSTALLED_APPS = [
+	...
+	'crispy_forms',
+]
+```
+
+***html***
+
+```html
+{% load crispy_forms_tags %}
+<form action="" method="POST">
+    {%  csrf_token %}
+    {{ form|crispy }}
+    <br>
+    <input type="submit" value="새 글 쓰기" class="btn btn-primary"/>
+</form> 
+```
+
+### 회원가입 구현
+
+#### django-bootstrap4 설치
+
+```bash
+$ pip install django-bootstrap4
+```
+
+***setting.py***
+
+```python
+INSTALLED_APPS = [
+	...
+	'crispy_forms',
+]
+```
+
+***html***
+
+```html
+{% load bootstrap4 %}
+
+<div class="container">
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bottons %}
+            <button type="submit" class="btn btn-primary">회원가입</button>
+        {% endbuttons %}
+        {% bottons submit="회원가입_2" reset="다시입력" %}
+        {% endbuttons %}
+    </form>
+</div>
+```
+
+#### views.py 구현
+
+```python
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from IPython import embed
+
+# Create your views here.
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        #embed()
+        if form.is_valid():
+            user = form.save()
+            return redirect('boards:index')
+    else:
+        form = UserCreationForm()
+        #embed()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/signup.html', context)
+```
+
+#### 로그인
+
+***views.py***
+
+```python
+def login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            auth_login(request, form.get_user())
+            return redirect('boards:index')
+    else:
+        form = AuthenticationForm()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'accounts/login.html', context)
+
+# 회원가입시 자동 로그인
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        #embed()
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)
+            return redirect('boards:index')
+    else:
+        form = UserCreationForm()
+        #embed()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/signup.html', context)
+```
+
+***html***
+
+```html
+<form action="{% url 'accounts:logout' %}" method="POST">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'boards:new' %}" class="btn btn-primary">New</a>
+            <br><br>
+            <a href="#" onclick="this.parentNode.submit()" class="btn btn-danger">로그아웃</a>
+        {% else %}
+            <a href="{% url 'accounts:signup' %}" class="btn btn-info">회원가입</a>
+        <a href="{% url 'accounts:login' %}" class="btn btn-info">로그인</a>
+        {% endif %}
+    </form>
+```
+
+#### session 관리
+
+> django.contrib.auth 관련 모듈/함수를 사용.
+>
+> :point_right: DAY14 수업 참조
+>
+> ***그런데 user table을 커스터마이징 할 경우 어떻게 해야할까???***
+
 ### VSCODE Extension 팁
 
 :point_right: https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django 
@@ -3203,10 +3358,6 @@ class AuthorForm(forms.ModelForm):
     "django-html": "html"
 },
 ```
-
-
-
-
 
 
 
