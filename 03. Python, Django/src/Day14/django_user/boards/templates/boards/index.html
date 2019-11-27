@@ -12,12 +12,14 @@
             <th>ID</th>
             <th>Title</th>
             <th>user</th>
+            <th></th>
         </tr>
     {% for board in boards %}
         <tr>
             <td>{{ board.id }}</td>
             <td><a href="{% url 'boards:detail' board.id %}">{{ board.title }}</a></td>
             <td>{{ board.user }}</td>
+            <td>{%  include 'boards/_board.html' %}</td>
         </tr>
     {% endfor %}
     </table>

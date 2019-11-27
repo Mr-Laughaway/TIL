@@ -2589,19 +2589,6 @@ $ python manage.py shell_plus
   </form>
   ```
 
-### M:N 관계
-
-> 다대다 관계
-
-```python
-# 따옴표 사용은 선언되기 전의 클래스 등을 사용할 때 유용하다.
-article = models.ManyToManyField(Article, through="ArticleComment")
-
-class ArticleCommnet(models.Model):
-    article = models.ForeignKey(Article)
-    comment = models.ForeignKey(Comment)
-```
-
 ### STATIC (이미지 업로드)
 
 - resource static과 다른 점
@@ -3342,22 +3329,336 @@ def signup(request):
 >
 > ***그런데 user table을 커스터마이징 할 경우 어떻게 해야할까???***
 
-### VSCODE Extension 팁
+### 댓글 구현
 
-:point_right: https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django 
-
-```File>Preference>Settings>Django 검색>Edit in settings.py```
+***models.py***
 
 ```python
-"files.associations": {
-    "**/templates/*.html": "django-html",
-    "**/templates/*": "django-txt",
-    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
-},
-"emmet.includeLanguages": {
-    "django-html": "html"
-},
+from django.db import models
+from django.conf import settings
+
+# Create your models here.
+class Board(models.Model):
+    title = models.CharField(max_length=30)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.id} {self.title}"
+
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=200)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.comment
+    
 ```
+
+***views.py***
+
+```python
+# -----------------------------------------------------------------------------
+# new_comment
+# -----------------------------------------------------------------------------
+@login_required
+@require_POST
+def new_comment(request, b_id):
+    form = CommentForm(request.POST)
+    if form.is_valid:
+        comment = form.save(commit=False)
+        # comment.board = Board.objects.get(id=b_id)
+        comment.board_id = b_id
+        comment.user = request.user
+        comment.save()
+
+        return redirect('boards:detail', b_id)
+    else:
+        board = Board.objects.get(id=b_id)
+        comments = board.comment_set.all()
+        context = {
+            'board': board,
+            'comment_form': form,
+            'comments': comments
+        }
+
+        return render(request, 'boards.detail.html', context)
+
+
+# -----------------------------------------------------------------------------
+# com_del
+# -----------------------------------------------------------------------------
+@login_required
+@require_POST
+def del_comment(request, c_id):
+    comment = get_object_or_404(Comment, id=c_id)
+    b_id = comment.board_id
+    if comment.user == request.user:
+        comment.delete()
+
+    return redirect('boards:detail', b_id)
+```
+
+### M:N
+
+>다대 다 관계
+>
+>좋아요 관계가 그렇다?
+
+```python
+# 따옴표 사용은 선언되기 전의 클래스 등을 사용할 때 유용하다.
+article = models.ManyToManyField(Article, through="ArticleComment")
+
+class ArticleCommnet(models.Model):
+    article = models.ForeignKey(Article)
+    comment = models.ForeignKey(Comment)
+```
+
+### ORM 실습
+
+#### 1:N
+
+> 1:N 에서는 복잡하고 빈번히 일어나는 일들을 관리할 수 없다.
+
+```bash
+# 1. 1번 사람이 작성한 게시글을 다 가져오려면?
+>>> u1 = User.objects.get(id=1)
+>>> Board.objects.filter(user_id=u1.id)
+# 와 같은 것
+>>> u1.board_set.all()
+
+# 2. 1번 사람이 작성한 모든 글의 댓글을 표시
+>>>	   : for b in u1.board_set.all():
+    ...:     for c in b.comment_set.all():
+    ...:         print(c.content)
+
+# 3. 2번째 댓글 을 쓴 사람은?
+>>> com2 = Comment.objects.get(id=2)
+>>> com2.user
+
+# 4. 2번째 댓글을 쓴 사람의 이름은?
+>>> com2.user.name
+
+# 5. 2번 댓글을 쓴 사람의 게시글들은?
+>>> Board.objects.filter(user_id=com2.user.id)
+# 와 같은 것
+>>> com2.user.board_set.all()
+
+# 6-1. 1번 글의 첫 번째 댓글을 쓴 사람의 이름은?
+>>> boa1 = Board.objects.get(id=1)
+>>> boa1.comment_set.first().user.name
+# 와 같은 것
+>>> boa1.comment_set.all()[0].user.name
+
+# 6-2 1번 글의 마지막 댓글을 쓴 사람의 이름은?
+>>> boa1.comment_set.last().user.name
+
+# 7. 1번글의 2번째 부터 4번째 까지 댓글을 가지고 오자.
+>>> boa1.comment_set.all()[1:4]
+# select 'manytomany_comment'.'id'.'...from manytomany_comment.postid = 1 limit 3 offset 1'
+
+# 8. 1번 글의 첫 번째, 두 번째 댓글을 가져오면?
+>>> boa1.comment_set.all()[0:2]
+
+# 9. 1번 글의 두번째 댓글을 쓴 사람의 첫 번째 게시물의 작성자 이름은?
+>>> boa1.comment_set.all()[1].user.board_set.all()[0].user.name
+
+# 10-1. 모든 댓글에서 content 정보만 가지 온다면?
+>>> Comment.objects.values('content')
+
+# 10-2. 1번 댓글의 content 정보를 가지고 온다면?
+>>> Comment.objects.first().content
+
+# 11. 2번 사람이 작성한 댓글을 content의 내림 차순으로 정렬
+>>> u2 = User.Objects.get(id=2)
+>>> u2.comment_set.order_by('-content')
+
+# 12-1. 1글 이라는 제목인 게시글
+>>> Board.objects.filter(title='1글')
+
+# 12-2. 글이라는 글자가 포함된 제목인 게시글을 보여주려면
+>>> Board.objects.filter(title__contains='글')
+
+```
+
+#### N:M
+
+> 중개 테이블을 만들어 관리
+
+```bash
+# 1. 손님 1의 입장에서 본 판매 정보
+>>> p1 = Person.objects.get(pk=1)
+>>> p1.sales_set.all()
+
+# 2-1. 주류 1의 입장에서 본 판매 정보
+>>> a1 = Alcohol.objects.get(pk=1)
+>>> a1.sales_set.all()
+
+# 2-2. 주류 2의 입장에서 본 판매 정보
+>>> Sales.objects.filter(alcohol_id = Alcohol.objects.get(pk=2).id)
+
+# 4. 손님 1의 주류 목록을 보고 싶다면?
+>>> for sales in p1.sales_set.all():
+    ...:     print(sales.alcohol.name)
+
+```
+
+#### N:M 중개 모델  설정
+
+***models.py***
+
+```python 
+from django.db import models
+
+# Create your models here.
+class Person(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"{self.id}번 술꾼 {self.name}"
+        
+
+class Alcohol(models.Model):
+    name = models.CharField(max_length=20)
+    
+    ##### !!!!!!!!!!!!!중요!!!!!!!!!!!!#####
+   	people = models.ManyToManyField(Person, through='Sales', related_name='alcohols')
+
+    def __str__(self):
+        return f"주류 No.{self.id} : {self.name}"
+
+
+class Sales(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    alcohol = models.ForeignKey(Alcohol, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.person}이 마시는 {self.alcohol}"
+    
+```
+
+***실습***
+
+```bash
+# 1. 조수를 마신 사람들
+>>> alcohol1 = Alcohol.objects.get(id=1)
+>>> alcohol1.people.all()
+
+>>> alcohol2 = Alcohol.objects.get(id=2)
+>>> alcohol2.people.all()
+
+# 2. 1번 손님의 주류목록
+# 장고가 만들어 준다!!!!!!!!!!!!
+>>> person1 = Person.objects.get(pk=1)
+>>> person1.alcohol_set.all()
+# 아래는 related_name을 위와 같이 설정하면 아래와 같이 써야 한다
+# alcohol_set.all()을 못쓰게 됨
+>>> person1.alcohols.all()
+
+```
+
+#### 중개 테이블 자동생성
+
+> 중개 테이블을 삭제하고 related_name 만 남긴다
+>
+> ```people = models.ManyToManyField(Person, related_name='alcohols')```
+
+```bash
+person1 = Person.objects.create(name="Pengsu")		
+person2 = Person.objects.create(name="Sanseul")		
+alcohol1 = Alcohol.objects.create(name="Soju")		
+alcohol2 = Alcohol.objects.create(name="Beer")		
+alcohol3 = Alcohol.objects.create(name="Makgeoly")	
+
+# 중개 테이블이 자동생성 되었을 경우 데이터 넣는 법
+>>> person1.alcohols.add(alcohol1)
+>>> alcohol2.people.add(person1)
+>>> person1.alcohols.all()
+>>> person1.alcohols.remove(alcohol2)
+
+```
+
+### 좋아요 구현(accounts/boards 소스)
+
+- like_users: 좋아요를 누른 유저
+- like_boards: 좋아요가 눌린 게시글
+- 사용 가능 ORM
+  - boards.users: 게시글을 작성한 유저
+  - boards.like_users: 게시글을 좋아요 누른 유저
+  - user.boards_set.all(): 유저가 작성한 게시글들
+  - user.like_boards.all():  유저가 좋아요 누른 게시글들
+
+### 쿼리셋
+
+- 지연 평가(lazy...)
+
+  ```python
+  person = Person.objects.filter(first_name="펭수")
+  per = person.order_by()
+  # 기타 등등
+  person = per.filter().abc().er()
+  
+  # 실제로 값 참조가 이루어질 때
+  for p in person:
+      print(p) #이때 실제로 쿼리가 생행되게 된다.
+  
+  # 작성된 새로운 쿼리가 없이 같은 쿼리를 보내면 캐시된 값을 사용한다.
+  for p in person:
+      print(p) #이때 실제로 쿼리가 생행되게 된다.
+      
+  
+  ```
+
+- exist()
+
+  > 값의 존재 여부만을 확인 할 때
+
+  ```python
+  # 값이 있는지만 확인해도 쿼리가 들어간다
+  city = City.objects.filter(name="seoul")
+  if city:
+      ...
+  
+  # 이런 불필요한 자원 낭비를 막으려면 exists()를 활용한다.
+  if city.exists():
+      ...
+  ```
+
+- iterator()
+
+  > 대용량 쿼리를 처리할 때 효율적으로 나누어 처리하도록 할 수 있다.
+
+  ```python
+  rabbits = Rabbit.objects.allo()
+  if rabiit.exists():
+      for rabbit in rabbit.iterator():
+          print(rabbit)
+  ```
+
+  **고급활용**
+
+  ```python
+  atom = Atom.objects.all()
+  atom_iterator = atom.iterator()
+  try:
+      first_atom = next(atom_iterator)
+  except StopIteration:
+      pass
+  else:
+      from itertool import chain
+      for at in chain([first_atom], atom)
+      	print(at)
+  ```
+
+  
+
+  
+
+
 
 
 
@@ -3458,5 +3759,20 @@ ex) div>ul>li
 </div>
 ```
 
+#### Extension 팁
 
+:point_right: https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django 
+
+```File>Preference>Settings>Django 검색>Edit in settings.py```
+
+```python
+"files.associations": {
+    "**/templates/*.html": "django-html",
+    "**/templates/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+},
+"emmet.includeLanguages": {
+    "django-html": "html"
+},
+```
 

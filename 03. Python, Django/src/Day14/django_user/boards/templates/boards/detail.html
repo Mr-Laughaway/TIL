@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 {% block title %}Detail{% endblock %}
 {% block local_head_resources %}
 {% endblock %}
@@ -17,6 +18,7 @@
             <td>  {{ board.content }}</td>
         <tr>
     </table>
+
     <br>
      <form action="{% url 'boards:delete' board.id %}" method="POST">
         <a href="{% url 'boards:index' %}" class="btn btn-primary">목록</a>
@@ -29,6 +31,30 @@
                 onclick="this.parentNode.submit()">글 삭제</a>
         {% endif %}
     </form>
+    <hr>
+
+    <br>
+    <h4>댓글</h4>
+    {% for comment in comments %}
+        <p style="display:inline-block;">{{ comment.user }}: {{ comment.comment }}</p>
+        {% if comment.user_id == user.id %}
+        <form action="{% url 'boards:del_comment' comment.id %}" method="POST"  style="display:inline-block !important;">
+            {% csrf_token %}
+            <a href="#" onclick="this.parentNode.submit()" class="btn btn-secondary btn-sm"
+               >댓글 삭제</a>
+        </form>
+        {% endif %}
+        <br>
+    {% empty %}
+        <h5>댓글이 없습니다.</h5>
+    {% endfor %}
+    <hr>
+    <form action="{% url 'boards:new_comment' board.id %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form comment_form %}
+        {% buttons submit='댓글등록' %}{% endbuttons %}
+    </form>
+
 
 </div>
 {% endblock %}
