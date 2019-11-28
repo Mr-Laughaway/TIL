@@ -42,6 +42,16 @@ INSTALLED_APPS = [
     'django_extensions',
     'crispy_forms',
     'bootstrap4',
+
+    # django-allauth
+    # # The following apps are required:
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # # ... include the providers you want to enable:
+    'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.naver',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +135,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'accounts.User'
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = 'boards:index'

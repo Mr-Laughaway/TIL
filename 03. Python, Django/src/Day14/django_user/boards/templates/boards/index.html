@@ -18,11 +18,12 @@
         <tr>
             <td>{{ board.id }}</td>
             <td><a href="{% url 'boards:detail' board.id %}">{{ board.title }}</a></td>
-            <td>{{ board.user }}</td>
+            <td><a href="{% url 'accounts:profile' board.user %}">{{ board.user }}</a></td>
             <td>{%  include 'boards/_board.html' %}</td>
         </tr>
     {% endfor %}
     </table>
+    {% include 'boards/_page.html' %}
 </div>
 
 {% endblock %}

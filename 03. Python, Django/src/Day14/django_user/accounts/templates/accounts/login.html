@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load bootstrap4 %}
+{% load socialaccount %}
 {% block title %}Login{% endblock %}
 {% block local_head_resources %}
 {% endblock %}
@@ -19,7 +20,11 @@
         {#% endbuttons %}
         -->
     </form>
+    <a href="{% provider_login_url 'kakao' method='oauth2' %}" class="btn btn-warning">카카오 로그인</a>
+    <a href="{% provider_login_url 'naver' method='oauth2' %}" class="btn btn-success">네이버 로그인</a>
 </div>
+
+
 {% endblock %}
 {% block local_body_resources %}
 {% endblock %}

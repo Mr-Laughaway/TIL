@@ -3206,6 +3206,29 @@ INSTALLED_APPS = [
 </form> 
 ```
 
+#### Custom ModelForm
+
+> ModelForm 에서 widget의 class나 id 등등 속성을 적용시켜줄 수 있다.
+
+***forms.py***
+
+```python
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ['comment'] # ('comment', ) # 튜플로 만들 때는 comma를 꼭 붙여줘야한다
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['comment'].widget.attrs.update(
+            {'class':'form-control-sm', 'id':'abcdef'})
+```
+
+
+
 ### 회원가입 구현
 
 #### django-bootstrap4 설치
@@ -3403,7 +3426,7 @@ def del_comment(request, c_id):
     return redirect('boards:detail', b_id)
 ```
 
-### M:N
+### N:M
 
 >다대 다 관계
 >
@@ -3654,9 +3677,219 @@ alcohol3 = Alcohol.objects.create(name="Makgeoly")
       	print(at)
   ```
 
-  
+### 팔로우 구현
 
-  
+#### AbstractBaseUser
+
+- password /last_login
+- 커스텀의 자유도가 높지만 수정하거나 추가할 것들이 많아서 pass
+- AUTH_USER_MODEL  재설정 필요 **없음**
+
+#### AbstrtactUser 
+
+- settings.AUTH_USER_MODEL 을 재설정 해줘야함
+
+  ```python
+  AUTH_USER_MODEL = "앱이름.클래스이름`
+  ```
+
+#### 상속 받아 재 설정
+
+***forms.py***
+
+```python
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth import get_user_model
+
+class UserCustomChangeForm(UserChangeForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+
+
+class UserCustomCreationForm(UserCreationForm):
+
+    class Meta(UserCreationForm.Meta):
+        model = get_user_model()
+        fields = UserCreationForm.Meta.fields
+        
+```
+
+#### view 로직 구현
+
+***views.py***
+
+```python
+@login_required
+def follow(request, u_id):
+    person = get_object_or_404(get_user_model(), id=u_id)
+
+    if person.followers.filter(id=request.user.id).exists():
+        person.followers.remove(request.user)
+    else:
+        person.followers.add(request.user)
+
+    return redirect('boards:index')
+    
+```
+
+### Pagination
+
+> 장고의 기능을 이용하여 Pagination을  구현해본다.
+
+***views.py***
+
+```python
+from django.core.paginator import Paginator
+
+def index(request):
+    boards = Board.objects.all()
+
+    # Paginator(전체리스트, 페이지당 보여지는 개수)
+    paging = Paginator(boards, 5)
+    page = reqeust.GET.get('page')
+    page_list = paging.get_page(page)
+
+    context = {
+        'boards': page_list
+    }
+    return render(request, 'boards/index.html', context)
+```
+
+***_page.html***
+
+```django
+<nav>
+    <ul class="pagination">
+        {% if boards.has_previous %}
+            <li class="page-item">
+                <a href="{% url 'boards:index' %}?page={{ boards.previous_page_number }}" 
+                    class="page-link">Prev</a>
+            </li>
+        {% endif %}
+
+        {% for page_num in boards.paginator.page_range %}
+            <li class="page-item {% if page_num == boards.number %}active{% endif %}">
+                <a href="{% url 'boards:index' %}?page={{ page_num }}" class="page-link">{{ page_num }}</a>
+            </li>
+        {% endfor%}
+
+        {% if boards.has_next %}
+            <li class="page-item">
+                <a href="{% url 'boards:index' %}?page={{ boards.next_page_number }}" class="page-link">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+```
+
+### OAuth 소셜 로그인
+
+#### django-allauth 패키지 설치
+
+```bash
+$ pip install django-allauth
+```
+
+#### 패키지 설정
+
+:point_right: https://django-allauth.readthedocs.io/en/latest/installation.html 
+
+***setting.py***
+
+```python
+INSTALLED_APPS = [
+    'accounts',
+    'boards',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django_extensions',
+    'crispy_forms',
+    'bootstrap4',
+
+    # django-allauth
+    # # The following apps are required:
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # # ... include the providers you want to enable:
+    'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.naver',
+]
+
+SITE_ID = 1
+```
+
+***urls.py***
+
+```python
+urlpatterns = [
+    path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('', include('boards.urls')),
+    path('admin/', admin.site.urls),
+]
+
+```
+
+#### Migrate
+
+> 소셜 로그인 관련 DB를 생성
+
+```bash
+$ pip install migrate
+# 를 한 번 진행한다.
+```
+
+#### 카카오 앱 생성
+
+- allauth 페이지에서 카카오 콜백 URL을 확인한다
+
+  콜백 URL:  http://localhost:8000/accounts/kakao/login/callback/ 
+
+- 카카오 개발자 센터에서 콜백 URL 설정
+
+#### Admin page 설정
+
+- 소셜 어플리케이션 추가
+
+  > 제공자가 없을 경우 INSTALLED_APP에 provider를 등록해준다.
+
+- 키  설정
+  - Client ID
+  - Client Secret
+
+#### login html에 적용
+
+:point_right: https://django-allauth.readthedocs.io/en/latest/templates.html  참조
+
+```html
+{% load socialaccount %}
+
+<a href="{% provider_login_url 'kakao' method='oauth2' %}" class="btn btn-warning">카카오 로그인</a>
+```
+
+#### login redirect 설정
+
+***settins.py***
+
+```python
+LOGIN_REDIRECT_URL = 'boards:index'
+```
+
+#### 네이버 적용
+
+> 카카오와 대동소이하다.
+
+
+
+
 
 
 
