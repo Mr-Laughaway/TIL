@@ -16,7 +16,8 @@ def index(request):
     for movie in movies:
         ratings = Rating.objects.filter(movie=movie)
         if len(ratings) > 0:
-            score = sum(list(map(lambda rate: rate.score, ratings)))
+            score_list = list(map(lambda rate: rate.score, ratings))
+            score = sum(score_list) / len(score_list)
             movie.score = score
         else:
             movie.score = "아직 평점이 없습니다."
