@@ -3887,6 +3887,734 @@ LOGIN_REDIRECT_URL = 'boards:index'
 
 > 카카오와 대동소이하다.
 
+## Node.js & Javascript
+
+### 설치
+
+#### Node.js 설치
+
+:point_right: https://nodejs.org/ko/ 
+
+```bash
+$ node -v
+v12.13.1
+
+$ npm -v
+6.12.1
+```
+
+#### VSCODE extension 설치
+
+- `auto close tag`
+
+- `ainbow brackets`
+- `indent rainbow`
+- `beautify`
+- `code runner`
+- `ESLint`
+
+#### VSCODE 설정
+
+- file preference > setting > json 검색 >  > edit in settings.json
+
+  ```json
+  "[html]": {
+          "editor.tabSize": 2
+      },
+      "[css]": {
+          "editor.tabSize": 2
+      },
+      "[python]": { // 추가!
+          "editor.tabSize": 4,
+      },
+      "terminal.integrated.fontSize": 16,
+      "editor.tabSize": 2,
+  
+      "beautify.language": {
+          "js": {
+          "type": ["javascript", "json"],
+          "filename": [".jshintrc", ".jsbeautifyrc"]
+          // "ext": ["js", "json"]
+          // ^^ to set extensions to be beautified using the javascript beautifier
+      },
+      "css": ["css", "scss"],
+      "html": ["htm", "html", "django-html"]
+      // ^^ providing just an array sets the VS Code file type
+      },
+  
+      "files.insertFinalNewline": true,
+  
+      "terminal.integrated.cwd": "${workspaceFolder}",
+  ```
+
+- editor.insert space 검색 > 체크 확인
+
+- detect indentation 검색 > 체크 확인
+- preference > keyboard shortcut > beautify > beautify selection > `ctrl + alt + b`
+
+### Naming Convention 소개
+
+- lowerCamelCase
+
+  - 소문자로 시작하고 각 단위 단어의 첫 글자를 대문자로 표시하는 방식
+
+  - 일반적인 Camel case
+
+- UpperCamelCase
+
+  - 모든 단어의 첫 글자를 대문자로 표시하는 방식
+
+- Snake_case
+
+  - 단어를 `_` 로 연결하는 방식
+
+- Hungarian notation
+
+  - 변수 앞에 타입에 대한 명시를 표기하는 방식
+  - `un16number`, `s32num` 
+
+- kebab-case
+
+  - 단어를 `-` 로 연결하는 방식
+
+### Javascript
+
+#### 변수
+
+- let
+  - 선언은 1번만 가능
+  - 재할당은 계속 가능
+  - block scope
+
+- const
+
+  - 상수
+  - 선언 1번만 가능
+  - 재할당 불가능
+  - 선언 할 때 값이 할당되어야 한다.
+  - block scope
+
+- var
+
+  > ES6 이전에 문제가 많이 발생했음.  범위 제한이 들쭉날쭉하고, hoisting 등으로 선언 전에서 사용이 가능 하는 등 편의성도 있지만 여러가지 문제가 있어서 최근에는 잘 사용하지 않음.
+
+  - 재할당/선언 계삭 사용 가능
+  - 잘 사용하지 않는다.
+
+#### if 문
+
+> 똑같음
+
+#### loop 문
+
+> 똑같음
+
+#### function함수 선언
+
+- 선언식
+
+  ```javascript
+  function add(num1, num2) {
+    return num1 + num2;
+  }
+  
+  console.log(add(5, 7););
+  ```
+
+- 표현식
+
+  ```javascript
+  const sub = function(num1, num2) {
+    return num1 - num2;
+  }
+  
+  console.log(sub(7, 2));
+  ```
+
+#### 화살표 함수
+
+- 익명함수
+
+- function 표현에 비해 구문이 짧다.
+
+- 생성자로 사용할 수 없다.
+
+- 사용법
+
+  > - function 생략 가능
+  > - 인자가 1개인 경우 괄호도 생략 가능
+  > - body 표현식이 1 줄인 경우 괄호와 리턴도 생략 가능
+
+  ```javascript
+  
+  // 1. function 키워드 생략
+  const greeging1 = (name) => {
+    return 'hello ${name}';
+  }
+  
+  
+  // 2. 인자가 1개인 경우 괄호도 생략 가능
+  const greegin2 = name => {
+    return 'hello ${name}';
+  }
+  
+  
+  // 3. body 표현식이 1줄 인 경우 괄호와 리턴도 생략 가능
+  const greeting3 = name => 'hello ${name}';
+  
+  
+  // 실습
+  // => 화살표 함수로 변환시켜 보자.
+  let square = function(num) {
+    return num;
+  }
+  // 답:
+  let square2 = num => num**2;
+  
+  
+  // object 형식으로 변환된다면?
+  // #1. 
+  let returnObject = () => {
+    return {key: 'value'};
+  }
+  // #2.
+  let returnObj = () => ({key: 'value'})
+  
+  
+  // 인자에 기본값을 설정했을 경우 => 괄호를 유지한다.
+  let sayHi2 = (name="pengsu") => 'hi ${name}';
+  
+  
+  ```
+
+#### 즉시 실행 함수
+
+```javascript
+// 즉시 실행 함수
+const cube = function(num) {
+  return num ** 3;
+}(2)
+
+// 익명 함 수 일때 즉시실행
+console.log(function(num){ return num ** 3; }(2));
+
+```
+
+#### 배열
+
+- 생성 및 값 참조
+
+  ```javascript
+  const numbers = [1, 2, 3, 4, 5, 6, 7];
+  console.log(numbers[1]);
+  // 인덱스에는 양의 정수만 넣을 수 있다.
+  ```
+
+- reverse
+
+  > 배열 순서를 뒤집어준다.
+
+  ```javascript
+  // 마지막 녀석을 확인 하려면?
+  
+  // #1. 마지막 인덱스 넣기
+  console.log(numbers[numbers.length - 1]);
+  
+  // #2. 배열 뒤집기 (원본이 뒤집힌다) // 중~~~~~~~~요
+  console.log(numbers.reverse()[0]);
+  ```
+
+- push
+
+  > 넣기
+
+  ```javascript
+  // push
+  numbers.push('펭');					// 타입에 상관 없이 들어간다
+  console.log(numbers);
+  console.log(numbers.push('su'));  	// 배열의 길이를 리턴한다.
+  ```
+
+- pop
+
+  > 뒤에서 부터 값을 하나씩 뽑아주고 배열에서 제거한다.
+
+  ```javascript
+  // pop
+  console.log(numbers.pop());
+  ```
+
+- unshift 
+
+  > 배열의 가장 앞쪽에 값을 넣어준다.
+
+  ```javascript
+  console.log(numbers.unshift("pengsu"));
+  console.log(numbers);
+  8
+  ['pengsu', 1, 2, 3, 4, 5, 6, 7]
+  
+  ```
+
+- shift
+
+  > 배열의 첫 번째 요소를 리턴하고 배열에서 제거해준다.
+
+  ```javascript
+  console.log(numbers.shift());
+  console.log(numbers);
+  pengsu
+  [1, 2, 3, 4, 5, 6, 7]
+  ```
+
+- includes
+
+  > 배열 안에 인자로 넘겨받은 값이 있는 지 확인해준다.
+
+  ```javascript
+  console.log(numbers.includes(1))
+  console.log(numbers.includes(0))
+  true
+  false
+  ```
+
+- indexof
+
+  > 배열 안에 해당 인자가 몇 번째 인덱스에 위치하고 있는지 알려준다.
+
+  ```javascript
+  console.log(numbers.indexOf(1))
+  console.log(numbers.indexOf(0))
+  0
+  -1
+  
+  // 배열 안에 같은 값이 두 개 있다면
+  // 첫 번째 만나는 인덱스만 반환한다.
+  ```
+
+- join
+
+  >각강의 배열 요소에 해당 값을 붙여서 스트링으로 표현한다.
+  >
+  >원본은 그대로 남는다.
+
+  ```javascript
+  console.log(numbers.join('-'))
+  1-1-2-3-4-5-6-7-펭
+  
+  console.log(numbers.join())
+  1,1,2,3,4,5,6,7,펭
+  
+  console.log(numbers.join(''))
+  11234567펭
+  ```
+
+#### 오브젝트
+
+- 생성
+
+  ```javascript
+  // 키 값에 공백이 있을 경우 quote로 감싼다.
+  // 오브젝트 안에 오브젝트가 들어갈 수 있다.
+  const pengsu = {
+    name: '펭수',
+    'phone number': '000-0000-0000',
+    profile: {
+      dream: "우주 대스타",
+      age: '10살',
+      speciality: "요들송"
+    }
+  }
+  ```
+
+- 접근
+
+  ```javascript
+  // 기본
+  console.log(pengsu.name)
+  펭수
+  
+  // 키 값으로 접근
+  console.log(pengsu['name'])
+  펭수
+  
+  // . 으로 접근
+  console.log(pengsu.profile.dream)
+  우주 대스타
+  
+  // 키 값에 공백이 있으면 . 으로 접근 하지 못한다.
+  console.log(pengsu['phone number'])
+  000-0000-0000
+  ```
+
+- 심화
+
+  > ES6 에서 추가된 표현 법
+
+  ```javascript
+  
+  var books = ['Learning JS', 'Learning Django']
+  var comics = {
+    DC: ['AquaMan', 'SuperMan'],
+    Marvel: ['IronMan', 'AntMan']
+  }
+  var magazines = null;
+  
+  // Before
+  var bookShop = {
+    books: books,
+    comics: comics,
+    magazines: magazines
+  }
+  
+  console.log(bookShop);
+  console.log(typeof bookShop);
+  console.log(bookShop.books[0]);
+  
+  // After (ES6)
+  // 이름이 같으면 값만 넣으면 된다.
+  let bookShop = {
+    books,
+    comics,
+    magazines
+  }
+  console.log(bookShop);
+  console.log(typeof bookShop);
+  console.log(bookShop.books[0]);
+  
+  // 출력 결과 -----------------------
+  {
+    books: [ 'Learning JS', 'Learning Django' ],
+    comics: { DC: [ 'AquaMan', 'SuperMan' ], Marvel: [ 'IronMan', 'AntMan' ] },
+    magazines: null
+  }
+  object
+  Learning JS
+  // --------------------------------
+  ```
+
+#### JSON
+
+> javascript object와 같은 키 밸류의 형태이지만 json은 문자열이다.
+>
+> 따라서 편하게 사용하려면 object로 변환하는 과정이 필요하다.
+
+- JSON.parse (json -> object)
+
+  ```javascript
+  let jsonObj = JSON.parse("{ \"name\": \"pengsu\", \"age\": \"10\"}");
+  console.log(typeof jsonObj);
+  console.log(jsonObj);
+  
+  object
+  { name: 'pengsu', age: '10' }
+  ```
+
+- JSON.stringify (object -> json)
+
+  ```javascript
+  let jsonStr = JSON.stringify(jsonObj);
+  console.log(typeof jsonStr);
+  console.log(jsonStr);
+  
+  string
+  {"name":"pengsu","age":"10"}
+  ```
+
+#### Array Helper Method
+
+> 자주 사용하는 배열 로직을 재사용 할 수 있게 제공하는 일종의 라이브러리.
+
+- ES5.1 즈음부터 등장하여 ES6 에 본격적으로 시작되었다.
+
+- `forEach`, `filter`, `find`, `map`, `every`, `some`, `reduce` 등이 있다.
+
+- forEach
+
+  > forEach 는 아무 값도 리턴해 주지 않는다.
+
+  ```javascript
+  // 기본 사용 법
+  xxx.forEach(function(elem, index, array))
+  
+  // 예전
+  var colors = ['red', 'orange', 'yellow']
+  for (var i = 0; i < colors.length; i++) {
+    console.log(colors[i]);
+  }
+  
+  // forEach
+  colors.forEach(function(color){
+    console.log(color);
+  });
+  
+  // forEach + 화살표 함수
+  colors.forEach(color => console.log(color))
+  
+  
+  // 실습 --------------------------------------------------------------
+  // # 1
+  function handlePosts() {
+    const posts = [
+      {
+        id: 23,
+        title: "오늘의 뉴스"
+      },
+      {
+        id: 34,
+        title: "오늘의 스포츠"
+      },
+      {
+        id:78,
+        title: "오늘의 연예"
+      }
+    ];
+  
+    // 기존 방법
+    // for(let i = 0; i < posts.length; i++) {
+    //   console.log(posts[i]);
+    //   console.log(posts[i].id);
+    //   console.log(posts[i].title);
+    // }
+  
+    // forEach 사용
+    posts.forEach(elem => {
+      console.log(elem);
+      console.log(elem.id);
+      console.log(elem.title);
+    });
+  }
+  
+  // # 2.
+  // image 배열 안에 있느 정보를 가지고
+  // 넓이를 구하고 그 값을 areas에 저장해보자
+  const IMAGES = [
+    {height:10, width:30},
+    {height:22, width:37},
+    {height:54, width:42},
+  ]
+  
+  let areas = []
+  IMAGES.forEach(obj => areas.push(obj.height * obj.width))
+  console.log(areas);
+  
+  [ 300, 814, 2268 ]
+  
+  
+  
+  ```
+
+- map
+
+  > 배열의 모든 요소마다 각각 함수로 주어진 처리를 취한 후 리스트로 반환
+
+  ``` javascript 
+  // map 사용
+  let NUMBERS = [2, 4, 6]
+  let doubleNum = []
+  
+  doubleNum = NUMBERS.map(function(num) {
+    return num*2;
+  });
+  
+  console.log(NUMBERS);
+  console.log(doubleNum);
+  
+  [ 2, 4, 6 ] // 원래 값은 유지 됨
+  [ 4, 8, 12 ]
+  
+  
+  // 실습 # 1
+  // 숫자가 담긴 배열을 받아서
+  // 각 숫자들의 제곱근이 들어있는 새 배열로 만들어 보자.
+  const newNum = [4, 9, 16];
+  
+  const roots = newNum.map(num => Math.sqrt(num));
+  //const roots = newNum.map(num => num ** 0.5);
+  console.log(roots);
+  
+  [ 2, 3, 4 ]
+  
+  
+  // 실습 # 2
+  // IMAGES 배열 안에 objectemfdml height만 들어잇는 배열을 만들어보자.
+  const IMAGES = [
+    {height: '34px', width: '39px'},
+    {height: '54px', width: '22px'},
+    {height: '48px', width: '22px'},
+  ];
+  
+  const height = IMAGES.map(image => image.height);
+  console.log(height);
+  
+  [ '34px', '54px', '48px' ]
+  
+  
+  // 실습 # 3
+  // { name: brand, movie: 영화 }
+  const brands = ["Marble", "DC"]
+  const movies = ["Avengers", "Batman"]
+  
+  const aaa = brands.map(function(brand, i){
+    return {name: brand, movie: movies[i]}
+  });
+  
+  const bbb = brands.map( (brand, i) => ({name: brand, movie: movies[i]}))
+  
+  console.log(aaa);
+  console.log(bbb);
+  
+  [
+    { name: 'Marble', movie: 'Avengers' },
+    { name: 'DC', movie: 'Batman' }
+  ]
+  [
+    { name: 'Marble', movie: 'Avengers' },
+    { name: 'DC', movie: 'Batman' }
+  ]
+  ```
+
+- filter
+
+  > 모든 배열의 요소 중 함수로 주어진 조건을 만족하는 경우에 리스트로 반환
+  >
+  > 초기 값을 지정해 주지 않으면 배열의 첫 번째 인자를 초기값으로 가져간다.
+
+  ```javascript
+  const PRODUCTS = [
+    { name: 'cucumber', type: 'vegetable'},
+    { name: 'banana', type: 'fruit'},
+    { name: 'carrot', type: 'vegetable'},
+    { name: 'apple', type: 'fruit'},
+  ]
+  
+  const R1 = PRODUCTS.filter(p => p.type === 'fruit');
+  console.log(R1);
+  
+  [ 
+      { name: 'banana', type: 'fruit' }, 
+      { name: 'apple', type: 'fruit' } 
+  ]
+  
+  // 실습 # 1
+  const TestResults = [90, 85, 70, 78, 58, 86, 99, 82]
+  const R2 = TestResults.filter(val => val >= 80);
+  console.log(R2);
+  
+  [ 90, 85, 86, 99, 82 ]
+  ```
+
+- reduce
+
+  > 모든 배열 요소의 누적된 값을 반환한다.
+
+  ```javascript
+  array.reduce(callback(acc, elements, ids) [, total의 초기값])
+  ```
+
+  ``` javascript 
+  const numbers = [1, 2, 3, 4,]
+  
+  const R1 = numbers.reduce(function(total, num){
+    return total += num;
+  }, 0);
+  const R2 = numbers.reduce( (total, num) => total += num, 0);
+  console.log(R1);
+  console.log(R2);
+  
+  // 실습 # 1
+  // 평균 구하기
+  const TestResults = [90, 85, 70, 78, 58, 86, 99, 82]
+  const R3 = TestResults.reduce((tot, n) => tot += n, 0) / TestResults.length;
+  console.log(R3);
+  
+  81
+  
+  
+  // 실습 # 2
+  // [{이름: 중복 횟수}, { 이름: 중복횟수}] 로 바꿔보기
+  const names = ['pengsu', 'bbung', 'pororo', 'bbung', 'bungaeman', 'pengsu']
+  const R4 = names.reduce( (allNames, name) => {
+    if (name in allNames) {
+      allNames[name] += 1;
+    }
+    else {
+      allNames[name] = 1;
+    }
+  
+    return allNames;
+  }, {});
+  
+  console.log(R4);
+  
+  { pengsu: 2, bbung: 2, pororo: 1, bungaeman: 1 }
+  ```
+
+- find
+
+  > 첫 번째 찾은 요소를 반환한다.
+
+  ``` javascript 
+  let heros = [
+    { name: 'Tony Stark', age: 45 },
+    { name: 'Captain Ame', age: 82 },
+    { name: 'Thor', age: 1500 },
+    { name: 'Tony Stark', age: 25 },
+  ]
+  
+  const R = heros.find(hero => hero.name === 'Tony Stark');
+  console.log(R);
+  
+  { name: 'Tony Stark', age: 45 }
+  
+  // 실습 # 1
+  // 잔액이 20000원 이상인 사람의 이름
+  const ACCOUNTS = [
+    {name: "pengsu", money: 1200},
+    {name: "bbung", money: 24000},
+    {name: "pororo", money: 50000}
+  ];
+  
+  const R1 = ACCOUNTS.find( p => p.money >= 20000);
+  console.log(R1.name);
+  ```
+
+- some & every
+
+  - some
+
+    > 조건에 맞는 값을 찾으면 바로 true를 리턴
+
+  - every
+
+    > 모든 요소가 조건을 만족해야 true를 리턴
+
+  ```javascript
+  const NUMBERS = [1, 2, 3, 4, 5]
+  
+  const result = NUMBERS.some(function(elem){
+    return elem % 2 === 0;
+  });
+  console.log(result);
+  
+  const every_result = NUMBERS.every(function(elem){
+    return elem %2 === 0;
+  });
+  
+  console.log(every_result);
+  
+  true
+  false
+  ```
+
+
+
+
+
+
+
+
+
 
 
 

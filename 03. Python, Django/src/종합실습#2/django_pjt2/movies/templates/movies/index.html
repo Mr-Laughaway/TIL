@@ -6,6 +6,8 @@
 {% block content %}
 <div class="container">
     <h3>영화 목록</h3>
+    <a href="{% url 'movies:new' %}" class="btn btn-primary">새 영화 등록</a>
+    <br><br>
     <table class="table">
         <tr>
             <th>ID</th>
@@ -26,7 +28,7 @@
     </table>
     <br><br>
 
-    <a href="{% url 'movies:new' %}" class="btn btn-primary">새 영화 등록</a>
+    
 
 
 </div>

@@ -15,7 +15,7 @@ def index(request):
 
     for movie in movies:
         ratings = Rating.objects.filter(movie=movie)
-        if len(ratings) > 0:
+        if ratings.exists():
             score_list = list(map(lambda rate: rate.score, ratings))
             score = sum(score_list) / len(score_list)
             movie.score = score
@@ -74,9 +74,14 @@ def detail(request, m_id):
 @login_required
 def edit(request, m_id):
     movie = get_object_or_404(Movie, id=m_id)
+
+    if movie.user != request.user:
+        return redirect('movies:detail', m_id)
     
     if request.method == 'POST':
         form = MovieForm(request.POST)
+        # 아래처럼 하면 더 편함
+        # form = MovieForm(request.Post, request.FiLES, instance=movie)
         if form.is_valid:
             movie.title = request.POST.get('title')
             movie.description = request.POST.get('description')
@@ -88,16 +93,13 @@ def edit(request, m_id):
             return redirect('movies:detail', m_id)
 
     else:
-        
-        if movie.user != request.user:
-            return redirect('movies:detail', m_id)
-
         form = MovieForm(instance=movie)
-        context = {
-            'title': "영화 수정",
-            'form': form,
-            'btn': '수정'
-        }
+
+    context = {
+        'title': "영화 수정",
+        'form': form,
+        'btn': '수정'
+    }
 
     return render(request, 'movies/form.html', context)
 
