@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="my"></div>
+  <button id="this-button">이것을 누르면</button>
+
+  <script>
+    const button = document.querySelector('#this-button');
+    button.addEventListener('click', function(e){
+      console.log(e);
+
+      const div = document.querySelector('#my');
+      div.innerHTML = '<h1>뿅!</h1>';
+
+    }, false);
+  </script>
+</body>
+</html>

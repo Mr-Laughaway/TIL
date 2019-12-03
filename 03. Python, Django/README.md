@@ -3906,12 +3906,12 @@ $ npm -v
 #### VSCODE extension 설치
 
 - `auto close tag`
-
 - `ainbow brackets`
 - `indent rainbow`
 - `beautify`
 - `code runner`
 - `ESLint`
+- `Live Server`
 
 #### VSCODE 설정
 
@@ -4606,6 +4606,92 @@ console.log(function(num){ return num ** 3; }(2));
   true
   false
   ```
+
+#### Callback 함수
+
+> 다른 함수에 인수로 넘겨지고, 호출한 함수의 실행 결과로 호출되는 함수이다.
+
+- 기본 사용 법
+
+  ```javascript
+  function doSomething(task, callback) {
+      alert(`자, ${task} 준비를 해보자.`);
+      callback();
+  }
+  
+  // 익명 함수로 callback 함수 추가
+  doSomething(`탕수육 먹을`, function(){
+      alert(`뿜빠이로 맛난 탕슉 먹으로 갑시다.!`)
+  });
+  
+  
+  function whereGo() {
+      alert(`탕슉 어디가 맛나나요??`);
+  }
+  
+  // 기명 합수로 callback 함수 추가
+  doSomething(`탕수육 먹을`, whereGo);
+  ```
+
+- 실습
+
+  콜백 만들어보기
+
+  ```html
+  <body>
+    <p id="para">어떤 휴지 줄까?</p>
+    <button onclick="changeColor('red', cb)">빨간 휴지</button>
+    <button onclick="changeColor('blue', cb)">파란 휴지</button>
+    <script>
+      function changeColor(newColor, callback) {
+        const elem = document.getElementById('para');
+        elem.style.color = newColor;
+  
+        callback(newColor);
+      }
+  
+      function cb(newColor) {
+        alert(newColor);
+      }
+    </script>
+  </body>
+  ```
+
+#### Event Listener
+
+> :point_right: http://www.ktword.co.kr/word/abbr_view.php?m_temp1=2744&id=1356
+
+```javascript
+EventTarget.addEventListener(<event type>, <callback>)
+
+EventTarget: 이벤트 리스너를 등록할 대상
+event type: 이벤트 유형을 뜻하는 문자열
+callback: 이벤트가 발생했을 때 처리를 담당하는 함수. 보통 e(event 객체)로 받는다.
+```
+
+- 기본 예제
+
+  ```html
+  <body>
+    <div id="my"></div>
+    <button id="this-button">이것을 누르면</button>
+  
+    <script>
+      const button = document.querySelector('#this-button');
+      button.addEventListener('click', function(e){
+        console.log(e);
+  
+        const div = document.querySelector('#my');
+        div.innerHTML = '<h1>뿅!</h1>';
+  
+      }, false);
+    </script>
+  </body>
+  ```
+
+
+
+
 
 
 
