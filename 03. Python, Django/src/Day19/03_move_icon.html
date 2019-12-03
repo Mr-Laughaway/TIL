@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .bg {
+      background-color: skyblue;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      display: flex;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="bg">
+    <img id="dino" style="width:100px; height:100px;" src="https://is4-ssl.mzstatic.com/image/thumb/Purple118/v4/88/e5/36/88e536d4-8a08-7c3b-ad29-c4e5dabc9f45/AppIcon-1x_U007emarketing-sRGB-85-220-0-6.png/246x0w.jpg" alt="icon">
+  </div>
+  <div class="bg">
+    <img id="movcon" style="width:100px; height:100px;" src="https://www.blendedperspectives.com/wp-content/uploads/2019/06/GitHub-for-Jira.png" alt="icon">
+  </div>
+
+  <script>
+    const bg = document.querySelector('.bg');
+    
+    x = 0; y = 0;
+    document.addEventListener('keydown', function(e){ 
+      
+      const dino = bg.querySelector('#dino');
+
+      if (e.code === 'Space') {
+        console.log('스페이스바');
+      } else if(e.code === 'ArrowUp') {
+          y -= 20;
+          dino.style.marginTop = `${y}px`;
+      } else if(e.code === 'ArrowDown') {
+          y += 20;
+          dino.style.marginTop = `${y}px`;
+      } else if(e.code === 'ArrowLeft') {
+          x -= 20;
+          dino.style.marginLeft = `${x}px`;
+      } else if(e.code === 'ArrowRight') {
+          x += 20;
+          dino.style.marginLeft = `${x}px`;
+      } else {
+        console.log('뭔가가 눌렸다...');
+      }
+    });
+
+    const movcon = document.querySelector('#movcon');
+    movcon.style.position = 'absolute;'
+    movcon.addEventListener('mouseover', function(e){
+      console.log('mouseover');
+      // (현재 윈도우의 너비 * 랜덤한 값(Math.random())) - (윈도우의 너비 /2)
+      const newWidth = window.innerWidth * Math.random() - window.innerWidth/2
+      const newHeight = window.innerHeight * Math.random() - window.innerHeight/2
+
+      movcon.style.marginLeft = newWidth + 'px';
+      movcon.style.marginTop = newHeight + 'px';
+    });
+  </script>
+</body>
+</html>

@@ -4689,23 +4689,206 @@ callback: 이벤트가 발생했을 때 처리를 담당하는 함수. 보통 e(
   </body>
   ```
 
+#### BOM & DOM
 
+- BOM(Browser Object Model)
 
+  > 자바스크립트가 브라우저와 소통하기 위한 모델. 브라우저에 따라 다르게 구현되기도 하고 한정적이지만, 웹 브라우저의 버튼, URL 주소 입력, 타이틀바 같은 브라우저 일부분을 제어할 수 있기 때문에 이용한다.
+  >
+  > `window` 객체를 통하여 접근할 수 있고, 전역 JS 객체, 함수, 변수들은 자동으로 window 객체의 멤버가 된다. HTML DOM 역시 window 객체의 속성이다.
 
+  ```javascript
+  window.print() // 인쇄창 오픈
+  window.open() // 탭 오픈
+  window.document // document도 window 전역 객체에 포함되어 있다.
+  window.confirm() // 확인&취소 버튼이 있는 대화상자를 표시.
+  ...
+  ```
 
+- DOM(Document Object Model)
 
+  > HTML 파일에 작성된 모든 요소(element)들이다. 요소에 이벤트를 등록해서 특정 이벤트가 발생할 시 특정 함수를 실행하도록 할 수 있다.
+  >
+  > HTML에 작성하지 않은 내용도 새로운 요소를 생성해서 추가/삭제할 수 있다.
 
+  - DOM Tree
 
+    ![img](assets/1_aYBX0u4He3VThBSVLJ7BJA.jpeg)
 
+    ```
+    - 부모 찾기
+    const bg = document.querySelector('.bg');
+    
+    - 자식 찾기
+    const movcon = bg.querySelector('#movcon');
+    ```
 
+  **기본 예제**
 
+  ```html
+  <!DOCTYPE html>
+  <html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      .bg {
+        background-color: skyblue;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        display: flex;
+      }
+    </style>
+  
+  </head>
+  <body>
+    <div class="bg">
+      <img id="movcon" style="width:100px; height:auto;" src="http://www.geekchamp.com/upload/SymbolIcons/Fun/1f47b-Ghost.png" alt="icon">
+    </div>
+  
+    <script>
+      const bg = document.querySelector('.bg');
+      const movcon = bg.querySelector('#movcon');
+  
+      movcon.style.width = "100px";
+      bg.firstElementChild.remove();
+  
+      const newMovcon = document.createElement('img')
+      newMovcon.id = 'movcon-2';
+      newMovcon.src = 'https://www.blendedperspectives.com/wp-content/uploads/2019/06/GitHub-for-Jira.png'
+      bg.append(newMovcon);
+    </script>
+  </body>
+  </html>
+  ```
 
+  **공룡 놀이  및 술래잡기 예제**
 
+  ```html
+  <!DOCTYPE html>
+  <html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      .bg {
+        background-color: skyblue;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        display: flex;
+      }
+    </style>
+  
+  </head>
+  <body>
+  
+    <div class="bg">
+      <img id="dino" style="width:100px; height:100px;" src="https://is4-ssl.mzstatic.com/image/thumb/Purple118/v4/88/e5/36/88e536d4-8a08-7c3b-ad29-c4e5dabc9f45/AppIcon-1x_U007emarketing-sRGB-85-220-0-6.png/246x0w.jpg" alt="icon">
+    </div>
+    <div class="bg">
+      <img id="movcon" style="width:100px; height:100px;" src="https://www.blendedperspectives.com/wp-content/uploads/2019/06/GitHub-for-Jira.png" alt="icon">
+    </div>
+  
+    <script>
+      const bg = document.querySelector('.bg');
+      
+      x = 0; y = 0;
+      document.addEventListener('keydown', function(e){ 
+        
+        const dino = bg.querySelector('#dino');
+  
+        if (e.code === 'Space') {
+          console.log('스페이스바');
+        } else if(e.code === 'ArrowUp') {
+            y -= 20;
+            dino.style.marginTop = `${y}px`;
+        } else if(e.code === 'ArrowDown') {
+            y += 20;
+            dino.style.marginTop = `${y}px`;
+        } else if(e.code === 'ArrowLeft') {
+            x -= 20;
+            dino.style.marginLeft = `${x}px`;
+        } else if(e.code === 'ArrowRight') {
+            x += 20;
+            dino.style.marginLeft = `${x}px`;
+        } else {
+          console.log('뭔가가 눌렸다...');
+        }
+      });
+  
+      const movcon = document.querySelector('#movcon');
+      movcon.style.position = 'absolute;'
+      movcon.addEventListener('mouseover', function(e){
+        console.log('mouseover');
+        // (현재 윈도우의 너비 * 랜덤한 값(Math.random())) - (윈도우의 너비 /2)
+        const newWidth = window.innerWidth * Math.random() - window.innerWidth/2
+        const newHeight = window.innerHeight * Math.random() - window.innerHeight/2
+  
+        movcon.style.marginLeft = newWidth + 'px';
+        movcon.style.marginTop = newHeight + 'px';
+      });
+    </script>
+  </body>
+  </html>
+  ```
 
+  **위시 리시트**
 
-
-
-
+  ```html
+  <!DOCTYPE html>
+  <html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>My Wish List</h1>
+    <form>
+      내가 원하는 건 : <input type="text" id="wish-input"/>
+      <button type="submit" id="add-button">추가하기</button>
+    </form>
+  
+    <ol id="wish-list">
+    </ol>
+  
+    <script>
+      const input = document.querySelector('#wish-input');
+      const ol = document.querySelector('#wish-list');
+      const button = document.querySelector('#add-button');
+  
+      button.addEventListener('click', function(e){
+        e.preventDefault();
+  
+        let value = input.value;
+        input.value = '';
+  
+        const li = document.createElement('li');
+        li.innerText = value;
+  
+        const btn = document.createElement('button');
+        btn.style.marginLeft = '10px';
+        btn.innerText = "했음";
+        btn.addEventListener('click', function(){
+          li.remove();
+        });
+        li.append(btn);
+  
+        ol.append(li);
+      });
+  
+    </script>
+  </body>
+  </html>
+  
+  ```
 
 
 
