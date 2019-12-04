@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Index Page</h1>
+<ul>
+    {% for board in boards %}
+        <li><a href="{% url 'boards:detail' board.id %}">{{ board.title }}</a> - 
+            <a href="{% url 'accounts:profile' board.user %}">{{ board.user }}</a></li>
+        <!-- 분할된 템플릿은 _(언더바)로 이름이 시작하는게 관례 -->
+        <!-- 분할된 템플릿 파일 불러오기 -->
+        {% include 'boards/_board.html' %}
+    {% endfor %}
+</ul>
+{% include 'boards/_page.html' %}
+
+{% if user.is_authenticated %}
+    <a href="{% url 'boards:new' %}">New</a><br>
+{% else %}
+    <h3>로그인 해야 글을 작성 할수 있습니다.</h3>
+{% endif %}
+
+
+<script>
+    // ajax를 이용하여 좋아요 로직 수정.
+
+    // 1. 모든 좋아요 버튼을 가져온다.
+    const likeButtons = document.querySelectorAll('.like-button')
+
+    // 2. 모든 좋아요 버튼에 이벤트 리스너를 달아준다.
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function(event){
+            // console.log(event)
+            const boardId = event.target.dataset.id
+            
+            // axios의 POST 동작을 위해 CSRF 토큰을 쿠키에 추가
+            axios.defaults.xsrfCookieName = 'csrftoken'
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+            // is_ajax() 확인을 위해 header에 XHR 부분 추가
+            axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+            
+            // post 동작
+            axios.post(`/boards/like/${boardId}/`)
+            .then(response =>{
+                // 어떤 데이터가 전달되는지 확인 필수!
+                // console.log(response.data)
+                // liked 라고 전달된 데이터를 받아서 판단
+                if (response.data.liked){
+                    // 하트 아이콘 제어
+                    event.target.style.color = 'crimson'
+                    event.target.classList.replace('far', 'fas')
+                }else{
+                    event.target.style.color = 'black'
+                    event.target.classList.replace('fas', 'far')
+                }
+                
+                // 좋아요 사람 누른수를 추가 하기 위한 로직
+                const span = document.querySelector(`.like_count_${boardId}`)
+                span.innerText = response.data.count
+            })
+        })
+    })
+
+
+</script>
+{% endblock %}
+
