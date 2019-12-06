@@ -3687,13 +3687,27 @@ alcohol3 = Alcohol.objects.create(name="Makgeoly")
 
 #### AbstrtactUser 
 
-- settings.AUTH_USER_MODEL 을 재설정 해줘야함
+settings.AUTH_USER_MODEL 을 재설정 해줘야함
 
-  ```python
-  AUTH_USER_MODEL = "앱이름.클래스이름`
-  ```
+```python
+#AUTH_USER_MODEL = "앱이름.클래스이름`
+
+AUTH_USER_MODEL = 'accounts.User'
+```
 
 #### 상속 받아 재 설정
+
+***models.py***
+
+```python
+from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+
+# Create your models here.
+class User(AbstractUser):
+    followers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="followings")
+```
 
 ***forms.py***
 
