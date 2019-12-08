@@ -3231,7 +3231,7 @@ class CommentForm(forms.ModelForm):
 
 ### 회원가입 구현
 
-> 기본 회원가입/로그인 예제이며 커스터 마이징을 위해선 [팔로우 구현](#팔로우%20구현)부분을 참조한다. [이곳]( https://wayhome25.github.io/django/2017/05/18/django-auth/  )에도 유용한 정보가 있다.
+> 기본 회원가입/로그인 예제이며 커스터 마이징을 위해선 [팔로우 구현](#팔로우-구현)부분을 참조한다. [이곳]( https://wayhome25.github.io/django/2017/05/18/django-auth/  )에도 유용한 정보가 있다.
 
 #### django-bootstrap4 설치
 
